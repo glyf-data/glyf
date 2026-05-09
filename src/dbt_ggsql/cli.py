@@ -1,0 +1,33 @@
+from pathlib import Path
+from typing import Annotated
+
+import typer
+
+from dbt_ggsql.commands.list_cmd import run_list
+from dbt_ggsql.commands.validate_cmd import run_validate
+
+app = typer.Typer(help="Discover and validate ggsql assets in a dbt project.")
+
+ProjectOption = Annotated[
+    Path,
+    typer.Option(
+        "--project",
+        "-p",
+        file_okay=False,
+        dir_okay=True,
+        resolve_path=True,
+        help="Path to a dbt project.",
+    ),
+]
+
+
+@app.command("list")
+def list_command(project: ProjectOption = Path(".")) -> None:
+    """List discovered ggsql project files."""
+    run_list(project)
+
+
+@app.command("validate")
+def validate_command(project: ProjectOption = Path(".")) -> None:
+    """Validate discovered files and manifest refs."""
+    run_validate(project)
