@@ -1,0 +1,17 @@
+from pathlib import Path
+
+from dbt_ggsql.project.scanner import scan_project
+
+
+def test_scan_project_discovers_expected_files() -> None:
+    project = Path("examples/basic")
+
+    scan = scan_project(project)
+
+    assert [path.relative_to(scan.root).as_posix() for path in scan.ggsql_files] == [
+        "visualisations/revenue.ggsql"
+    ]
+    assert [path.relative_to(scan.root).as_posix() for path in scan.dashboard_files] == [
+        "dashboards/executive.yml"
+    ]
+    assert scan.manifest_path == scan.root / "target" / "manifest.json"
