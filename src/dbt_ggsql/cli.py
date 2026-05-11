@@ -4,6 +4,7 @@ from typing import Annotated
 import typer
 
 from dbt_ggsql.commands.dashboard_cmd import run_dashboard
+from dbt_ggsql.commands.export_cmd import run_export
 from dbt_ggsql.commands.list_cmd import run_list
 from dbt_ggsql.commands.render_cmd import run_render
 from dbt_ggsql.commands.validate_cmd import run_validate
@@ -48,3 +49,19 @@ def render_command(project: ProjectOption = Path(".")) -> None:
 def dashboard_command(project: ProjectOption = Path(".")) -> None:
     """Generate static dashboard HTML from rendered chart artifacts."""
     run_dashboard(project)
+
+
+@app.command("export")
+def export_command(
+    project: ProjectOption = Path("."),
+    clean: Annotated[
+        bool,
+        typer.Option("--clean", help="Delete the previous site export before copying."),
+    ] = False,
+    zip_site: Annotated[
+        bool,
+        typer.Option("--zip", help="Create target/ggsql/dbt-ggsql-site.zip."),
+    ] = False,
+) -> None:
+    """Copy generated outputs into a publish-ready static site folder."""
+    run_export(project, clean=clean, zip_site=zip_site)

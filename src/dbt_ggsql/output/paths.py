@@ -8,6 +8,8 @@ class ArtifactPaths:
     compiled_dir: Path
     charts_dir: Path
     dashboards_dir: Path
+    site_dir: Path
+    site_zip: Path
 
 
 def artifact_paths(project_root: Path) -> ArtifactPaths:
@@ -17,4 +19,6 @@ def artifact_paths(project_root: Path) -> ArtifactPaths:
         compiled_dir=root / "compiled",
         charts_dir=root / "charts",
         dashboards_dir=root / "dashboards",
+        site_dir=root / "site",
+        site_zip=root / "dbt-ggsql-site.zip",
     )
