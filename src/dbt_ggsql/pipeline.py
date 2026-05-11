@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from dbt_ggsql.config import DbtGgsqlConfig
 from dbt_ggsql.execution.duckdb import SqlExecutionError, execute_sql
 from dbt_ggsql.ggsql.models import GgsqlChart
 from dbt_ggsql.ggsql.parser import GgsqlParseError, parse_ggsql_file
@@ -36,8 +37,12 @@ class RenderError(ValueError):
     """Raised when chart artifacts cannot be generated."""
 
 
-def render_project(project: Path) -> RenderResult:
-    scan = scan_project(project)
+def render_project(
+    project: Path,
+    config: DbtGgsqlConfig | None = None,
+) -> RenderResult:
+    config = config or DbtGgsqlConfig()
+    scan = scan_project(project, config)
     if scan.manifest_path is None:
         raise RenderError(
             "Missing target/manifest.json. Run dbt compile or dbt build before render."
@@ -67,7 +72,7 @@ def render_project(project: Path) -> RenderResult:
             rel_path = path.relative_to(scan.root).as_posix()
             raise RenderError(f"{rel_path} has unresolved dbt references: {missing}")
 
-        artifacts = chart_artifact_paths(scan.root, chart)
+        artifacts = chart_artifact_paths(scan.root, chart, config)
         write_compiled_sql(artifacts.compiled_sql, resolution.sql)
 
         try:
@@ -77,7 +82,7 @@ def render_project(project: Path) -> RenderResult:
             raise RenderError(f"{rel_path} SQL execution failed: {exc}") from exc
 
         try:
-            render_chart(chart, data, artifacts.png, artifacts.svg)
+            render_chart(chart, data, artifacts.png, artifacts.svg, config.render)
         except ChartRenderError as exc:
             rel_path = path.relative_to(scan.root).as_posix()
             raise RenderError(f"{rel_path} chart rendering failed: {exc}") from exc

@@ -2,6 +2,7 @@ from pathlib import Path
 
 import typer
 
+from dbt_ggsql.config import ConfigError, load_config
 from dbt_ggsql.manifest.loader import load_manifest
 from dbt_ggsql.project.scanner import scan_project
 
@@ -10,8 +11,15 @@ def _rel(path: Path, project: Path) -> str:
     return path.relative_to(project).as_posix()
 
 
-def run_list(project: Path) -> None:
-    scan = scan_project(project)
+def run_list(project: Path, config_path: Path | None = None) -> None:
+    try:
+        config = load_config(project, config_path)
+    except ConfigError as exc:
+        typer.echo("Config error")
+        typer.echo(f"  - {exc}")
+        raise typer.Exit(1) from exc
+
+    scan = scan_project(project, config)
 
     typer.echo(f"Project: {scan.root}")
     typer.echo("")

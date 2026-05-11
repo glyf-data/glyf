@@ -18,6 +18,7 @@ uv run dbt-ggsql list --project examples/basic
 uv run dbt-ggsql validate --project examples/basic
 uv run dbt-ggsql render --project examples/basic
 uv run dbt-ggsql dashboard --project examples/basic
+uv run dbt-ggsql export --project examples/basic
 ```
 
 For real dbt projects, run dbt first so `target/manifest.json` exists:
@@ -51,6 +52,45 @@ The scanner currently discovers:
 - `.ggsql` files
 - dashboard YAML files under `dashboards/`
 - `target/manifest.json`
+
+## Configuration
+
+`dbt-ggsql` uses sensible defaults, so a config file is optional. If present,
+`dbt_ggsql.yml` is loaded from the dbt project root. You can also pass a config
+explicitly:
+
+```bash
+uv run dbt-ggsql render --config dbt_ggsql.yml
+uv run dbt-ggsql dashboard --config dbt_ggsql.yml
+uv run dbt-ggsql export --config dbt_ggsql.yml
+```
+
+Default conventions:
+
+```yaml
+visualisations_path: visualisations
+dashboards_path: dashboards
+output_path: target/ggsql
+compiled_path: target/ggsql/compiled
+charts_path: target/ggsql/charts
+dashboards_output_path: target/ggsql/dashboards
+site_path: target/ggsql/site
+
+render:
+  formats:
+    - svg
+    - png
+  default_width: 800
+  default_height: 400
+
+dashboard:
+  theme: light
+  embed_charts: true
+  show_compiled_sql: true
+```
+
+Paths are resolved relative to the dbt project root. Use path settings to keep
+visualisations, dashboard YAML, or generated artifacts in custom folders.
 
 `validate` checks malformed `.ggsql`, unresolved refs, missing manifests, and
 dashboard chart names that do not match discovered `.ggsql` file names.
