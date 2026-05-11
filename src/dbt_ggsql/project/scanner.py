@@ -17,6 +17,9 @@ class ProjectScan:
     ggsql_files: tuple[Path, ...]
     dashboard_files: tuple[Path, ...]
     manifest_path: Path | None
+    dbt_project_path: Path | None
+    visualisations_dir: Path | None
+    dashboards_dir: Path | None
 
 
 def _iter_project_files(root: Path) -> tuple[Path, ...]:
@@ -47,10 +50,16 @@ def scan_project(project: Path) -> ProjectScan:
             and "dashboards" in path.relative_to(root).parts
     )
     manifest_path = root / "target" / "manifest.json"
+    dbt_project_path = root / "dbt_project.yml"
+    visualisations_dir = root / "visualisations"
+    dashboards_dir = root / "dashboards"
 
     return ProjectScan(
         root=root,
         ggsql_files=ggsql_files,
         dashboard_files=dashboard_files,
         manifest_path=manifest_path if manifest_path.exists() else None,
+        dbt_project_path=dbt_project_path if dbt_project_path.exists() else None,
+        visualisations_dir=visualisations_dir if visualisations_dir.is_dir() else None,
+        dashboards_dir=dashboards_dir if dashboards_dir.is_dir() else None,
     )

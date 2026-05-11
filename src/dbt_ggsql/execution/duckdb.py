@@ -9,12 +9,21 @@ class SqlExecutionError(ValueError):
 
 
 def execute_sql(project_root: Path, sql: str) -> pd.DataFrame:
+    database = _duckdb_database(project_root)
     try:
-        with duckdb.connect(database=":memory:") as connection:
-            _load_seed_tables(connection, project_root / "seeds")
+        with duckdb.connect(database=database) as connection:
+            if database == ":memory:":
+                _load_seed_tables(connection, project_root / "seeds")
             return connection.execute(sql).fetchdf()
     except duckdb.Error as exc:
         raise SqlExecutionError(str(exc)) from exc
+
+
+def _duckdb_database(project_root: Path) -> str:
+    database_path = project_root / f"{project_root.name}.duckdb"
+    if database_path.exists():
+        return database_path.as_posix()
+    return ":memory:"
 
 
 def _load_seed_tables(connection: duckdb.DuckDBPyConnection, seeds_dir: Path) -> None:

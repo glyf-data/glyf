@@ -11,6 +11,8 @@ class ChartRenderError(ValueError):
 
 
 SUPPORTED_CHART_TYPES = {"line", "bar", "scatter"}
+CHART_WIDTH = 720
+CHART_HEIGHT = 420
 
 
 def render_chart(chart: GgsqlChart, data: pd.DataFrame, png_path: Path, svg_path: Path) -> None:
@@ -39,7 +41,19 @@ def build_chart(chart: GgsqlChart, data: pd.DataFrame) -> alt.Chart:
         joined = ", ".join(f"'{field}'" for field in missing_columns)
         raise ChartRenderError(f"query result missing chart column {joined}")
 
-    base = alt.Chart(data).encode(x=x_field, y=y_field).properties(title=chart.title)
+    base = (
+        alt.Chart(data)
+        .encode(
+            x=alt.X(x_field, axis=alt.Axis(labelAngle=0)),
+            y=alt.Y(y_field),
+        )
+        .properties(
+            title=chart.title,
+            width=CHART_WIDTH,
+            height=CHART_HEIGHT,
+        )
+        .configure_view(stroke="#d9e2ec")
+    )
     if chart.draw_type == "line":
         return base.mark_line(point=True)
     if chart.draw_type == "bar":

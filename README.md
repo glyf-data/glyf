@@ -20,6 +20,31 @@ uv run dbt-ggsql render --project examples/basic
 uv run dbt-ggsql dashboard --project examples/basic
 ```
 
+For real dbt projects, run dbt first so `target/manifest.json` exists:
+
+```bash
+dbt build
+dbt-ggsql render
+dbt-ggsql dashboard
+```
+
+You can point at another dbt project root with `--project-dir`:
+
+```bash
+uv run dbt-ggsql validate --project-dir examples/simple_dbt
+uv run dbt-ggsql render --project-dir examples/simple_dbt
+uv run dbt-ggsql dashboard --project-dir examples/simple_dbt
+```
+
+`dbt-ggsql` depends on dbt artifacts rather than invoking dbt itself. The key
+artifact is:
+
+```text
+target/manifest.json
+```
+
+`ref()` and `source()` calls in `.ggsql` files are resolved from that manifest.
+
 The scanner currently discovers:
 
 - `.ggsql` files

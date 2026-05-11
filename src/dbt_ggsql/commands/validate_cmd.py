@@ -17,8 +17,22 @@ def run_validate(project: Path) -> None:
     scan = scan_project(project)
     errors: list[str] = []
 
+    if scan.dbt_project_path is None:
+        errors.append(
+            "Missing dbt_project.yml. Run from a dbt project root or pass --project-dir."
+        )
+    if scan.visualisations_dir is None:
+        errors.append(
+            "Missing visualisations/ directory. Add .ggsql files under visualisations/."
+        )
+    if scan.dashboards_dir is None:
+        errors.append(
+            "Missing dashboards/ directory. Add dashboard YAML files under dashboards/."
+        )
     if scan.manifest_path is None:
-        errors.append("Missing target/manifest.json")
+        errors.append(
+            "Missing target/manifest.json. Run dbt compile or dbt build before dbt-ggsql."
+        )
         manifest = None
     else:
         try:
@@ -41,6 +55,11 @@ def run_validate(project: Path) -> None:
         result = resolve_refs(parsed.sql, manifest)
         for ref in result.missing_refs:
             errors.append(f"{_rel(path, scan.root)} references unknown model '{ref}'")
+        for source_name, table_name in result.missing_sources:
+            errors.append(
+                f"{_rel(path, scan.root)} references unknown source "
+                f"'{source_name}.{table_name}'"
+            )
 
     for path in scan.dashboard_files:
         try:
