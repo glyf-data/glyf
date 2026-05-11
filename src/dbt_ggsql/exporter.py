@@ -3,6 +3,7 @@ import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
+from dbt_ggsql.config import DbtGgsqlConfig
 from dbt_ggsql.output.paths import artifact_paths
 from dbt_ggsql.project.scanner import ProjectScan, scan_project
 
@@ -18,9 +19,16 @@ class ExportResult:
     zip_path: Path | None
 
 
-def export_site(project: Path, *, clean: bool = False, zip_site: bool = False) -> ExportResult:
-    scan = scan_project(project)
-    paths = artifact_paths(scan.root)
+def export_site(
+    project: Path,
+    *,
+    clean: bool = False,
+    zip_site: bool = False,
+    config: DbtGgsqlConfig | None = None,
+) -> ExportResult:
+    config = config or DbtGgsqlConfig()
+    scan = scan_project(project, config)
+    paths = artifact_paths(scan.root, config)
 
     if clean and paths.site_dir.exists():
         shutil.rmtree(paths.site_dir)

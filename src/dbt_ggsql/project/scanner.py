@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+from dbt_ggsql.config import DbtGgsqlConfig, resolve_project_path
+
 IGNORED_DIRS = {
     ".git",
     ".mypy_cache",
@@ -34,7 +36,8 @@ def _iter_project_files(root: Path) -> tuple[Path, ...]:
     return tuple(files)
 
 
-def scan_project(project: Path) -> ProjectScan:
+def scan_project(project: Path, config: DbtGgsqlConfig | None = None) -> ProjectScan:
+    config = config or DbtGgsqlConfig()
     root = project.expanduser().resolve()
     if not root.exists():
         raise ValueError(f"Project path does not exist: {root}")
@@ -42,17 +45,22 @@ def scan_project(project: Path) -> ProjectScan:
         raise ValueError(f"Project path is not a directory: {root}")
 
     files = _iter_project_files(root)
-    ggsql_files = tuple(path for path in files if path.suffix == ".ggsql")
+    visualisations_dir = resolve_project_path(root, config.visualisations_path)
+    dashboards_dir = resolve_project_path(root, config.dashboards_path)
+    ggsql_files = tuple(
+        path
+        for path in files
+        if path.suffix == ".ggsql"
+        and visualisations_dir in (path.parent, *path.parents)
+    )
     dashboard_files = tuple(
         path
         for path in files
         if path.suffix.lower() in {".yml", ".yaml"}
-            and "dashboards" in path.relative_to(root).parts
+        and dashboards_dir in (path.parent, *path.parents)
     )
     manifest_path = root / "target" / "manifest.json"
     dbt_project_path = root / "dbt_project.yml"
-    visualisations_dir = root / "visualisations"
-    dashboards_dir = root / "dashboards"
 
     return ProjectScan(
         root=root,

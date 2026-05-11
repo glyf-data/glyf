@@ -29,8 +29,8 @@ def test_render_chart_writes_png_and_svg(tmp_path: Path) -> None:
     assert png_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
     svg = svg_path.read_text(encoding="utf-8")
     assert "<svg" in svg
-    assert 'width="778"' in svg
-    assert 'height="484"' in svg
+    assert 'width="858"' in svg
+    assert 'height="464"' in svg
 
 
 def test_render_chart_rejects_unsupported_chart_type(tmp_path: Path) -> None:

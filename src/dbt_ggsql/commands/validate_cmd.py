@@ -2,6 +2,7 @@ from pathlib import Path
 
 import typer
 
+from dbt_ggsql.config import ConfigError, load_config
 from dbt_ggsql.dashboard.loader import load_dashboard
 from dbt_ggsql.ggsql.parser import GgsqlParseError, parse_ggsql_file
 from dbt_ggsql.manifest.loader import ManifestError, load_manifest
@@ -13,8 +14,15 @@ def _rel(path: Path, project: Path) -> str:
     return path.relative_to(project).as_posix()
 
 
-def run_validate(project: Path) -> None:
-    scan = scan_project(project)
+def run_validate(project: Path, config_path: Path | None = None) -> None:
+    try:
+        config = load_config(project, config_path)
+    except ConfigError as exc:
+        typer.echo("Config error")
+        typer.echo(f"  - {exc}")
+        raise typer.Exit(1) from exc
+
+    scan = scan_project(project, config)
     errors: list[str] = []
 
     if scan.dbt_project_path is None:
@@ -23,11 +31,11 @@ def run_validate(project: Path) -> None:
         )
     if scan.visualisations_dir is None:
         errors.append(
-            "Missing visualisations/ directory. Add .ggsql files under visualisations/."
+            "Missing visualisations directory. Check visualisations_path in dbt_ggsql.yml."
         )
     if scan.dashboards_dir is None:
         errors.append(
-            "Missing dashboards/ directory. Add dashboard YAML files under dashboards/."
+            "Missing dashboards directory. Check dashboards_path in dbt_ggsql.yml."
         )
     if scan.manifest_path is None:
         errors.append(

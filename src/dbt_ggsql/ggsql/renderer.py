@@ -3,6 +3,7 @@ from pathlib import Path
 import altair as alt
 import pandas as pd
 
+from dbt_ggsql.config import RenderConfig
 from dbt_ggsql.ggsql.models import GgsqlChart
 
 
@@ -11,23 +12,35 @@ class ChartRenderError(ValueError):
 
 
 SUPPORTED_CHART_TYPES = {"line", "bar", "scatter"}
-CHART_WIDTH = 720
-CHART_HEIGHT = 420
 
 
-def render_chart(chart: GgsqlChart, data: pd.DataFrame, png_path: Path, svg_path: Path) -> None:
-    chart_spec = build_chart(chart, data)
+def render_chart(
+    chart: GgsqlChart,
+    data: pd.DataFrame,
+    png_path: Path,
+    svg_path: Path,
+    config: RenderConfig | None = None,
+) -> None:
+    config = config or RenderConfig()
+    chart_spec = build_chart(chart, data, config=config)
     png_path.parent.mkdir(parents=True, exist_ok=True)
     svg_path.parent.mkdir(parents=True, exist_ok=True)
 
     try:
-        chart_spec.save(svg_path)
-        chart_spec.save(png_path)
+        if "svg" in config.formats:
+            chart_spec.save(svg_path)
+        if "png" in config.formats:
+            chart_spec.save(png_path)
     except Exception as exc:
         raise ChartRenderError(str(exc)) from exc
 
 
-def build_chart(chart: GgsqlChart, data: pd.DataFrame) -> alt.Chart:
+def build_chart(
+    chart: GgsqlChart,
+    data: pd.DataFrame,
+    config: RenderConfig | None = None,
+) -> alt.Chart:
+    config = config or RenderConfig()
     x_field = chart.field_for_role("x")
     y_field = chart.field_for_role("y")
     if x_field is None or y_field is None:
@@ -49,8 +62,8 @@ def build_chart(chart: GgsqlChart, data: pd.DataFrame) -> alt.Chart:
         )
         .properties(
             title=chart.title,
-            width=CHART_WIDTH,
-            height=CHART_HEIGHT,
+            width=config.default_width,
+            height=config.default_height,
         )
         .configure_view(stroke="#d9e2ec")
     )

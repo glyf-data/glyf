@@ -26,34 +26,45 @@ ProjectOption = Annotated[
     ),
 ]
 
+ConfigOption = Annotated[
+    Path | None,
+    typer.Option(
+        "--config",
+        file_okay=True,
+        dir_okay=False,
+        help="Path to dbt_ggsql.yml. Defaults to PROJECT/dbt_ggsql.yml if present.",
+    ),
+]
+
 
 @app.command("list")
-def list_command(project: ProjectOption = Path(".")) -> None:
+def list_command(project: ProjectOption = Path("."), config: ConfigOption = None) -> None:
     """List discovered ggsql project files."""
-    run_list(project)
+    run_list(project, config)
 
 
 @app.command("validate")
-def validate_command(project: ProjectOption = Path(".")) -> None:
+def validate_command(project: ProjectOption = Path("."), config: ConfigOption = None) -> None:
     """Validate discovered files and manifest refs."""
-    run_validate(project)
+    run_validate(project, config)
 
 
 @app.command("render")
-def render_command(project: ProjectOption = Path(".")) -> None:
+def render_command(project: ProjectOption = Path("."), config: ConfigOption = None) -> None:
     """Generate compiled SQL and chart artifacts."""
-    run_render(project)
+    run_render(project, config)
 
 
 @app.command("dashboard")
-def dashboard_command(project: ProjectOption = Path(".")) -> None:
+def dashboard_command(project: ProjectOption = Path("."), config: ConfigOption = None) -> None:
     """Generate static dashboard HTML from rendered chart artifacts."""
-    run_dashboard(project)
+    run_dashboard(project, config)
 
 
 @app.command("export")
 def export_command(
     project: ProjectOption = Path("."),
+    config: ConfigOption = None,
     clean: Annotated[
         bool,
         typer.Option("--clean", help="Delete the previous site export before copying."),
@@ -64,4 +75,4 @@ def export_command(
     ] = False,
 ) -> None:
     """Copy generated outputs into a publish-ready static site folder."""
-    run_export(project, clean=clean, zip_site=zip_site)
+    run_export(project, clean=clean, zip_site=zip_site, config_path=config)

@@ -3,6 +3,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from dbt_ggsql.config import DbtGgsqlConfig
 from dbt_ggsql.dashboard.artifacts import (
     ChartArtifact,
     ChartArtifactError,
@@ -31,9 +32,13 @@ class DashboardGenerationResult:
     index_path: Path
 
 
-def generate_dashboards(project: Path) -> DashboardGenerationResult:
-    scan = scan_project(project)
-    paths = artifact_paths(scan.root)
+def generate_dashboards(
+    project: Path,
+    config: DbtGgsqlConfig | None = None,
+) -> DashboardGenerationResult:
+    config = config or DbtGgsqlConfig()
+    scan = scan_project(project, config)
+    paths = artifact_paths(scan.root, config)
     paths.dashboards_dir.mkdir(parents=True, exist_ok=True)
 
     dashboards: list[GeneratedDashboard] = []
@@ -47,14 +52,14 @@ def generate_dashboards(project: Path) -> DashboardGenerationResult:
         chart_artifacts = []
         for chart_name in dashboard.charts:
             try:
-                chart_artifacts.append(load_chart_artifact(scan.root, chart_name))
+                chart_artifacts.append(load_chart_artifact(scan.root, chart_name, config))
             except ChartArtifactError as exc:
                 rel_path = dashboard_path.relative_to(scan.root).as_posix()
                 raise DashboardGenerationError(f"{rel_path}: {exc}") from exc
 
         output_path = paths.dashboards_dir / f"{dashboard.name}.html"
         output_path.write_text(
-            _render_dashboard(dashboard, tuple(chart_artifacts)),
+            _render_dashboard(dashboard, tuple(chart_artifacts), config),
             encoding="utf-8",
         )
         dashboards.append(
@@ -84,9 +89,17 @@ def _environment() -> Environment:
     )
 
 
-def _render_dashboard(dashboard: Dashboard, charts: tuple[ChartArtifact, ...]) -> str:
+def _render_dashboard(
+    dashboard: Dashboard,
+    charts: tuple[ChartArtifact, ...],
+    config: DbtGgsqlConfig,
+) -> str:
     template = _environment().get_template("dashboard.html.j2")
-    return template.render(dashboard=dashboard, charts=charts)
+    return template.render(
+        dashboard=dashboard,
+        charts=charts,
+        dashboard_config=config.dashboard,
+    )
 
 
 def _render_index(dashboards: tuple[GeneratedDashboard, ...]) -> str:

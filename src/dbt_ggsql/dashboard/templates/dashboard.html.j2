@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="{{ dashboard_config.theme }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -88,13 +88,13 @@
       <article>
         <h2>{{ chart.metadata.title or chart.metadata.name }}</h2>
         <div class="chart">
-          {% if chart.svg %}
+          {% if dashboard_config.embed_charts and chart.svg %}
           {{ chart.svg | safe }}
           {% else %}
           <img src="../charts/{{ chart.metadata.png_path.name }}" alt="{{ chart.metadata.title or chart.metadata.name }}">
           {% endif %}
         </div>
-        {% if chart.compiled_sql %}
+        {% if dashboard_config.show_compiled_sql and chart.compiled_sql %}
         <details>
           <summary>Compiled SQL</summary>
           <pre><code>{{ chart.compiled_sql }}</code></pre>

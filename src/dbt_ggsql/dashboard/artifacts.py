@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from dbt_ggsql.config import DbtGgsqlConfig
 from dbt_ggsql.output.paths import artifact_paths
 
 
@@ -28,8 +29,12 @@ class ChartArtifact:
     compiled_sql: str | None
 
 
-def load_chart_artifact(project_root: Path, chart_name: str) -> ChartArtifact:
-    paths = artifact_paths(project_root)
+def load_chart_artifact(
+    project_root: Path,
+    chart_name: str,
+    config: DbtGgsqlConfig | None = None,
+) -> ChartArtifact:
+    paths = artifact_paths(project_root, config)
     metadata_path = paths.charts_dir / f"{chart_name}.json"
     if not metadata_path.exists():
         raise ChartArtifactError(f"missing chart metadata for '{chart_name}'")
