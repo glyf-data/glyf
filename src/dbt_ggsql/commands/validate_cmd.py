@@ -3,7 +3,7 @@ from pathlib import Path
 import typer
 
 from dbt_ggsql.dashboard.loader import load_dashboard
-from dbt_ggsql.ggsql.parser import parse_ggsql_file
+from dbt_ggsql.ggsql.parser import GgsqlParseError, parse_ggsql_file
 from dbt_ggsql.manifest.loader import ManifestError, load_manifest
 from dbt_ggsql.manifest.resolver import resolve_refs
 from dbt_ggsql.project.scanner import scan_project
@@ -30,7 +30,12 @@ def run_validate(project: Path) -> None:
     ggsql_names = {path.stem for path in scan.ggsql_files}
 
     for path in scan.ggsql_files:
-        parsed = parse_ggsql_file(path)
+        try:
+            parsed = parse_ggsql_file(path)
+        except GgsqlParseError as exc:
+            errors.append(f"{_rel(path, scan.root)}: {exc}")
+            continue
+
         if manifest is None:
             continue
         result = resolve_refs(parsed.sql, manifest)
