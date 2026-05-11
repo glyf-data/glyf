@@ -6,9 +6,11 @@ dbt-ggsql lets users define visualisations close to their dbt models using ggsql
 
 ## CLI
 
-This early implementation discovers project files, parses `.ggsql`, resolves basic
-`ref()` calls using `target/manifest.json`, and writes placeholder chart artifacts.
-It does not execute dbt, run SQL, or render real charts yet.
+This implementation discovers project files, parses `.ggsql`, resolves basic
+`ref()` calls using `target/manifest.json`, executes the compiled SQL locally with
+DuckDB, and renders PNG/SVG chart artifacts with Altair.
+
+It does not execute dbt itself or provide a dashboard server yet.
 
 ```bash
 uv sync
@@ -32,3 +34,6 @@ dashboard chart names that do not match discovered `.ggsql` file names.
 - `charts/<chart>.json`
 - `charts/<chart>.png`
 - `charts/<chart>.svg`
+
+For local examples, CSV files in `seeds/` are loaded into DuckDB using the CSV
+filename as the table name.

@@ -14,9 +14,8 @@ def run_render(project: Path) -> None:
         raise typer.Exit(1) from exc
 
     chart_count = len(result.charts)
-    chart_label = "chart" if chart_count == 1 else "charts"
-    typer.echo(f"✓ discovered {chart_count} {chart_label}")
-    typer.echo("✓ parsed ggsql")
-    typer.echo("✓ resolved refs")
-    typer.echo("✓ generated compiled SQL")
-    typer.echo("✓ wrote artifacts")
+    typer.echo(f"✓ discovered charts ({chart_count})")
+    typer.echo("✓ compiled SQL")
+    typer.echo("✓ executed SQL")
+    typer.echo("✓ rendered PNG/SVG")
+    typer.echo("✓ wrote metadata")

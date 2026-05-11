@@ -14,45 +14,37 @@ class ChartArtifacts:
     svg: Path
 
 
-def write_chart_artifacts(project_root: Path, chart: GgsqlChart, compiled_sql: str) -> ChartArtifacts:
+def chart_artifact_paths(project_root: Path, chart: GgsqlChart) -> ChartArtifacts:
     paths = artifact_paths(project_root)
     paths.compiled_dir.mkdir(parents=True, exist_ok=True)
     paths.charts_dir.mkdir(parents=True, exist_ok=True)
 
-    compiled_path = paths.compiled_dir / f"{chart.name}.sql"
-    metadata_path = paths.charts_dir / f"{chart.name}.json"
-    png_path = paths.charts_dir / f"{chart.name}.png"
-    svg_path = paths.charts_dir / f"{chart.name}.svg"
+    return ChartArtifacts(
+        compiled_sql=paths.compiled_dir / f"{chart.name}.sql",
+        metadata_json=paths.charts_dir / f"{chart.name}.json",
+        png=paths.charts_dir / f"{chart.name}.png",
+        svg=paths.charts_dir / f"{chart.name}.svg",
+    )
 
+
+def write_compiled_sql(compiled_path: Path, compiled_sql: str) -> None:
+    compiled_path.parent.mkdir(parents=True, exist_ok=True)
     compiled_path.write_text(compiled_sql.strip() + "\n", encoding="utf-8")
 
+
+def write_chart_metadata(project_root: Path, chart: GgsqlChart, artifacts: ChartArtifacts) -> None:
     metadata = {
-        "chart": chart.name,
-        "type": chart.draw_type,
+        "name": chart.name,
         "title": chart.title,
-        "compiled_sql": compiled_path.relative_to(project_root).as_posix(),
+        "chart_type": chart.draw_type,
+        "x": chart.field_for_role("x"),
+        "y": chart.field_for_role("y"),
+        "compiled_sql_path": artifacts.compiled_sql.relative_to(project_root).as_posix(),
+        "png_path": artifacts.png.relative_to(project_root).as_posix(),
+        "svg_path": artifacts.svg.relative_to(project_root).as_posix(),
     }
-    metadata_path.write_text(
+    artifacts.metadata_json.parent.mkdir(parents=True, exist_ok=True)
+    artifacts.metadata_json.write_text(
         json.dumps(metadata, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
-    )
-
-    png_path.write_text(f"Placeholder PNG for {chart.name}\n", encoding="utf-8")
-    svg_path.write_text(
-        (
-            '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" '
-            'viewBox="0 0 640 360">\n'
-            '  <rect width="640" height="360" fill="#f5f5f5"/>\n'
-            f'  <text x="32" y="64" font-family="sans-serif" font-size="24">'
-            f"Placeholder chart: {chart.name}</text>\n"
-            "</svg>\n"
-        ),
-        encoding="utf-8",
-    )
-
-    return ChartArtifacts(
-        compiled_sql=compiled_path,
-        metadata_json=metadata_path,
-        png=png_path,
-        svg=svg_path,
     )
