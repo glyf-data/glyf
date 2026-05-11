@@ -25,6 +25,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+!src/dbt_ggsql/manifest/
+!src/dbt_ggsql/manifest/*.py
 
 # PyInstaller
 #   Usually these files are written by a python script from a template
@@ -74,6 +76,9 @@ docs/_build/
 # PyBuilder
 .pybuilder/
 target/
+examples/simple_dbt/.user.yml
+examples/simple_dbt/*.duckdb
+examples/simple_dbt/*.duckdb.wal
 
 # Jupyter Notebook
 .ipynb_checkpoints

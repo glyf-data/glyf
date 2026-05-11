@@ -39,7 +39,9 @@ class RenderError(ValueError):
 def render_project(project: Path) -> RenderResult:
     scan = scan_project(project)
     if scan.manifest_path is None:
-        raise RenderError("Missing target/manifest.json")
+        raise RenderError(
+            "Missing target/manifest.json. Run dbt compile or dbt build before render."
+        )
 
     try:
         manifest = load_manifest(scan.manifest_path)
@@ -55,10 +57,15 @@ def render_project(project: Path) -> RenderResult:
             raise RenderError(f"{rel_path}: {exc}") from exc
 
         resolution = resolve_refs(chart.sql, manifest)
-        if resolution.missing_refs:
-            missing = ", ".join(f"'{ref}'" for ref in resolution.missing_refs)
+        missing_refs = [f"ref('{ref}')" for ref in resolution.missing_refs]
+        missing_sources = [
+            f"source('{source_name}', '{table_name}')"
+            for source_name, table_name in resolution.missing_sources
+        ]
+        if missing_refs or missing_sources:
+            missing = ", ".join(missing_refs + missing_sources)
             rel_path = path.relative_to(scan.root).as_posix()
-            raise RenderError(f"{rel_path} references unknown model {missing}")
+            raise RenderError(f"{rel_path} has unresolved dbt references: {missing}")
 
         artifacts = chart_artifact_paths(scan.root, chart)
         write_compiled_sql(artifacts.compiled_sql, resolution.sql)

@@ -1,0 +1,6 @@
+SELECT month, revenue
+FROM {{ ref('fct_orders') }}
+
+VISUALISE month AS x, revenue AS y
+DRAW line
+LABEL title => 'Monthly Revenue'

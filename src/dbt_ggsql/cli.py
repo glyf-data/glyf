@@ -15,12 +15,13 @@ app = typer.Typer(
 ProjectOption = Annotated[
     Path,
     typer.Option(
+        "--project-dir",
         "--project",
         "-p",
         file_okay=False,
         dir_okay=True,
         resolve_path=True,
-        help="Path to a dbt project.",
+        help="Path to a dbt project. Defaults to the current directory.",
     ),
 ]
 

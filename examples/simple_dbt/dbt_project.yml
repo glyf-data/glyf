@@ -1,0 +1,6 @@
+name: simple_dbt
+version: "1.0"
+profile: simple_dbt
+
+model-paths: ["models"]
+seed-paths: ["seeds"]

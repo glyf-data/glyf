@@ -15,3 +15,6 @@ def test_scan_project_discovers_expected_files() -> None:
         "dashboards/executive.yml"
     ]
     assert scan.manifest_path == scan.root / "target" / "manifest.json"
+    assert scan.dbt_project_path == scan.root / "dbt_project.yml"
+    assert scan.visualisations_dir == scan.root / "visualisations"
+    assert scan.dashboards_dir == scan.root / "dashboards"
