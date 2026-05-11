@@ -64,6 +64,24 @@ def test_dashboard_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert (project / "target" / "ggsql" / "index.html").exists()
 
 
+def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
+    project = tmp_path / "basic"
+    shutil.copytree(Path("examples/basic"), project)
+    render_result = runner.invoke(app, ["render", "--project", str(project)])
+    assert render_result.exit_code == 0
+    dashboard_result = runner.invoke(app, ["dashboard", "--project", str(project)])
+    assert dashboard_result.exit_code == 0
+
+    result = runner.invoke(app, ["export", "--project", str(project), "--zip"])
+
+    assert result.exit_code == 0
+    assert "✓ copied dashboard HTML" in result.output
+    assert "✓ copied chart artifacts" in result.output
+    assert "✓ wrote site assets" in result.output
+    assert (project / "target" / "ggsql" / "site" / "index.html").exists()
+    assert (project / "target" / "ggsql" / "dbt-ggsql-site.zip").exists()
+
+
 def test_validate_command_reports_malformed_ggsql(tmp_path: Path) -> None:
     project = tmp_path / "basic"
     shutil.copytree(Path("examples/basic"), project)

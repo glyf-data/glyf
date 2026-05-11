@@ -34,6 +34,7 @@ You can point at another dbt project root with `--project-dir`:
 uv run dbt-ggsql validate --project-dir examples/simple_dbt
 uv run dbt-ggsql render --project-dir examples/simple_dbt
 uv run dbt-ggsql dashboard --project-dir examples/simple_dbt
+uv run dbt-ggsql export --project-dir examples/simple_dbt
 ```
 
 `dbt-ggsql` depends on dbt artifacts rather than invoking dbt itself. The key
@@ -69,3 +70,21 @@ filename as the table name.
 `dashboard` reads YAML files in `dashboards/` and generates static HTML pages from
 the rendered chart artifacts. SVG is embedded directly when available, with PNG as
 a fallback.
+
+`export` creates a publish-ready static site:
+
+```bash
+uv run dbt-ggsql render
+uv run dbt-ggsql dashboard
+uv run dbt-ggsql export
+```
+
+The exported site is written to:
+
+```text
+target/ggsql/site/
+```
+
+That folder can be hosted as a static website on GitHub Pages, Cloudflare Pages,
+Netlify, S3 static hosting, or opened locally. Use `--clean` to rebuild the site
+folder from scratch, and `--zip` to create `target/ggsql/dbt-ggsql-site.zip`.
