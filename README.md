@@ -17,6 +17,7 @@ uv sync
 uv run dbt-ggsql list --project examples/basic
 uv run dbt-ggsql validate --project examples/basic
 uv run dbt-ggsql render --project examples/basic
+uv run dbt-ggsql dashboard --project examples/basic
 ```
 
 The scanner currently discovers:
@@ -34,6 +35,12 @@ dashboard chart names that do not match discovered `.ggsql` file names.
 - `charts/<chart>.json`
 - `charts/<chart>.png`
 - `charts/<chart>.svg`
+- `dashboards/<dashboard>.html`
+- `index.html`
 
 For local examples, CSV files in `seeds/` are loaded into DuckDB using the CSV
 filename as the table name.
+
+`dashboard` reads YAML files in `dashboards/` and generates static HTML pages from
+the rendered chart artifacts. SVG is embedded directly when available, with PNG as
+a fallback.
