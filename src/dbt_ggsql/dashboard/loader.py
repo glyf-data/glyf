@@ -10,6 +10,8 @@ class Dashboard:
     name: str
     title: str
     charts: tuple[str, ...]
+    description: str | None = None
+    layout: str | None = None
 
 
 def load_dashboard(path: Path) -> Dashboard:
@@ -23,13 +25,26 @@ def load_dashboard(path: Path) -> Dashboard:
 
     name = raw.get("name")
     title = raw.get("title", name)
+    description = raw.get("description")
+    layout = raw.get("layout")
     charts = raw.get("charts", [])
 
     if not isinstance(name, str) or not name:
         raise ValueError("expected non-empty 'name'")
     if not isinstance(title, str) or not title:
         raise ValueError("expected non-empty 'title'")
+    if description is not None and not isinstance(description, str):
+        raise ValueError("expected 'description' to be a string")
+    if layout is not None and not isinstance(layout, str):
+        raise ValueError("expected 'layout' to be a string")
     if not isinstance(charts, list) or not all(isinstance(item, str) for item in charts):
         raise ValueError("expected 'charts' to be a list of chart names")
 
-    return Dashboard(path=path, name=name, title=title, charts=tuple(charts))
+    return Dashboard(
+        path=path,
+        name=name,
+        title=title,
+        description=description,
+        layout=layout,
+        charts=tuple(charts),
+    )

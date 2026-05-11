@@ -40,6 +40,23 @@ def test_render_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert (project / "target" / "ggsql" / "compiled" / "revenue.sql").exists()
 
 
+def test_dashboard_command_outputs_pipeline_steps(tmp_path: Path) -> None:
+    project = tmp_path / "basic"
+    shutil.copytree(Path("examples/basic"), project)
+    render_result = runner.invoke(app, ["render", "--project", str(project)])
+    assert render_result.exit_code == 0
+
+    result = runner.invoke(app, ["dashboard", "--project", str(project)])
+
+    assert result.exit_code == 0
+    assert "✓ discovered dashboard configs" in result.output
+    assert "✓ loaded chart artifacts" in result.output
+    assert "✓ generated dashboard HTML" in result.output
+    assert "✓ generated index page" in result.output
+    assert (project / "target" / "ggsql" / "dashboards" / "executive.html").exists()
+    assert (project / "target" / "ggsql" / "index.html").exists()
+
+
 def test_validate_command_reports_malformed_ggsql(tmp_path: Path) -> None:
     project = tmp_path / "basic"
     shutil.copytree(Path("examples/basic"), project)
