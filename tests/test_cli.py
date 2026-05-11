@@ -32,9 +32,11 @@ def test_render_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     result = runner.invoke(app, ["render", "--project", str(project)])
 
     assert result.exit_code == 0
-    assert "✓ discovered 1 chart" in result.output
-    assert "✓ parsed ggsql" in result.output
-    assert "✓ resolved refs" in result.output
+    assert "✓ discovered charts (1)" in result.output
+    assert "✓ compiled SQL" in result.output
+    assert "✓ executed SQL" in result.output
+    assert "✓ rendered PNG/SVG" in result.output
+    assert "✓ wrote metadata" in result.output
     assert (project / "target" / "ggsql" / "compiled" / "revenue.sql").exists()
 
 

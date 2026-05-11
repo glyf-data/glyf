@@ -20,3 +20,9 @@ class GgsqlChart:
     @property
     def title(self) -> str | None:
         return self.labels.get("title")
+
+    def field_for_role(self, role: str) -> str | None:
+        for mapping in self.visualise:
+            if mapping.role == role:
+                return mapping.field
+        return None

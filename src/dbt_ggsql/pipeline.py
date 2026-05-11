@@ -1,11 +1,20 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+import pandas as pd
+
+from dbt_ggsql.execution.duckdb import SqlExecutionError, execute_sql
 from dbt_ggsql.ggsql.models import GgsqlChart
 from dbt_ggsql.ggsql.parser import GgsqlParseError, parse_ggsql_file
+from dbt_ggsql.ggsql.renderer import ChartRenderError, render_chart
 from dbt_ggsql.manifest.loader import ManifestError, load_manifest
 from dbt_ggsql.manifest.resolver import resolve_refs
-from dbt_ggsql.output.writer import ChartArtifacts, write_chart_artifacts
+from dbt_ggsql.output.writer import (
+    ChartArtifacts,
+    chart_artifact_paths,
+    write_chart_metadata,
+    write_compiled_sql,
+)
 from dbt_ggsql.project.scanner import ProjectScan, scan_project
 
 
@@ -13,6 +22,7 @@ from dbt_ggsql.project.scanner import ProjectScan, scan_project
 class RenderedChart:
     chart: GgsqlChart
     compiled_sql: str
+    data: pd.DataFrame
     artifacts: ChartArtifacts
 
 
@@ -50,11 +60,27 @@ def render_project(project: Path) -> RenderResult:
             rel_path = path.relative_to(scan.root).as_posix()
             raise RenderError(f"{rel_path} references unknown model {missing}")
 
-        artifacts = write_chart_artifacts(scan.root, chart, resolution.sql)
+        artifacts = chart_artifact_paths(scan.root, chart)
+        write_compiled_sql(artifacts.compiled_sql, resolution.sql)
+
+        try:
+            data = execute_sql(scan.root, resolution.sql)
+        except SqlExecutionError as exc:
+            rel_path = path.relative_to(scan.root).as_posix()
+            raise RenderError(f"{rel_path} SQL execution failed: {exc}") from exc
+
+        try:
+            render_chart(chart, data, artifacts.png, artifacts.svg)
+        except ChartRenderError as exc:
+            rel_path = path.relative_to(scan.root).as_posix()
+            raise RenderError(f"{rel_path} chart rendering failed: {exc}") from exc
+
+        write_chart_metadata(scan.root, chart, artifacts)
         rendered.append(
             RenderedChart(
                 chart=chart,
                 compiled_sql=resolution.sql,
+                data=data,
                 artifacts=artifacts,
             )
         )
