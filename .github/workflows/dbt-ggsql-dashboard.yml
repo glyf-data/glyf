@@ -1,0 +1,81 @@
+name: dbt-ggsql dashboard
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-dashboard:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Check dbt-ggsql project health
+        run: uv run dbt-ggsql doctor --project-dir examples/simple_dbt
+
+      - name: Build dbt project
+        run: |
+          uv run dbt seed --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt --full-refresh --no-partial-parse
+          uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
+
+      - name: Generate dbt-ggsql dashboard
+        run: |
+          uv run dbt-ggsql render --project-dir examples/simple_dbt
+          uv run dbt-ggsql dashboard --project-dir examples/simple_dbt
+          uv run dbt-ggsql export --project-dir examples/simple_dbt --clean --zip
+
+      - name: Upload static site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-ggsql-site
+          path: examples/simple_dbt/target/ggsql/site
+
+      - name: Upload zipped static site
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-ggsql-site-zip
+          path: examples/simple_dbt/target/ggsql/dbt-ggsql-site.zip
+
+  # Optional GitHub Pages publishing example.
+  # Enable GitHub Pages for Actions in repository settings, then uncomment.
+  #
+  # publish-pages:
+  #   needs: build-dashboard
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     pages: write
+  #     id-token: write
+  #   environment:
+  #     name: github-pages
+  #     url: ${{ steps.deployment.outputs.page_url }}
+  #   steps:
+  #     - name: Download static site artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dbt-ggsql-site
+  #         path: site
+  #
+  #     - name: Configure Pages
+  #       uses: actions/configure-pages@v5
+  #
+  #     - name: Upload Pages artifact
+  #       uses: actions/upload-pages-artifact@v3
+  #       with:
+  #         path: site
+  #
+  #     - name: Deploy to GitHub Pages
+  #       id: deployment
+  #       uses: actions/deploy-pages@v4

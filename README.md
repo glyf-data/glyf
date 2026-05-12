@@ -36,6 +36,7 @@ uv run dbt-ggsql validate --project-dir examples/simple_dbt
 uv run dbt-ggsql render --project-dir examples/simple_dbt
 uv run dbt-ggsql dashboard --project-dir examples/simple_dbt
 uv run dbt-ggsql export --project-dir examples/simple_dbt
+uv run dbt-ggsql doctor --project-dir examples/simple_dbt
 ```
 
 `dbt-ggsql` depends on dbt artifacts rather than invoking dbt itself. The key
@@ -148,3 +149,5 @@ target/ggsql/site/
 That folder can be hosted as a static website on GitHub Pages, Cloudflare Pages,
 Netlify, S3 static hosting, or opened locally. Use `--clean` to rebuild the site
 folder from scratch, and `--zip` to create `target/ggsql/dbt-ggsql-site.zip`.
+
+For CI/CD and GitHub Actions examples, see [docs/ci-cd.md](docs/ci-cd.md).
