@@ -1,0 +1,78 @@
+# Release Process
+
+`dbt-ggsql` is experimental alpha software. The current version is `0.1.0`.
+
+## Versioning
+
+Use semantic versioning once the public API stabilizes:
+
+- patch: bug fixes and docs-only changes
+- minor: backwards-compatible features
+- major: breaking CLI, config, or artifact contract changes
+
+For now, keep the package version at `0.1.0` until the first public alpha is
+explicitly tagged.
+
+## Build Process
+
+From the repository root:
+
+```bash
+uv sync
+uv run pytest
+uv build
+```
+
+Build outputs are written to:
+
+```text
+dist/
+```
+
+## Local Install Test
+
+After building:
+
+```bash
+uv pip install --force-reinstall dist/*.whl
+dbt-ggsql --help
+```
+
+If you prefer not to modify the active environment, create a temporary virtual
+environment and install the wheel there.
+
+## Publish Process
+
+Publishing to PyPI is intentionally manual.
+
+1. Confirm tests pass:
+
+   ```bash
+   uv run pytest
+   ```
+
+2. Build distributions:
+
+   ```bash
+   uv build
+   ```
+
+3. Inspect `dist/`.
+
+4. Publish with trusted publishing or a scoped token:
+
+   ```bash
+   uv publish
+   ```
+
+The optional GitHub Actions publish workflow is manual-only and should be enabled
+only after the project has a configured PyPI publishing environment.
+
+## Release Checklist
+
+- Update `CHANGELOG.md`.
+- Confirm `pyproject.toml` metadata.
+- Run `uv run pytest`.
+- Run `uv build`.
+- Install the wheel locally and run `dbt-ggsql --help`.
+- Tag the release after publish, if publishing.
