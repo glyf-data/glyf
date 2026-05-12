@@ -104,6 +104,26 @@ dashboard chart names that do not match discovered `.ggsql` file names.
 - `dashboards/<dashboard>.html`
 - `index.html`
 
+Supported chart syntax stays intentionally small:
+
+```sql
+SELECT month, revenue, region
+FROM {{ ref('fct_orders') }}
+
+VISUALISE month AS x, revenue AS y, region AS color
+DRAW bar
+LABEL title => 'Revenue by Region'
+LABEL subtitle => 'Revenue trend from dbt model'
+LABEL x_title => 'Month'
+LABEL y_title => 'Revenue'
+CONFIG width => 900
+CONFIG height => 500
+```
+
+Supported chart types are `line`, `bar`, `scatter`, `area`, and `pie`.
+`x` and `y` mappings are required. `color`, labels, and width/height config are
+optional.
+
 For local examples, CSV files in `seeds/` are loaded into DuckDB using the CSV
 filename as the table name.
 

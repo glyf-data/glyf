@@ -16,6 +16,7 @@ class GgsqlChart:
     visualise: tuple[VisualiseMapping, ...]
     draw_type: str
     labels: dict[str, str]
+    config: dict[str, int]
 
     @property
     def title(self) -> str | None:
@@ -26,3 +27,23 @@ class GgsqlChart:
             if mapping.role == role:
                 return mapping.field
         return None
+
+    @property
+    def subtitle(self) -> str | None:
+        return self.labels.get("subtitle")
+
+    @property
+    def x_title(self) -> str | None:
+        return self.labels.get("x_title")
+
+    @property
+    def y_title(self) -> str | None:
+        return self.labels.get("y_title")
+
+    @property
+    def width(self) -> int | None:
+        return self.config.get("width")
+
+    @property
+    def height(self) -> int | None:
+        return self.config.get("height")

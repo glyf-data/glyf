@@ -101,7 +101,9 @@ def test_validate_command_reports_unresolved_ref(tmp_path: Path) -> None:
     project = tmp_path / "basic"
     shutil.copytree(Path("examples/basic"), project)
     (project / "visualisations" / "revenue.ggsql").write_text(
-        "select * from {{ ref('missing_model') }}\n\nVISUALISE one AS x\nDRAW line\n",
+        "select * from {{ ref('missing_model') }}\n\n"
+        "VISUALISE month AS x, revenue AS y\n"
+        "DRAW line\n",
         encoding="utf-8",
     )
 

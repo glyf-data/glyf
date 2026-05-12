@@ -1,0 +1,9 @@
+SELECT month, revenue, region
+FROM {{ ref('fct_orders') }}
+
+VISUALISE month AS x, revenue AS y, region AS color
+DRAW area
+LABEL title => 'Revenue Area'
+LABEL subtitle => 'Area chart with color grouping'
+LABEL x_title => 'Month'
+LABEL y_title => 'Revenue'

@@ -5,13 +5,11 @@ import pandas as pd
 
 from dbt_ggsql.config import RenderConfig
 from dbt_ggsql.ggsql.models import GgsqlChart
+from dbt_ggsql.ggsql.parser import SUPPORTED_CHART_TYPES
 
 
 class ChartRenderError(ValueError):
     """Raised when a chart cannot be rendered."""
-
-
-SUPPORTED_CHART_TYPES = {"line", "bar", "scatter"}
 
 
 def render_chart(
@@ -49,21 +47,46 @@ def build_chart(
     if chart.draw_type not in SUPPORTED_CHART_TYPES:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
 
-    missing_columns = [field for field in (x_field, y_field) if field not in data.columns]
+    color_field = chart.field_for_role("color")
+    required_fields = [x_field, y_field]
+    if color_field is not None:
+        required_fields.append(color_field)
+
+    missing_columns = [field for field in required_fields if field not in data.columns]
     if missing_columns:
         joined = ", ".join(f"'{field}'" for field in missing_columns)
         raise ChartRenderError(f"query result missing chart column {joined}")
 
+    width = chart.width or config.default_width
+    height = chart.height or config.default_height
+    title: str | alt.TitleParams | None = chart.title
+    if chart.title and chart.subtitle:
+        title = alt.TitleParams(text=chart.title, subtitle=chart.subtitle)
+
+    encoding: dict[str, object]
+    if chart.draw_type == "pie":
+        encoding = {
+            "theta": alt.Theta(y_field, title=chart.y_title),
+            "color": alt.Color(
+                color_field or x_field,
+                title=chart.x_title if color_field is None else color_field,
+            ),
+        }
+    else:
+        encoding = {
+            "x": alt.X(x_field, axis=alt.Axis(labelAngle=0), title=chart.x_title),
+            "y": alt.Y(y_field, title=chart.y_title),
+        }
+        if color_field is not None:
+            encoding["color"] = alt.Color(color_field)
+
     base = (
         alt.Chart(data)
-        .encode(
-            x=alt.X(x_field, axis=alt.Axis(labelAngle=0)),
-            y=alt.Y(y_field),
-        )
+        .encode(**encoding)
         .properties(
-            title=chart.title,
-            width=config.default_width,
-            height=config.default_height,
+            title=title,
+            width=width,
+            height=height,
         )
         .configure_view(stroke="#d9e2ec")
     )
@@ -71,4 +94,8 @@ def build_chart(
         return base.mark_line(point=True)
     if chart.draw_type == "bar":
         return base.mark_bar()
-    return base.mark_circle(size=80)
+    if chart.draw_type == "scatter":
+        return base.mark_circle(size=80)
+    if chart.draw_type == "area":
+        return base.mark_area(opacity=0.7)
+    return base.mark_arc()

@@ -4,3 +4,7 @@ description: Revenue from a minimal dbt-style project.
 
 charts:
   - revenue
+  - revenue_by_region_bar
+  - revenue_scatter
+  - revenue_area
+  - revenue_share_pie
