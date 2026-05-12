@@ -1,0 +1,9 @@
+SELECT month, sum(bookings) as bookings
+FROM {{ ref('fct_finance') }}
+GROUP BY 1
+
+VISUALISE month AS x, bookings AS y
+DRAW line
+LABEL title => 'Bookings Trend'
+LABEL x_title => 'Month'
+LABEL y_title => 'Bookings'

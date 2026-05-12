@@ -76,9 +76,10 @@ docs/_build/
 # PyBuilder
 .pybuilder/
 target/
-examples/simple_dbt/.user.yml
-examples/simple_dbt/*.duckdb
-examples/simple_dbt/*.duckdb.wal
+examples/*/.user.yml
+examples/*/*.duckdb
+examples/*/*.duckdb.wal
+examples/*/logs/
 
 # Jupyter Notebook
 .ipynb_checkpoints

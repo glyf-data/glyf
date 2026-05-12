@@ -1,0 +1,8 @@
+SELECT active_users, sessions, plan
+FROM {{ ref('fct_product_usage') }}
+
+VISUALISE active_users AS x, sessions AS y, plan AS color
+DRAW scatter
+LABEL title => 'Sessions vs Active Users'
+LABEL x_title => 'Active Users'
+LABEL y_title => 'Sessions'

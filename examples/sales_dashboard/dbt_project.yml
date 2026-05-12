@@ -1,0 +1,6 @@
+name: sales_dashboard
+version: "1.0"
+profile: sales_dashboard
+
+model-paths: ["models"]
+seed-paths: ["seeds"]

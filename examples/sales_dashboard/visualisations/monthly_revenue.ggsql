@@ -1,0 +1,10 @@
+SELECT month, sum(revenue) as revenue
+FROM {{ ref('fct_sales') }}
+GROUP BY 1
+
+VISUALISE month AS x, revenue AS y
+DRAW line
+LABEL title => 'Monthly Revenue'
+LABEL subtitle => 'Revenue across all channels'
+LABEL x_title => 'Month'
+LABEL y_title => 'Revenue'

@@ -1,0 +1,8 @@
+name: sales
+title: Sales Dashboard
+description: Monthly sales performance by channel and region.
+
+charts:
+  - monthly_revenue
+  - channel_revenue
+  - regional_revenue

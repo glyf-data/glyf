@@ -1,0 +1,7 @@
+product_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: product_analytics.duckdb
+      schema: main

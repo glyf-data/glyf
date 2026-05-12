@@ -1,0 +1,9 @@
+SELECT month, channel, sum(revenue) as revenue
+FROM {{ ref('fct_sales') }}
+GROUP BY 1, 2
+
+VISUALISE month AS x, revenue AS y, channel AS color
+DRAW bar
+LABEL title => 'Channel Revenue'
+LABEL x_title => 'Month'
+LABEL y_title => 'Revenue'
