@@ -1,0 +1,8 @@
+SELECT month, revenue, region
+FROM {{ ref('fct_orders') }}
+
+VISUALISE month AS x, revenue AS y, region AS color
+DRAW scatter
+LABEL title => 'Revenue Scatter'
+LABEL x_title => 'Month'
+LABEL y_title => 'Revenue'

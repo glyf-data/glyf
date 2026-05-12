@@ -4,3 +4,8 @@ FROM {{ ref('fct_orders') }}
 VISUALISE month AS x, revenue AS y
 DRAW line
 LABEL title => 'Monthly Revenue'
+LABEL subtitle => 'Revenue trend from dbt model'
+LABEL x_title => 'Month'
+LABEL y_title => 'Revenue'
+CONFIG width => 900
+CONFIG height => 500

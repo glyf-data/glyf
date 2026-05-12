@@ -1,4 +1,7 @@
-month,revenue
-2026-01,1200
-2026-02,1800
-2026-03,2100
+month,region,revenue
+2026-01,North,700
+2026-01,South,500
+2026-02,North,1100
+2026-02,South,700
+2026-03,North,1200
+2026-03,South,900
