@@ -4,6 +4,7 @@ from typing import Annotated
 import typer
 
 from dbt_ggsql.commands.dashboard_cmd import run_dashboard
+from dbt_ggsql.commands.doctor_cmd import run_doctor
 from dbt_ggsql.commands.export_cmd import run_export
 from dbt_ggsql.commands.list_cmd import run_list
 from dbt_ggsql.commands.render_cmd import run_render
@@ -76,3 +77,9 @@ def export_command(
 ) -> None:
     """Copy generated outputs into a publish-ready static site folder."""
     run_export(project, clean=clean, zip_site=zip_site, config_path=config)
+
+
+@app.command("doctor")
+def doctor_command(project: ProjectOption = Path("."), config: ConfigOption = None) -> None:
+    """Check whether a project is ready for dbt-ggsql workflows."""
+    run_doctor(project, config)
