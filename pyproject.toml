@@ -1,9 +1,29 @@
 [project]
 name = "dbt-ggsql"
 version = "0.1.0"
-description = "Chart-as-code dashboards for dbt projects."
+description = "Experimental chart-as-code static dashboards for dbt projects."
 readme = "README.md"
 requires-python = ">=3.11"
+license = "MIT"
+authors = [
+    { name = "Kannan Kalidasan" },
+]
+keywords = ["dbt", "dashboards", "charts", "analytics", "static-site"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Build Tools",
+    "Typing :: Typed",
+]
 dependencies = [
     "typer>=0.12",
     "pyyaml>=6.0",
@@ -17,6 +37,11 @@ dependencies = [
 [project.scripts]
 dbt-ggsql = "dbt_ggsql.cli:app"
 
+[project.urls]
+Repository = "https://github.com/kannandreams/dbt-ggsql"
+Issues = "https://github.com/kannandreams/dbt-ggsql/issues"
+Documentation = "https://github.com/kannandreams/dbt-ggsql/tree/main/docs"
+
 [dependency-groups]
 dev = [
     "dbt-core>=1.11.9",
@@ -27,6 +52,23 @@ dev = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dbt_ggsql"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src",
+    "tests",
+    "docs",
+    "examples",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "pyproject.toml",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

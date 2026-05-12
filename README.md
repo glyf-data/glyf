@@ -94,6 +94,7 @@ See [examples/README.md](examples/README.md).
 - [Dashboard YAML](docs/dashboard-yaml.md)
 - [dbt integration](docs/dbt-integration.md)
 - [CI/CD](docs/ci-cd.md)
+- [Release process](docs/release.mdxplain)
 - [Troubleshooting](docs/troubleshooting.md)
 
 ## Roadmap
