@@ -1,0 +1,7 @@
+sales_dashboard:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: sales_dashboard.duckdb
+      schema: main

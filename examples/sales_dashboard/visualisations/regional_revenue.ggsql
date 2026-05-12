@@ -1,0 +1,7 @@
+SELECT region, sum(revenue) as revenue
+FROM {{ ref('fct_sales') }}
+GROUP BY 1
+
+VISUALISE region AS x, revenue AS y
+DRAW pie
+LABEL title => 'Regional Revenue Share'

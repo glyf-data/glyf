@@ -1,0 +1,8 @@
+name: finance
+title: Finance Metrics
+description: Bookings, expenses, and margin by month and department.
+
+charts:
+  - bookings_trend
+  - expenses_by_department
+  - margin_share

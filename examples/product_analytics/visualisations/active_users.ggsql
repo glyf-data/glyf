@@ -1,0 +1,9 @@
+SELECT week, sum(active_users) as active_users
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1
+
+VISUALISE week AS x, active_users AS y
+DRAW area
+LABEL title => 'Active Users'
+LABEL x_title => 'Week'
+LABEL y_title => 'Users'

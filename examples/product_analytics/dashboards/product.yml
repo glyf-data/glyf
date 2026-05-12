@@ -1,0 +1,8 @@
+name: product
+title: Product Analytics
+description: Product usage and activation metrics by plan.
+
+charts:
+  - active_users
+  - activation_by_plan
+  - sessions_scatter

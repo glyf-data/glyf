@@ -1,0 +1,9 @@
+SELECT week, plan, sum(activated_users) as activated_users
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1, 2
+
+VISUALISE week AS x, activated_users AS y, plan AS color
+DRAW line
+LABEL title => 'Activation by Plan'
+LABEL x_title => 'Week'
+LABEL y_title => 'Activated Users'

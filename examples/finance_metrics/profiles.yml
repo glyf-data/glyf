@@ -1,0 +1,7 @@
+finance_metrics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: finance_metrics.duckdb
+      schema: main

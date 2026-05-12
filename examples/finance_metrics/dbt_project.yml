@@ -1,0 +1,6 @@
+name: finance_metrics
+version: "1.0"
+profile: finance_metrics
+
+model-paths: ["models"]
+seed-paths: ["seeds"]

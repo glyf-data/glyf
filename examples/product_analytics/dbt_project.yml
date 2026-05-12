@@ -1,0 +1,6 @@
+name: product_analytics
+version: "1.0"
+profile: product_analytics
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
