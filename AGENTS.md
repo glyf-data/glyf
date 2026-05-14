@@ -2,17 +2,17 @@
 
   ## Shared Capability Library
 
-  Use the shared capability library mounted in this repository at `vendor/agent-forge/`.
+  Use the shared capability library mounted in this repository at `capabilities/agent-forge/`.
 
   Primary reference:
-  - `vendor/agent-forge/docs/capabilities_index.md`
+  - `capabilities/agent-forge/docs/capabilities_index.md`
 
   Use these topic files for this project:
-  - `vendor/agent-forge/skills/python/uv_project_setup.md`
-  - `vendor/agent-forge/skills/python/packaging_standards.md`
-  - `vendor/agent-forge/skills/architecture/cli_first_tool_design.md`
-  - `vendor/agent-forge/skills/architecture/artifact_driven_integration.md`
-  - `vendor/agent-forge/skills/testing/test_strategy.md`
+  - `capabilities/agent-forge/skills/python/uv_project_setup.md`
+  - `capabilities/agent-forge/skills/python/packaging_standards.md`
+  - `capabilities/agent-forge/skills/architecture/cli_first_tool_design.md`
+  - `capabilities/agent-forge/skills/architecture/artifact_driven_integration.md`
+  - `capabilities/agent-forge/skills/testing/test_strategy.md`
 
   Apply the shared guidance from those files unless a project-specific rule below overrides it.
 
