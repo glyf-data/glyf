@@ -3,18 +3,19 @@ from pathlib import Path
 
 from dbt_charts.manifest.loader import load_manifest
 from dbt_charts.manifest.resolver import resolve_refs
+from tests.helpers import write_basic_manifest
 
 
-def test_manifest_loads_models() -> None:
-    manifest = load_manifest(Path("examples/basic/target/manifest.json"))
+def test_manifest_loads_models(tmp_path: Path) -> None:
+    manifest = load_manifest(write_basic_manifest(tmp_path / "basic"))
 
     assert len(manifest.models) == 1
     assert manifest.models[0].name == "fct_orders"
     assert manifest.models[0].relation_name == "main.fct_orders"
 
 
-def test_resolve_refs_uses_manifest_relation_name() -> None:
-    manifest = load_manifest(Path("examples/basic/target/manifest.json"))
+def test_resolve_refs_uses_manifest_relation_name(tmp_path: Path) -> None:
+    manifest = load_manifest(write_basic_manifest(tmp_path / "basic"))
 
     result = resolve_refs("select * from {{ ref('fct_orders') }}", manifest)
 
@@ -23,8 +24,8 @@ def test_resolve_refs_uses_manifest_relation_name() -> None:
     assert result.missing_refs == ()
 
 
-def test_resolve_refs_reports_missing_refs() -> None:
-    manifest = load_manifest(Path("examples/basic/target/manifest.json"))
+def test_resolve_refs_reports_missing_refs(tmp_path: Path) -> None:
+    manifest = load_manifest(write_basic_manifest(tmp_path / "basic"))
 
     result = resolve_refs("select * from {{ ref('missing_model') }}", manifest)
 

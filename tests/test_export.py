@@ -1,10 +1,10 @@
-import shutil
 import zipfile
 from pathlib import Path
 
 from dbt_charts.dashboard.generator import generate_dashboards
 from dbt_charts.exporter import export_site
 from dbt_charts.pipeline import render_project
+from tests.helpers import copy_basic_project
 
 
 def test_export_site_creates_publish_ready_folder(tmp_path: Path) -> None:
@@ -72,8 +72,7 @@ def test_export_site_zip_writes_archive(tmp_path: Path) -> None:
 
 
 def _rendered_project(tmp_path: Path) -> Path:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     render_project(project)
     generate_dashboards(project)
     return project

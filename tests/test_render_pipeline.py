@@ -1,16 +1,15 @@
 import json
-import shutil
 from pathlib import Path
 
 import pytest
 
 from dbt_charts.execution.duckdb import execute_sql
 from dbt_charts.pipeline import RenderError, render_project
+from tests.helpers import copy_basic_project
 
 
 def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
 
     result = render_project(project)
 
@@ -41,8 +40,7 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
 
 
 def test_duckdb_execution_loads_seed_tables(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
 
     data = execute_sql(
         project,
@@ -58,8 +56,7 @@ def test_duckdb_execution_loads_seed_tables(tmp_path: Path) -> None:
 
 
 def test_render_project_reports_unsupported_chart_type(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     (project / "visualisations" / "revenue.ggsql").write_text(
         "select month, revenue from {{ ref('fct_orders') }}\n\n"
         "VISUALISE month AS x, revenue AS y\n"

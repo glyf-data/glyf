@@ -8,6 +8,7 @@ from dbt_charts.cli import app
 from dbt_charts.config import ConfigError, load_config
 from dbt_charts.dashboard.generator import generate_dashboards
 from dbt_charts.pipeline import render_project
+from tests.helpers import write_basic_manifest
 
 
 runner = CliRunner()
@@ -103,6 +104,7 @@ def test_config_option_works_with_project_dir(tmp_path: Path) -> None:
 def _custom_path_project(tmp_path: Path) -> Path:
     project = tmp_path / "custom"
     shutil.copytree(Path("examples/basic"), project)
+    write_basic_manifest(project)
     (project / "visualisations").rename(project / "viz")
     (project / "dashboards").rename(project / "boards")
     (project / "dbt_charts.yml").write_text(

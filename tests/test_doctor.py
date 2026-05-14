@@ -1,17 +1,19 @@
-import shutil
 from pathlib import Path
 
 from typer.testing import CliRunner
 
 from dbt_charts.cli import app
 from dbt_charts.doctor import run_doctor_checks
+from tests.helpers import copy_basic_project
 
 
 runner = CliRunner()
 
 
-def test_doctor_checks_pass_for_basic_project() -> None:
-    result = run_doctor_checks(Path("examples/basic"))
+def test_doctor_checks_pass_for_basic_project(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = run_doctor_checks(project)
 
     assert result.has_errors is False
     statuses = {check.name: check.status for check in result.checks}
@@ -33,8 +35,10 @@ def test_doctor_checks_report_missing_required_files(tmp_path: Path) -> None:
     assert any("missing target/manifest.json" in message for message in errors)
 
 
-def test_doctor_command_outputs_checks() -> None:
-    result = runner.invoke(app, ["doctor", "--project-dir", "examples/basic"])
+def test_doctor_command_outputs_checks(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = runner.invoke(app, ["doctor", "--project-dir", str(project)])
 
     assert result.exit_code == 0
     assert "[OK] dbt_project.yml" in result.output
@@ -42,8 +46,7 @@ def test_doctor_command_outputs_checks() -> None:
 
 
 def test_doctor_command_exits_nonzero_for_broken_project(tmp_path: Path) -> None:
-    project = tmp_path / "broken"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path, "broken")
     (project / "target" / "manifest.json").unlink()
 
     result = runner.invoke(app, ["doctor", "--project-dir", str(project)])

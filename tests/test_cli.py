@@ -1,16 +1,18 @@
-import shutil
 from pathlib import Path
 
 from typer.testing import CliRunner
 
 from dbt_charts.cli import app
+from tests.helpers import copy_basic_project, copy_simple_dbt_project
 
 
 runner = CliRunner()
 
 
-def test_list_command_outputs_discovered_assets() -> None:
-    result = runner.invoke(app, ["list", "--project", "examples/basic"])
+def test_list_command_outputs_discovered_assets(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = runner.invoke(app, ["list", "--project", str(project)])
 
     assert result.exit_code == 0
     assert "visualisations/revenue.ggsql" in result.output
@@ -18,23 +20,26 @@ def test_list_command_outputs_discovered_assets() -> None:
     assert "fct_orders -> main.fct_orders" in result.output
 
 
-def test_validate_command_passes_basic_example() -> None:
-    result = runner.invoke(app, ["validate", "--project", "examples/basic"])
+def test_validate_command_passes_basic_example(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = runner.invoke(app, ["validate", "--project", str(project)])
 
     assert result.exit_code == 0
     assert "Validation passed" in result.output
 
 
-def test_project_dir_option_validates_simple_dbt_example() -> None:
-    result = runner.invoke(app, ["validate", "--project-dir", "examples/simple_dbt"])
+def test_project_dir_option_validates_simple_dbt_example(tmp_path: Path) -> None:
+    project = copy_simple_dbt_project(tmp_path)
+
+    result = runner.invoke(app, ["validate", "--project-dir", str(project)])
 
     assert result.exit_code == 0
     assert "Validation passed" in result.output
 
 
 def test_render_command_outputs_pipeline_steps(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
 
     result = runner.invoke(app, ["render", "--project", str(project)])
 
@@ -48,8 +53,7 @@ def test_render_command_outputs_pipeline_steps(tmp_path: Path) -> None:
 
 
 def test_dashboard_command_outputs_pipeline_steps(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     render_result = runner.invoke(app, ["render", "--project", str(project)])
     assert render_result.exit_code == 0
 
@@ -65,8 +69,7 @@ def test_dashboard_command_outputs_pipeline_steps(tmp_path: Path) -> None:
 
 
 def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     render_result = runner.invoke(app, ["render", "--project", str(project)])
     assert render_result.exit_code == 0
     dashboard_result = runner.invoke(app, ["dashboard", "--project", str(project)])
@@ -83,8 +86,7 @@ def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
 
 
 def test_validate_command_reports_malformed_ggsql(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     (project / "visualisations" / "revenue.ggsql").write_text(
         "select 1\n",
         encoding="utf-8",
@@ -98,8 +100,7 @@ def test_validate_command_reports_malformed_ggsql(tmp_path: Path) -> None:
 
 
 def test_validate_command_reports_unresolved_ref(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     (project / "visualisations" / "revenue.ggsql").write_text(
         "select * from {{ ref('missing_model') }}\n\n"
         "VISUALISE month AS x, revenue AS y\n"
@@ -114,8 +115,7 @@ def test_validate_command_reports_unresolved_ref(tmp_path: Path) -> None:
 
 
 def test_validate_command_reports_unresolved_source(tmp_path: Path) -> None:
-    project = tmp_path / "simple_dbt"
-    shutil.copytree(Path("examples/simple_dbt"), project)
+    project = copy_simple_dbt_project(tmp_path)
     (project / "visualisations" / "revenue.ggsql").write_text(
         "select * from {{ source('raw', 'missing') }}\n\n"
         "VISUALISE month AS x, revenue AS y\n"
@@ -130,8 +130,7 @@ def test_validate_command_reports_unresolved_source(tmp_path: Path) -> None:
 
 
 def test_validate_command_reports_invalid_dashboard_reference(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     (project / "dashboards" / "executive.yml").write_text(
         "name: executive\ntitle: Executive Dashboard\ncharts:\n  - missing_chart\n",
         encoding="utf-8",
@@ -144,8 +143,7 @@ def test_validate_command_reports_invalid_dashboard_reference(tmp_path: Path) ->
 
 
 def test_validate_command_reports_missing_manifest(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     (project / "target" / "manifest.json").unlink()
 
     result = runner.invoke(app, ["validate", "--project", str(project)])
@@ -155,8 +153,7 @@ def test_validate_command_reports_missing_manifest(tmp_path: Path) -> None:
 
 
 def test_validate_command_reports_missing_dbt_project(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     (project / "dbt_project.yml").unlink()
 
     result = runner.invoke(app, ["validate", "--project-dir", str(project)])

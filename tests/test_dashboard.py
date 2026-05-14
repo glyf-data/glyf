@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 
 import pytest
@@ -7,6 +6,7 @@ from dbt_charts.dashboard.artifacts import load_chart_artifact
 from dbt_charts.dashboard.generator import DashboardGenerationError, generate_dashboards
 from dbt_charts.dashboard.loader import load_dashboard
 from dbt_charts.pipeline import render_project
+from tests.helpers import copy_basic_project
 
 
 def test_dashboard_yaml_parses_optional_fields(tmp_path: Path) -> None:
@@ -31,8 +31,7 @@ def test_dashboard_yaml_parses_optional_fields(tmp_path: Path) -> None:
 
 
 def test_chart_metadata_loading(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     render_project(project)
 
     artifact = load_chart_artifact(project, "revenue")
@@ -45,8 +44,7 @@ def test_chart_metadata_loading(tmp_path: Path) -> None:
 
 
 def test_dashboard_generation_writes_dashboard_and_index(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     render_project(project)
 
     result = generate_dashboards(project)
@@ -65,8 +63,7 @@ def test_dashboard_generation_writes_dashboard_and_index(tmp_path: Path) -> None
 
 
 def test_dashboard_generation_reports_missing_chart(tmp_path: Path) -> None:
-    project = tmp_path / "basic"
-    shutil.copytree(Path("examples/basic"), project)
+    project = copy_basic_project(tmp_path)
     render_project(project)
     (project / "dashboards" / "executive.yml").write_text(
         "name: executive\n"
