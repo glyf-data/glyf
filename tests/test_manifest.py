@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-from dbt_ggsql.manifest.loader import load_manifest
-from dbt_ggsql.manifest.resolver import resolve_refs
+from dbt_charts.manifest.loader import load_manifest
+from dbt_charts.manifest.resolver import resolve_refs
 
 
 def test_manifest_loads_models() -> None:

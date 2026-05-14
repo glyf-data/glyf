@@ -13,10 +13,10 @@ cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
-uv run dbt-ggsql doctor
-uv run dbt-ggsql render
-uv run dbt-ggsql dashboard
-uv run dbt-ggsql export --clean
+uv run dbt-charts doctor
+uv run dbt-charts render
+uv run dbt-charts dashboard
+uv run dbt-charts export --clean
 ```
 
 Open:
@@ -31,11 +31,11 @@ From your dbt project root:
 
 ```bash
 dbt build
-dbt-ggsql doctor
-dbt-ggsql render
-dbt-ggsql dashboard
-dbt-ggsql export
+dbt-charts doctor
+dbt-charts render
+dbt-charts dashboard
+dbt-charts export
 ```
 
-`dbt-ggsql` does not run dbt for you. It uses dbt artifacts, especially
+`dbt-charts` does not run dbt for you. It uses dbt artifacts, especially
 `target/manifest.json`.

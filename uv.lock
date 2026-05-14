@@ -322,7 +322,7 @@ wheels = [
 ]
 
 [[package]]
-name = "dbt-ggsql"
+name = "dbt-charts"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

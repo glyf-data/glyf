@@ -2,8 +2,8 @@ from pathlib import Path
 
 import typer
 
-from dbt_ggsql.config import ConfigError, load_config
-from dbt_ggsql.pipeline import RenderError, render_project
+from dbt_charts.config import ConfigError, load_config
+from dbt_charts.pipeline import RenderError, render_project
 
 
 def run_render(project: Path, config_path: Path | None = None) -> None:

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for considering a contribution. `dbt-ggsql` is experimental, so small,
+Thanks for considering a contribution. `dbt-charts` is experimental, so small,
 focused changes are easiest to review.
 
 ## Development Setup
@@ -13,7 +13,7 @@ uv run pytest
 ## Useful Commands
 
 ```bash
-uv run dbt-ggsql --help
+uv run dbt-charts --help
 uv run pytest
 uv build
 ```

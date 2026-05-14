@@ -3,20 +3,20 @@ from pathlib import Path
 
 import pandas as pd
 
-from dbt_ggsql.config import DbtGgsqlConfig
-from dbt_ggsql.execution.duckdb import SqlExecutionError, execute_sql
-from dbt_ggsql.ggsql.models import GgsqlChart
-from dbt_ggsql.ggsql.parser import GgsqlParseError, parse_ggsql_file
-from dbt_ggsql.ggsql.renderer import ChartRenderError, render_chart
-from dbt_ggsql.manifest.loader import ManifestError, load_manifest
-from dbt_ggsql.manifest.resolver import resolve_refs
-from dbt_ggsql.output.writer import (
+from dbt_charts.config import DbtChartsConfig
+from dbt_charts.execution.duckdb import SqlExecutionError, execute_sql
+from dbt_charts.ggsql.models import GgsqlChart
+from dbt_charts.ggsql.parser import GgsqlParseError, parse_ggsql_file
+from dbt_charts.ggsql.renderer import ChartRenderError, render_chart
+from dbt_charts.manifest.loader import ManifestError, load_manifest
+from dbt_charts.manifest.resolver import resolve_refs
+from dbt_charts.output.writer import (
     ChartArtifacts,
     chart_artifact_paths,
     write_chart_metadata,
     write_compiled_sql,
 )
-from dbt_ggsql.project.scanner import ProjectScan, scan_project
+from dbt_charts.project.scanner import ProjectScan, scan_project
 
 
 @dataclass(frozen=True)
@@ -39,9 +39,9 @@ class RenderError(ValueError):
 
 def render_project(
     project: Path,
-    config: DbtGgsqlConfig | None = None,
+    config: DbtChartsConfig | None = None,
 ) -> RenderResult:
-    config = config or DbtGgsqlConfig()
+    config = config or DbtChartsConfig()
     scan = scan_project(project, config)
     if scan.manifest_path is None:
         raise RenderError(

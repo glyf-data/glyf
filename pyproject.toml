@@ -1,5 +1,5 @@
 [project]
-name = "dbt-ggsql"
+name = "dbt-charts"
 version = "0.1.0"
 description = "Experimental chart-as-code static dashboards for dbt projects."
 readme = "README.md"
@@ -35,12 +35,12 @@ dependencies = [
 ]
 
 [project.scripts]
-dbt-ggsql = "dbt_ggsql.cli:app"
+dbt-charts = "dbt_charts.cli:app"
 
 [project.urls]
-Repository = "https://github.com/kannandreams/dbt-ggsql"
-Issues = "https://github.com/kannandreams/dbt-ggsql/issues"
-Documentation = "https://github.com/kannandreams/dbt-ggsql/tree/main/docs"
+Repository = "https://github.com/kannandreams/dbt-charts"
+Issues = "https://github.com/kannandreams/dbt-charts/issues"
+Documentation = "https://github.com/kannandreams/dbt-charts/tree/main/docs"
 
 [dependency-groups]
 dev = [
@@ -54,7 +54,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/dbt_ggsql"]
+packages = ["src/dbt_charts"]
 
 [tool.hatch.build.targets.sdist]
 include = [

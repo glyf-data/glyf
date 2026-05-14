@@ -3,9 +3,9 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-from dbt_ggsql.config import ConfigError, DbtGgsqlConfig, load_config, resolve_project_path
-from dbt_ggsql.output.paths import artifact_paths
-from dbt_ggsql.project.scanner import ProjectScan, scan_project
+from dbt_charts.config import ConfigError, DbtChartsConfig, load_config, resolve_project_path
+from dbt_charts.output.paths import artifact_paths
+from dbt_charts.project.scanner import ProjectScan, scan_project
 
 
 @dataclass(frozen=True)
@@ -32,7 +32,7 @@ def run_doctor_checks(
     root = project.expanduser().resolve()
     checks: list[DoctorCheck] = [_uv_environment_check()]
 
-    config = DbtGgsqlConfig()
+    config = DbtChartsConfig()
     config_loaded = False
     try:
         config = load_config(root, config_path)
@@ -65,9 +65,9 @@ def _uv_environment_check() -> DoctorCheck:
 def _config_check(root: Path, config_path: Path | None) -> DoctorCheck:
     if config_path is not None:
         return DoctorCheck("config", "ok", f"loaded {config_path}")
-    default_path = root / "dbt_ggsql.yml"
+    default_path = root / "dbt_charts.yml"
     if default_path.exists():
-        return DoctorCheck("config", "ok", "loaded dbt_ggsql.yml")
+        return DoctorCheck("config", "ok", "loaded dbt_charts.yml")
     return DoctorCheck("config", "ok", "no config file found, using defaults")
 
 
@@ -128,7 +128,7 @@ def _project_checks(scan: ProjectScan) -> list[DoctorCheck]:
     return checks
 
 
-def _output_checks(root: Path, config: DbtGgsqlConfig) -> list[DoctorCheck]:
+def _output_checks(root: Path, config: DbtChartsConfig) -> list[DoctorCheck]:
     paths = artifact_paths(root, config)
     output_paths = {
         "output directory": paths.root,

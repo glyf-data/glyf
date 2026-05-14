@@ -2,8 +2,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from dbt_ggsql.config import DbtGgsqlConfig
-from dbt_ggsql.output.paths import artifact_paths
+from dbt_charts.config import DbtChartsConfig
+from dbt_charts.output.paths import artifact_paths
 
 
 class ChartArtifactError(ValueError):
@@ -32,7 +32,7 @@ class ChartArtifact:
 def load_chart_artifact(
     project_root: Path,
     chart_name: str,
-    config: DbtGgsqlConfig | None = None,
+    config: DbtChartsConfig | None = None,
 ) -> ChartArtifact:
     paths = artifact_paths(project_root, config)
     metadata_path = paths.charts_dir / f"{chart_name}.json"

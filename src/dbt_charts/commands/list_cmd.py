@@ -2,9 +2,9 @@ from pathlib import Path
 
 import typer
 
-from dbt_ggsql.config import ConfigError, load_config
-from dbt_ggsql.manifest.loader import load_manifest
-from dbt_ggsql.project.scanner import scan_project
+from dbt_charts.config import ConfigError, load_config
+from dbt_charts.manifest.loader import load_manifest
+from dbt_charts.project.scanner import scan_project
 
 
 def _rel(path: Path, project: Path) -> str:

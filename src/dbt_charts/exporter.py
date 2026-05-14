@@ -3,9 +3,9 @@ import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
-from dbt_ggsql.config import DbtGgsqlConfig
-from dbt_ggsql.output.paths import artifact_paths
-from dbt_ggsql.project.scanner import ProjectScan, scan_project
+from dbt_charts.config import DbtChartsConfig
+from dbt_charts.output.paths import artifact_paths
+from dbt_charts.project.scanner import ProjectScan, scan_project
 
 
 class ExportError(ValueError):
@@ -24,9 +24,9 @@ def export_site(
     *,
     clean: bool = False,
     zip_site: bool = False,
-    config: DbtGgsqlConfig | None = None,
+    config: DbtChartsConfig | None = None,
 ) -> ExportResult:
-    config = config or DbtGgsqlConfig()
+    config = config or DbtChartsConfig()
     scan = scan_project(project, config)
     paths = artifact_paths(scan.root, config)
 
@@ -61,8 +61,8 @@ def _ensure_generated_outputs(root: Path) -> None:
     if missing:
         joined = ", ".join(missing)
         raise ExportError(
-            f"Missing generated outputs: {joined}. Run dbt-ggsql render and "
-            "dbt-ggsql dashboard before export."
+            f"Missing generated outputs: {joined}. Run dbt-charts render and "
+            "dbt-charts dashboard before export."
         )
 
 
@@ -79,7 +79,7 @@ def _write_assets(assets_dir: Path) -> None:
     assets_dir.mkdir(parents=True, exist_ok=True)
     (assets_dir / "style.css").write_text(
         """/*
-  Static site asset for dbt-ggsql exports.
+  Static site asset for dbt-charts exports.
   Dashboard pages currently inline their critical CSS so they work standalone.
 */
 :root {

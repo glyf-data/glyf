@@ -24,9 +24,9 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
-!src/dbt_ggsql/manifest/
-!src/dbt_ggsql/manifest/*.py
+/MANIFEST
+!src/dbt_charts/manifest/
+!src/dbt_charts/manifest/*.py
 
 # PyInstaller
 #   Usually these files are written by a python script from a template

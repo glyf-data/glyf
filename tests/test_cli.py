@@ -3,7 +3,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from dbt_ggsql.cli import app
+from dbt_charts.cli import app
 
 
 runner = CliRunner()
@@ -79,7 +79,7 @@ def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert "✓ copied chart artifacts" in result.output
     assert "✓ wrote site assets" in result.output
     assert (project / "target" / "ggsql" / "site" / "index.html").exists()
-    assert (project / "target" / "ggsql" / "dbt-ggsql-site.zip").exists()
+    assert (project / "target" / "ggsql" / "dbt-charts-site.zip").exists()
 
 
 def test_validate_command_reports_malformed_ggsql(tmp_path: Path) -> None:

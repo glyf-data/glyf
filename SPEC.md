@@ -14,5 +14,5 @@ Build a dbt-compatible tool/package that discovers ggsql visualisation files, re
 
 ```bash
 dbt build
-dbt-ggsql render
-dbt-ggsql dashboard
+dbt-charts render
+dbt-charts dashboard

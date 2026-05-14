@@ -2,7 +2,7 @@ from pathlib import Path
 
 import typer
 
-from dbt_ggsql.doctor import DoctorResult, run_doctor_checks
+from dbt_charts.doctor import DoctorResult, run_doctor_checks
 
 
 def run_doctor(project: Path, config_path: Path | None = None) -> None:

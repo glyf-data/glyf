@@ -72,7 +72,7 @@
   - `uv add typer rich pyyaml pydantic`
   - `uv add --dev pytest ruff`
   - `uv run pytest`
-  - `uv run dbt-ggsql list`
+  - `uv run dbt-charts list`
 
   ## Packaging Baseline
 
@@ -85,7 +85,7 @@
   Target structure:
 
   ```text
-  dbt-ggsql/
+  dbt-charts/
   ├── pyproject.toml
   ├── uv.lock
   ├── .python-version
@@ -95,7 +95,7 @@
   ├── TASKS.md
   ├── DECISIONS.md
   ├── src/
-  │   └── dbt_ggsql/
+  │   └── dbt_charts/
   │       ├── __init__.py
   │       ├── cli.py
   │       ├── config.py
@@ -170,10 +170,10 @@
 
   Implement:
 
-  - dbt-ggsql list
-  - dbt-ggsql validate
-  - dbt-ggsql render
-  - dbt-ggsql dashboard
+  - dbt-charts list
+  - dbt-charts validate
+  - dbt-charts render
+  - dbt-charts dashboard
 
   Initial implementation may use placeholder artifacts instead of real rendered charts.
 

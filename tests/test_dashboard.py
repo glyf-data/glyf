@@ -3,10 +3,10 @@ from pathlib import Path
 
 import pytest
 
-from dbt_ggsql.dashboard.artifacts import load_chart_artifact
-from dbt_ggsql.dashboard.generator import DashboardGenerationError, generate_dashboards
-from dbt_ggsql.dashboard.loader import load_dashboard
-from dbt_ggsql.pipeline import render_project
+from dbt_charts.dashboard.artifacts import load_chart_artifact
+from dbt_charts.dashboard.generator import DashboardGenerationError, generate_dashboards
+from dbt_charts.dashboard.loader import load_dashboard
+from dbt_charts.pipeline import render_project
 
 
 def test_dashboard_yaml_parses_optional_fields(tmp_path: Path) -> None:

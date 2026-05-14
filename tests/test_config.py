@@ -4,10 +4,10 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from dbt_ggsql.cli import app
-from dbt_ggsql.config import ConfigError, load_config
-from dbt_ggsql.dashboard.generator import generate_dashboards
-from dbt_ggsql.pipeline import render_project
+from dbt_charts.cli import app
+from dbt_charts.config import ConfigError, load_config
+from dbt_charts.dashboard.generator import generate_dashboards
+from dbt_charts.pipeline import render_project
 
 
 runner = CliRunner()
@@ -26,7 +26,7 @@ def test_missing_config_uses_defaults(tmp_path: Path) -> None:
 
 
 def test_valid_config_loads_correctly(tmp_path: Path) -> None:
-    config_path = tmp_path / "dbt_ggsql.yml"
+    config_path = tmp_path / "dbt_charts.yml"
     config_path.write_text(
         "visualisations_path: viz\n"
         "dashboards_path: boards\n"
@@ -61,7 +61,7 @@ def test_valid_config_loads_correctly(tmp_path: Path) -> None:
 
 
 def test_invalid_config_yaml_reports_clear_error(tmp_path: Path) -> None:
-    config_path = tmp_path / "dbt_ggsql.yml"
+    config_path = tmp_path / "dbt_charts.yml"
     config_path.write_text("render: [", encoding="utf-8")
 
     with pytest.raises(ConfigError, match="Invalid YAML"):
@@ -70,7 +70,7 @@ def test_invalid_config_yaml_reports_clear_error(tmp_path: Path) -> None:
 
 def test_custom_paths_are_respected(tmp_path: Path) -> None:
     project = _custom_path_project(tmp_path)
-    config = load_config(project, project / "dbt_ggsql.yml")
+    config = load_config(project, project / "dbt_charts.yml")
 
     render_project(project, config)
     generate_dashboards(project, config)
@@ -91,7 +91,7 @@ def test_config_option_works_with_project_dir(tmp_path: Path) -> None:
             "--project-dir",
             str(project),
             "--config",
-            str(project / "dbt_ggsql.yml"),
+            str(project / "dbt_charts.yml"),
         ],
     )
 
@@ -105,7 +105,7 @@ def _custom_path_project(tmp_path: Path) -> Path:
     shutil.copytree(Path("examples/basic"), project)
     (project / "visualisations").rename(project / "viz")
     (project / "dashboards").rename(project / "boards")
-    (project / "dbt_ggsql.yml").write_text(
+    (project / "dbt_charts.yml").write_text(
         "visualisations_path: viz\n"
         "dashboards_path: boards\n"
         "output_path: custom_out\n"

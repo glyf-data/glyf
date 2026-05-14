@@ -2,9 +2,9 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from dbt_ggsql.config import DbtGgsqlConfig
-from dbt_ggsql.ggsql.models import GgsqlChart
-from dbt_ggsql.output.paths import artifact_paths
+from dbt_charts.config import DbtChartsConfig
+from dbt_charts.ggsql.models import GgsqlChart
+from dbt_charts.output.paths import artifact_paths
 
 
 @dataclass(frozen=True)
@@ -18,7 +18,7 @@ class ChartArtifacts:
 def chart_artifact_paths(
     project_root: Path,
     chart: GgsqlChart,
-    config: DbtGgsqlConfig | None = None,
+    config: DbtChartsConfig | None = None,
 ) -> ChartArtifacts:
     paths = artifact_paths(project_root, config)
     paths.compiled_dir.mkdir(parents=True, exist_ok=True)

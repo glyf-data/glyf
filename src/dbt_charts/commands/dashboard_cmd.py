@@ -2,8 +2,8 @@ from pathlib import Path
 
 import typer
 
-from dbt_ggsql.config import ConfigError, load_config
-from dbt_ggsql.dashboard.generator import DashboardGenerationError, generate_dashboards
+from dbt_charts.config import ConfigError, load_config
+from dbt_charts.dashboard.generator import DashboardGenerationError, generate_dashboards
 
 
 def run_dashboard(project: Path, config_path: Path | None = None) -> None:

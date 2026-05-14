@@ -3,8 +3,8 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from dbt_ggsql.cli import app
-from dbt_ggsql.doctor import run_doctor_checks
+from dbt_charts.cli import app
+from dbt_charts.doctor import run_doctor_checks
 
 
 runner = CliRunner()

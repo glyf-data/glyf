@@ -1,4 +1,4 @@
-from dbt_ggsql.cli import app
+from dbt_charts.cli import app
 
 
 if __name__ == "__main__":
