@@ -6,9 +6,9 @@ Sales dashboard example with monthly revenue, channel mix, and regional sales.
 cd examples/sales_dashboard
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt build --profiles-dir .
-uv run dbt-ggsql render
-uv run dbt-ggsql dashboard
-uv run dbt-ggsql export --clean --zip
+uv run dbt-charts render
+uv run dbt-charts dashboard
+uv run dbt-charts export --clean --zip
 ```
 
 Expected generated output:

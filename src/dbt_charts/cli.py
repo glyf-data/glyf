@@ -3,12 +3,12 @@ from typing import Annotated
 
 import typer
 
-from dbt_ggsql.commands.dashboard_cmd import run_dashboard
-from dbt_ggsql.commands.doctor_cmd import run_doctor
-from dbt_ggsql.commands.export_cmd import run_export
-from dbt_ggsql.commands.list_cmd import run_list
-from dbt_ggsql.commands.render_cmd import run_render
-from dbt_ggsql.commands.validate_cmd import run_validate
+from dbt_charts.commands.dashboard_cmd import run_dashboard
+from dbt_charts.commands.doctor_cmd import run_doctor
+from dbt_charts.commands.export_cmd import run_export
+from dbt_charts.commands.list_cmd import run_list
+from dbt_charts.commands.render_cmd import run_render
+from dbt_charts.commands.validate_cmd import run_validate
 
 app = typer.Typer(
     help="Discover, validate, render, and publish ggsql assets in a dbt project."
@@ -33,7 +33,7 @@ ConfigOption = Annotated[
         "--config",
         file_okay=True,
         dir_okay=False,
-        help="Path to dbt_ggsql.yml. Defaults to PROJECT/dbt_ggsql.yml if present.",
+        help="Path to dbt_charts.yml. Defaults to PROJECT/dbt_charts.yml if present.",
     ),
 ]
 
@@ -72,7 +72,7 @@ def export_command(
     ] = False,
     zip_site: Annotated[
         bool,
-        typer.Option("--zip", help="Create target/ggsql/dbt-ggsql-site.zip."),
+        typer.Option("--zip", help="Create target/ggsql/dbt-charts-site.zip."),
     ] = False,
 ) -> None:
     """Copy generated outputs into a publish-ready static site folder."""
@@ -81,5 +81,5 @@ def export_command(
 
 @app.command("doctor")
 def doctor_command(project: ProjectOption = Path("."), config: ConfigOption = None) -> None:
-    """Check whether a project is ready for dbt-ggsql workflows."""
+    """Check whether a project is ready for dbt-charts workflows."""
     run_doctor(project, config)

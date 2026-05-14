@@ -2,12 +2,12 @@ from pathlib import Path
 
 import typer
 
-from dbt_ggsql.config import ConfigError, load_config
-from dbt_ggsql.dashboard.loader import load_dashboard
-from dbt_ggsql.ggsql.parser import GgsqlParseError, parse_ggsql_file
-from dbt_ggsql.manifest.loader import ManifestError, load_manifest
-from dbt_ggsql.manifest.resolver import resolve_refs
-from dbt_ggsql.project.scanner import scan_project
+from dbt_charts.config import ConfigError, load_config
+from dbt_charts.dashboard.loader import load_dashboard
+from dbt_charts.ggsql.parser import GgsqlParseError, parse_ggsql_file
+from dbt_charts.manifest.loader import ManifestError, load_manifest
+from dbt_charts.manifest.resolver import resolve_refs
+from dbt_charts.project.scanner import scan_project
 
 
 def _rel(path: Path, project: Path) -> str:
@@ -31,15 +31,15 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
         )
     if scan.visualisations_dir is None:
         errors.append(
-            "Missing visualisations directory. Check visualisations_path in dbt_ggsql.yml."
+            "Missing visualisations directory. Check visualisations_path in dbt_charts.yml."
         )
     if scan.dashboards_dir is None:
         errors.append(
-            "Missing dashboards directory. Check dashboards_path in dbt_ggsql.yml."
+            "Missing dashboards directory. Check dashboards_path in dbt_charts.yml."
         )
     if scan.manifest_path is None:
         errors.append(
-            "Missing target/manifest.json. Run dbt compile or dbt build before dbt-ggsql."
+            "Missing target/manifest.json. Run dbt compile or dbt build before dbt-charts."
         )
         manifest = None
     else:

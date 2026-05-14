@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-from dbt_ggsql.ggsql.models import GgsqlChart, VisualiseMapping
+from dbt_charts.ggsql.models import GgsqlChart, VisualiseMapping
 
 
 class GgsqlParseError(ValueError):

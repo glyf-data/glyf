@@ -3,9 +3,9 @@ from pathlib import Path
 import altair as alt
 import pandas as pd
 
-from dbt_ggsql.config import RenderConfig
-from dbt_ggsql.ggsql.models import GgsqlChart
-from dbt_ggsql.ggsql.parser import SUPPORTED_CHART_TYPES
+from dbt_charts.config import RenderConfig
+from dbt_charts.ggsql.models import GgsqlChart
+from dbt_charts.ggsql.parser import SUPPORTED_CHART_TYPES
 
 
 class ChartRenderError(ValueError):

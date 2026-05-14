@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from dbt_ggsql.config import DbtGgsqlConfig, resolve_project_path
+from dbt_charts.config import DbtChartsConfig, resolve_project_path
 
 IGNORED_DIRS = {
     ".git",
@@ -36,8 +36,8 @@ def _iter_project_files(root: Path) -> tuple[Path, ...]:
     return tuple(files)
 
 
-def scan_project(project: Path, config: DbtGgsqlConfig | None = None) -> ProjectScan:
-    config = config or DbtGgsqlConfig()
+def scan_project(project: Path, config: DbtChartsConfig | None = None) -> ProjectScan:
+    config = config or DbtChartsConfig()
     root = project.expanduser().resolve()
     if not root.exists():
         raise ValueError(f"Project path does not exist: {root}")

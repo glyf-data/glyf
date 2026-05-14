@@ -5,7 +5,7 @@ import yaml
 
 
 class ConfigError(ValueError):
-    """Raised when dbt_ggsql.yml cannot be loaded."""
+    """Raised when dbt_charts.yml cannot be loaded."""
 
 
 @dataclass(frozen=True)
@@ -23,7 +23,7 @@ class DashboardConfig:
 
 
 @dataclass(frozen=True)
-class DbtGgsqlConfig:
+class DbtChartsConfig:
     visualisations_path: Path = Path("visualisations")
     dashboards_path: Path = Path("dashboards")
     output_path: Path = Path("target/ggsql")
@@ -35,11 +35,11 @@ class DbtGgsqlConfig:
     dashboard: DashboardConfig = DashboardConfig()
 
 
-def load_config(project_root: Path, config_path: Path | None = None) -> DbtGgsqlConfig:
+def load_config(project_root: Path, config_path: Path | None = None) -> DbtChartsConfig:
     root = project_root.expanduser().resolve()
     path = _resolve_config_path(root, config_path)
     if path is None:
-        return DbtGgsqlConfig()
+        return DbtChartsConfig()
 
     try:
         raw = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -53,7 +53,7 @@ def load_config(project_root: Path, config_path: Path | None = None) -> DbtGgsql
     if not isinstance(raw, dict):
         raise ConfigError("Invalid config: expected a YAML mapping")
 
-    return DbtGgsqlConfig(
+    return DbtChartsConfig(
         visualisations_path=_path_value(raw, "visualisations_path", "visualisations"),
         dashboards_path=_path_value(raw, "dashboards_path", "dashboards"),
         output_path=_path_value(raw, "output_path", "target/ggsql"),
@@ -76,7 +76,7 @@ def resolve_project_path(project_root: Path, path: Path) -> Path:
 
 def _resolve_config_path(root: Path, config_path: Path | None) -> Path | None:
     if config_path is None:
-        default_path = root / "dbt_ggsql.yml"
+        default_path = root / "dbt_charts.yml"
         return default_path if default_path.exists() else None
 
     expanded = config_path.expanduser()

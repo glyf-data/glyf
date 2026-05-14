@@ -1,8 +1,8 @@
-# dbt-ggsql
+# dbt-charts
 
 Chart-as-code dashboards for dbt projects.
 
-`dbt-ggsql` discovers `.ggsql` visualisation files in a dbt project, resolves dbt
+`dbt-charts` discovers `.ggsql` visualisation files in a dbt project, resolves dbt
 `ref()` and `source()` calls from `target/manifest.json`, executes chart SQL with
 DuckDB, renders PNG/SVG charts with Altair, and exports static dashboards.
 
@@ -30,9 +30,9 @@ cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
-uv run dbt-ggsql render
-uv run dbt-ggsql dashboard
-uv run dbt-ggsql export
+uv run dbt-charts render
+uv run dbt-charts dashboard
+uv run dbt-charts export
 ```
 
 Open:
@@ -44,18 +44,18 @@ examples/simple_dbt/target/ggsql/site/index.html
 ## CLI
 
 ```bash
-uv run dbt-ggsql doctor
-uv run dbt-ggsql list
-uv run dbt-ggsql validate
-uv run dbt-ggsql render
-uv run dbt-ggsql dashboard
-uv run dbt-ggsql export --clean --zip
+uv run dbt-charts doctor
+uv run dbt-charts list
+uv run dbt-charts validate
+uv run dbt-charts render
+uv run dbt-charts dashboard
+uv run dbt-charts export --clean --zip
 ```
 
 Point at another project:
 
 ```bash
-uv run dbt-ggsql render --project-dir examples/sales_dashboard
+uv run dbt-charts render --project-dir examples/sales_dashboard
 ```
 
 ## Example Output
@@ -110,7 +110,7 @@ See [examples/README.md](examples/README.md).
 - Missing `target/manifest.json`: run `dbt compile` or `dbt build`.
 - Unresolved `ref()` or `source()`: check the dbt model/source names in the
   generated manifest.
-- No charts found: check `visualisations_path` in `dbt_ggsql.yml`.
-- DuckDB execution error: run `dbt seed` and `dbt run` before `dbt-ggsql render`.
+- No charts found: check `visualisations_path` in `dbt_charts.yml`.
+- DuckDB execution error: run `dbt seed` and `dbt run` before `dbt-charts render`.
 - Rendering dependency error: run `uv sync` to install Altair and
   `vl-convert-python`.

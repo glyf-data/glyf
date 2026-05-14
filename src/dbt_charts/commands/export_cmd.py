@@ -2,8 +2,8 @@ from pathlib import Path
 
 import typer
 
-from dbt_ggsql.config import ConfigError, load_config
-from dbt_ggsql.exporter import ExportError, export_site
+from dbt_charts.config import ConfigError, load_config
+from dbt_charts.exporter import ExportError, export_site
 
 
 def run_export(

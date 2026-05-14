@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `dbt-ggsql` will be documented in this file.
+All notable changes to `dbt-charts` will be documented in this file.
 
 ## 0.1.0 - Unreleased
 
@@ -12,5 +12,5 @@ Initial experimental alpha release.
 - DuckDB SQL execution.
 - Altair chart rendering to SVG and PNG.
 - Static dashboard generation and exportable site folder.
-- Optional `dbt_ggsql.yml` project configuration.
+- Optional `dbt_charts.yml` project configuration.
 - Example dbt projects and documentation.

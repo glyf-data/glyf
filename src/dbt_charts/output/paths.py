@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from dbt_ggsql.config import DbtGgsqlConfig, resolve_project_path
+from dbt_charts.config import DbtChartsConfig, resolve_project_path
 
 
 @dataclass(frozen=True)
@@ -14,8 +14,8 @@ class ArtifactPaths:
     site_zip: Path
 
 
-def artifact_paths(project_root: Path, config: DbtGgsqlConfig | None = None) -> ArtifactPaths:
-    config = config or DbtGgsqlConfig()
+def artifact_paths(project_root: Path, config: DbtChartsConfig | None = None) -> ArtifactPaths:
+    config = config or DbtChartsConfig()
     root = resolve_project_path(project_root, config.output_path)
     return ArtifactPaths(
         root=root,
@@ -23,5 +23,5 @@ def artifact_paths(project_root: Path, config: DbtGgsqlConfig | None = None) -> 
         charts_dir=resolve_project_path(project_root, config.charts_path),
         dashboards_dir=resolve_project_path(project_root, config.dashboards_output_path),
         site_dir=resolve_project_path(project_root, config.site_path),
-        site_zip=root / "dbt-ggsql-site.zip",
+        site_zip=root / "dbt-charts-site.zip",
     )

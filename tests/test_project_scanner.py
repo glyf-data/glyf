@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from dbt_ggsql.project.scanner import scan_project
+from dbt_charts.project.scanner import scan_project
 
 
 def test_scan_project_discovers_expected_files() -> None:

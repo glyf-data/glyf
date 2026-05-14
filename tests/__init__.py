@@ -1,1 +1,1 @@
-"""Tests for dbt-ggsql."""
+"""Tests for dbt-charts."""

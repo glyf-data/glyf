@@ -2,9 +2,9 @@ import shutil
 import zipfile
 from pathlib import Path
 
-from dbt_ggsql.dashboard.generator import generate_dashboards
-from dbt_ggsql.exporter import export_site
-from dbt_ggsql.pipeline import render_project
+from dbt_charts.dashboard.generator import generate_dashboards
+from dbt_charts.exporter import export_site
+from dbt_charts.pipeline import render_project
 
 
 def test_export_site_creates_publish_ready_folder(tmp_path: Path) -> None:
@@ -56,7 +56,7 @@ def test_export_site_zip_writes_archive(tmp_path: Path) -> None:
 
     result = export_site(project, zip_site=True)
 
-    zip_path = project / "target" / "ggsql" / "dbt-ggsql-site.zip"
+    zip_path = project / "target" / "ggsql" / "dbt-charts-site.zip"
     assert result.zip_path == zip_path
     assert zip_path.exists()
     with zipfile.ZipFile(zip_path) as archive:

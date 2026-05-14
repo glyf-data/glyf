@@ -3,15 +3,15 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from dbt_ggsql.config import DbtGgsqlConfig
-from dbt_ggsql.dashboard.artifacts import (
+from dbt_charts.config import DbtChartsConfig
+from dbt_charts.dashboard.artifacts import (
     ChartArtifact,
     ChartArtifactError,
     load_chart_artifact,
 )
-from dbt_ggsql.dashboard.loader import Dashboard, load_dashboard
-from dbt_ggsql.output.paths import artifact_paths
-from dbt_ggsql.project.scanner import ProjectScan, scan_project
+from dbt_charts.dashboard.loader import Dashboard, load_dashboard
+from dbt_charts.output.paths import artifact_paths
+from dbt_charts.project.scanner import ProjectScan, scan_project
 
 
 class DashboardGenerationError(ValueError):
@@ -34,9 +34,9 @@ class DashboardGenerationResult:
 
 def generate_dashboards(
     project: Path,
-    config: DbtGgsqlConfig | None = None,
+    config: DbtChartsConfig | None = None,
 ) -> DashboardGenerationResult:
-    config = config or DbtGgsqlConfig()
+    config = config or DbtChartsConfig()
     scan = scan_project(project, config)
     paths = artifact_paths(scan.root, config)
     paths.dashboards_dir.mkdir(parents=True, exist_ok=True)
@@ -92,7 +92,7 @@ def _environment() -> Environment:
 def _render_dashboard(
     dashboard: Dashboard,
     charts: tuple[ChartArtifact, ...],
-    config: DbtGgsqlConfig,
+    config: DbtChartsConfig,
 ) -> str:
     template = _environment().get_template("dashboard.html.j2")
     return template.render(

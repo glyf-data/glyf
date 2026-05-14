@@ -1,6 +1,6 @@
-# CI/CD for dbt-ggsql
+# CI/CD for dbt-charts
 
-`dbt-ggsql` generates a static site from dbt artifacts and rendered chart outputs.
+`dbt-charts` generates a static site from dbt artifacts and rendered chart outputs.
 The site in `target/ggsql/site/` can be uploaded by any CI/CD system that can run
 Python commands.
 
@@ -11,10 +11,10 @@ From a dbt project root:
 ```bash
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt build --profiles-dir .
-uv run dbt-ggsql doctor
-uv run dbt-ggsql render
-uv run dbt-ggsql dashboard
-uv run dbt-ggsql export --clean --zip
+uv run dbt-charts doctor
+uv run dbt-charts render
+uv run dbt-charts dashboard
+uv run dbt-charts export --clean --zip
 ```
 
 The publish-ready files are written to:
@@ -26,7 +26,7 @@ target/ggsql/site/
 The optional zip archive is written to:
 
 ```text
-target/ggsql/dbt-ggsql-site.zip
+target/ggsql/dbt-charts-site.zip
 ```
 
 ## GitHub Actions workflow
@@ -34,7 +34,7 @@ target/ggsql/dbt-ggsql-site.zip
 This repository includes an example workflow:
 
 ```text
-.github/workflows/dbt-ggsql-dashboard.yml
+.github/workflows/dbt-charts-dashboard.yml
 ```
 
 The workflow:
@@ -42,11 +42,11 @@ The workflow:
 - checks out the repository
 - installs `uv`
 - installs dependencies
-- runs `dbt-ggsql doctor`
+- runs `dbt-charts doctor`
 - runs `dbt seed` and `dbt build`
-- runs `dbt-ggsql render`
-- runs `dbt-ggsql dashboard`
-- runs `dbt-ggsql export`
+- runs `dbt-charts render`
+- runs `dbt-charts dashboard`
+- runs `dbt-charts export`
 - uploads the static site as a workflow artifact
 
 For your own project, change the `examples/simple_dbt` paths to your dbt project
@@ -74,4 +74,4 @@ You can publish `target/ggsql/site/` to any static host, including:
 - Azure Static Web Apps
 - any internal static file host
 
-Use `dbt-ggsql export --zip` when the target platform expects a single archive.
+Use `dbt-charts export --zip` when the target platform expects a single archive.

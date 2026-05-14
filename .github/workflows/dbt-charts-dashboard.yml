@@ -1,4 +1,4 @@
-name: dbt-ggsql dashboard
+name: dbt-charts dashboard
 
 on:
   workflow_dispatch:
@@ -23,31 +23,31 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-groups
 
-      - name: Check dbt-ggsql project health
-        run: uv run dbt-ggsql doctor --project-dir examples/simple_dbt
+      - name: Check dbt-charts project health
+        run: uv run dbt-charts doctor --project-dir examples/simple_dbt
 
       - name: Build dbt project
         run: |
           uv run dbt seed --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt --full-refresh --no-partial-parse
           uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
 
-      - name: Generate dbt-ggsql dashboard
+      - name: Generate dbt-charts dashboard
         run: |
-          uv run dbt-ggsql render --project-dir examples/simple_dbt
-          uv run dbt-ggsql dashboard --project-dir examples/simple_dbt
-          uv run dbt-ggsql export --project-dir examples/simple_dbt --clean --zip
+          uv run dbt-charts render --project-dir examples/simple_dbt
+          uv run dbt-charts dashboard --project-dir examples/simple_dbt
+          uv run dbt-charts export --project-dir examples/simple_dbt --clean --zip
 
       - name: Upload static site artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dbt-ggsql-site
+          name: dbt-charts-site
           path: examples/simple_dbt/target/ggsql/site
 
       - name: Upload zipped static site
         uses: actions/upload-artifact@v4
         with:
-          name: dbt-ggsql-site-zip
-          path: examples/simple_dbt/target/ggsql/dbt-ggsql-site.zip
+          name: dbt-charts-site-zip
+          path: examples/simple_dbt/target/ggsql/dbt-charts-site.zip
 
   # Optional GitHub Pages publishing example.
   # Enable GitHub Pages for Actions in repository settings, then uncomment.
@@ -65,7 +65,7 @@ jobs:
   #     - name: Download static site artifact
   #       uses: actions/download-artifact@v4
   #       with:
-  #         name: dbt-ggsql-site
+  #         name: dbt-charts-site
   #         path: site
   #
   #     - name: Configure Pages

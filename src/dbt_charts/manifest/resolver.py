@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-from dbt_ggsql.manifest.loader import DbtManifest
+from dbt_charts.manifest.loader import DbtManifest
 
 REF_PATTERN = re.compile(r"\{\{\s*ref\(\s*['\"]([^'\"]+)['\"]\s*\)\s*\}\}")
 SOURCE_PATTERN = re.compile(

@@ -4,8 +4,8 @@ import re
 import pandas as pd
 import pytest
 
-from dbt_ggsql.ggsql.parser import GgsqlParseError, parse_ggsql
-from dbt_ggsql.ggsql.renderer import ChartRenderError, render_chart
+from dbt_charts.ggsql.parser import GgsqlParseError, parse_ggsql
+from dbt_charts.ggsql.renderer import ChartRenderError, render_chart
 
 
 def test_render_chart_writes_png_and_svg(tmp_path: Path) -> None:

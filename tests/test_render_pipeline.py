@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from dbt_ggsql.execution.duckdb import execute_sql
-from dbt_ggsql.pipeline import RenderError, render_project
+from dbt_charts.execution.duckdb import execute_sql
+from dbt_charts.pipeline import RenderError, render_project
 
 
 def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> None:
