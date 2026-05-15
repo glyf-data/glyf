@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import duckdb
 import pytest
 
 from dbt_charts.execution.duckdb import execute_sql
@@ -52,6 +53,32 @@ def test_duckdb_execution_loads_seed_tables(tmp_path: Path) -> None:
         {"month": "2026-02", "revenue": 1800},
         {"month": "2026-03", "revenue": 2100},
         {"month": "2026-04", "revenue": 2400},
+    ]
+
+
+def test_duckdb_execution_uses_working_directory_database(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    project = tmp_path / "simple_dbt"
+    project.mkdir()
+    database = tmp_path / "simple_dbt.duckdb"
+    with duckdb.connect(database.as_posix()) as connection:
+        connection.execute("CREATE SCHEMA IF NOT EXISTS main")
+        connection.execute(
+            "CREATE TABLE main.fct_orders AS "
+            "SELECT '2026-01' AS month, 1200 AS revenue"
+        )
+
+    monkeypatch.chdir(tmp_path)
+
+    data = execute_sql(
+        project,
+        'select month, revenue from "simple_dbt"."main"."fct_orders"',
+    )
+
+    assert data.to_dict(orient="records") == [
+        {"month": "2026-01", "revenue": 1200}
     ]
 
 
