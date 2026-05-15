@@ -85,6 +85,16 @@ def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert (project / "target" / "ggsql" / "dbt-charts-site.zip").exists()
 
 
+def test_serve_command_reports_missing_site(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = runner.invoke(app, ["serve", "--project", str(project)])
+
+    assert result.exit_code == 1
+    assert "Serve failed" in result.output
+    assert "run `dbt-charts dashboard` first" in result.output
+
+
 def test_validate_command_reports_malformed_ggsql(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     (project / "visualisations" / "revenue.ggsql").write_text(
