@@ -21,14 +21,8 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: Set up Python
-        run: uv python install ${{ matrix.python-version }}
+      - name: Install Task
+        uses: go-task/setup-task@v2
 
-      - name: Install dependencies
-        run: uv sync --all-groups --python ${{ matrix.python-version }}
-
-      - name: Run tests
-        run: uv run pytest
-
-      - name: Build package
-        run: uv build
+      - name: Run CI task
+        run: task ci PYTHON_VERSION=${{ matrix.python-version }}

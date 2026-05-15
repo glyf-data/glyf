@@ -1,0 +1,38 @@
+version: "3"
+
+vars:
+  PYTHON_VERSION: '{{.PYTHON_VERSION | default "3.11"}}'
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+
+  python:
+    desc: Install the configured Python version with uv
+    cmds:
+      - uv python install {{.PYTHON_VERSION}}
+
+  install:
+    desc: Install project and development dependencies
+    cmds:
+      - uv sync --all-groups --python {{.PYTHON_VERSION}}
+
+  test:
+    desc: Run the test suite
+    cmds:
+      - uv run pytest
+
+  build:
+    desc: Build package distributions
+    cmds:
+      - uv build
+
+  ci:
+    desc: Run the same checks used by GitHub Actions
+    cmds:
+      - task: python
+      - task: install
+      - task: test
+      - task: build

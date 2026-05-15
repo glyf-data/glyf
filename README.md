@@ -22,6 +22,36 @@ uv sync
 For the included dbt examples, dev dependencies include `dbt-core` and
 `dbt-duckdb`.
 
+## CI Run
+
+This project uses Taskfile to run the same checks locally and in GitHub Actions.
+Install Task before running these commands:
+
+```bash
+brew install go-task
+task --version
+```
+
+Run the full CI pipeline:
+
+```bash
+task ci
+```
+
+Run CI with a specific Python version:
+
+```bash
+task ci PYTHON_VERSION=3.12
+```
+
+Run individual CI steps:
+
+```bash
+task install
+task test
+task build
+```
+
 ## Copy-Paste Quickstart
 
 ```bash
