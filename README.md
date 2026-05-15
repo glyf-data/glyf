@@ -25,6 +25,12 @@ For the included dbt examples, dev dependencies include `dbt-core` and
 ## CI Run
 
 This project uses Taskfile to run the same checks locally and in GitHub Actions.
+Install Task before running these commands:
+
+```bash
+brew install go-task
+task --version
+```
 
 Run the full CI pipeline:
 
