@@ -1,10 +1,11 @@
 from pathlib import Path
 
 from dbt_charts.project.scanner import scan_project
+from tests.helpers import copy_basic_project
 
 
-def test_scan_project_discovers_expected_files() -> None:
-    project = Path("examples/basic")
+def test_scan_project_discovers_expected_files(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
 
     scan = scan_project(project)
 
