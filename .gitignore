@@ -77,6 +77,8 @@ docs/_build/
 .pybuilder/
 target/
 examples/*/.user.yml
+*.duckdb
+*.duckdb.wal
 examples/*/*.duckdb
 examples/*/*.duckdb.wal
 examples/*/logs/
