@@ -23,13 +23,13 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-groups
 
-      - name: Check dbt-charts project health
-        run: uv run dbt-charts doctor --project-dir examples/simple_dbt
-
       - name: Build dbt project
         run: |
           uv run dbt seed --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt --full-refresh --no-partial-parse
           uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
+
+      - name: Check dbt-charts project health
+        run: uv run dbt-charts doctor --project-dir examples/simple_dbt
 
       - name: Generate dbt-charts dashboard
         run: |

@@ -42,8 +42,8 @@ The workflow:
 - checks out the repository
 - installs `uv`
 - installs dependencies
-- runs `dbt-charts doctor`
 - runs `dbt seed` and `dbt build`
+- runs `dbt-charts doctor`
 - runs `dbt-charts render`
 - runs `dbt-charts dashboard`
 - runs `dbt-charts export`
