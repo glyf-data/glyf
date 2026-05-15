@@ -81,12 +81,20 @@ uv run dbt-charts validate
 uv run dbt-charts render
 uv run dbt-charts dashboard
 uv run dbt-charts export --clean --zip
+uv run dbt-charts serve
 ```
 
 Point at another project:
 
 ```bash
 uv run dbt-charts render --project-dir examples/sales_dashboard
+```
+
+Preview a generated dashboard locally:
+
+```bash
+uv run dbt-charts serve --project-dir examples/simple_dbt
+uv run dbt-charts serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
 ```
 
 ## Example Output

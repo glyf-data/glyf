@@ -8,6 +8,7 @@ from dbt_charts.commands.doctor_cmd import run_doctor
 from dbt_charts.commands.export_cmd import run_export
 from dbt_charts.commands.list_cmd import run_list
 from dbt_charts.commands.render_cmd import run_render
+from dbt_charts.commands.serve_cmd import run_serve
 from dbt_charts.commands.validate_cmd import run_validate
 
 app = typer.Typer(
@@ -77,6 +78,28 @@ def export_command(
 ) -> None:
     """Copy generated outputs into a publish-ready static site folder."""
     run_export(project, clean=clean, zip_site=zip_site, config_path=config)
+
+
+@app.command("serve")
+def serve_command(
+    project: ProjectOption = Path("."),
+    config: ConfigOption = None,
+    host: Annotated[
+        str,
+        typer.Option("--host", help="Host interface to bind. Defaults to 127.0.0.1."),
+    ] = "127.0.0.1",
+    port: Annotated[
+        int,
+        typer.Option(
+            "--port",
+            min=0,
+            max=65535,
+            help="Port to bind. Defaults to 8000. Use 0 to choose an available port.",
+        ),
+    ] = 8000,
+) -> None:
+    """Serve the generated static dashboard site locally."""
+    run_serve(project, host=host, port=port, config_path=config)
 
 
 @app.command("doctor")
