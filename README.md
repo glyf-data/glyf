@@ -129,11 +129,16 @@ See [examples/README.md](examples/README.md).
 
 ## Roadmap
 
+See [ROADMAP.md](ROADMAP.md) for the detailed future roadmap.
+
+Near-term themes:
+
 - richer chart syntax while keeping the parser small
 - more dashboard layouts
 - better error messages for dbt adapter-specific execution failures
 - snapshot tests for generated HTML
 - optional publish helpers for common static hosts
+- local `serve` and `watch` workflows after the release baseline is stable
 
 ## Common Issues
 
