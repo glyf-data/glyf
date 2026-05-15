@@ -50,6 +50,7 @@ Run individual CI steps:
 task install
 task test
 task build
+task dashboard-ci
 ```
 
 ## Copy-Paste Quickstart
