@@ -82,7 +82,14 @@ def render_project(
             raise RenderError(f"{rel_path} SQL execution failed: {exc}") from exc
 
         try:
-            render_chart(chart, data, artifacts.png, artifacts.svg, config.render)
+            render_chart(
+                chart,
+                data,
+                artifacts.png,
+                artifacts.svg,
+                config.render,
+                vega_json_path=artifacts.vega_json,
+            )
         except ChartRenderError as exc:
             rel_path = path.relative_to(scan.root).as_posix()
             raise RenderError(f"{rel_path} chart rendering failed: {exc}") from exc

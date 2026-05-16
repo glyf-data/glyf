@@ -100,7 +100,32 @@ def test_dashboard_generation_writes_dashboard_and_index(tmp_path: Path) -> None
     assert "Executive Dashboard" in dashboard_html.read_text(encoding="utf-8")
     assert "Monthly Revenue" in dashboard_html.read_text(encoding="utf-8")
     assert "<svg" in dashboard_html.read_text(encoding="utf-8")
+    assert "vegaEmbed" not in dashboard_html.read_text(encoding="utf-8")
     assert "dashboards/executive.html" in index_html.read_text(encoding="utf-8")
+
+
+def test_dashboard_generation_embeds_interactive_vega_spec(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "visualisations" / "revenue.ggsql").write_text(
+        "select month, revenue from {{ ref('fct_orders') }}\n\n"
+        "VISUALISE month AS x, revenue AS y\n"
+        "DRAW line\n"
+        "LABEL title => 'Monthly Revenue'\n"
+        "INTERACT tooltip, zoom\n",
+        encoding="utf-8",
+    )
+    render_project(project)
+
+    generate_dashboards(project)
+
+    dashboard_html = (
+        project / "target" / "ggsql" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "https://cdn.jsdelivr.net/npm/vega" in dashboard_html
+    assert "vegaEmbed" in dashboard_html
+    assert 'data-vega-chart="chart-revenue-spec"' in dashboard_html
+    assert '"tooltip"' in dashboard_html
+    assert (project / "target" / "ggsql" / "charts" / "revenue.vega.json").exists()
 
 
 def test_dashboard_generation_renders_sections_and_layout_items(tmp_path: Path) -> None:

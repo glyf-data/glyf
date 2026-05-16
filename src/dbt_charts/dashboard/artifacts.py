@@ -20,6 +20,8 @@ class ChartMetadata:
     compiled_sql_path: Path
     png_path: Path
     svg_path: Path
+    interactions: tuple[str, ...] = ()
+    vega_json_path: Path | None = None
 
 
 @dataclass(frozen=True)
@@ -27,6 +29,7 @@ class ChartArtifact:
     metadata: ChartMetadata
     svg: str | None
     compiled_sql: str | None
+    vega_spec: object | None = None
 
 
 def load_chart_artifact(
@@ -51,11 +54,22 @@ def load_chart_artifact(
         if metadata.compiled_sql_path.exists()
         else None
     )
+    vega_spec = None
+    if metadata.vega_json_path is not None and metadata.vega_json_path.exists():
+        try:
+            vega_spec = json.loads(metadata.vega_json_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ChartArtifactError(f"invalid Vega-Lite JSON for '{chart_name}'") from exc
 
     if svg is None and not metadata.png_path.exists():
         raise ChartArtifactError(f"missing SVG or PNG artifact for '{chart_name}'")
 
-    return ChartArtifact(metadata=metadata, svg=svg, compiled_sql=compiled_sql)
+    return ChartArtifact(
+        metadata=metadata,
+        svg=svg,
+        compiled_sql=compiled_sql,
+        vega_spec=vega_spec,
+    )
 
 
 def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMetadata:
@@ -80,6 +94,20 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
     if title is not None and not isinstance(title, str):
         raise ChartArtifactError(f"chart metadata for '{chart_name}' has invalid title")
 
+    interactions = raw.get("interactions", [])
+    if not isinstance(interactions, list) or not all(
+        isinstance(item, str) for item in interactions
+    ):
+        raise ChartArtifactError(
+            f"chart metadata for '{chart_name}' has invalid interactions"
+        )
+
+    vega_json_path = raw.get("vega_json_path")
+    if vega_json_path is not None and not isinstance(vega_json_path, str):
+        raise ChartArtifactError(
+            f"chart metadata for '{chart_name}' has invalid vega_json_path"
+        )
+
     return ChartMetadata(
         name=raw["name"],
         title=title,
@@ -89,4 +117,8 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         compiled_sql_path=project_root / raw["compiled_sql_path"],
         png_path=project_root / raw["png_path"],
         svg_path=project_root / raw["svg_path"],
+        interactions=tuple(interactions),
+        vega_json_path=project_root / vega_json_path
+        if vega_json_path is not None
+        else None,
     )

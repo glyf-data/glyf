@@ -109,6 +109,22 @@ def test_validate_command_reports_malformed_ggsql(tmp_path: Path) -> None:
     assert "missing VISUALISE section" in result.output
 
 
+def test_validate_command_reports_unsupported_interaction(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "visualisations" / "revenue.ggsql").write_text(
+        "select month, revenue from {{ ref('fct_orders') }}\n\n"
+        "VISUALISE month AS x, revenue AS y\n"
+        "DRAW line\n"
+        "INTERACT brush\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["validate", "--project", str(project)])
+
+    assert result.exit_code == 1
+    assert "unsupported interaction 'brush'" in result.output
+
+
 def test_validate_command_reports_unresolved_ref(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     (project / "visualisations" / "revenue.ggsql").write_text(

@@ -10,6 +10,7 @@ class GgsqlParseError(ValueError):
 
 SUPPORTED_CHART_TYPES = {"line", "bar", "scatter", "area", "pie"}
 SUPPORTED_CONFIG_KEYS = {"width", "height"}
+SUPPORTED_INTERACTIONS = {"tooltip", "zoom", "legend_filter"}
 VISUALISE_PATTERN = re.compile(r"^VISUALISE\s+(.+)$", re.IGNORECASE)
 MAPPING_PATTERN = re.compile(
     r"^\s*([A-Za-z_][\w.]*)\s+AS\s+([A-Za-z_][\w]*)\s*$",
@@ -21,6 +22,7 @@ LABEL_PATTERN = re.compile(
     re.IGNORECASE,
 )
 CONFIG_PATTERN = re.compile(r"^CONFIG\s+([A-Za-z_][\w-]*)\s*=>\s*(.+?)\s*$", re.IGNORECASE)
+INTERACT_PATTERN = re.compile(r"^INTERACT\s+(.+)$", re.IGNORECASE)
 
 
 def parse_ggsql_file(path: Path) -> GgsqlChart:
@@ -44,6 +46,7 @@ def parse_ggsql(text: str, *, path: Path | None = None, name: str = "chart") -> 
     draw_type: str | None = None
     labels: dict[str, str] = {}
     config: dict[str, int] = {}
+    interactions: list[str] = []
 
     for line in config_lines[1:]:
         draw_match = DRAW_PATTERN.match(line)
@@ -66,6 +69,11 @@ def parse_ggsql(text: str, *, path: Path | None = None, name: str = "chart") -> 
             config[key] = _parse_positive_int_config(key, config_match.group(2))
             continue
 
+        interact_match = INTERACT_PATTERN.match(line)
+        if interact_match:
+            interactions.extend(_parse_interactions(interact_match.group(1)))
+            continue
+
         raise GgsqlParseError(f"unrecognised ggsql directive: {line}")
 
     if draw_type is None:
@@ -79,6 +87,7 @@ def parse_ggsql(text: str, *, path: Path | None = None, name: str = "chart") -> 
         draw_type=draw_type,
         labels=labels,
         config=config,
+        interactions=tuple(dict.fromkeys(interactions)),
     )
 
 
@@ -133,3 +142,22 @@ def _parse_positive_int_config(key: str, raw_value: str) -> int:
     if parsed <= 0:
         raise GgsqlParseError(f"invalid CONFIG {key}: expected a positive integer")
     return parsed
+
+
+def _parse_interactions(raw_value: str) -> tuple[str, ...]:
+    values = [
+        item.strip().lower().replace("-", "_")
+        for item in raw_value.split(",")
+        if item.strip()
+    ]
+    if not values:
+        raise GgsqlParseError("INTERACT requires at least one interaction")
+
+    unsupported = sorted(set(values) - SUPPORTED_INTERACTIONS)
+    if unsupported:
+        joined = ", ".join(f"'{value}'" for value in unsupported)
+        supported = ", ".join(sorted(SUPPORTED_INTERACTIONS))
+        raise GgsqlParseError(
+            f"unsupported interaction {joined}; supported interactions: {supported}"
+        )
+    return tuple(values)

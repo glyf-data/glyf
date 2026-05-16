@@ -17,6 +17,7 @@ class GgsqlChart:
     draw_type: str
     labels: dict[str, str]
     config: dict[str, int]
+    interactions: tuple[str, ...] = ()
 
     @property
     def title(self) -> str | None:
@@ -47,3 +48,7 @@ class GgsqlChart:
     @property
     def height(self) -> int | None:
         return self.config.get("height")
+
+    @property
+    def is_interactive(self) -> bool:
+        return bool(self.interactions)

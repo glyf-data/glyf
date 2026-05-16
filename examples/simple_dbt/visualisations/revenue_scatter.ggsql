@@ -6,3 +6,4 @@ DRAW scatter
 LABEL title => 'Revenue Scatter'
 LABEL x_title => 'Month'
 LABEL y_title => 'Revenue'
+INTERACT tooltip, zoom, legend_filter

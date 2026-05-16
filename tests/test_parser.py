@@ -37,6 +37,7 @@ CONFIG height => 500
         "y_title": "Revenue",
     }
     assert chart.config == {"width": 900, "height": 500}
+    assert chart.interactions == ()
 
 
 def test_parse_ggsql_requires_visualise_section() -> None:
@@ -58,6 +59,29 @@ def test_parse_ggsql_supports_color_mapping() -> None:
     )
 
     assert chart.field_for_role("color") == "region"
+
+
+def test_parse_ggsql_supports_interactions() -> None:
+    chart = parse_ggsql(
+        "select month, revenue, region from fct_orders\n\n"
+        "VISUALISE month AS x, revenue AS y, region AS color\n"
+        "DRAW scatter\n"
+        "INTERACT tooltip, zoom, legend-filter, tooltip\n",
+        name="revenue",
+    )
+
+    assert chart.interactions == ("tooltip", "zoom", "legend_filter")
+
+
+def test_parse_ggsql_rejects_unsupported_interaction() -> None:
+    with pytest.raises(GgsqlParseError, match="unsupported interaction 'brush'"):
+        parse_ggsql(
+            "select month, revenue from fct_orders\n\n"
+            "VISUALISE month AS x, revenue AS y\n"
+            "DRAW scatter\n"
+            "INTERACT brush\n",
+            name="revenue",
+        )
 
 
 def test_parse_ggsql_rejects_unsupported_chart_type() -> None:

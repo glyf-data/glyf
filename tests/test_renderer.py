@@ -90,3 +90,54 @@ def test_render_chart_reports_missing_color_column(tmp_path: Path) -> None:
 
     with pytest.raises(ChartRenderError, match="query result missing chart column 'region'"):
         render_chart(chart, data, tmp_path / "revenue.png", tmp_path / "revenue.svg")
+
+
+def test_render_chart_writes_vega_json_for_interactive_chart(tmp_path: Path) -> None:
+    chart = parse_ggsql(
+        "select month, revenue, region from fct_orders\n\n"
+        "VISUALISE month AS x, revenue AS y, region AS color\n"
+        "DRAW scatter\n"
+        "INTERACT tooltip, zoom, legend_filter\n",
+        name="revenue",
+    )
+    data = pd.DataFrame(
+        {
+            "month": ["2026-01", "2026-02"],
+            "region": ["North", "South"],
+            "revenue": [1200, 1800],
+        }
+    )
+    vega_json_path = tmp_path / "revenue.vega.json"
+
+    render_chart(
+        chart,
+        data,
+        tmp_path / "revenue.png",
+        tmp_path / "revenue.svg",
+        vega_json_path=vega_json_path,
+    )
+
+    spec = vega_json_path.read_text(encoding="utf-8")
+    assert '"tooltip"' in spec
+    assert '"params"' in spec
+    assert '"bind": "legend"' in spec
+
+
+def test_render_chart_reports_legend_filter_without_color_mapping(tmp_path: Path) -> None:
+    chart = parse_ggsql(
+        "select month, revenue from fct_orders\n\n"
+        "VISUALISE month AS x, revenue AS y\n"
+        "DRAW scatter\n"
+        "INTERACT legend_filter\n",
+        name="revenue",
+    )
+    data = pd.DataFrame({"month": ["2026-01"], "revenue": [1200]})
+
+    with pytest.raises(ChartRenderError, match="requires a color mapping"):
+        render_chart(
+            chart,
+            data,
+            tmp_path / "revenue.png",
+            tmp_path / "revenue.svg",
+            vega_json_path=tmp_path / "revenue.vega.json",
+        )

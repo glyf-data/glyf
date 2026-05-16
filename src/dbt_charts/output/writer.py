@@ -13,6 +13,7 @@ class ChartArtifacts:
     metadata_json: Path
     png: Path
     svg: Path
+    vega_json: Path
 
 
 def chart_artifact_paths(
@@ -29,6 +30,7 @@ def chart_artifact_paths(
         metadata_json=paths.charts_dir / f"{chart.name}.json",
         png=paths.charts_dir / f"{chart.name}.png",
         svg=paths.charts_dir / f"{chart.name}.svg",
+        vega_json=paths.charts_dir / f"{chart.name}.vega.json",
     )
 
 
@@ -48,6 +50,11 @@ def write_chart_metadata(project_root: Path, chart: GgsqlChart, artifacts: Chart
         "png_path": artifacts.png.relative_to(project_root).as_posix(),
         "svg_path": artifacts.svg.relative_to(project_root).as_posix(),
     }
+    if chart.is_interactive:
+        metadata["interactions"] = list(chart.interactions)
+        metadata["vega_json_path"] = artifacts.vega_json.relative_to(
+            project_root
+        ).as_posix()
     artifacts.metadata_json.parent.mkdir(parents=True, exist_ok=True)
     artifacts.metadata_json.write_text(
         json.dumps(metadata, indent=2, sort_keys=True) + "\n",
