@@ -33,8 +33,24 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(var(--dashboard-columns, auto-fit), minmax(280px, 1fr));
       gap: 18px;
+    }
+    .grid[data-auto-columns="true"] {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .section {
+      margin-top: 28px;
+    }
+    .section:first-of-type {
+      margin-top: 0;
+    }
+    .section-header {
+      margin-bottom: 14px;
+    }
+    .section-header h2 {
+      margin: 0 0 6px;
+      font-size: 1.25rem;
     }
     article {
       background: #ffffff;
@@ -42,9 +58,36 @@
       border-radius: 8px;
       padding: 16px;
     }
-    h2 {
+    .chart-card {
+      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
+    }
+    .chart-card h3 {
       margin: 0 0 12px;
       font-size: 1rem;
+    }
+    .markdown-card {
+      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
+    }
+    .markdown-card h3,
+    .metric-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+    .markdown-card p {
+      margin: 0;
+      white-space: pre-line;
+    }
+    .metric-card {
+      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
+    }
+    .metric-value {
+      color: #102a43;
+      font-size: 1.9rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .metric-note {
+      margin-top: 8px;
     }
     .chart svg {
       width: 100%;
@@ -75,6 +118,25 @@
   </style>
 </head>
 <body>
+  {% macro chart_card(chart, title=None, width=None) -%}
+  <article class="chart-card"{% if width %} style="--item-width: {{ width }}"{% endif %}>
+    <h3>{{ title or chart.metadata.title or chart.metadata.name }}</h3>
+    <div class="chart">
+      {% if dashboard_config.embed_charts and chart.svg %}
+      {{ chart.svg | safe }}
+      {% else %}
+      <img src="../charts/{{ chart.metadata.png_path.name }}" alt="{{ title or chart.metadata.title or chart.metadata.name }}">
+      {% endif %}
+    </div>
+    {% if dashboard_config.show_compiled_sql and chart.compiled_sql %}
+    <details>
+      <summary>Compiled SQL</summary>
+      <pre><code>{{ chart.compiled_sql }}</code></pre>
+    </details>
+    {% endif %}
+  </article>
+  {%- endmacro %}
+
   <main>
     <header>
       <h1>{{ dashboard.title }}</h1>
@@ -83,26 +145,51 @@
       {% endif %}
     </header>
 
-    <section class="grid" aria-label="Charts">
-      {% for chart in charts %}
-      <article>
-        <h2>{{ chart.metadata.title or chart.metadata.name }}</h2>
-        <div class="chart">
-          {% if dashboard_config.embed_charts and chart.svg %}
-          {{ chart.svg | safe }}
-          {% else %}
-          <img src="../charts/{{ chart.metadata.png_path.name }}" alt="{{ chart.metadata.title or chart.metadata.name }}">
+    {% if dashboard.sections %}
+      {% for section in dashboard.sections %}
+      {% set section_columns = section.columns or dashboard.layout_config.columns or 3 %}
+      <section class="section" aria-label="{{ section.title or 'Dashboard section' }}">
+        {% if section.title or section.description %}
+        <div class="section-header">
+          {% if section.title %}
+          <h2>{{ section.title }}</h2>
+          {% endif %}
+          {% if section.description %}
+          <p>{{ section.description }}</p>
           {% endif %}
         </div>
-        {% if dashboard_config.show_compiled_sql and chart.compiled_sql %}
-        <details>
-          <summary>Compiled SQL</summary>
-          <pre><code>{{ chart.compiled_sql }}</code></pre>
-        </details>
         {% endif %}
-      </article>
+        <div class="grid" style="--dashboard-columns: {{ section_columns }}; --section-columns: {{ section_columns }}">
+          {% for item in section.items %}
+            {% if item.kind == "chart" and item.chart %}
+              {{ chart_card(chart_artifacts[item.chart], item.title, item.width) }}
+            {% elif item.kind == "markdown" %}
+              <article class="markdown-card">
+                {% if item.title %}
+                <h3>{{ item.title }}</h3>
+                {% endif %}
+                <p>{{ item.text }}</p>
+              </article>
+            {% elif item.kind == "metric" %}
+              <article class="metric-card"{% if item.width %} style="--item-width: {{ item.width }}"{% endif %}>
+                <h3>{{ item.label }}</h3>
+                <div class="metric-value">{{ item.value }}</div>
+                {% if item.note %}
+                <p class="metric-note">{{ item.note }}</p>
+                {% endif %}
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+      {% endfor %}
+    {% else %}
+    <section class="grid" data-auto-columns="true" aria-label="Charts">
+      {% for chart in charts %}
+      {{ chart_card(chart) }}
       {% endfor %}
     </section>
+    {% endif %}
   </main>
 </body>
 </html>

@@ -13,13 +13,72 @@ charts:
   - revenue_share_pie
 ```
 
+Existing dashboards that only use `charts` continue to render as a simple
+responsive chart grid.
+
+## Rich Layout
+
+Use `layout.columns` plus `sections` when a dashboard needs grouped content,
+metric tiles, markdown notes, or chart sizing hints.
+
+```yaml
+name: executive
+title: Executive Dashboard
+description: Key business metrics generated from dbt models.
+
+layout:
+  columns: 3
+
+sections:
+  - title: Revenue overview
+    description: Revenue signals for the current sample period.
+    columns: 3
+    items:
+      - metric:
+          label: Total revenue
+          value: $7.6k
+          note: Generated from fct_orders
+      - markdown:
+          title: Analyst note
+          text: |
+            Revenue charts are generated from dbt model outputs.
+            Use this section to capture dashboard context.
+      - chart: revenue
+        title: Monthly revenue
+        width: 2
+```
+
+`groups` is accepted as an alias for `sections`:
+
+```yaml
+groups:
+  - title: Regional performance
+    columns: 2
+    charts:
+      - revenue_by_region_bar
+      - revenue_share_pie
+```
+
 ## Fields
 
 - `name`: output filename stem.
 - `title`: dashboard page title.
 - `description`: optional intro text.
 - `charts`: list of `.ggsql` chart names without the extension.
-- `layout`: optional placeholder for future layout support.
+- `layout`: optional layout string or mapping.
+- `layout.columns`: optional default number of grid columns for rich sections.
+- `sections`: optional grouped dashboard content.
+- `groups`: optional alias for `sections`.
+- `sections[].title`: optional section heading.
+- `sections[].description`: optional section intro text.
+- `sections[].columns`: optional section-level grid column count.
+- `sections[].charts`: shorthand list of chart names for a section.
+- `sections[].items`: ordered list of chart, markdown, and metric items.
+- `items[].chart`: chart name, with optional `title` and `width`.
+- `items[].markdown`: markdown-style text block, either a string or a mapping with
+  `title` and `text`.
+- `items[].metric`: metric tile with `label`, `value`, optional `note`, and
+  optional `width`.
 
 Generated HTML is written to:
 

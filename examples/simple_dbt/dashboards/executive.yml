@@ -2,9 +2,32 @@ name: executive
 title: Executive Dashboard
 description: Revenue from a minimal dbt-style project.
 
-charts:
-  - revenue
-  - revenue_by_region_bar
-  - revenue_scatter
-  - revenue_area
-  - revenue_share_pie
+layout:
+  columns: 3
+
+sections:
+  - title: Revenue overview
+    description: Summary and trend views for the sample orders model.
+    columns: 3
+    items:
+      - metric:
+          label: Sample revenue
+          value: "$7.6k"
+          note: Generated from six seed rows.
+      - markdown:
+          title: Context
+          text: |
+            These charts are generated from the fct_orders dbt model.
+            Use this example to inspect layout sections, metric tiles, and notes.
+      - chart: revenue
+        title: Monthly revenue
+        width: 2
+
+  - title: Breakdowns
+    description: Regional and distribution views.
+    columns: 2
+    charts:
+      - revenue_by_region_bar
+      - revenue_scatter
+      - revenue_area
+      - revenue_share_pie

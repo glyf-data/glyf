@@ -49,24 +49,32 @@ def generate_dashboards(
             rel_path = dashboard_path.relative_to(scan.root).as_posix()
             raise DashboardGenerationError(f"{rel_path}: {exc}") from exc
 
-        chart_artifacts = []
-        for chart_name in dashboard.charts:
+        chart_artifacts = {}
+        for chart_name in dashboard.chart_names:
             try:
-                chart_artifacts.append(load_chart_artifact(scan.root, chart_name, config))
+                chart_artifacts[chart_name] = load_chart_artifact(
+                    scan.root,
+                    chart_name,
+                    config,
+                )
             except ChartArtifactError as exc:
                 rel_path = dashboard_path.relative_to(scan.root).as_posix()
                 raise DashboardGenerationError(f"{rel_path}: {exc}") from exc
 
+        ordered_chart_artifacts = tuple(
+            chart_artifacts[chart_name] for chart_name in dashboard.chart_names
+        )
+
         output_path = paths.dashboards_dir / f"{dashboard.name}.html"
         output_path.write_text(
-            _render_dashboard(dashboard, tuple(chart_artifacts), config),
+            _render_dashboard(dashboard, chart_artifacts, ordered_chart_artifacts, config),
             encoding="utf-8",
         )
         dashboards.append(
             GeneratedDashboard(
                 dashboard=dashboard,
                 path=output_path,
-                charts=tuple(chart_artifacts),
+                charts=ordered_chart_artifacts,
             )
         )
 
@@ -91,12 +99,14 @@ def _environment() -> Environment:
 
 def _render_dashboard(
     dashboard: Dashboard,
+    chart_artifacts: dict[str, ChartArtifact],
     charts: tuple[ChartArtifact, ...],
     config: DbtChartsConfig,
 ) -> str:
     template = _environment().get_template("dashboard.html.j2")
     return template.render(
         dashboard=dashboard,
+        chart_artifacts=chart_artifacts,
         charts=charts,
         dashboard_config=config.dashboard,
     )
