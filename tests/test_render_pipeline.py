@@ -56,6 +56,27 @@ def test_duckdb_execution_loads_seed_tables(tmp_path: Path) -> None:
     ]
 
 
+def test_render_project_writes_interactive_metadata_and_vega_json(
+    tmp_path: Path,
+) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "visualisations" / "revenue.ggsql").write_text(
+        "select month, revenue from {{ ref('fct_orders') }}\n\n"
+        "VISUALISE month AS x, revenue AS y\n"
+        "DRAW line\n"
+        "INTERACT tooltip, zoom\n",
+        encoding="utf-8",
+    )
+
+    render_project(project)
+
+    metadata_json = project / "target" / "ggsql" / "charts" / "revenue.json"
+    metadata = json.loads(metadata_json.read_text(encoding="utf-8"))
+    assert metadata["interactions"] == ["tooltip", "zoom"]
+    assert metadata["vega_json_path"] == "target/ggsql/charts/revenue.vega.json"
+    assert (project / metadata["vega_json_path"]).exists()
+
+
 def test_duckdb_execution_uses_working_directory_database(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

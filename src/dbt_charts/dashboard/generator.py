@@ -108,6 +108,7 @@ def _render_dashboard(
         dashboard=dashboard,
         chart_artifacts=chart_artifacts,
         charts=charts,
+        has_interactive_charts=any(chart.vega_spec is not None for chart in charts),
         dashboard_config=config.dashboard,
     )
 

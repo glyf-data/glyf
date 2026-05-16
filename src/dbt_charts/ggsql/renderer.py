@@ -18,6 +18,8 @@ def render_chart(
     png_path: Path,
     svg_path: Path,
     config: RenderConfig | None = None,
+    *,
+    vega_json_path: Path | None = None,
 ) -> None:
     config = config or RenderConfig()
     chart_spec = build_chart(chart, data, config=config)
@@ -29,6 +31,9 @@ def render_chart(
             chart_spec.save(svg_path)
         if "png" in config.formats:
             chart_spec.save(png_path)
+        if chart.is_interactive and vega_json_path is not None:
+            vega_json_path.parent.mkdir(parents=True, exist_ok=True)
+            chart_spec.save(vega_json_path)
     except Exception as exc:
         raise ChartRenderError(str(exc)) from exc
 
@@ -79,23 +84,41 @@ def build_chart(
         }
         if color_field is not None:
             encoding["color"] = alt.Color(color_field)
+    if "tooltip" in chart.interactions:
+        tooltip_fields = list(dict.fromkeys(required_fields))
+        encoding["tooltip"] = [alt.Tooltip(field) for field in tooltip_fields]
+
+    properties: dict[str, object] = {
+        "width": width,
+        "height": height,
+    }
+    if title is not None:
+        properties["title"] = title
 
     base = (
         alt.Chart(data)
         .encode(**encoding)
-        .properties(
-            title=title,
-            width=width,
-            height=height,
-        )
+        .properties(**properties)
         .configure_view(stroke="#d9e2ec")
     )
     if chart.draw_type == "line":
-        return base.mark_line(point=True)
-    if chart.draw_type == "bar":
-        return base.mark_bar()
-    if chart.draw_type == "scatter":
-        return base.mark_circle(size=80)
-    if chart.draw_type == "area":
-        return base.mark_area(opacity=0.7)
-    return base.mark_arc()
+        rendered = base.mark_line(point=True)
+    elif chart.draw_type == "bar":
+        rendered = base.mark_bar()
+    elif chart.draw_type == "scatter":
+        rendered = base.mark_circle(size=80)
+    elif chart.draw_type == "area":
+        rendered = base.mark_area(opacity=0.7)
+    else:
+        rendered = base.mark_arc()
+
+    if "legend_filter" in chart.interactions:
+        if color_field is None:
+            raise ChartRenderError("legend_filter interaction requires a color mapping")
+        legend_selection = alt.selection_point(fields=[color_field], bind="legend")
+        rendered = rendered.add_params(legend_selection).encode(
+            opacity=alt.condition(legend_selection, alt.value(1), alt.value(0.2))
+        )
+    if "zoom" in chart.interactions:
+        rendered = rendered.interactive()
+    return rendered

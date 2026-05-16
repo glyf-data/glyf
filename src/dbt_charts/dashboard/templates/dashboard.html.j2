@@ -4,6 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ dashboard.title }}</title>
+  {% if has_interactive_charts %}
+  <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+  {% endif %}
   <style>
     :root {
       color-scheme: light;
@@ -98,6 +103,14 @@
       max-width: 100%;
       height: auto;
     }
+    .interactive-chart {
+      width: 100%;
+    }
+    .interactive-chart canvas,
+    .interactive-chart svg {
+      max-width: 100%;
+      height: auto;
+    }
     details {
       margin-top: 12px;
       border-top: 1px solid #e4e7eb;
@@ -122,7 +135,17 @@
   <article class="chart-card"{% if width %} style="--item-width: {{ width }}"{% endif %}>
     <h3>{{ title or chart.metadata.title or chart.metadata.name }}</h3>
     <div class="chart">
-      {% if dashboard_config.embed_charts and chart.svg %}
+      {% if chart.vega_spec %}
+      <div
+        class="interactive-chart"
+        id="chart-{{ chart.metadata.name }}"
+        data-vega-chart="chart-{{ chart.metadata.name }}-spec"
+      ></div>
+      <script type="application/json" id="chart-{{ chart.metadata.name }}-spec">{{ chart.vega_spec | tojson }}</script>
+      <noscript>
+        <img src="../charts/{{ chart.metadata.png_path.name }}" alt="{{ title or chart.metadata.title or chart.metadata.name }}">
+      </noscript>
+      {% elif dashboard_config.embed_charts and chart.svg %}
       {{ chart.svg | safe }}
       {% else %}
       <img src="../charts/{{ chart.metadata.png_path.name }}" alt="{{ title or chart.metadata.title or chart.metadata.name }}">
@@ -191,5 +214,17 @@
     </section>
     {% endif %}
   </main>
+  {% if has_interactive_charts %}
+  <script>
+    document.querySelectorAll("[data-vega-chart]").forEach((container) => {
+      const specElement = document.getElementById(container.dataset.vegaChart);
+      if (!specElement) {
+        return;
+      }
+      const spec = JSON.parse(specElement.textContent);
+      vegaEmbed(container, spec, { actions: false, renderer: "svg" });
+    });
+  </script>
+  {% endif %}
 </body>
 </html>
