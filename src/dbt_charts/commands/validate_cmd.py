@@ -76,7 +76,7 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
             errors.append(f"{_rel(path, scan.root)}: {exc}")
             continue
 
-        for chart in dashboard.charts:
+        for chart in dashboard.chart_names:
             if chart not in ggsql_names:
                 errors.append(
                     f"{_rel(path, scan.root)} references unknown chart '{chart}'"

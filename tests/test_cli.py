@@ -152,6 +152,24 @@ def test_validate_command_reports_invalid_dashboard_reference(tmp_path: Path) ->
     assert "unknown chart 'missing_chart'" in result.output
 
 
+def test_validate_command_reports_invalid_section_chart_reference(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "sections:\n"
+        "  - title: Missing chart section\n"
+        "    items:\n"
+        "      - chart: missing_chart\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["validate", "--project", str(project)])
+
+    assert result.exit_code == 1
+    assert "unknown chart 'missing_chart'" in result.output
+
+
 def test_validate_command_reports_missing_manifest(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     (project / "target" / "manifest.json").unlink()

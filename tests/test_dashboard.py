@@ -30,6 +30,47 @@ def test_dashboard_yaml_parses_optional_fields(tmp_path: Path) -> None:
     assert dashboard.charts == ("revenue",)
 
 
+def test_dashboard_yaml_parses_sections_and_layout_items(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "layout:\n"
+        "  columns: 3\n"
+        "sections:\n"
+        "  - title: Revenue\n"
+        "    description: Key revenue signals.\n"
+        "    columns: 2\n"
+        "    items:\n"
+        "      - metric:\n"
+        "          label: Total revenue\n"
+        "          value: $7.6k\n"
+        "          note: Current sample period\n"
+        "      - markdown:\n"
+        "          title: Notes\n"
+        "          text: Revenue is generated from the fct_orders model.\n"
+        "      - chart: revenue\n"
+        "        title: Monthly revenue\n"
+        "        width: 2\n",
+        encoding="utf-8",
+    )
+
+    dashboard = load_dashboard(dashboard_path)
+
+    assert dashboard.layout == "grid"
+    assert dashboard.layout_config.columns == 3
+    assert dashboard.chart_names == ("revenue",)
+    assert len(dashboard.sections) == 1
+    section = dashboard.sections[0]
+    assert section.title == "Revenue"
+    assert section.columns == 2
+    assert [item.kind for item in section.items] == ["metric", "markdown", "chart"]
+    assert section.items[0].label == "Total revenue"
+    assert section.items[1].text == "Revenue is generated from the fct_orders model."
+    assert section.items[2].chart == "revenue"
+    assert section.items[2].width == 2
+
+
 def test_chart_metadata_loading(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     render_project(project)
@@ -60,6 +101,47 @@ def test_dashboard_generation_writes_dashboard_and_index(tmp_path: Path) -> None
     assert "Monthly Revenue" in dashboard_html.read_text(encoding="utf-8")
     assert "<svg" in dashboard_html.read_text(encoding="utf-8")
     assert "dashboards/executive.html" in index_html.read_text(encoding="utf-8")
+
+
+def test_dashboard_generation_renders_sections_and_layout_items(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "description: Key business metrics.\n"
+        "layout:\n"
+        "  columns: 3\n"
+        "sections:\n"
+        "  - title: Revenue Overview\n"
+        "    columns: 2\n"
+        "    items:\n"
+        "      - metric:\n"
+        "          label: Total revenue\n"
+        "          value: $7.6k\n"
+        "          note: Current sample period\n"
+        "      - markdown:\n"
+        "          title: Analyst note\n"
+        "          text: Revenue is generated from the fct_orders model.\n"
+        "      - chart: revenue\n"
+        "        title: Monthly revenue\n"
+        "        width: 2\n",
+        encoding="utf-8",
+    )
+
+    generate_dashboards(project)
+
+    html = (
+        project / "target" / "ggsql" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "Revenue Overview" in html
+    assert "Total revenue" in html
+    assert "$7.6k" in html
+    assert "Analyst note" in html
+    assert "Revenue is generated from the fct_orders model." in html
+    assert "Monthly revenue" in html
+    assert "--dashboard-columns: 2" in html
+    assert "--item-width: 2" in html
 
 
 def test_dashboard_generation_reports_missing_chart(tmp_path: Path) -> None:
