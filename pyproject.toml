@@ -40,7 +40,7 @@ dbt-charts = "dbt_charts.cli:app"
 [project.urls]
 Repository = "https://github.com/kannandreams/dbt-charts"
 Issues = "https://github.com/kannandreams/dbt-charts/issues"
-Documentation = "https://github.com/kannandreams/dbt-charts/tree/main/docs"
+Documentation = "https://kannandreams.github.io/dbt-charts/"
 
 [dependency-groups]
 dev = [
@@ -61,6 +61,7 @@ include = [
     "src",
     "tests",
     "docs",
+    "docs-site",
     "examples",
     "README.md",
     "LICENSE",

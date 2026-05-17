@@ -1,0 +1,37 @@
+# Finance Metrics
+
+`examples/finance_metrics` shows bookings, expenses, and gross margin reporting.
+
+## What it demonstrates
+
+- Finance dashboard structure.
+- Multiple KPI views in one static site.
+- A clean pattern for adding new metric dashboards.
+
+## Run it
+
+```bash
+cd examples/finance_metrics
+uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
+uv run dbt build --profiles-dir .
+uv run dbt-charts render
+uv run dbt-charts dashboard
+uv run dbt-charts export --clean --zip
+```
+
+## Dashboard YAML
+
+```yaml
+name: finance
+title: Finance Metrics
+description: Bookings, expenses, and margin by month and department.
+
+charts:
+  - bookings_trend
+  - expenses_by_department
+  - margin_share
+```
+
+## Extend it
+
+Add another `.ggsql` file under `visualisations/`, then add the filename stem to `dashboards/finance.yml`.

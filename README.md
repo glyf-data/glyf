@@ -127,6 +127,21 @@ See [examples/README.md](examples/README.md).
 
 ## Documentation
 
+The Docusaurus docs site source lives in [docs-site](docs-site/). It is intended
+to become the primary public documentation experience with a landing page,
+quickstart, examples gallery, command reference, integrations, AI context, and
+community resources.
+
+Run it locally after installing Node.js:
+
+```bash
+cd docs-site
+npm install
+npm start
+```
+
+Existing Markdown docs are still available while the site is being introduced:
+
 - [Getting started](docs/getting-started.md)
 - [Configuration](docs/configuration.md)
 - [Visualisation syntax](docs/visualisation-syntax.md)

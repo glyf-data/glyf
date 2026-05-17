@@ -1,0 +1,160 @@
+import React from 'react';
+import Link from '@docusaurus/Link';
+import Layout from '@theme/Layout';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+const workflow = [
+  ['Build dbt models', 'Run dbt seed, run, build, or compile so the manifest and warehouse tables are available.'],
+  ['Write ggsql', 'Keep chart SQL next to the dbt project and map result columns to visual roles.'],
+  ['Render charts', 'Generate compiled SQL plus SVG, PNG, and optional Vega-Lite JSON artifacts.'],
+  ['Export a site', 'Publish the generated dashboard folder to any static host or CI artifact store.'],
+];
+
+const examples = [
+  ['Simple dbt', 'A compact revenue dashboard and chart syntax sampler.', '/docs/examples/simple-dbt'],
+  ['Sales dashboard', 'Monthly revenue, channel mix, and regional sales.', '/docs/examples/sales-dashboard'],
+  ['Product analytics', 'Active users, activation rate, and plan behavior.', '/docs/examples/product-analytics'],
+  ['Finance metrics', 'Bookings, expense share, and gross margin signals.', '/docs/examples/finance-metrics'],
+];
+
+const featureLinks = [
+  ['Quickstart', 'Run the included dbt project and export your first static dashboard.', '/docs/get-started/quickstart'],
+  ['Command reference', 'See every CLI command, option, and common workflow.', '/docs/reference/cli'],
+  ['Technical guide', 'Understand parsing, dbt artifact resolution, rendering, and export paths.', '/docs/guides/technical-architecture'],
+  ['AI context', 'Use the docs index and prompts as a starting point for coding agents.', '/docs/ai-context/overview'],
+  ['Integrations', 'Connect dbt-charts to CI, static hosting, and future orchestration workflows.', '/docs/integrations/overview'],
+  ['Migration placeholder', 'Track the future path for moving Looker dashboards into dbt-charts.', '/docs/migrations/looker'],
+];
+
+function HomepageHeader() {
+  const heroImage = useBaseUrl('img/dashboard-preview.svg');
+
+  return (
+    <header className="landingHero" style={{backgroundImage: `url(${heroImage})`}}>
+      <div className="landingHero__scrim" />
+      <div className="container landingHero__content">
+        <p className="eyebrow">Open source dashboard compiler for analytics engineers</p>
+        <h1>Chart-as-code dashboards for dbt projects</h1>
+        <p className="landingHero__lead">
+          Define visualisations in SQL, resolve dbt refs from artifacts, render static charts, and publish dashboards without running a BI server.
+        </p>
+        <div className="buttonRow">
+          <Link className="button button--primary button--lg" to="/docs/get-started/quickstart">
+            Start with the quickstart
+          </Link>
+          <Link className="button button--secondary button--lg" to="/docs/examples/gallery">
+            Browse examples
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function Workflow() {
+  return (
+    <section className="band">
+      <div className="container">
+        <div className="sectionHeader">
+          <p className="eyebrow">Developer workflow</p>
+          <h2>From dbt model to publishable dashboard</h2>
+        </div>
+        <div className="workflowGrid">
+          {workflow.map(([title, description], index) => (
+            <article className="workflowStep" key={title}>
+              <span>{index + 1}</span>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FeatureLinks() {
+  return (
+    <section className="band band--muted">
+      <div className="container">
+        <div className="sectionHeader">
+          <p className="eyebrow">Documentation</p>
+          <h2>Find the right entry point quickly</h2>
+        </div>
+        <div className="linkGrid">
+          {featureLinks.map(([title, description, to]) => (
+            <Link className="docTile" to={to} key={title}>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Examples() {
+  return (
+    <section className="band">
+      <div className="container splitLayout">
+        <div>
+          <p className="eyebrow">Examples gallery</p>
+          <h2>Use small projects as patterns</h2>
+          <p>
+            Each example includes seeds, dbt models, ggsql visualisations, dashboard YAML, and repeatable commands. Use them as starting points for your own analytics project.
+          </p>
+          <Link className="button button--primary" to="/docs/examples/gallery">
+            Open gallery
+          </Link>
+        </div>
+        <div className="exampleList">
+          {examples.map(([title, description, to]) => (
+            <Link className="exampleItem" to={to} key={title}>
+              <strong>{title}</strong>
+              <span>{description}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AgentSection() {
+  return (
+    <section className="band band--ink">
+      <div className="container agentLayout">
+        <div>
+          <p className="eyebrow">AI context and agents</p>
+          <h2>Make the project easier for coding assistants to understand</h2>
+          <p>
+            The docs include an AI context section, an llms.txt placeholder, and a future skills placeholder for Codex, Claude, or other coding agents that can help users generate visualisations and dashboards from dbt models.
+          </p>
+        </div>
+        <div className="terminalPanel" aria-label="AI context command examples">
+          <code>curl https://kannandreams.github.io/dbt-charts/llms.txt</code>
+          <code>uv run dbt-charts doctor --project-dir examples/simple_dbt</code>
+          <code>uv run dbt-charts render --project-dir examples/simple_dbt</code>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function Home() {
+  return (
+    <Layout
+      title="Chart-as-code dashboards for dbt"
+      description="dbt-charts documentation, examples, CLI reference, integrations, and AI context for analytics engineers."
+    >
+      <HomepageHeader />
+      <main>
+        <Workflow />
+        <FeatureLinks />
+        <Examples />
+        <AgentSection />
+      </main>
+    </Layout>
+  );
+}
