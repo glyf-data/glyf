@@ -120,7 +120,7 @@ body {
 }
 
 .eyebrow {
-  color: var(--dbtc-highlight);
+  color: var(--dbtc-primary);
   font-size: 0.78rem;
   font-weight: 750;
   letter-spacing: 0;
@@ -129,6 +129,10 @@ body {
 }
 
 .landingHero .eyebrow {
+  color: var(--dbtc-neon);
+}
+
+.band--ink .eyebrow {
   color: var(--dbtc-neon);
 }
 
