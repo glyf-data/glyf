@@ -1,6 +1,6 @@
 # dbt-charts
 
-> SQL-first dashboards for dbt.
+> A lightweight dashboard layer for analytics engineers.
 
 Use these pages as compact context for coding agents and language models:
 
