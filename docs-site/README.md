@@ -11,11 +11,37 @@ npm install
 npm start
 ```
 
+Open:
+
+```text
+http://localhost:3000/dbt-charts/
+```
+
+If port `3000` is busy, choose another port:
+
+```bash
+npm start -- --port 3001
+```
+
+Open:
+
+```text
+http://localhost:3001/dbt-charts/
+```
+
 Build the static site:
 
 ```bash
 npm run build
 ```
+
+Preview the production build:
+
+```bash
+npm run serve
+```
+
+Then open the URL printed by Docusaurus.
 
 ## Maintenance model
 
