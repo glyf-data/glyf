@@ -108,7 +108,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright ${new Date().getFullYear()} dbt-charts contributors. Released under the MIT License.`,
+        copyright: `Copyright ${new Date().getFullYear()} dbt-charts contributors. Released under the Apache License 2.0.`,
       },
       prism: {
         theme: lightCodeTheme,
