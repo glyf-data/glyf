@@ -1,11 +1,11 @@
 :root {
-  --ifm-color-primary: #2563eb;
-  --ifm-color-primary-dark: #1d4ed8;
-  --ifm-color-primary-darker: #1e40af;
-  --ifm-color-primary-darkest: #1e3a8a;
-  --ifm-color-primary-light: #3b82f6;
-  --ifm-color-primary-lighter: #60a5fa;
-  --ifm-color-primary-lightest: #93c5fd;
+  --ifm-color-primary: #008f5f;
+  --ifm-color-primary-dark: #007a52;
+  --ifm-color-primary-darker: #006c49;
+  --ifm-color-primary-darkest: #00533a;
+  --ifm-color-primary-light: #00a870;
+  --ifm-color-primary-lighter: #00bf80;
+  --ifm-color-primary-lightest: #00e599;
   --ifm-background-color: #ffffff;
   --ifm-font-color-base: #111827;
   --ifm-heading-color: #0f172a;
@@ -16,37 +16,41 @@
   --ifm-global-radius: 8px;
   --dbtc-ink: #0f172a;
   --dbtc-slate: #475569;
+  --dbtc-primary: #008f5f;
+  --dbtc-neon: #00e599;
+  --dbtc-teal: #00b8a9;
   --dbtc-blue: #2563eb;
-  --dbtc-teal: #14b8a6;
-  --dbtc-teal-dark: #0f766e;
-  --dbtc-highlight: #f59e0b;
+  --dbtc-highlight: #bef264;
   --dbtc-green: #16a34a;
-  --dbtc-violet: #7c3aed;
+  --dbtc-violet: #6d5dfc;
+  --dbtc-dark: #07130f;
   --dbtc-paper: #ffffff;
-  --dbtc-muted: #f8fafc;
-  --dbtc-soft: #eef6ff;
+  --dbtc-muted: #f6faf8;
+  --dbtc-soft: #eafff5;
   --dbtc-border: rgba(15, 23, 42, 0.12);
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #60a5fa;
-  --ifm-background-color: #0f172a;
-  --ifm-font-color-base: #e5e7eb;
+  --ifm-color-primary: #00e599;
+  --ifm-background-color: #07130f;
+  --ifm-font-color-base: #e6f4ef;
   --ifm-heading-color: #ffffff;
-  --ifm-navbar-background-color: rgba(15, 23, 42, 0.96);
-  --ifm-footer-background-color: #111827;
+  --ifm-navbar-background-color: rgba(7, 19, 15, 0.96);
+  --ifm-footer-background-color: #030907;
   --dbtc-ink: #f8fafc;
-  --dbtc-slate: #cbd5e1;
-  --dbtc-blue: #60a5fa;
+  --dbtc-slate: #bfd2cc;
+  --dbtc-primary: #00e599;
+  --dbtc-neon: #00e599;
   --dbtc-teal: #2dd4bf;
-  --dbtc-teal-dark: #14b8a6;
-  --dbtc-highlight: #fbbf24;
-  --dbtc-green: #4ade80;
+  --dbtc-blue: #7dd3fc;
+  --dbtc-highlight: #bef264;
+  --dbtc-green: #86efac;
   --dbtc-violet: #a78bfa;
-  --dbtc-paper: #111827;
-  --dbtc-muted: #1e293b;
-  --dbtc-soft: #172033;
-  --dbtc-border: rgba(148, 163, 184, 0.24);
+  --dbtc-dark: #030907;
+  --dbtc-paper: #0d1d17;
+  --dbtc-muted: #102720;
+  --dbtc-soft: #123329;
+  --dbtc-border: rgba(0, 229, 153, 0.22);
 }
 
 html {
@@ -66,9 +70,23 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  background: var(--ifm-background-color);
-  border-bottom: 1px solid var(--dbtc-border);
+  background:
+    radial-gradient(circle at 70% 24%, rgba(0, 229, 153, 0.16), transparent 28%),
+    linear-gradient(135deg, #030907 0%, #07130f 54%, #0b2018 100%);
+  border-bottom: 1px solid rgba(0, 229, 153, 0.18);
   overflow: hidden;
+}
+
+.landingHero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 229, 153, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 153, 0.08) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(90deg, transparent 0%, black 58%, black 100%);
+  opacity: 0.7;
 }
 
 .landingHero__layout {
@@ -84,11 +102,11 @@ body {
   position: relative;
   z-index: 1;
   max-width: 780px;
-  color: var(--dbtc-ink);
+  color: #ffffff;
 }
 
 .landingHero h1 {
-  color: var(--dbtc-ink);
+  color: #ffffff;
   font-size: clamp(2.7rem, 5.8vw, 5.1rem);
   line-height: 1.02;
   margin-bottom: 1.25rem;
@@ -96,7 +114,7 @@ body {
 
 .landingHero__lead {
   max-width: 680px;
-  color: var(--dbtc-slate);
+  color: rgba(230, 244, 239, 0.78);
   font-size: 1.25rem;
   line-height: 1.65;
 }
@@ -111,7 +129,7 @@ body {
 }
 
 .landingHero .eyebrow {
-  color: var(--dbtc-teal);
+  color: var(--dbtc-neon);
 }
 
 .buttonRow {
@@ -122,15 +140,15 @@ body {
 }
 
 .button.button--primary {
-  --ifm-button-background-color: var(--dbtc-blue);
-  --ifm-button-border-color: var(--dbtc-blue);
-  color: #ffffff;
+  --ifm-button-background-color: var(--dbtc-neon);
+  --ifm-button-border-color: var(--dbtc-neon);
+  color: #03100c;
 }
 
 .button.button--secondary {
-  color: var(--dbtc-ink);
-  border-color: var(--dbtc-border);
-  background: var(--dbtc-paper);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .heroEquation {
@@ -144,21 +162,21 @@ body {
 .equationCard {
   width: 100%;
   min-height: 150px;
-  border: 1px solid var(--dbtc-border);
+  border: 1px solid rgba(0, 229, 153, 0.22);
   border-radius: 8px;
-  background: var(--dbtc-paper);
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  background: rgba(6, 20, 15, 0.82);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
   display: grid;
   gap: 0.8rem;
   align-content: center;
   justify-items: center;
   padding: 1rem;
-  color: var(--dbtc-ink);
+  color: rgba(230, 244, 239, 0.86);
   font-weight: 750;
 }
 
 .equationCard--dbt {
-  border-top: 4px solid var(--dbtc-blue);
+  border-top: 4px solid var(--dbtc-neon);
 }
 
 .equationCard--charts {
@@ -166,17 +184,17 @@ body {
 }
 
 .equationCard--dashboard {
-  border-top: 4px solid var(--dbtc-highlight);
+  border-top: 4px solid var(--dbtc-blue);
 }
 
 .dbtToken {
-  color: var(--dbtc-blue);
+  color: var(--dbtc-neon);
   font-size: 2.4rem;
   font-weight: 850;
 }
 
 .equationSymbol {
-  color: var(--dbtc-highlight);
+  color: var(--dbtc-neon);
   font-size: 2rem;
   font-weight: 850;
 }
@@ -201,12 +219,12 @@ body {
 
 .miniBars span:nth-child(2) {
   height: 50px;
-  background: var(--dbtc-blue);
+  background: var(--dbtc-neon);
 }
 
 .miniBars span:nth-child(3) {
   height: 40px;
-  background: var(--dbtc-highlight);
+  background: var(--dbtc-blue);
 }
 
 .miniDashboard {
@@ -219,17 +237,17 @@ body {
 .miniDashboard span {
   min-height: 30px;
   border-radius: 6px;
-  background: var(--dbtc-soft);
-  border: 1px solid var(--dbtc-border);
+  background: rgba(0, 229, 153, 0.1);
+  border: 1px solid rgba(0, 229, 153, 0.18);
 }
 
 .miniDashboard span:first-child {
   grid-column: span 2;
-  background: linear-gradient(90deg, var(--dbtc-blue), var(--dbtc-teal));
+  background: linear-gradient(90deg, var(--dbtc-neon), var(--dbtc-teal));
 }
 
 .miniDashboard span:nth-child(2) {
-  background: var(--dbtc-highlight);
+  background: var(--dbtc-blue);
 }
 
 .miniDashboard span:nth-child(3) {
@@ -245,7 +263,7 @@ body {
 }
 
 .band--ink {
-  background: #0f172a;
+  background: var(--dbtc-dark);
   color: #ffffff;
 }
 
@@ -288,9 +306,9 @@ body {
 
 .workflowStep span {
   align-items: center;
-  background: color-mix(in srgb, var(--dbtc-blue) 12%, transparent);
+  background: color-mix(in srgb, var(--dbtc-primary) 12%, transparent);
   border-radius: 999px;
-  color: var(--dbtc-blue);
+  color: var(--dbtc-primary);
   display: inline-flex;
   font-weight: 800;
   height: 2rem;
@@ -328,7 +346,7 @@ body {
 }
 
 .docTile:hover {
-  border-color: var(--dbtc-blue);
+  border-color: var(--dbtc-primary);
   color: inherit;
   text-decoration: none;
   transform: translateY(-2px);
@@ -370,7 +388,7 @@ body {
 }
 
 .terminalPanel {
-  background: #020617;
+  background: #030907;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   display: grid;
   gap: 0.75rem;
@@ -379,7 +397,7 @@ body {
 
 .terminalPanel code {
   background: transparent;
-  color: #bfdbfe;
+  color: #b8ffe3;
   display: block;
   white-space: normal;
   word-break: break-word;
