@@ -4,7 +4,7 @@ const darkCodeTheme = require('prism-react-renderer').themes.dracula;
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'dbt-charts',
-  tagline: 'Chart-as-code dashboards for dbt projects',
+  tagline: 'SQL-first dashboards for dbt',
   favicon: 'img/dbt-charts-mark.svg',
 
   url: 'https://kannandreams.github.io',

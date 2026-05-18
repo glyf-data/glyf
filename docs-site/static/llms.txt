@@ -1,6 +1,6 @@
 # dbt-charts
 
-> Chart-as-code dashboards for dbt projects.
+> SQL-first dashboards for dbt.
 
 Use these pages as compact context for coding agents and language models:
 

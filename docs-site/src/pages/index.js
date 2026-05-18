@@ -31,9 +31,9 @@ function HomepageHeader() {
       <div className="container landingHero__layout">
         <div className="landingHero__content">
           <p className="eyebrow">Open source dashboard compiler for analytics engineers</p>
-          <h1>Chart-as-code dashboards for dbt projects</h1>
+          <h1>SQL-first dashboards for dbt</h1>
           <p className="landingHero__lead">
-            Define visualisations in SQL, resolve dbt refs from artifacts, render static charts, and publish dashboards without running a BI server.
+            Powered by ggsql. Compile visualisations into static dashboards, no BI server required.
           </p>
           <div className="buttonRow">
             <Link className="button button--primary button--lg" to="/docs/get-started/quickstart">
@@ -176,7 +176,7 @@ function AgentSection() {
 export default function Home() {
   return (
     <Layout
-      title="Chart-as-code dashboards for dbt"
+      title="SQL-first dashboards for dbt"
       description="dbt-charts documentation, examples, CLI reference, integrations, and AI context for analytics engineers."
     >
       <HomepageHeader />
