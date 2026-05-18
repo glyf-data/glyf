@@ -51,14 +51,14 @@ const config = {
         id: 'release-preview',
         content:
           'Docs preview for dbt-charts 0.1.0: quickstart, examples gallery, AI context, and migration placeholders are now in progress.',
-        backgroundColor: '#225075',
+        backgroundColor: '#050a32',
         textColor: '#ffffff',
         isCloseable: true,
       },
       colorMode: {
-        defaultMode: 'light',
+        defaultMode: 'dark',
         disableSwitch: false,
-        respectPrefersColorScheme: true,
+        respectPrefersColorScheme: false,
       },
       navbar: {
         title: 'dbt-charts',
