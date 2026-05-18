@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 
 const workflow = [
   ['Build dbt models', 'Run dbt seed, run, build, or compile so the manifest and warehouse tables are available.'],
@@ -27,24 +26,47 @@ const featureLinks = [
 ];
 
 function HomepageHeader() {
-  const heroImage = useBaseUrl('img/dashboard-preview.svg');
-
   return (
-    <header className="landingHero" style={{backgroundImage: `url(${heroImage})`}}>
-      <div className="landingHero__scrim" />
-      <div className="container landingHero__content">
-        <p className="eyebrow">Open source dashboard compiler for analytics engineers</p>
-        <h1>Chart-as-code dashboards for dbt projects</h1>
-        <p className="landingHero__lead">
-          Define visualisations in SQL, resolve dbt refs from artifacts, render static charts, and publish dashboards without running a BI server.
-        </p>
-        <div className="buttonRow">
-          <Link className="button button--primary button--lg" to="/docs/get-started/quickstart">
-            Start with the quickstart
-          </Link>
-          <Link className="button button--secondary button--lg" to="/docs/examples/gallery">
-            Browse examples
-          </Link>
+    <header className="landingHero">
+      <div className="container landingHero__layout">
+        <div className="landingHero__content">
+          <p className="eyebrow">Open source dashboard compiler for analytics engineers</p>
+          <h1>Chart-as-code dashboards for dbt projects</h1>
+          <p className="landingHero__lead">
+            Define visualisations in SQL, resolve dbt refs from artifacts, render static charts, and publish dashboards without running a BI server.
+          </p>
+          <div className="buttonRow">
+            <Link className="button button--primary button--lg" to="/docs/get-started/quickstart">
+              Start with the quickstart
+            </Link>
+            <Link className="button button--secondary button--lg" to="/docs/examples/gallery">
+              Browse examples
+            </Link>
+          </div>
+        </div>
+        <div className="heroEquation" aria-label="dbt plus charts equals dashboard">
+          <div className="equationCard equationCard--dbt">
+            <span className="dbtToken">dbt</span>
+            <span>models</span>
+          </div>
+          <span className="equationSymbol">+</span>
+          <div className="equationCard equationCard--charts">
+            <div className="miniBars" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
+            <span>charts</span>
+          </div>
+          <span className="equationSymbol">=</span>
+          <div className="equationCard equationCard--dashboard">
+            <div className="miniDashboard" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
+            <span>dashboard</span>
+          </div>
         </div>
       </div>
     </header>

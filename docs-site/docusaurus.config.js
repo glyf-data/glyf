@@ -46,19 +46,19 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      image: 'img/dashboard-preview.svg',
+      image: 'img/dbt-charts-mark.svg',
       announcementBar: {
         id: 'release-preview',
         content:
           'Docs preview for dbt-charts 0.1.0: quickstart, examples gallery, AI context, and migration placeholders are now in progress.',
-        backgroundColor: '#050a32',
+        backgroundColor: '#0f172a',
         textColor: '#ffffff',
         isCloseable: true,
       },
       colorMode: {
-        defaultMode: 'dark',
+        defaultMode: 'light',
         disableSwitch: false,
-        respectPrefersColorScheme: false,
+        respectPrefersColorScheme: true,
       },
       navbar: {
         title: 'dbt-charts',

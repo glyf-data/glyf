@@ -1,54 +1,52 @@
 :root {
-  --ifm-color-primary: #00d9ff;
-  --ifm-color-primary-dark: #00c4e6;
-  --ifm-color-primary-darker: #00abc9;
-  --ifm-color-primary-darkest: #008aa3;
-  --ifm-color-primary-light: #27e2ff;
-  --ifm-color-primary-lighter: #55e9ff;
-  --ifm-color-primary-lightest: #89f1ff;
-  --ifm-background-color: #070d3f;
-  --ifm-font-color-base: #edf7ff;
-  --ifm-heading-color: #ffffff;
+  --ifm-color-primary: #2563eb;
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
+  --ifm-background-color: #ffffff;
+  --ifm-font-color-base: #111827;
+  --ifm-heading-color: #0f172a;
   --ifm-code-font-size: 95%;
-  --ifm-navbar-background-color: rgba(7, 13, 63, 0.96);
-  --ifm-navbar-shadow: 0 1px 0 rgba(0, 217, 255, 0.16);
-  --ifm-footer-background-color: #050a32;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.96);
+  --ifm-navbar-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
+  --ifm-footer-background-color: #f8fafc;
   --ifm-global-radius: 8px;
-  --dbtc-ink: #edf7ff;
-  --dbtc-slate: #9fb4d4;
-  --dbtc-teal: #00d9ff;
-  --dbtc-aqua: #19f4e4;
-  --dbtc-blue: #2f66ff;
-  --dbtc-violet: #35318e;
-  --dbtc-green: #2df07c;
-  --dbtc-navy: #070d3f;
-  --dbtc-deep: #050a32;
-  --dbtc-paper: #0b155a;
-  --dbtc-muted: #0f1b65;
-  --dbtc-warm: #111a70;
-  --dbtc-border: rgba(0, 217, 255, 0.18);
+  --dbtc-ink: #0f172a;
+  --dbtc-slate: #475569;
+  --dbtc-blue: #2563eb;
+  --dbtc-teal: #14b8a6;
+  --dbtc-teal-dark: #0f766e;
+  --dbtc-highlight: #f59e0b;
+  --dbtc-green: #16a34a;
+  --dbtc-violet: #7c3aed;
+  --dbtc-paper: #ffffff;
+  --dbtc-muted: #f8fafc;
+  --dbtc-soft: #eef6ff;
+  --dbtc-border: rgba(15, 23, 42, 0.12);
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #00d9ff;
-  --ifm-background-color: #070d3f;
-  --ifm-font-color-base: #edf7ff;
+  --ifm-color-primary: #60a5fa;
+  --ifm-background-color: #0f172a;
+  --ifm-font-color-base: #e5e7eb;
   --ifm-heading-color: #ffffff;
-  --ifm-navbar-background-color: rgba(7, 13, 63, 0.96);
-  --ifm-footer-background-color: #050a32;
-  --dbtc-ink: #edf7ff;
-  --dbtc-slate: #9fb4d4;
-  --dbtc-teal: #00d9ff;
-  --dbtc-aqua: #19f4e4;
-  --dbtc-blue: #2f66ff;
-  --dbtc-violet: #35318e;
-  --dbtc-green: #2df07c;
-  --dbtc-navy: #070d3f;
-  --dbtc-deep: #050a32;
-  --dbtc-paper: #0b155a;
-  --dbtc-muted: #0f1b65;
-  --dbtc-warm: #111a70;
-  --dbtc-border: rgba(0, 217, 255, 0.18);
+  --ifm-navbar-background-color: rgba(15, 23, 42, 0.96);
+  --ifm-footer-background-color: #111827;
+  --dbtc-ink: #f8fafc;
+  --dbtc-slate: #cbd5e1;
+  --dbtc-blue: #60a5fa;
+  --dbtc-teal: #2dd4bf;
+  --dbtc-teal-dark: #14b8a6;
+  --dbtc-highlight: #fbbf24;
+  --dbtc-green: #4ade80;
+  --dbtc-violet: #a78bfa;
+  --dbtc-paper: #111827;
+  --dbtc-muted: #1e293b;
+  --dbtc-soft: #172033;
+  --dbtc-border: rgba(148, 163, 184, 0.24);
 }
 
 html {
@@ -64,32 +62,28 @@ body {
 }
 
 .landingHero {
-  min-height: 70vh;
+  min-height: 68vh;
   position: relative;
   display: flex;
   align-items: center;
-  background-color: var(--dbtc-navy);
-  background-position: center right;
-  background-size: cover;
+  background: var(--ifm-background-color);
   border-bottom: 1px solid var(--dbtc-border);
   overflow: hidden;
 }
 
-.landingHero__scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, rgba(7, 13, 63, 0.98) 0%, rgba(7, 13, 63, 0.88) 46%, rgba(7, 13, 63, 0.54) 100%),
-    radial-gradient(circle at 72% 42%, rgba(0, 217, 255, 0.18), transparent 34%),
-    radial-gradient(circle at 88% 16%, rgba(45, 240, 124, 0.12), transparent 28%);
+.landingHero__layout {
+  display: grid;
+  gap: 3rem;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.82fr);
+  align-items: center;
+  padding-top: 5.5rem;
+  padding-bottom: 5.5rem;
 }
 
 .landingHero__content {
   position: relative;
   z-index: 1;
   max-width: 780px;
-  padding-top: 5rem;
-  padding-bottom: 5rem;
   color: var(--dbtc-ink);
 }
 
@@ -102,13 +96,13 @@ body {
 
 .landingHero__lead {
   max-width: 680px;
-  color: rgba(237, 247, 255, 0.82);
+  color: var(--dbtc-slate);
   font-size: 1.25rem;
   line-height: 1.65;
 }
 
 .eyebrow {
-  color: var(--dbtc-gold);
+  color: var(--dbtc-highlight);
   font-size: 0.78rem;
   font-weight: 750;
   letter-spacing: 0;
@@ -128,15 +122,118 @@ body {
 }
 
 .button.button--primary {
-  --ifm-button-background-color: var(--dbtc-teal);
-  --ifm-button-border-color: var(--dbtc-teal);
-  color: #04103b;
+  --ifm-button-background-color: var(--dbtc-blue);
+  --ifm-button-border-color: var(--dbtc-blue);
+  color: #ffffff;
 }
 
 .button.button--secondary {
   color: var(--dbtc-ink);
-  border-color: rgba(0, 217, 255, 0.42);
-  background: rgba(11, 21, 90, 0.5);
+  border-color: var(--dbtc-border);
+  background: var(--dbtc-paper);
+}
+
+.heroEquation {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1.2fr;
+  gap: 0.8rem;
+  align-items: center;
+  justify-items: center;
+}
+
+.equationCard {
+  width: 100%;
+  min-height: 150px;
+  border: 1px solid var(--dbtc-border);
+  border-radius: 8px;
+  background: var(--dbtc-paper);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 0.8rem;
+  align-content: center;
+  justify-items: center;
+  padding: 1rem;
+  color: var(--dbtc-ink);
+  font-weight: 750;
+}
+
+.equationCard--dbt {
+  border-top: 4px solid var(--dbtc-blue);
+}
+
+.equationCard--charts {
+  border-top: 4px solid var(--dbtc-teal);
+}
+
+.equationCard--dashboard {
+  border-top: 4px solid var(--dbtc-highlight);
+}
+
+.dbtToken {
+  color: var(--dbtc-blue);
+  font-size: 2.4rem;
+  font-weight: 850;
+}
+
+.equationSymbol {
+  color: var(--dbtc-highlight);
+  font-size: 2rem;
+  font-weight: 850;
+}
+
+.miniBars {
+  display: flex;
+  align-items: end;
+  gap: 0.35rem;
+  height: 54px;
+}
+
+.miniBars span {
+  display: block;
+  width: 16px;
+  border-radius: 4px 4px 0 0;
+  background: var(--dbtc-teal);
+}
+
+.miniBars span:nth-child(1) {
+  height: 32px;
+}
+
+.miniBars span:nth-child(2) {
+  height: 50px;
+  background: var(--dbtc-blue);
+}
+
+.miniBars span:nth-child(3) {
+  height: 40px;
+  background: var(--dbtc-highlight);
+}
+
+.miniDashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  width: 86px;
+}
+
+.miniDashboard span {
+  min-height: 30px;
+  border-radius: 6px;
+  background: var(--dbtc-soft);
+  border: 1px solid var(--dbtc-border);
+}
+
+.miniDashboard span:first-child {
+  grid-column: span 2;
+  background: linear-gradient(90deg, var(--dbtc-blue), var(--dbtc-teal));
+}
+
+.miniDashboard span:nth-child(2) {
+  background: var(--dbtc-highlight);
+}
+
+.miniDashboard span:nth-child(3) {
+  background: var(--dbtc-teal);
 }
 
 .band {
@@ -148,7 +245,7 @@ body {
 }
 
 .band--ink {
-  background: #050a32;
+  background: #0f172a;
   color: #ffffff;
 }
 
@@ -191,9 +288,9 @@ body {
 
 .workflowStep span {
   align-items: center;
-  background: rgba(0, 217, 255, 0.12);
+  background: color-mix(in srgb, var(--dbtc-blue) 12%, transparent);
   border-radius: 999px;
-  color: var(--dbtc-teal);
+  color: var(--dbtc-blue);
   display: inline-flex;
   font-weight: 800;
   height: 2rem;
@@ -231,7 +328,7 @@ body {
 }
 
 .docTile:hover {
-  border-color: rgba(0, 217, 255, 0.5);
+  border-color: var(--dbtc-blue);
   color: inherit;
   text-decoration: none;
   transform: translateY(-2px);
@@ -259,7 +356,7 @@ body {
 }
 
 .exampleItem:hover {
-  border-color: rgba(45, 240, 124, 0.5);
+  border-color: var(--dbtc-teal);
   color: inherit;
   text-decoration: none;
 }
@@ -273,7 +370,7 @@ body {
 }
 
 .terminalPanel {
-  background: #07104d;
+  background: #020617;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   display: grid;
   gap: 0.75rem;
@@ -282,7 +379,7 @@ body {
 
 .terminalPanel code {
   background: transparent;
-  color: #89f1ff;
+  color: #bfdbfe;
   display: block;
   white-space: normal;
   word-break: break-word;
@@ -301,12 +398,22 @@ body {
   .workflowGrid,
   .linkGrid,
   .splitLayout,
-  .agentLayout {
+  .agentLayout,
+  .landingHero__layout {
     grid-template-columns: 1fr;
   }
 
+  .heroEquation {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .equationSymbol {
+    line-height: 1;
+  }
+
   .landingHero {
-    min-height: 66vh;
+    min-height: auto;
   }
 }
 
