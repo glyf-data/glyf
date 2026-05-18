@@ -28,7 +28,7 @@ jobs:
 
       - name: Install docs dependencies
         working-directory: docs-site
-        run: npm install
+        run: npm ci
 
       - name: Build docs site
         working-directory: docs-site

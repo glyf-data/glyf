@@ -4,8 +4,8 @@
 
 ## Project links
 
-- GitHub repository: <https://github.com/kannandreams/dbt-charts>
-- Issues: <https://github.com/kannandreams/dbt-charts/issues>
+- GitHub repository: [kannandreams/dbt-charts](https://github.com/kannandreams/dbt-charts)
+- Issues: [GitHub issues](https://github.com/kannandreams/dbt-charts/issues)
 - Roadmap: [Roadmap](roadmap.md)
 
 ## Good issue reports
