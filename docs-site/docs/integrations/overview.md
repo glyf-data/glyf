@@ -5,6 +5,8 @@
 ## Current integration paths
 
 - GitHub Actions for repeatable dashboard builds.
+- Cloudflare Pages for the private hosted docs site.
+- Cloudflare Access for private documentation access.
 - GitHub Pages or any static host for published output.
 - CI artifact uploads for internal review.
 

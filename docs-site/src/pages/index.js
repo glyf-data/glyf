@@ -164,7 +164,7 @@ function AgentSection() {
           </p>
         </div>
         <div className="terminalPanel" aria-label="AI context command examples">
-          <code>curl https://kannandreams.github.io/dbt-charts/llms.txt</code>
+          <code>curl https://dbtcharts.pages.dev/llms.txt</code>
           <code>uv run dbt-charts doctor --project-dir examples/simple_dbt</code>
           <code>uv run dbt-charts render --project-dir examples/simple_dbt</code>
         </div>

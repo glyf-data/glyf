@@ -16,6 +16,9 @@ dbt-charts export
 - Serve and watch workflows for local development.
 - Richer dashboard layouts.
 - Cloud publish helpers.
+- Private Cloudflare-hosted documentation.
+- Real screenshot-backed examples gallery.
+- Social preview and public SEO assets.
 - Interactive chart support.
 - dbt docs integration.
 - Lineage-aware dashboards.

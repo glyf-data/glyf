@@ -31,6 +31,7 @@ const sidebars = {
       collapsed: false,
       items: [
         'examples/gallery',
+        'examples/screenshots',
         'examples/simple-dbt',
         'examples/sales-dashboard',
         'examples/product-analytics',
@@ -47,7 +48,13 @@ const sidebars = {
       type: 'category',
       label: 'Integrations',
       collapsed: false,
-      items: ['integrations/overview', 'integrations/github-actions', 'integrations/static-hosting'],
+      items: [
+        'integrations/overview',
+        'integrations/cloudflare-pages',
+        'integrations/private-access',
+        'integrations/github-actions',
+        'integrations/static-hosting',
+      ],
     },
     {
       type: 'category',
@@ -65,7 +72,7 @@ const sidebars = {
       type: 'category',
       label: 'Resources',
       collapsed: false,
-      items: ['resources/community', 'resources/roadmap', 'resources/troubleshooting'],
+      items: ['resources/community', 'resources/roadmap', 'resources/seo-preview', 'resources/troubleshooting'],
     },
   ],
 };
