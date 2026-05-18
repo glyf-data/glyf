@@ -4,14 +4,14 @@
 
 Use these pages as compact context for coding agents and language models:
 
-- Overview: https://kannandreams.github.io/dbt-charts/docs/intro
-- Quickstart: https://kannandreams.github.io/dbt-charts/docs/get-started/quickstart
-- Existing dbt project: https://kannandreams.github.io/dbt-charts/docs/get-started/existing-dbt-project
-- Visualisation syntax: https://kannandreams.github.io/dbt-charts/docs/guides/visualisation-syntax
-- Dashboard YAML: https://kannandreams.github.io/dbt-charts/docs/guides/dashboard-yaml
-- CLI reference: https://kannandreams.github.io/dbt-charts/docs/reference/cli
-- Examples gallery: https://kannandreams.github.io/dbt-charts/docs/examples/gallery
-- Agents: https://kannandreams.github.io/dbt-charts/docs/ai-context/agents
+- Overview: https://dbtcharts.pages.dev/docs/intro
+- Quickstart: https://dbtcharts.pages.dev/docs/get-started/quickstart
+- Existing dbt project: https://dbtcharts.pages.dev/docs/get-started/existing-dbt-project
+- Visualisation syntax: https://dbtcharts.pages.dev/docs/guides/visualisation-syntax
+- Dashboard YAML: https://dbtcharts.pages.dev/docs/guides/dashboard-yaml
+- CLI reference: https://dbtcharts.pages.dev/docs/reference/cli
+- Examples gallery: https://dbtcharts.pages.dev/docs/examples/gallery
+- Agents: https://dbtcharts.pages.dev/docs/ai-context/agents
 
 Core workflow:
 

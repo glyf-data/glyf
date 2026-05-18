@@ -10,6 +10,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
 | [Sales dashboard](sales-dashboard.md) | Reporting patterns for revenue by time, channel, and region. | Line, bar, and regional charts. |
 | [Product analytics](product-analytics.md) | Product usage and activation metrics. | Area, bar, and scatter examples. |
 | [Finance metrics](finance-metrics.md) | Finance KPI dashboard patterns. | Bookings, expense, and margin charts. |
+| [Screenshots](screenshots.md) | Planning the future visual gallery. | Capture backlog and screenshot guidelines. |
 
 ## Run an example
 

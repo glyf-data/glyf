@@ -1,14 +1,19 @@
 const lightCodeTheme = require('prism-react-renderer').themes.github;
 const darkCodeTheme = require('prism-react-renderer').themes.dracula;
 
+const siteUrl = (process.env.DOCS_SITE_URL || 'https://dbtcharts.pages.dev').replace(/\/$/, '');
+const rawBaseUrl = process.env.DOCS_SITE_BASE_URL || '/';
+const normalizedBaseUrl = rawBaseUrl.startsWith('/') ? rawBaseUrl : `/${rawBaseUrl}`;
+const baseUrl = normalizedBaseUrl.endsWith('/') ? normalizedBaseUrl : `${normalizedBaseUrl}/`;
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'dbt-charts',
   tagline: 'A lightweight dashboard layer for analytics engineers',
   favicon: 'img/dbt-charts-mark.svg',
 
-  url: 'https://kannandreams.github.io',
-  baseUrl: '/dbt-charts/',
+  url: siteUrl,
+  baseUrl,
 
   organizationName: 'kannandreams',
   projectName: 'dbt-charts',

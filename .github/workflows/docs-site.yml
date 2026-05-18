@@ -13,8 +13,17 @@ on:
       - ".github/workflows/docs-site.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+  deployments: write
+
+env:
+  DOCS_SITE_URL: https://dbtcharts.pages.dev
+  DOCS_SITE_BASE_URL: /
+  CLOUDFLARE_PROJECT_NAME: dbtcharts
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,3 +42,12 @@ jobs:
       - name: Build docs site
         working-directory: docs-site
         run: npm run build
+
+      - name: Deploy docs to Cloudflare Pages
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy docs-site/build --project-name=${{ env.CLOUDFLARE_PROJECT_NAME }} --branch=main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
