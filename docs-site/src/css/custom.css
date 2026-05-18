@@ -151,107 +151,117 @@ body {
   background: rgba(255, 255, 255, 0.06);
 }
 
-.heroEquation {
+.pipelineVisual {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1.2fr;
-  gap: 0.8rem;
-  align-items: center;
-  justify-items: center;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0.9rem;
+  align-items: stretch;
 }
 
-.equationCard {
-  width: 100%;
-  min-height: 150px;
+.pipelineStage {
+  min-height: 168px;
   border: 1px solid rgba(0, 229, 153, 0.22);
   border-radius: 8px;
   background: rgba(6, 20, 15, 0.82);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
   display: grid;
-  gap: 0.8rem;
-  align-content: center;
-  justify-items: center;
+  gap: 0.75rem;
+  align-content: start;
   padding: 1rem;
-  color: rgba(230, 244, 239, 0.86);
-  font-weight: 750;
+  color: rgba(230, 244, 239, 0.88);
 }
 
-.equationCard--dbt {
+.pipelineStage--dbt {
   border-top: 4px solid var(--dbtc-neon);
 }
 
-.equationCard--charts {
+.pipelineStage--code {
   border-top: 4px solid var(--dbtc-teal);
 }
 
-.equationCard--dashboard {
+.pipelineStage--dashboard {
+  grid-column: 1 / -1;
   border-top: 4px solid var(--dbtc-blue);
 }
 
-.dbtToken {
-  color: var(--dbtc-neon);
-  font-size: 2.4rem;
-  font-weight: 850;
-}
-
-.equationSymbol {
-  color: var(--dbtc-neon);
-  font-size: 2rem;
-  font-weight: 850;
-}
-
-.miniBars {
+.stageHeader {
   display: flex;
-  align-items: end;
-  gap: 0.35rem;
-  height: 54px;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.15rem;
 }
 
-.miniBars span {
-  display: block;
-  width: 16px;
-  border-radius: 4px 4px 0 0;
-  background: var(--dbtc-teal);
+.stageHeader strong {
+  color: #ffffff;
+  font-size: 0.98rem;
 }
 
-.miniBars span:nth-child(1) {
-  height: 32px;
+.stageBadge {
+  border: 1px solid rgba(0, 229, 153, 0.3);
+  border-radius: 999px;
+  color: var(--dbtc-neon);
+  font-size: 0.72rem;
+  font-weight: 850;
+  line-height: 1;
+  padding: 0.35rem 0.55rem;
+  text-transform: uppercase;
 }
 
-.miniBars span:nth-child(2) {
-  height: 50px;
-  background: var(--dbtc-neon);
-}
-
-.miniBars span:nth-child(3) {
-  height: 40px;
-  background: var(--dbtc-blue);
-}
-
-.miniDashboard {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
-  width: 86px;
-}
-
-.miniDashboard span {
-  min-height: 30px;
+.pipelineStage code {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
-  background: rgba(0, 229, 153, 0.1);
-  border: 1px solid rgba(0, 229, 153, 0.18);
+  color: #b8ffe3;
+  display: block;
+  font-size: 0.78rem;
+  padding: 0.45rem 0.55rem;
+  white-space: normal;
+  word-break: break-word;
 }
 
-.miniDashboard span:first-child {
-  grid-column: span 2;
+.pipelineArrow {
+  align-self: center;
+  color: var(--dbtc-neon);
+  font-weight: 850;
+  letter-spacing: 0;
+}
+
+.dashboardPreview {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 0.5rem;
+  min-height: 90px;
+}
+
+.dashboardPreview span {
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dashboardPreview span:first-child {
+  grid-column: 1 / -1;
   background: linear-gradient(90deg, var(--dbtc-neon), var(--dbtc-teal));
 }
 
-.miniDashboard span:nth-child(2) {
+.dashboardPreview span:nth-child(2) {
   background: var(--dbtc-blue);
 }
 
-.miniDashboard span:nth-child(3) {
+.dashboardPreview span:nth-child(3) {
   background: var(--dbtc-teal);
+}
+
+.dashboardPreview span:nth-child(4) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pipelineStage p {
+  color: rgba(230, 244, 239, 0.72);
+  font-size: 0.88rem;
+  margin: 0;
 }
 
 .band {
@@ -421,13 +431,19 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .heroEquation {
+  .pipelineVisual {
     grid-template-columns: 1fr;
     justify-items: stretch;
   }
 
-  .equationSymbol {
+  .pipelineArrow {
     line-height: 1;
+    text-align: center;
+    transform: rotate(90deg);
+  }
+
+  .pipelineStage--dashboard {
+    grid-column: auto;
   }
 
   .landingHero {

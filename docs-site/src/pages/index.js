@@ -44,28 +44,37 @@ function HomepageHeader() {
             </Link>
           </div>
         </div>
-        <div className="heroEquation" aria-label="dbt plus charts equals dashboard">
-          <div className="equationCard equationCard--dbt">
-            <span className="dbtToken">dbt</span>
-            <span>models</span>
+        <div className="pipelineVisual" aria-label="dbt pipeline to chart-as-code dashboard">
+          <div className="pipelineStage pipelineStage--dbt">
+            <div className="stageHeader">
+              <span className="stageBadge">dbt</span>
+              <strong>Model pipeline</strong>
+            </div>
+            <code>models/fct_revenue.sql</code>
+            <code>target/manifest.json</code>
           </div>
-          <span className="equationSymbol">+</span>
-          <div className="equationCard equationCard--charts">
-            <div className="miniBars" aria-hidden="true">
+          <span className="pipelineArrow">-></span>
+          <div className="pipelineStage pipelineStage--code">
+            <div className="stageHeader">
+              <span className="stageBadge">code</span>
+              <strong>Charts as code</strong>
+            </div>
+            <code>visualisations/revenue.ggsql</code>
+            <code>dashboards/executive.yml</code>
+          </div>
+          <span className="pipelineArrow">-></span>
+          <div className="pipelineStage pipelineStage--dashboard">
+            <div className="stageHeader">
+              <span className="stageBadge">site</span>
+              <strong>Static dashboard</strong>
+            </div>
+            <div className="dashboardPreview" aria-hidden="true">
+              <span />
               <span />
               <span />
               <span />
             </div>
-            <span>charts</span>
-          </div>
-          <span className="equationSymbol">=</span>
-          <div className="equationCard equationCard--dashboard">
-            <div className="miniDashboard" aria-hidden="true">
-              <span />
-              <span />
-              <span />
-            </div>
-            <span>dashboard</span>
+            <p>No BI server required</p>
           </div>
         </div>
       </div>
