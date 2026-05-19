@@ -53,7 +53,7 @@ function HomepageHeader() {
             <code>models/fct_revenue.sql</code>
             <code>target/manifest.json</code>
           </div>
-          <span className="pipelineArrow">-></span>
+          <span className="pipelineArrow" aria-hidden="true" />
           <div className="pipelineStage pipelineStage--code">
             <div className="stageHeader">
               <span className="stageBadge">code</span>
@@ -62,7 +62,13 @@ function HomepageHeader() {
             <code>visualisations/revenue.ggsql</code>
             <code>dashboards/executive.yml</code>
           </div>
-          <span className="pipelineArrow">-></span>
+          <div className="pipelineFlow" aria-hidden="true">
+            <span className="pipelineFlow__chevrons">
+              <span />
+              <span />
+              <span />
+            </span>
+          </div>
           <div className="pipelineStage pipelineStage--dashboard">
             <div className="stageHeader">
               <span className="stageBadge">site</span>

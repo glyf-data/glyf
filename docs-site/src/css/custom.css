@@ -226,10 +226,76 @@ body {
 }
 
 .pipelineArrow {
+  position: relative;
   align-self: center;
-  color: var(--dbtc-neon);
-  font-weight: 850;
-  letter-spacing: 0;
+  display: block;
+  height: 2px;
+  min-width: 2.2rem;
+  background: linear-gradient(90deg, rgba(0, 229, 153, 0.25), var(--dbtc-neon));
+  border-radius: 999px;
+}
+
+.pipelineArrow::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 2px solid var(--dbtc-neon);
+  border-top: 2px solid var(--dbtc-neon);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.pipelineFlow {
+  grid-column: 3;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-height: 3.25rem;
+  margin: -0.2rem 0;
+}
+
+.pipelineFlow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(45, 212, 191, 0.15), var(--dbtc-neon), var(--dbtc-blue));
+  border-radius: 999px;
+  transform: translateX(-50%);
+}
+
+.pipelineFlow__chevrons {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.18rem;
+  align-content: center;
+  align-self: center;
+  padding: 0.25rem 0.35rem;
+  background: rgba(6, 20, 15, 0.94);
+  border: 1px solid rgba(0, 229, 153, 0.2);
+  border-radius: 999px;
+}
+
+.pipelineFlow__chevrons span {
+  display: block;
+  width: 0.58rem;
+  height: 0.58rem;
+  border-right: 2px solid var(--dbtc-neon);
+  border-bottom: 2px solid var(--dbtc-neon);
+  transform: rotate(45deg);
+}
+
+.pipelineFlow__chevrons span:first-child {
+  opacity: 0.42;
+}
+
+.pipelineFlow__chevrons span:nth-child(2) {
+  opacity: 0.7;
 }
 
 .dashboardPreview {
@@ -441,9 +507,22 @@ body {
   }
 
   .pipelineArrow {
-    line-height: 1;
-    text-align: center;
-    transform: rotate(90deg);
+    justify-self: center;
+    height: 2rem;
+    min-width: 2px;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(0, 229, 153, 0.25), var(--dbtc-neon));
+  }
+
+  .pipelineArrow::after {
+    right: 50%;
+    top: auto;
+    bottom: -1px;
+    transform: translateX(50%) rotate(135deg);
+  }
+
+  .pipelineFlow {
+    grid-column: auto;
   }
 
   .pipelineStage--dashboard {
