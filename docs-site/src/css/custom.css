@@ -483,6 +483,31 @@ body {
   word-break: break-word;
 }
 
+.cliReferenceExamples .theme-code-block {
+  border: 1px solid rgba(0, 229, 153, 0.18);
+  border-radius: 8px;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+}
+
+.cliReferenceExamples .theme-code-block pre {
+  background: #030907 !important;
+}
+
+.cliReferenceExamples .theme-code-block code {
+  color: #d7fff1;
+}
+
+.cliReferenceExamples [class*='codeBlockTitle'] {
+  background: #07130f;
+  border-bottom: 1px solid rgba(0, 229, 153, 0.18);
+  color: #b8ffe3;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
 .theme-doc-markdown h1 {
   font-size: clamp(2.25rem, 4vw, 3.4rem);
 }
