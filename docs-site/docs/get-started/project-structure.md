@@ -2,6 +2,8 @@
 
 A dbt-charts project is a normal dbt project with chart and dashboard files added.
 
+Use `dbt-charts init` from a dbt project root to create the starter structure.
+
 ```text
 my_dbt_project/
   dbt_project.yml

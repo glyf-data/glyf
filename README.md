@@ -14,7 +14,19 @@ dbt adapter, BI server, or hosted dashboard service.
 
 ## Installation
 
-This project uses `uv`:
+Install the CLI:
+
+```bash
+pip install dbt-charts
+```
+
+Or keep it isolated with `uv`:
+
+```bash
+uv tool install dbt-charts
+```
+
+When developing from this repository, install dependencies with `uv`:
 
 ```bash
 uv sync
@@ -56,15 +68,30 @@ task dashboard-ci
 
 ## Copy-Paste Quickstart
 
+In a dbt project:
+
+```bash
+dbt-charts init
+dbt build
+dbt-charts doctor
+dbt-charts validate
+dbt-charts render
+dbt-charts dashboard
+dbt-charts export --clean
+```
+
+For the included example project:
+
 ```bash
 uv sync
 cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
+uv run dbt-charts validate
 uv run dbt-charts render
 uv run dbt-charts dashboard
-uv run dbt-charts export
+uv run dbt-charts export --clean
 ```
 
 Open:
@@ -76,6 +103,7 @@ examples/simple_dbt/target/ggsql/site/index.html
 ## CLI
 
 ```bash
+uv run dbt-charts init
 uv run dbt-charts doctor
 uv run dbt-charts list
 uv run dbt-charts validate

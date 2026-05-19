@@ -37,6 +37,15 @@ Key project files:
 - dashboards/*.yml: dashboard definitions and chart ordering.
 - target/ggsql/: generated compiled SQL, chart artifacts, dashboards, and exported site.
 
+Scaffold workflow:
+
+```bash
+dbt-charts init
+dbt-charts init --clean
+```
+
+Use init from a dbt project root. It creates dbt_charts.yml when missing, creates visualisations/ and dashboards/, writes a starter .ggsql file, and writes a starter dashboard YAML file. Use --clean only when replacing the starter chart/dashboard files selected by the prompts.
+
 Core workflow:
 
 ```bash
@@ -56,11 +65,12 @@ dbt-charts validate --project-dir path/to/dbt_project
 
 Assistant workflow:
 
-1. Read dbt_project.yml, dbt_charts.yml, models/, target/manifest.json, visualisations/, and dashboards/.
-2. Create or update a .ggsql file under visualisations/.
-3. Add the chart name to the relevant dashboard YAML under dashboards/.
-4. Run dbt-charts doctor, validate, render, and dashboard.
-5. Report changed files, validation results, generated artifacts, and anything requiring human review.
+1. If visualisations/ or dashboards/ are missing, suggest dbt-charts init or run it when the user asks for scaffolding.
+2. Read dbt_project.yml, dbt_charts.yml, models/, target/manifest.json, visualisations/, and dashboards/.
+3. Create or update a .ggsql file under visualisations/.
+4. Add the chart name to the relevant dashboard YAML under dashboards/.
+5. Run dbt-charts doctor, validate, render, and dashboard.
+6. Report changed files, validation results, generated artifacts, and anything requiring human review.
 
 Guardrails for agents:
 

@@ -16,6 +16,7 @@ uv run dbt-charts
 
 | Command | Purpose |
 | --- | --- |
+| `dbt-charts init` | Scaffold dbt-charts config, starter chart, and dashboard files. |
 | `dbt-charts doctor` | Check whether a project is ready for dbt-charts workflows. |
 | `dbt-charts list` | List discovered ggsql project files. |
 | `dbt-charts validate` | Validate discovered files and manifest refs. |
@@ -35,6 +36,14 @@ Most commands support:
 
 ## Common workflow
 
+For a new dbt project, scaffold starter files first:
+
+```bash
+dbt-charts init --project-dir path/to/dbt_project
+```
+
+Then run dbt and generate dashboard artifacts:
+
 ```bash
 uv run dbt-charts doctor --project-dir examples/simple_dbt
 uv run dbt-charts list --project-dir examples/simple_dbt
@@ -52,6 +61,43 @@ Run dbt first so `target/manifest.json` and project relations exist:
 
 ```bash title="Prepare dbt artifacts"
 uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
+```
+
+### `init`
+
+Use `init` inside a dbt project to create the standard dbt-charts config, starter `.ggsql` file, and dashboard YAML.
+
+```bash title="Command"
+dbt-charts init
+```
+
+Example prompts:
+
+```text title="Prompts"
+Starter chart name [monthly_revenue]:
+Starter dashboard name [executive]:
+dbt model ref for the starter chart [fct_revenue]:
+Starter chart title [Monthly Revenue]:
+Starter chart type [line]:
+```
+
+Example output:
+
+```text title="Output"
+Initialized dbt-charts in .
+✓ wrote dbt_charts.yml
+✓ ensured visualisations/
+✓ wrote visualisations/monthly_revenue.ggsql
+✓ ensured dashboards/
+✓ wrote dashboards/executive.yml
+
+Next steps:
+  dbt build
+  dbt-charts doctor
+  dbt-charts validate
+  dbt-charts render
+  dbt-charts dashboard
+  dbt-charts export --clean
 ```
 
 ### `doctor`
@@ -181,6 +227,17 @@ Example output:
 ```
 
 </div>
+
+## `init` options
+
+| Option | Description |
+| --- | --- |
+| `--clean` | Replace starter chart/dashboard files selected by the prompts. Keeps existing `dbt_charts.yml`. |
+| `--chart-name` | Filename stem for the starter `.ggsql` file. |
+| `--dashboard-name` | Filename stem for the starter dashboard YAML file. |
+| `--model-name` | dbt model name used in the starter `ref()`. |
+| `--chart-title` | Title label for the starter chart. |
+| `--chart-type` | Starter chart type: `line`, `bar`, `scatter`, `area`, or `pie`. |
 
 ## `export` options
 

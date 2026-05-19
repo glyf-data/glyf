@@ -29,7 +29,7 @@ That workflow keeps data transformation in dbt, chart definitions in SQL-first f
 
 ## Documentation map
 
-- Start with [Quickstart](get-started/quickstart.md) to generate the sample dashboard.
+- Start with [Quickstart](get-started/quickstart.md) to install the CLI, scaffold starter files, and generate your first dashboard.
 - Use [Existing dbt project](get-started/existing-dbt-project.md) when adding dbt-charts to your own repo.
 - Browse [Examples gallery](examples/gallery.md) for project patterns.
 - Keep [CLI reference](reference/cli.md) open when wiring scripts or CI.

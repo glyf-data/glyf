@@ -1,47 +1,109 @@
 # Quickstart
 
-This flow uses the included `examples/simple_dbt` project and writes a static dashboard site under `target/ggsql/site`.
+Use this flow when you already have a dbt project and want to add dbt-charts without hand-creating folders.
 
-## Prerequisites
+## Install
 
-- Python 3.11 or newer.
-- [`uv`](https://docs.astral.sh/uv/) for dependency management.
-- A shell from the repository root.
-
-Install project dependencies:
+Install the CLI with your Python package manager:
 
 ```bash
-uv sync --all-groups
+pip install dbt-charts
 ```
 
-## Run the example
+Or install it as an isolated `uv` tool:
 
 ```bash
-cd examples/simple_dbt
-uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
-uv run dbt run --profiles-dir .
-uv run dbt compile --profiles-dir .
-uv run dbt-charts doctor
-uv run dbt-charts render
-uv run dbt-charts dashboard
-uv run dbt-charts export --clean
+uv tool install dbt-charts
 ```
 
-Open the generated dashboard:
+## Scaffold your dbt project
+
+Run `init` from the root of your dbt project:
+
+```bash
+cd path/to/my_dbt_project
+dbt-charts init
+```
+
+The command prompts for:
+
+- Starter chart name.
+- Starter dashboard name.
+- dbt model ref for the starter chart.
+- Starter chart title.
+- Starter chart type.
+
+It creates the standard dbt-charts files:
 
 ```text
-examples/simple_dbt/target/ggsql/site/index.html
+my_dbt_project/
+  dbt_charts.yml
+  visualisations/
+    monthly_revenue.ggsql
+  dashboards/
+    executive.yml
 ```
 
-## What happened
+If you want to rerun the scaffold and replace the starter chart/dashboard files, use:
 
-`dbt-charts doctor` checked that the dbt project has the required artifacts and chart files.
+```bash
+dbt-charts init --clean
+```
 
-`dbt-charts render` resolved dbt references, compiled chart SQL, executed the queries, and rendered chart files.
+`--clean` keeps an existing `dbt_charts.yml` and replaces only the starter `.ggsql` and dashboard YAML files selected by the prompts.
 
-`dbt-charts dashboard` generated dashboard HTML from the rendered artifacts.
+## Edit the starter chart
 
-`dbt-charts export --clean` copied the dashboard output into a static site folder that can be uploaded to a static host.
+Open the generated `.ggsql` file and point it at real columns from your dbt model:
+
+```sql title="visualisations/monthly_revenue.ggsql"
+SELECT
+  date_day,
+  metric_value
+FROM {{ ref('fct_revenue') }}
+
+VISUALISE date_day AS x, metric_value AS y
+DRAW line
+LABEL title => "Monthly Revenue"
+LABEL x_title => "Date"
+LABEL y_title => "Revenue"
+CONFIG width => 900
+CONFIG height => 500
+```
+
+The filename stem becomes the chart name used by dashboard YAML. For example, `visualisations/monthly_revenue.ggsql` is referenced as `monthly_revenue`.
+
+## Build dbt first
+
+`dbt-charts` reads dbt artifacts. Run dbt before rendering charts so `target/manifest.json` exists and `ref()` or `source()` calls can be resolved.
+
+```bash
+dbt build
+```
+
+If you only need to regenerate metadata:
+
+```bash
+dbt compile
+```
+
+## Check and generate
+
+Use `doctor` and `validate` before rendering:
+
+```bash
+dbt-charts doctor
+dbt-charts validate
+dbt-charts render
+dbt-charts dashboard
+dbt-charts export --clean
+```
+
+Open the generated static site:
+
+```text
+target/ggsql/site/index.html
+```
 
 ## Expected output
 
@@ -54,14 +116,37 @@ target/ggsql/
   index.html
 ```
 
-The publish-ready site lives in:
+The publish-ready dashboard site lives in:
 
 ```text
 target/ggsql/site/
 ```
 
+## Try the included example
+
+If you are working from the dbt-charts repository, you can run the included demo project:
+
+```bash
+uv sync --all-groups
+cd examples/simple_dbt
+uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
+uv run dbt run --profiles-dir .
+uv run dbt compile --profiles-dir .
+uv run dbt-charts doctor
+uv run dbt-charts validate
+uv run dbt-charts render
+uv run dbt-charts dashboard
+uv run dbt-charts export --clean
+```
+
+Open:
+
+```text
+examples/simple_dbt/target/ggsql/site/index.html
+```
+
 ## Next steps
 
 - Learn the [project structure](project-structure.md).
-- Run another project from the [examples gallery](../examples/gallery.md).
 - Add dbt-charts to an [existing dbt project](existing-dbt-project.md).
+- Explore the [examples gallery](../examples/gallery.md).
