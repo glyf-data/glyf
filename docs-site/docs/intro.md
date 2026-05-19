@@ -4,6 +4,8 @@
 
 It lets analytics engineers define chart queries in `.ggsql`, resolve dbt `ref()` and `source()` calls from `target/manifest.json`, render the results into static chart artifacts, and publish dashboards without running a BI server.
 
+The chart syntax builds on the SQL-first visualisation model from [ggsql](https://ggsql.org), which brings Grammar of Graphics-style clauses such as `VISUALISE`, `DRAW`, `SCALE`, and `LABEL` into SQL workflows.
+
 Use it when you want dashboards to live beside dbt models, move through code review, and produce static output for internal reporting, client delivery, or lightweight documentation.
 
 ## Who it is for

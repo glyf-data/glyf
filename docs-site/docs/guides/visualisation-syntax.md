@@ -2,6 +2,8 @@
 
 A `.ggsql` file contains SQL followed by a small chart block.
 
+`dbt-charts` uses a focused subset of [ggsql](https://ggsql.org)-style directives so chart definitions stay readable in dbt projects and easy to validate in CI.
+
 ```sql
 SELECT month, revenue, region
 FROM {{ ref('fct_sales') }}
