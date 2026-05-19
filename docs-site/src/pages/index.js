@@ -116,7 +116,7 @@ function FeatureLinks() {
       <div className="container">
         <div className="sectionHeader">
           <p className="eyebrow">Documentation</p>
-          <h2>Find the right entry point quickly</h2>
+          <h2>Start with the docs you need</h2>
         </div>
         <div className="linkGrid">
           {featureLinks.map(([title, description, to]) => (
