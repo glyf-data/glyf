@@ -163,10 +163,10 @@ function AgentSection() {
     <section className="band band--ink">
       <div className="container agentLayout">
         <div>
-          <p className="eyebrow">AI context and agents</p>
-          <h2>Make the project easier for coding assistants to understand</h2>
+          <p className="eyebrow">AI-assisted dashboard workflow</p>
+          <h2>Give coding assistants the right project context</h2>
           <p>
-            The docs include compact context, agent guardrails, and assistant setup notes for Codex, Claude, or other coding agents that can help users draft visualisations and dashboard YAML from dbt models.
+            Point an assistant at the dbt project, manifest, chart files, and dashboard YAML, then ask it to draft `.ggsql`, update the dashboard, run validation, and report what still needs review.
           </p>
         </div>
         <div className="terminalPanel" aria-label="AI context command examples">

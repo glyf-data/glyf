@@ -4,7 +4,7 @@ Use this page to give coding assistants a clear, bounded brief before they edit 
 
 The goal is not to let an assistant invent a dashboard in isolation. The goal is to make it inspect dbt models, respect supported chart syntax, update dashboard YAML carefully, and run validation commands before handing changes back for review.
 
-## Codex-style brief
+## Copy This Brief
 
 ```text
 You are helping me add dbt-charts dashboards to this dbt project.
@@ -13,11 +13,11 @@ Inspect dbt_project.yml, dbt_charts.yml, models/, visualisations/, dashboards/, 
 Use existing model names and dbt refs where possible.
 Create or update .ggsql files only with supported dbt-charts syntax.
 Update dashboard YAML only when a chart should appear on a dashboard.
-Run dbt-charts doctor and validate after editing.
+Run dbt-charts doctor, validate, render, and dashboard after editing.
 Summarize changed files, commands run, and anything that still needs human review.
 ```
 
-## Claude project instruction
+## Project Instructions
 
 ```text
 This project uses dbt-charts to generate static dashboards from dbt models.
@@ -28,6 +28,27 @@ The dbt manifest is target/manifest.json.
 Use dbt-charts doctor, validate, render, and dashboard to verify changes.
 Do not change dbt models unless the user asks for model changes.
 Prefer small, reviewable chart additions over broad dashboard rewrites.
+```
+
+Use the same text for Codex custom instructions, Claude project instructions, or any assistant that can read files and run shell commands.
+
+## Task Template
+
+```text
+Task:
+Add <chart description> to <dashboard name>.
+
+Inputs:
+- dbt model or source:
+- metric definition:
+- chart type:
+- dashboard YAML:
+
+Rules:
+- Read dbt_charts.yml and target/manifest.json first.
+- Use supported .ggsql syntax only.
+- Run dbt-charts doctor and validate before finishing.
+- Do not change dbt models unless required and explicitly requested.
 ```
 
 ## Validation commands
