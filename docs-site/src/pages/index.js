@@ -37,7 +37,7 @@ function HomepageHeader() {
           </p>
           <div className="buttonRow">
             <Link className="button button--primary button--lg" to="/docs/get-started/quickstart">
-              Start with the quickstart
+              Get started
             </Link>
             <Link className="button button--secondary button--lg" to="/docs/examples/gallery">
               Browse examples
