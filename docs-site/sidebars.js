@@ -60,7 +60,7 @@ const sidebars = {
       type: 'category',
       label: 'AI Context',
       collapsed: false,
-      items: ['ai-context/overview', 'ai-context/agents', 'ai-context/skills-placeholder'],
+      items: ['ai-context/overview', 'ai-context/agents', 'ai-context/assistant-setup'],
     },
     {
       type: 'category',

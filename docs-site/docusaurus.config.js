@@ -55,7 +55,7 @@ const config = {
       announcementBar: {
         id: 'release-preview',
         content:
-          'Docs preview for dbt-charts 0.1.0: quickstart, examples gallery, AI context, and migration placeholders are now in progress.',
+          'Docs preview for dbt-charts 0.1.0: quickstart, examples gallery, AI context, integrations, and migration planning are available.',
         backgroundColor: '#07130f',
         textColor: '#ffffff',
         isCloseable: true,

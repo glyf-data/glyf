@@ -8,9 +8,9 @@
 - Cloudflare Pages for the private hosted docs site.
 - Cloudflare Access for private documentation access.
 - GitHub Pages or any static host for published output.
-- CI artifact uploads for internal review.
+- CI artifact uploads for review before publishing.
 
-## Future integration ideas
+## Planned integration areas
 
 - dbt docs metadata links.
 - Lineage-aware dashboard summaries from the manifest.

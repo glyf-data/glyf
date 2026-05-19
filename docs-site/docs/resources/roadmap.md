@@ -11,7 +11,7 @@ dbt-charts dashboard
 dbt-charts export
 ```
 
-## Future themes
+## Planned themes
 
 - Serve and watch workflows for local development.
 - Richer dashboard layouts.
@@ -25,6 +25,6 @@ dbt-charts export
 - Agent-assisted chart authoring.
 - Migration guides for existing BI dashboards.
 
-## Product direction
+## Documentation priorities
 
-`dbt-charts` should stay useful as an open source package before becoming anything larger. The near-term documentation should therefore focus on install, first success, examples, command reference, and practical integration patterns.
+The docs should help a new analytics engineer install the package, generate a first dashboard, understand the file layout, and copy realistic examples into their own dbt project.

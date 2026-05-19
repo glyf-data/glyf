@@ -1,6 +1,6 @@
 # Community
 
-`dbt-charts` is early open source software. Community surfaces should make it easy to report issues, propose examples, and discuss integrations.
+`dbt-charts` is open source software for analytics engineers who want dashboards to fit naturally into dbt projects. Use these links to report issues, propose examples, and discuss integrations.
 
 ## Project links
 

@@ -21,8 +21,8 @@ const featureLinks = [
   ['Command reference', 'See every CLI command, option, and common workflow.', '/docs/reference/cli'],
   ['Technical guide', 'Understand parsing, dbt artifact resolution, rendering, and export paths.', '/docs/guides/technical-architecture'],
   ['AI context', 'Use the docs index and prompts as a starting point for coding agents.', '/docs/ai-context/overview'],
-  ['Integrations', 'Connect dbt-charts to CI, static hosting, and future orchestration workflows.', '/docs/integrations/overview'],
-  ['Migration placeholder', 'Track the future path for moving Looker dashboards into dbt-charts.', '/docs/migrations/looker'],
+  ['Integrations', 'Connect dbt-charts to CI, static hosting, and deployment workflows.', '/docs/integrations/overview'],
+  ['Looker migration', 'Plan how selected Looker dashboard patterns can move into dbt-charts.', '/docs/migrations/looker'],
 ];
 
 function HomepageHeader() {
@@ -160,7 +160,7 @@ function AgentSection() {
           <p className="eyebrow">AI context and agents</p>
           <h2>Make the project easier for coding assistants to understand</h2>
           <p>
-            The docs include an AI context section, an llms.txt placeholder, and a future skills placeholder for Codex, Claude, or other coding agents that can help users generate visualisations and dashboards from dbt models.
+            The docs include compact context, agent guardrails, and assistant setup notes for Codex, Claude, or other coding agents that can help users draft visualisations and dashboard YAML from dbt models.
           </p>
         </div>
         <div className="terminalPanel" aria-label="AI context command examples">
