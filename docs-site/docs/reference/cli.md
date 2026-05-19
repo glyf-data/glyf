@@ -44,6 +44,140 @@ uv run dbt-charts dashboard --project-dir examples/simple_dbt
 uv run dbt-charts export --project-dir examples/simple_dbt --clean --zip
 ```
 
+## Example Output
+
+Run dbt first so `target/manifest.json` and project relations exist:
+
+```bash
+uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
+```
+
+### `doctor`
+
+Use `doctor` to check whether the dbt project has the required config, manifest, chart files, dashboard files, and output directories.
+
+```bash
+uv run dbt-charts doctor --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text
+Project: examples/simple_dbt
+[OK] uv: uv executable found
+[OK] config: loaded dbt_charts.yml
+[OK] dbt_project.yml: found dbt_project.yml
+[OK] manifest.json: found target/manifest.json
+[OK] visualisations: found 5 .ggsql file(s)
+[OK] dashboards: found 1 dashboard YAML file(s)
+[OK] visualisation files: 5 .ggsql file(s) discovered
+[OK] dashboard files: 1 dashboard YAML file(s) discovered
+[OK] output directory: found target/ggsql
+[OK] compiled directory: found target/ggsql/compiled
+[OK] charts directory: found target/ggsql/charts
+[OK] dashboards output directory: found target/ggsql/dashboards
+[OK] site directory: found target/ggsql/site
+```
+
+### `list`
+
+Use `list` to see the `.ggsql` files, dashboard YAML files, and dbt models discovered from the manifest.
+
+```bash
+uv run dbt-charts list --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text
+Project: examples/simple_dbt
+
+GGSQL files (5)
+  - visualisations/revenue.ggsql
+  - visualisations/revenue_area.ggsql
+  - visualisations/revenue_by_region_bar.ggsql
+  - visualisations/revenue_scatter.ggsql
+  - visualisations/revenue_share_pie.ggsql
+
+Dashboard YAML files (1)
+  - dashboards/executive.yml
+
+Manifest: target/manifest.json
+Models (1)
+  - fct_orders -> "simple_dbt"."main"."fct_orders"
+```
+
+### `validate`
+
+Use `validate` before rendering to catch parser errors, unresolved dbt refs or sources, and dashboard references to missing chart names.
+
+```bash
+uv run dbt-charts validate --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text
+Validation passed
+  GGSQL files: 5
+  Dashboard YAML files: 1
+  Manifest: present
+```
+
+### `render`
+
+Use `render` to compile chart SQL, execute queries, and write chart artifacts.
+
+```bash
+uv run dbt-charts render --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text
+✓ discovered charts (5)
+✓ compiled SQL
+✓ executed SQL
+✓ rendered PNG/SVG
+✓ wrote metadata
+```
+
+### `dashboard`
+
+Use `dashboard` after `render` to generate dashboard HTML pages from the rendered artifacts and dashboard YAML.
+
+```bash
+uv run dbt-charts dashboard --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text
+✓ discovered dashboard configs
+✓ loaded chart artifacts
+✓ generated dashboard HTML
+✓ generated index page
+```
+
+### `export`
+
+Use `export` to copy the generated dashboard, chart artifacts, compiled SQL, and static assets into the publish-ready site directory.
+
+```bash
+uv run dbt-charts export --project-dir examples/simple_dbt --clean --zip
+```
+
+Example output:
+
+```text
+✓ copied dashboard HTML
+✓ copied chart artifacts
+✓ copied compiled SQL
+✓ wrote site assets
+✓ exported site to target/ggsql/site
+✓ wrote zip archive target/ggsql/dbt-charts-site.zip
+```
+
 ## `export` options
 
 | Option | Description |
