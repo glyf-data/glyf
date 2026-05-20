@@ -493,18 +493,26 @@ body {
 
 .cliReferenceExamples .theme-code-block pre {
   background: #030907 !important;
+  color: #eafff5 !important;
   margin: 0;
   padding: 1.15rem 1.25rem !important;
 }
 
 .cliReferenceExamples .theme-code-block code {
-  color: #d7fff1;
+  color: #eafff5 !important;
   font-size: 0.92rem;
   line-height: 1.65;
 }
 
+.cliReferenceExamples .theme-code-block [class*='tokenLine'],
+.cliReferenceExamples .theme-code-block [class*='token-line'],
 .cliReferenceExamples .theme-code-block code span {
-  color: inherit !important;
+  color: #eafff5 !important;
+  opacity: 1 !important;
+}
+
+.cliReferenceExamples .theme-code-block .token {
+  color: #eafff5 !important;
 }
 
 .cliReferenceExamples [class*='codeBlockTitle'] {
