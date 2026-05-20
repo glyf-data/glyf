@@ -1,8 +1,8 @@
 # Screenshots
 
-This page is a placeholder for the future visual examples library.
+Screenshots keep the examples gallery grounded in real generated output.
 
-The examples gallery should eventually show real generated dashboard screenshots, not generic product artwork.
+Use this checklist when refreshing docs assets so every image shows a dashboard produced by dbt-charts, not generic product artwork.
 
 ## Screenshot backlog
 
@@ -24,7 +24,7 @@ Capture these once the example dashboards have stable output:
 - Keep light and dark mode screenshots if both modes are visually meaningful.
 - Store assets under `docs-site/static/img/examples/`.
 
-## Future docs work
+## Gallery improvements
 
 - Add screenshots to each example page.
 - Replace text-only gallery rows with image-backed example cards.

@@ -16,6 +16,7 @@ uv run dbt-charts
 
 | Command | Purpose |
 | --- | --- |
+| `dbt-charts init` | Scaffold dbt-charts config, starter chart, and dashboard files. |
 | `dbt-charts doctor` | Check whether a project is ready for dbt-charts workflows. |
 | `dbt-charts list` | List discovered ggsql project files. |
 | `dbt-charts validate` | Validate discovered files and manifest refs. |
@@ -35,6 +36,14 @@ Most commands support:
 
 ## Common workflow
 
+For a new dbt project, scaffold starter files first:
+
+```bash
+dbt-charts init --project-dir path/to/dbt_project
+```
+
+Then run dbt and generate dashboard artifacts:
+
 ```bash
 uv run dbt-charts doctor --project-dir examples/simple_dbt
 uv run dbt-charts list --project-dir examples/simple_dbt
@@ -43,6 +52,192 @@ uv run dbt-charts render --project-dir examples/simple_dbt
 uv run dbt-charts dashboard --project-dir examples/simple_dbt
 uv run dbt-charts export --project-dir examples/simple_dbt --clean --zip
 ```
+
+## Example Output
+
+<div className="cliReferenceExamples">
+
+Run dbt first so `target/manifest.json` and project relations exist:
+
+```bash title="Prepare dbt artifacts"
+uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
+```
+
+### `init`
+
+Use `init` inside a dbt project to create the standard dbt-charts config, starter `.ggsql` file, and dashboard YAML.
+
+```bash title="Command"
+dbt-charts init
+```
+
+Example prompts:
+
+```text title="Prompts"
+Starter chart name [monthly_revenue]:
+Starter dashboard name [executive]:
+dbt model ref for the starter chart [fct_revenue]:
+Starter chart title [Monthly Revenue]:
+Starter chart type [line]:
+```
+
+Example output:
+
+```text title="Output"
+Initialized dbt-charts in .
+✓ wrote dbt_charts.yml
+✓ ensured visualisations/
+✓ wrote visualisations/monthly_revenue.ggsql
+✓ ensured dashboards/
+✓ wrote dashboards/executive.yml
+
+Next steps:
+  dbt build
+  dbt-charts doctor
+  dbt-charts validate
+  dbt-charts render
+  dbt-charts dashboard
+  dbt-charts export --clean
+```
+
+### `doctor`
+
+Use `doctor` to check whether the dbt project has the required config, manifest, chart files, dashboard files, and output directories.
+
+```bash title="Command"
+uv run dbt-charts doctor --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text title="Output"
+Project: examples/simple_dbt
+[OK] uv: uv executable found
+[OK] config: loaded dbt_charts.yml
+[OK] dbt_project.yml: found dbt_project.yml
+[OK] manifest.json: found target/manifest.json
+[OK] visualisations: found 5 .ggsql file(s)
+[OK] dashboards: found 1 dashboard YAML file(s)
+[OK] visualisation files: 5 .ggsql file(s) discovered
+[OK] dashboard files: 1 dashboard YAML file(s) discovered
+[OK] output directory: found target/ggsql
+[OK] compiled directory: found target/ggsql/compiled
+[OK] charts directory: found target/ggsql/charts
+[OK] dashboards output directory: found target/ggsql/dashboards
+[OK] site directory: found target/ggsql/site
+```
+
+### `list`
+
+Use `list` to see the `.ggsql` files, dashboard YAML files, and dbt models discovered from the manifest.
+
+```bash title="Command"
+uv run dbt-charts list --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text title="Output"
+Project: examples/simple_dbt
+
+GGSQL files (5)
+  - visualisations/revenue.ggsql
+  - visualisations/revenue_area.ggsql
+  - visualisations/revenue_by_region_bar.ggsql
+  - visualisations/revenue_scatter.ggsql
+  - visualisations/revenue_share_pie.ggsql
+
+Dashboard YAML files (1)
+  - dashboards/executive.yml
+
+Manifest: target/manifest.json
+Models (1)
+  - fct_orders -> "simple_dbt"."main"."fct_orders"
+```
+
+### `validate`
+
+Use `validate` before rendering to catch parser errors, unresolved dbt refs or sources, and dashboard references to missing chart names.
+
+```bash title="Command"
+uv run dbt-charts validate --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text title="Output"
+Validation passed
+  GGSQL files: 5
+  Dashboard YAML files: 1
+  Manifest: present
+```
+
+### `render`
+
+Use `render` to compile chart SQL, execute queries, and write chart artifacts.
+
+```bash title="Command"
+uv run dbt-charts render --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text title="Output"
+✓ discovered charts (5)
+✓ compiled SQL
+✓ executed SQL
+✓ rendered PNG/SVG
+✓ wrote metadata
+```
+
+### `dashboard`
+
+Use `dashboard` after `render` to generate dashboard HTML pages from the rendered artifacts and dashboard YAML.
+
+```bash title="Command"
+uv run dbt-charts dashboard --project-dir examples/simple_dbt
+```
+
+Example output:
+
+```text title="Output"
+✓ discovered dashboard configs
+✓ loaded chart artifacts
+✓ generated dashboard HTML
+✓ generated index page
+```
+
+### `export`
+
+Use `export` to copy the generated dashboard, chart artifacts, compiled SQL, and static assets into the publish-ready site directory.
+
+```bash title="Command"
+uv run dbt-charts export --project-dir examples/simple_dbt --clean --zip
+```
+
+Example output:
+
+```text title="Output"
+✓ copied dashboard HTML
+✓ copied chart artifacts
+✓ copied compiled SQL
+✓ wrote site assets
+✓ exported site to target/ggsql/site
+✓ wrote zip archive target/ggsql/dbt-charts-site.zip
+```
+
+</div>
+
+## `init` options
+
+| Option | Description |
+| --- | --- |
+| `--clean` | Replace starter chart/dashboard files selected by the prompts. Keeps existing `dbt_charts.yml`. |
+| `--chart-name` | Filename stem for the starter `.ggsql` file. |
+| `--dashboard-name` | Filename stem for the starter dashboard YAML file. |
+| `--model-name` | dbt model name used in the starter `ref()`. |
+| `--chart-title` | Title label for the starter chart. |
+| `--chart-type` | Starter chart type: `line`, `bar`, `scatter`, `area`, or `pie`. |
 
 ## `export` options
 

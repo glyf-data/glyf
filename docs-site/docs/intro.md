@@ -1,8 +1,12 @@
 # dbt-charts
 
-`dbt-charts` is an experimental Python CLI for building static dashboards from dbt projects.
+`dbt-charts` adds a lightweight dashboard layer to dbt projects.
 
-It discovers `.ggsql` visualisation files, resolves dbt `ref()` and `source()` calls from `target/manifest.json`, executes chart SQL with DuckDB, renders charts with Altair, and exports a publish-ready static site.
+It lets analytics engineers define chart queries in `.ggsql`, resolve dbt `ref()` and `source()` calls from `target/manifest.json`, render the results into static chart artifacts, and publish dashboards without running a BI server.
+
+The chart syntax builds on the SQL-first visualisation model from [ggsql](https://ggsql.org), which brings Grammar of Graphics-style clauses such as `VISUALISE`, `DRAW`, `SCALE`, and `LABEL` into SQL workflows.
+
+Use it when you want dashboards to live beside dbt models, move through code review, and produce static output for internal reporting, client delivery, or lightweight documentation.
 
 ## Who it is for
 
@@ -12,7 +16,7 @@ It discovers `.ggsql` visualisation files, resolves dbt `ref()` and `source()` c
 
 ## What it is not
 
-`dbt-charts` is not a dbt adapter, hosted BI server, semantic layer, or drag-and-drop dashboard editor. The current goal is a deterministic CLI workflow:
+`dbt-charts` is not a dbt adapter, hosted BI server, semantic layer, or drag-and-drop dashboard editor. The goal is a deterministic CLI workflow:
 
 ```bash
 dbt build
@@ -21,16 +25,12 @@ dbt-charts dashboard
 dbt-charts export
 ```
 
+That workflow keeps data transformation in dbt, chart definitions in SQL-first files, and dashboard publishing in static artifacts.
+
 ## Documentation map
 
-- Start with [Quickstart](get-started/quickstart.md) to generate the sample dashboard.
+- Start with [Quickstart](get-started/quickstart.md) to install the CLI, scaffold starter files, and generate your first dashboard.
 - Use [Existing dbt project](get-started/existing-dbt-project.md) when adding dbt-charts to your own repo.
 - Browse [Examples gallery](examples/gallery.md) for project patterns.
 - Keep [CLI reference](reference/cli.md) open when wiring scripts or CI.
 - Read [Technical architecture](guides/technical-architecture.md) before contributing.
-
-## Recommended maintenance model
-
-The `docs-site` directory should be the source for the public docs website. The older root `docs/` Markdown files can remain as compatibility references during the transition, then either redirect to this site or be retired once the Docusaurus site is published.
-
-This keeps the website maintainable because navigation, landing pages, examples, and references live in one Docusaurus project while the Python package and examples stay in their existing locations.

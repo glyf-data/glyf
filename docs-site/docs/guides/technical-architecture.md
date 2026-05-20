@@ -34,6 +34,6 @@ dbt project
 - Prefer deterministic static output over a long-running service.
 - Keep the chart syntax small enough to review in code.
 
-## Extension points
+## Planned extension points
 
-Future work can add richer layouts, dbt docs metadata, lineage-aware dashboards, cloud publish helpers, and agent-assisted chart creation without changing the basic artifact pipeline.
+The artifact pipeline leaves room for richer layouts, dbt docs metadata, lineage-aware dashboards, cloud publish helpers, and agent-assisted chart creation without changing the core workflow.

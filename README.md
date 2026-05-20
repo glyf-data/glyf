@@ -8,12 +8,25 @@ DuckDB, renders PNG/SVG charts with Altair, and exports static dashboards.
 
 ## Status
 
-Experimental Python CLI. Useful for demos, local analytics, and static dashboard
-prototypes. It is not a dbt adapter, BI server, or hosted dashboard service.
+Alpha-stage Python CLI. Useful for local analytics, static dashboard prototypes,
+and repeatable reporting artifacts that live beside dbt projects. It is not a
+dbt adapter, BI server, or hosted dashboard service.
 
 ## Installation
 
-This project uses `uv`:
+Install the CLI:
+
+```bash
+pip install dbt-charts
+```
+
+Or keep it isolated with `uv`:
+
+```bash
+uv tool install dbt-charts
+```
+
+When developing from this repository, install dependencies with `uv`:
 
 ```bash
 uv sync
@@ -55,15 +68,30 @@ task dashboard-ci
 
 ## Copy-Paste Quickstart
 
+In a dbt project:
+
+```bash
+dbt-charts init
+dbt build
+dbt-charts doctor
+dbt-charts validate
+dbt-charts render
+dbt-charts dashboard
+dbt-charts export --clean
+```
+
+For the included example project:
+
 ```bash
 uv sync
 cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
+uv run dbt-charts validate
 uv run dbt-charts render
 uv run dbt-charts dashboard
-uv run dbt-charts export
+uv run dbt-charts export --clean
 ```
 
 Open:
@@ -75,6 +103,7 @@ examples/simple_dbt/target/ggsql/site/index.html
 ## CLI
 
 ```bash
+uv run dbt-charts init
 uv run dbt-charts doctor
 uv run dbt-charts list
 uv run dbt-charts validate
@@ -128,9 +157,9 @@ See [examples/README.md](examples/README.md).
 ## Documentation
 
 The Docusaurus docs site source lives in [docs-site](docs-site/). It is intended
-to become the primary public documentation experience with a landing page,
-quickstart, examples gallery, command reference, integrations, AI context, and
-community resources.
+to be the primary documentation experience with a landing page, quickstart,
+examples gallery, command reference, integrations, AI context, and community
+resources.
 
 Run it locally after installing Node.js:
 

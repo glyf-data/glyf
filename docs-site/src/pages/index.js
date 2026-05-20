@@ -21,8 +21,8 @@ const featureLinks = [
   ['Command reference', 'See every CLI command, option, and common workflow.', '/docs/reference/cli'],
   ['Technical guide', 'Understand parsing, dbt artifact resolution, rendering, and export paths.', '/docs/guides/technical-architecture'],
   ['AI context', 'Use the docs index and prompts as a starting point for coding agents.', '/docs/ai-context/overview'],
-  ['Integrations', 'Connect dbt-charts to CI, static hosting, and future orchestration workflows.', '/docs/integrations/overview'],
-  ['Migration placeholder', 'Track the future path for moving Looker dashboards into dbt-charts.', '/docs/migrations/looker'],
+  ['Integrations', 'Connect dbt-charts to CI, static hosting, and deployment workflows.', '/docs/integrations/overview'],
+  ['Looker migration', 'Plan how selected Looker dashboard patterns can move into dbt-charts.', '/docs/migrations/looker'],
 ];
 
 function HomepageHeader() {
@@ -37,7 +37,7 @@ function HomepageHeader() {
           </p>
           <div className="buttonRow">
             <Link className="button button--primary button--lg" to="/docs/get-started/quickstart">
-              Start with the quickstart
+              Get started
             </Link>
             <Link className="button button--secondary button--lg" to="/docs/examples/gallery">
               Browse examples
@@ -53,7 +53,7 @@ function HomepageHeader() {
             <code>models/fct_revenue.sql</code>
             <code>target/manifest.json</code>
           </div>
-          <span className="pipelineArrow">-></span>
+          <span className="pipelineArrow" aria-hidden="true" />
           <div className="pipelineStage pipelineStage--code">
             <div className="stageHeader">
               <span className="stageBadge">code</span>
@@ -62,7 +62,13 @@ function HomepageHeader() {
             <code>visualisations/revenue.ggsql</code>
             <code>dashboards/executive.yml</code>
           </div>
-          <span className="pipelineArrow">-></span>
+          <div className="pipelineFlow" aria-hidden="true">
+            <span className="pipelineFlow__chevrons">
+              <span />
+              <span />
+              <span />
+            </span>
+          </div>
           <div className="pipelineStage pipelineStage--dashboard">
             <div className="stageHeader">
               <span className="stageBadge">site</span>
@@ -110,7 +116,7 @@ function FeatureLinks() {
       <div className="container">
         <div className="sectionHeader">
           <p className="eyebrow">Documentation</p>
-          <h2>Find the right entry point quickly</h2>
+          <h2>Start with the docs you need</h2>
         </div>
         <div className="linkGrid">
           {featureLinks.map(([title, description, to]) => (
@@ -157,10 +163,10 @@ function AgentSection() {
     <section className="band band--ink">
       <div className="container agentLayout">
         <div>
-          <p className="eyebrow">AI context and agents</p>
-          <h2>Make the project easier for coding assistants to understand</h2>
+          <p className="eyebrow">AI-assisted dashboard workflow</p>
+          <h2>Give coding assistants the right project context</h2>
           <p>
-            The docs include an AI context section, an llms.txt placeholder, and a future skills placeholder for Codex, Claude, or other coding agents that can help users generate visualisations and dashboards from dbt models.
+            Point an assistant at the dbt project, manifest, chart files, and dashboard YAML, then ask it to draft `.ggsql`, update the dashboard, run validation, and report what still needs review.
           </p>
         </div>
         <div className="terminalPanel" aria-label="AI context command examples">

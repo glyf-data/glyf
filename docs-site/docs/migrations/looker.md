@@ -1,28 +1,29 @@
 # Migrating from Looker
 
-This page is a placeholder for a future migration guide.
+Use this page to decide which Looker dashboard ideas are good candidates for dbt-charts.
 
-The likely workflow will help teams move selected Looker dashboard ideas into dbt-charts when the desired output is a version-controlled static dashboard.
+`dbt-charts` is not a Looker replacement. It is a static dashboard workflow for teams that want selected dashboard outputs to live closer to dbt models, code review, and CI.
 
-## Future use cases
+## Good candidates
 
-- Recreate a small Looker dashboard as `.ggsql` visualisations and dashboard YAML.
-- Map LookML explores or SQL runner queries to dbt models.
-- Identify metrics that should move into dbt models before chart generation.
-- Preserve dashboard review workflows in pull requests.
+- Dashboards with stable metrics and predictable filters.
+- Client-ready KPI pages that can be regenerated from dbt outputs.
+- Internal reporting views that do not need live drill-down behavior.
+- Charts where the business logic already belongs in dbt models.
 
-## Migration questions to answer later
+## Migration workflow
 
-- Which Looker objects should be supported first: dashboards, tiles, explores, or Looks?
-- Should migration start from exported dashboard metadata, screenshots, SQL, or manual descriptions?
-- How should filters and parameters map to static dashboards?
-- Which chart types can map cleanly to current dbt-charts syntax?
+1. Pick one Looker dashboard with a small number of stable charts.
+2. Identify the dbt model, source, or SQL behind each chart.
+3. Move metric definitions into dbt models when they are not already modeled.
+4. Write one `.ggsql` file per chart.
+5. Create a dashboard YAML file that lists the chart names.
+6. Run `dbt-charts validate`, `render`, and `dashboard`.
+7. Compare the generated dashboard with the original Looker dashboard before expanding the migration.
 
-## Current recommendation
+## Questions to resolve before scaling
 
-For now, manually recreate a small dashboard:
-
-1. Identify the dbt model or source behind each chart.
-2. Write one `.ggsql` file per chart.
-3. Create a dashboard YAML file that lists the chart names.
-4. Run `dbt-charts validate`, `render`, and `dashboard`.
+- Which source should drive the migration: dashboard screenshots, SQL, LookML metadata, or manual chart descriptions?
+- Which filters should become static dashboard variants?
+- Which chart types map cleanly to current dbt-charts syntax?
+- Which interactive Looker behaviors should stay in Looker instead of moving to static output?

@@ -9,6 +9,171 @@ from tests.helpers import copy_basic_project, copy_simple_dbt_project
 runner = CliRunner()
 
 
+def test_init_command_creates_starter_files(tmp_path: Path) -> None:
+    project = tmp_path / "my_dbt_project"
+    project.mkdir()
+    (project / "dbt_project.yml").write_text("name: my_dbt_project\n", encoding="utf-8")
+
+    result = runner.invoke(
+        app,
+        [
+            "init",
+            "--project",
+            str(project),
+            "--chart-name",
+            "monthly_revenue",
+            "--dashboard-name",
+            "executive",
+            "--model-name",
+            "fct_orders",
+            "--chart-title",
+            "Monthly Revenue",
+            "--chart-type",
+            "line",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Initialized dbt-charts" in result.output
+    assert "✓ wrote dbt_charts.yml" in result.output
+    assert "✓ wrote visualisations/monthly_revenue.ggsql" in result.output
+    assert "✓ wrote dashboards/executive.yml" in result.output
+    assert "dbt-charts validate" in result.output
+    assert (project / "dbt_charts.yml").exists()
+    assert (project / "visualisations" / "monthly_revenue.ggsql").exists()
+    assert (project / "dashboards" / "executive.yml").exists()
+    assert "{{ ref('fct_orders') }}" in (
+        project / "visualisations" / "monthly_revenue.ggsql"
+    ).read_text(encoding="utf-8")
+    assert "monthly_revenue" in (project / "dashboards" / "executive.yml").read_text(
+        encoding="utf-8"
+    )
+
+
+def test_init_command_prompts_for_starter_values(tmp_path: Path) -> None:
+    project = tmp_path / "my_dbt_project"
+    project.mkdir()
+    (project / "dbt_project.yml").write_text("name: my_dbt_project\n", encoding="utf-8")
+
+    result = runner.invoke(
+        app,
+        ["init", "--project", str(project)],
+        input="weekly_signups\nproduct\nfct_signups\nWeekly Signups\nbar\n",
+    )
+
+    assert result.exit_code == 0
+    assert "Starter chart name" in result.output
+    assert (project / "visualisations" / "weekly_signups.ggsql").exists()
+    assert (project / "dashboards" / "product.yml").exists()
+    assert "DRAW bar" in (project / "visualisations" / "weekly_signups.ggsql").read_text(
+        encoding="utf-8"
+    )
+
+
+def test_init_command_requires_clean_before_replacing_starter_files(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "my_dbt_project"
+    project.mkdir()
+    (project / "dbt_project.yml").write_text("name: my_dbt_project\n", encoding="utf-8")
+
+    first_result = runner.invoke(
+        app,
+        [
+            "init",
+            "--project",
+            str(project),
+            "--chart-name",
+            "monthly_revenue",
+            "--dashboard-name",
+            "executive",
+            "--model-name",
+            "fct_orders",
+            "--chart-title",
+            "Monthly Revenue",
+            "--chart-type",
+            "line",
+        ],
+    )
+    assert first_result.exit_code == 0
+
+    result = runner.invoke(
+        app,
+        [
+            "init",
+            "--project",
+            str(project),
+            "--chart-name",
+            "monthly_revenue",
+            "--dashboard-name",
+            "executive",
+            "--model-name",
+            "fct_orders",
+            "--chart-title",
+            "Monthly Revenue",
+            "--chart-type",
+            "line",
+        ],
+    )
+
+    assert result.exit_code == 1
+    assert "Init skipped" in result.output
+    assert "Re-run with --clean" in result.output
+
+
+def test_init_command_clean_replaces_starter_files(tmp_path: Path) -> None:
+    project = tmp_path / "my_dbt_project"
+    project.mkdir()
+    (project / "dbt_project.yml").write_text("name: my_dbt_project\n", encoding="utf-8")
+
+    first_result = runner.invoke(
+        app,
+        [
+            "init",
+            "--project",
+            str(project),
+            "--chart-name",
+            "monthly_revenue",
+            "--dashboard-name",
+            "executive",
+            "--model-name",
+            "fct_orders",
+            "--chart-title",
+            "Monthly Revenue",
+            "--chart-type",
+            "line",
+        ],
+    )
+    assert first_result.exit_code == 0
+    chart_file = project / "visualisations" / "monthly_revenue.ggsql"
+    chart_file.write_text("custom content\n", encoding="utf-8")
+
+    result = runner.invoke(
+        app,
+        [
+            "init",
+            "--project",
+            str(project),
+            "--clean",
+            "--chart-name",
+            "monthly_revenue",
+            "--dashboard-name",
+            "executive",
+            "--model-name",
+            "fct_revenue",
+            "--chart-title",
+            "Monthly Revenue",
+            "--chart-type",
+            "bar",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "✓ kept dbt_charts.yml" in result.output
+    assert "DRAW bar" in chart_file.read_text(encoding="utf-8")
+    assert "{{ ref('fct_revenue') }}" in chart_file.read_text(encoding="utf-8")
+
+
 def test_list_command_outputs_discovered_assets(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
 

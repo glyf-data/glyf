@@ -6,6 +6,7 @@ import typer
 from dbt_charts.commands.dashboard_cmd import run_dashboard
 from dbt_charts.commands.doctor_cmd import run_doctor
 from dbt_charts.commands.export_cmd import run_export
+from dbt_charts.commands.init_cmd import run_init
 from dbt_charts.commands.list_cmd import run_list
 from dbt_charts.commands.render_cmd import run_render
 from dbt_charts.commands.serve_cmd import run_serve
@@ -37,6 +38,71 @@ ConfigOption = Annotated[
         help="Path to dbt_charts.yml. Defaults to PROJECT/dbt_charts.yml if present.",
     ),
 ]
+
+
+@app.command("init")
+def init_command(
+    project: ProjectOption = Path("."),
+    config: ConfigOption = None,
+    clean: Annotated[
+        bool,
+        typer.Option(
+            "--clean",
+            help="Replace starter chart/dashboard files created by init.",
+        ),
+    ] = False,
+    chart_name: Annotated[
+        str,
+        typer.Option(
+            "--chart-name",
+            prompt="Starter chart name",
+            help="Filename stem for the starter .ggsql file.",
+        ),
+    ] = "monthly_revenue",
+    dashboard_name: Annotated[
+        str,
+        typer.Option(
+            "--dashboard-name",
+            prompt="Starter dashboard name",
+            help="Filename stem for the starter dashboard YAML file.",
+        ),
+    ] = "executive",
+    model_name: Annotated[
+        str,
+        typer.Option(
+            "--model-name",
+            prompt="dbt model ref for the starter chart",
+            help="dbt model name used in the starter ref().",
+        ),
+    ] = "fct_revenue",
+    chart_title: Annotated[
+        str,
+        typer.Option(
+            "--chart-title",
+            prompt="Starter chart title",
+            help="Title label for the starter chart.",
+        ),
+    ] = "Monthly Revenue",
+    chart_type: Annotated[
+        str,
+        typer.Option(
+            "--chart-type",
+            prompt="Starter chart type",
+            help="Starter chart type: line, bar, scatter, area, or pie.",
+        ),
+    ] = "line",
+) -> None:
+    """Scaffold dbt-charts files inside a dbt project."""
+    run_init(
+        project,
+        config_path=config,
+        clean=clean,
+        chart_name=chart_name,
+        dashboard_name=dashboard_name,
+        model_name=model_name,
+        chart_title=chart_title,
+        chart_type=chart_type,
+    )
 
 
 @app.command("list")
