@@ -484,28 +484,51 @@ body {
 }
 
 .cliReferenceExamples .theme-code-block {
-  border: 1px solid rgba(0, 229, 153, 0.18);
+  background: #020806;
+  border: 1px solid rgba(0, 229, 153, 0.24);
   border-radius: 8px;
-  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.14);
   overflow: hidden;
 }
 
 .cliReferenceExamples .theme-code-block pre {
   background: #030907 !important;
+  margin: 0;
+  padding: 1.15rem 1.25rem !important;
 }
 
 .cliReferenceExamples .theme-code-block code {
   color: #d7fff1;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.cliReferenceExamples .theme-code-block code span {
+  color: inherit !important;
 }
 
 .cliReferenceExamples [class*='codeBlockTitle'] {
-  background: #07130f;
-  border-bottom: 1px solid rgba(0, 229, 153, 0.18);
-  color: #b8ffe3;
+  align-items: center;
+  background: #071f18;
+  border-bottom: 1px solid rgba(0, 229, 153, 0.24);
+  color: #9ff7d5;
+  display: flex;
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.25rem;
   text-transform: uppercase;
+}
+
+.cliReferenceExamples .theme-code-block button[class*='copyButton'] {
+  background: rgba(215, 255, 241, 0.08);
+  border: 1px solid rgba(215, 255, 241, 0.16);
+  color: #d7fff1;
+}
+
+.cliReferenceExamples .theme-code-block button[class*='copyButton']:hover {
+  background: rgba(0, 229, 153, 0.16);
 }
 
 .theme-doc-markdown h1 {
