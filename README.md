@@ -1,5 +1,11 @@
 # dbt-charts
 
+[![Tests](https://github.com/kannandreams/dbt-charts/actions/workflows/test.yml/badge.svg)](https://github.com/kannandreams/dbt-charts/actions/workflows/test.yml)
+[![Coverage](https://codecov.io/gh/kannandreams/dbt-charts/branch/main/graph/badge.svg)](https://codecov.io/gh/kannandreams/dbt-charts)
+[![PyPI version](https://img.shields.io/pypi/v/dbt-charts.svg)](https://pypi.org/project/dbt-charts/)
+[![Python versions](https://img.shields.io/pypi/pyversions/dbt-charts.svg)](https://pypi.org/project/dbt-charts/)
+[![License](https://img.shields.io/pypi/l/dbt-charts.svg)](LICENSE)
+
 Chart-as-code dashboards for dbt projects.
 
 `dbt-charts` discovers `.ggsql` visualisation files in a dbt project, resolves dbt
