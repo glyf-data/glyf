@@ -65,8 +65,10 @@ include = [
     "examples",
     "README.md",
     "LICENSE",
+    "CLA.md",
     "CHANGELOG.md",
     "CONTRIBUTING.md",
+    "GOVERNANCE.md",
     "CODE_OF_CONDUCT.md",
     "pyproject.toml",
 ]
