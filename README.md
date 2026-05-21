@@ -193,6 +193,11 @@ Near-term themes:
 - optional publish helpers for common static hosts
 - local `serve` and `watch` workflows after the release baseline is stable
 
+## License
+
+`dbt-charts` is released under the
+[Apache License 2.0](LICENSE).
+
 ## Common Issues
 
 - Missing `target/manifest.json`: run `dbt compile` or `dbt build`.
