@@ -15,6 +15,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
     "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Rust",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -51,16 +52,21 @@ dev = [
 ]
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["maturin>=1.8,<2.0"]
+build-backend = "maturin"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/dbt_charts"]
-
-[tool.hatch.build.targets.sdist]
+[tool.maturin]
+manifest-path = "crates/dbt-charts-core/Cargo.toml"
+module-name = "dbt_charts._core"
+python-source = "src"
+features = ["extension-module"]
 include = [
     "src",
     "tests",
+    "crates",
+    ".cargo/config.toml",
+    "Cargo.toml",
+    "Cargo.lock",
     "docs",
     "docs-site",
     "examples",

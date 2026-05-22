@@ -4,8 +4,10 @@ import re
 import pandas as pd
 import pytest
 
+from dbt_charts.config import RenderConfig
 from dbt_charts.ggsql.parser import GgsqlParseError, parse_ggsql
 from dbt_charts.ggsql.renderer import ChartRenderError, render_chart
+from dbt_charts.renderers import chart_renderer
 
 
 def test_render_chart_writes_png_and_svg(tmp_path: Path) -> None:
@@ -141,3 +143,36 @@ def test_render_chart_reports_legend_filter_without_color_mapping(tmp_path: Path
             tmp_path / "revenue.svg",
             vega_json_path=tmp_path / "revenue.vega.json",
         )
+
+
+def test_render_chart_uses_custom_python_renderer(tmp_path: Path) -> None:
+    @chart_renderer("test_custom_renderer")
+    def custom_renderer(
+        chart,
+        data,
+        png_path,
+        svg_path,
+        config,
+        vega_json_path,
+    ) -> None:
+        png_path.write_text(chart.name, encoding="utf-8")
+        svg_path.write_text(str(len(data)), encoding="utf-8")
+
+    chart = parse_ggsql(
+        "select month, revenue from fct_orders\n\n"
+        "VISUALISE month AS x, revenue AS y\n"
+        "DRAW line\n",
+        name="custom_revenue",
+    )
+    data = pd.DataFrame({"month": ["2026-01"], "revenue": [1200]})
+
+    render_chart(
+        chart,
+        data,
+        tmp_path / "custom.txt",
+        tmp_path / "custom.svg",
+        RenderConfig(renderer="test-custom-renderer"),
+    )
+
+    assert (tmp_path / "custom.txt").read_text(encoding="utf-8") == "custom_revenue"
+    assert (tmp_path / "custom.svg").read_text(encoding="utf-8") == "1"
