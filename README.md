@@ -68,9 +68,13 @@ Run individual CI steps:
 ```bash
 task install
 task test
+task coverage
 task build
 task dashboard-ci
 ```
+
+`task test` runs pytest with coverage and writes `coverage.xml`; CI uploads that
+report to Codecov for the README coverage badge.
 
 ## Copy-Paste Quickstart
 

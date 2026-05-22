@@ -27,10 +27,6 @@ jobs:
       - name: Run CI task
         run: task ci PYTHON_VERSION=${{ matrix.python-version }}
 
-      - name: Generate coverage report
-        if: matrix.python-version == '3.11'
-        run: uv run pytest --cov=src/dbt_charts --cov-report=xml --cov-report=term
-
       - name: Upload coverage report
         if: matrix.python-version == '3.11'
         uses: codecov/codecov-action@v5
