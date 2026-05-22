@@ -6,6 +6,7 @@ import pandas as pd
 from dbt_charts.config import RenderConfig
 from dbt_charts.ggsql.models import GgsqlChart
 from dbt_charts.ggsql.parser import SUPPORTED_CHART_TYPES
+from dbt_charts.renderers import chart_renderer, get_chart_renderer
 
 
 class ChartRenderError(ValueError):
@@ -22,6 +23,22 @@ def render_chart(
     vega_json_path: Path | None = None,
 ) -> None:
     config = config or RenderConfig()
+    try:
+        renderer = get_chart_renderer(config.renderer)
+    except ValueError as exc:
+        raise ChartRenderError(str(exc)) from exc
+    renderer(chart, data, png_path, svg_path, config, vega_json_path)
+
+
+@chart_renderer("altair")
+def _render_altair_chart(
+    chart: GgsqlChart,
+    data: pd.DataFrame,
+    png_path: Path,
+    svg_path: Path,
+    config: RenderConfig,
+    vega_json_path: Path | None,
+) -> None:
     chart_spec = build_chart(chart, data, config=config)
     png_path.parent.mkdir(parents=True, exist_ok=True)
     svg_path.parent.mkdir(parents=True, exist_ok=True)

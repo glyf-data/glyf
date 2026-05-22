@@ -13,6 +13,7 @@ class RenderConfig:
     formats: tuple[str, ...] = ("svg", "png")
     default_width: int = 800
     default_height: int = 400
+    renderer: str = "altair"
 
 
 @dataclass(frozen=True)
@@ -119,6 +120,7 @@ def _render_config(raw: object) -> RenderConfig:
         formats=normalized_formats,
         default_width=_positive_int(raw, "default_width", 800),
         default_height=_positive_int(raw, "default_height", 400),
+        renderer=_string_value(raw, "renderer", "altair"),
     )
 
 
@@ -149,3 +151,10 @@ def _bool_value(raw: dict[object, object], key: str, default: bool) -> bool:
     if not isinstance(value, bool):
         raise ConfigError(f"Invalid config: 'dashboard.{key}' must be true or false")
     return value
+
+
+def _string_value(raw: dict[object, object], key: str, default: str) -> str:
+    value = raw.get(key, default)
+    if not isinstance(value, str) or not value.strip():
+        raise ConfigError(f"Invalid config: 'render.{key}' must be a non-empty string")
+    return value.strip()
