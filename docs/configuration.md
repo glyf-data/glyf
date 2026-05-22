@@ -12,6 +12,7 @@ dashboards_output_path: target/ggsql/dashboards
 site_path: target/ggsql/site
 
 render:
+  renderer: altair
   formats:
     - svg
     - png

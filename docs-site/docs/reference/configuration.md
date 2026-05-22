@@ -20,6 +20,7 @@
 | --- | --- | --- |
 | `render.formats` | `[svg, png]` | Chart artifact formats. |
 | `render.default_width` | `800` | Default chart width. |
+| `render.renderer` | `altair` | Python renderer hook used for chart artifact generation. |
 | `render.default_height` | `400` | Default chart height. |
 
 ## Dashboard
