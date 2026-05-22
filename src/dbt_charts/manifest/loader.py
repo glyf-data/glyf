@@ -1,6 +1,7 @@
-import json
 from dataclasses import dataclass
 from pathlib import Path
+
+from dbt_charts import _core
 
 
 class ManifestError(ValueError):
@@ -50,89 +51,57 @@ class DbtManifest:
 
 def load_manifest(path: Path) -> DbtManifest:
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
     except OSError as exc:
         raise ManifestError(f"Could not read manifest: {path}") from exc
-    except json.JSONDecodeError as exc:
-        raise ManifestError(f"Invalid manifest JSON: {path}") from exc
 
-    nodes = raw.get("nodes")
-    if not isinstance(nodes, dict):
-        raise ManifestError("Invalid manifest: expected top-level 'nodes' object")
+    try:
+        raw = _core.load_manifest_json(text, path.as_posix())
+    except ValueError as exc:
+        raise ManifestError(str(exc)) from exc
 
-    nodes_list: list[ManifestRelation] = []
-    for unique_id, node in nodes.items():
-        if not isinstance(node, dict):
-            continue
+    return _manifest_from_core(raw)
 
-        relation = _manifest_relation(str(unique_id), node)
-        if relation is not None and relation.resource_type in {
-            "model",
-            "seed",
-            "snapshot",
-        }:
-            nodes_list.append(relation)
 
-    sources = raw.get("sources", {})
-    if not isinstance(sources, dict):
-        raise ManifestError("Invalid manifest: expected top-level 'sources' object")
-
-    source_list: list[ManifestRelation] = []
-    for unique_id, source in sources.items():
-        if not isinstance(source, dict):
-            continue
-        relation = _manifest_relation(str(unique_id), source)
-        if relation is not None and relation.resource_type == "source":
-            source_list.append(relation)
-
+def _manifest_from_core(raw: dict[str, object]) -> DbtManifest:
     return DbtManifest(
-        path=path,
-        nodes=tuple(sorted(nodes_list, key=lambda item: item.unique_id)),
-        sources=tuple(sorted(source_list, key=lambda item: item.unique_id)),
+        path=Path(_required_str(raw, "path")),
+        nodes=tuple(_relation_from_core(item) for item in _required_list(raw, "nodes")),
+        sources=tuple(
+            _relation_from_core(item) for item in _required_list(raw, "sources")
+        ),
     )
 
 
-def _manifest_relation(unique_id: str, raw: dict[str, object]) -> ManifestRelation | None:
-    name = raw.get("name")
-    if not isinstance(name, str) or not name:
-        return None
-
-    resource_type = raw.get("resource_type", _resource_type_from_unique_id(unique_id))
-    if not isinstance(resource_type, str) or not resource_type:
-        return None
-
-    relation_name = raw.get("relation_name")
-    if not isinstance(relation_name, str) or not relation_name:
-        relation_name = _relation_from_parts(raw)
-    if relation_name is None:
-        return None
-
-    package_name = raw.get("package_name")
-    source_name = raw.get("source_name")
+def _relation_from_core(raw: object) -> ManifestRelation:
+    if not isinstance(raw, dict):
+        raise ManifestError("Rust core returned invalid manifest relation")
     return ManifestRelation(
-        unique_id=unique_id,
-        name=name,
-        relation_name=relation_name,
-        resource_type=resource_type,
-        package_name=package_name if isinstance(package_name, str) else None,
-        source_name=source_name if isinstance(source_name, str) else None,
+        unique_id=_required_str(raw, "unique_id"),
+        name=_required_str(raw, "name"),
+        relation_name=_required_str(raw, "relation_name"),
+        resource_type=_required_str(raw, "resource_type"),
+        package_name=_optional_str(raw, "package_name"),
+        source_name=_optional_str(raw, "source_name"),
     )
 
 
-def _resource_type_from_unique_id(unique_id: str) -> str:
-    return unique_id.split(".", 1)[0] if "." in unique_id else ""
+def _required_str(raw: dict[str, object], key: str) -> str:
+    value = raw.get(key)
+    if not isinstance(value, str):
+        raise ManifestError(f"Rust core returned invalid manifest field '{key}'")
+    return value
 
 
-def _relation_from_parts(raw: dict[str, object]) -> str | None:
-    identifier = raw.get("alias") or raw.get("identifier") or raw.get("name")
-    schema = raw.get("schema")
-    database = raw.get("database")
+def _optional_str(raw: dict[str, object], key: str) -> str | None:
+    value = raw.get(key)
+    if value is None or isinstance(value, str):
+        return value
+    raise ManifestError(f"Rust core returned invalid manifest field '{key}'")
 
-    parts = [
-        part
-        for part in (database, schema, identifier)
-        if isinstance(part, str) and part
-    ]
-    if not parts:
-        return None
-    return ".".join(parts)
+
+def _required_list(raw: dict[str, object], key: str) -> list[object]:
+    value = raw.get(key)
+    if not isinstance(value, list):
+        raise ManifestError(f"Rust core returned invalid manifest field '{key}'")
+    return value

@@ -1,6 +1,7 @@
 import re
 from dataclasses import dataclass
 
+from dbt_charts import _core
 from dbt_charts.manifest.loader import DbtManifest
 
 REF_PATTERN = re.compile(r"\{\{\s*ref\(\s*['\"]([^'\"]+)['\"]\s*\)\s*\}\}")
@@ -27,36 +28,52 @@ def find_sources(sql: str) -> tuple[tuple[str, str], ...]:
 
 
 def resolve_refs(sql: str, manifest: DbtManifest) -> RefResolution:
-    missing: list[str] = []
-    refs: list[str] = []
-    missing_sources: list[tuple[str, str]] = []
-    sources: list[tuple[str, str]] = []
-
-    def replace_ref(match: re.Match[str]) -> str:
-        name = match.group(1)
-        refs.append(name)
-        relation = manifest.relation_for_ref(name)
-        if relation is None:
-            missing.append(name)
-            return match.group(0)
-        return relation
-
-    def replace_source(match: re.Match[str]) -> str:
-        source_name = match.group(1)
-        table_name = match.group(2)
-        sources.append((source_name, table_name))
-        relation = manifest.relation_for_source(source_name, table_name)
-        if relation is None:
-            missing_sources.append((source_name, table_name))
-            return match.group(0)
-        return relation
-
-    resolved_sql = REF_PATTERN.sub(replace_ref, sql)
-    resolved_sql = SOURCE_PATTERN.sub(replace_source, resolved_sql)
+    raw = _core.resolve_refs(sql, _manifest_to_core(manifest))
     return RefResolution(
-        sql=resolved_sql,
-        refs=tuple(refs),
-        missing_refs=tuple(dict.fromkeys(missing)),
-        sources=tuple(sources),
-        missing_sources=tuple(dict.fromkeys(missing_sources)),
+        sql=_required_str(raw, "sql"),
+        refs=tuple(str(item) for item in _required_list(raw, "refs")),
+        missing_refs=tuple(str(item) for item in _required_list(raw, "missing_refs")),
+        sources=tuple(_tuple_pair(item) for item in _required_list(raw, "sources")),
+        missing_sources=tuple(
+            _tuple_pair(item) for item in _required_list(raw, "missing_sources")
+        ),
     )
+
+
+def _manifest_to_core(manifest: DbtManifest) -> dict[str, object]:
+    return {
+        "path": manifest.path.as_posix(),
+        "nodes": [_relation_to_core(item) for item in manifest.nodes],
+        "sources": [_relation_to_core(item) for item in manifest.sources],
+    }
+
+
+def _relation_to_core(relation: object) -> dict[str, object]:
+    return {
+        "unique_id": relation.unique_id,
+        "name": relation.name,
+        "relation_name": relation.relation_name,
+        "resource_type": relation.resource_type,
+        "package_name": relation.package_name,
+        "source_name": relation.source_name,
+    }
+
+
+def _tuple_pair(raw: object) -> tuple[str, str]:
+    if not isinstance(raw, (tuple, list)) or len(raw) != 2:
+        raise ValueError("Rust core returned invalid ref/source tuple")
+    return (str(raw[0]), str(raw[1]))
+
+
+def _required_str(raw: dict[str, object], key: str) -> str:
+    value = raw.get(key)
+    if not isinstance(value, str):
+        raise ValueError(f"Rust core returned invalid resolution field '{key}'")
+    return value
+
+
+def _required_list(raw: dict[str, object], key: str) -> list[object]:
+    value = raw.get(key)
+    if not isinstance(value, list):
+        raise ValueError(f"Rust core returned invalid resolution field '{key}'")
+    return value
