@@ -18,6 +18,7 @@ Deployed docs path: `https://dbtcharts.pages.dev/dashboards/product-analytics/da
 - Activation by plan.
 - Scatter plot patterns for usage analysis.
 - Rich dashboard sections with asymmetric `30% 70%` and `65% 35%` columns.
+- Dashboard macro components, including built-ins and project-local Python macros.
 - Interactive ggsql charts with tooltip, legend filtering, and zoom.
 
 ## Run it
@@ -38,6 +39,15 @@ name: product
 title: Product Analytics
 description: Product usage and activation metrics by plan.
 
+toolbar:
+  visibility: private
+  actions: [share, visibility]
+
+summary:
+  - "{{ product_owner() }}"
+  - "{{ ui.label_value('Generated', time.now('%Y-%m-%d %H:%M')) }}"
+  - "{{ ui.badge('Demo macros', tone='info') }}"
+
 layout:
   columns: "30% 70%"
 
@@ -56,9 +66,11 @@ sections:
 
   - title: Activation
     columns: 2
-    charts:
-      - activation_by_plan
-      - activation_rate_by_plan
+    items:
+      - component: "{{ activation_health(0.82) }}"
+      - component: "{{ ui.list(['Free', 'Team', 'Enterprise'], title='Tracked plans') }}"
+      - chart: activation_by_plan
+      - chart: activation_rate_by_plan
 
   - title: Engagement Mix
     columns: "65% 35%"

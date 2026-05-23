@@ -4,6 +4,11 @@ import typer
 
 from dbt_charts.config import ConfigError, load_config
 from dbt_charts.dashboard.loader import load_dashboard
+from dbt_charts.dashboard.macros import (
+    DashboardMacroError,
+    DashboardMacroRegistry,
+    resolve_dashboard_components,
+)
 from dbt_charts.ggsql.parser import GgsqlParseError, parse_ggsql_file
 from dbt_charts.manifest.loader import ManifestError, load_manifest
 from dbt_charts.manifest.resolver import resolve_refs
@@ -24,6 +29,11 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
 
     scan = scan_project(project, config)
     errors: list[str] = []
+    try:
+        macro_registry = DashboardMacroRegistry.from_project(scan.dashboards_dir)
+    except DashboardMacroError as exc:
+        errors.append(str(exc))
+        macro_registry = None
 
     if scan.dbt_project_path is None:
         errors.append(
@@ -75,6 +85,11 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
         except ValueError as exc:
             errors.append(f"{_rel(path, scan.root)}: {exc}")
             continue
+        if macro_registry is not None:
+            try:
+                dashboard = resolve_dashboard_components(dashboard, macro_registry)
+            except DashboardMacroError as exc:
+                errors.append(f"{_rel(path, scan.root)}: {exc}")
 
         for chart in dashboard.chart_names:
             if chart not in ggsql_names:
