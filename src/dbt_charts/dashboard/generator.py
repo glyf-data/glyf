@@ -104,15 +104,21 @@ def _render_dashboard(
     config: DbtChartsConfig,
 ) -> str:
     template = _environment().get_template("dashboard.html.j2")
-    return template.render(
-        dashboard=dashboard,
-        chart_artifacts=chart_artifacts,
-        charts=charts,
-        has_interactive_charts=any(chart.vega_spec is not None for chart in charts),
-        dashboard_config=config.dashboard,
+    return _strip_trailing_whitespace(
+        template.render(
+            dashboard=dashboard,
+            chart_artifacts=chart_artifacts,
+            charts=charts,
+            has_interactive_charts=any(chart.vega_spec is not None for chart in charts),
+            dashboard_config=config.dashboard,
+        )
     )
+
+
+def _strip_trailing_whitespace(value: str) -> str:
+    return "\n".join(line.rstrip() for line in value.splitlines()) + "\n"
 
 
 def _render_index(dashboards: tuple[GeneratedDashboard, ...]) -> str:
     template = _environment().get_template("index.html.j2")
-    return template.render(dashboards=dashboards)
+    return _strip_trailing_whitespace(template.render(dashboards=dashboards))

@@ -38,7 +38,7 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(var(--dashboard-columns, auto-fit), minmax(280px, 1fr));
+      grid-template-columns: var(--dashboard-column-template, repeat(var(--dashboard-columns, auto-fit), minmax(280px, 1fr)));
       gap: 18px;
     }
     .grid[data-auto-columns="true"] {
@@ -128,6 +128,16 @@
       border-radius: 6px;
       font-size: 0.875rem;
     }
+    @media (max-width: 760px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .chart-card,
+      .markdown-card,
+      .metric-card {
+        grid-column: 1 / -1;
+      }
+    }
   </style>
 </head>
 <body>
@@ -171,6 +181,13 @@
     {% if dashboard.sections %}
       {% for section in dashboard.sections %}
       {% set section_columns = section.columns or dashboard.layout_config.columns or 3 %}
+      {% if section.column_template %}
+      {% set column_template = section.column_template %}
+      {% elif section.columns %}
+      {% set column_template = none %}
+      {% else %}
+      {% set column_template = dashboard.layout_config.column_template %}
+      {% endif %}
       <section class="section" aria-label="{{ section.title or 'Dashboard section' }}">
         {% if section.title or section.description %}
         <div class="section-header">
@@ -182,7 +199,7 @@
           {% endif %}
         </div>
         {% endif %}
-        <div class="grid" style="--dashboard-columns: {{ section_columns }}; --section-columns: {{ section_columns }}">
+        <div class="grid" style="--dashboard-columns: {{ section_columns }}; --section-columns: {{ section_columns }}{% if column_template %}; --dashboard-column-template: {{ column_template }}{% endif %}">
           {% for item in section.items %}
             {% if item.kind == "chart" and item.chart %}
               {{ chart_card(chart_artifacts[item.chart], item.title, item.width) }}

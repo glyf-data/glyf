@@ -4,7 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Product Analytics</title>
-  
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+
   <style>
     :root {
       color-scheme: light;
@@ -34,7 +38,7 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(var(--dashboard-columns, auto-fit), minmax(280px, 1fr));
+      grid-template-columns: var(--dashboard-column-template, repeat(var(--dashboard-columns, auto-fit), minmax(280px, 1fr)));
       gap: 18px;
     }
     .grid[data-auto-columns="true"] {
@@ -124,30 +128,75 @@
       border-radius: 6px;
       font-size: 0.875rem;
     }
+    @media (max-width: 760px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .chart-card,
+      .markdown-card,
+      .metric-card {
+        grid-column: 1 / -1;
+      }
+    }
   </style>
 </head>
 <body>
-  
+
 
   <main>
     <header>
       <h1>Product Analytics</h1>
-      
+
       <p>Product usage and activation metrics by plan.</p>
-      
+
     </header>
 
-    
-    <section class="grid" data-auto-columns="true" aria-label="Charts">
-      
-      <article class="chart-card">
-    <h3>Active Users</h3>
+
+
+
+
+
+
+      <section class="section" aria-label="Usage Overview">
+
+        <div class="section-header">
+
+          <h2>Usage Overview</h2>
+
+
+          <p>Active user growth and engagement for the sample period.</p>
+
+        </div>
+
+        <div class="grid" style="--dashboard-columns: 2; --section-columns: 2; --dashboard-column-template: minmax(0, 30fr) minmax(0, 70fr)">
+
+
+              <article class="metric-card">
+                <h3>Active users</h3>
+                <div class="metric-value">4.3k</div>
+
+                <p class="metric-note">Sum of weekly active users across plans</p>
+
+              </article>
+
+
+
+              <article class="chart-card">
+    <h3>Active Users Trend</h3>
     <div class="chart">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="858" height="464" viewBox="0 0 858 464"><rect width="858" height="464" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(53,27)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h800v400h-800Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,400)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,350)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,300)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,250)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,200)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,150)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,100)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,50)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Week' for a discrete scale with 3 values: 2026-W01, 2026-W02, 2026-W03"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(133,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(400,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(667,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(133.33333333333331,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-W01</text><text text-anchor="middle" transform="translate(400,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-W02</text><text text-anchor="middle" transform="translate(666.6666666666667,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-W03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="800" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(400,30)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Week</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Users' for a linear scale with values from 0 to 1,600"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,400)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,350)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,300)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,250)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,200)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,150)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,100)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,50)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,403)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,353)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">200</text><text text-anchor="end" transform="translate(-7,303)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">400</text><text text-anchor="end" transform="translate(-7,253)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">600</text><text text-anchor="end" transform="translate(-7,203)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">800</text><text text-anchor="end" transform="translate(-7,153)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">1,000</text><text text-anchor="end" transform="translate(-7,103)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">1,200</text><text text-anchor="end" transform="translate(-7,53)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">1,400</text><text text-anchor="end" transform="translate(-7,3)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">1,600</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,400)" x2="0" y2="-400" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-36.0244140625,200) rotate(-90) translate(0,-2)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Users</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-area role-mark marks" role="graphics-object" aria-roledescription="area mark container"><path aria-label="Week: 2026-W01; Users: 1320" role="graphics-symbol" aria-roledescription="area mark" d="M133.333,70L400,37.5L666.667,10L666.667,400L400,400L133.333,400Z" fill="#4c78a8" opacity="0.7"/></g><g class="mark-group role-title"><g transform="translate(400,-22)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Active Users'" pointer-events="none"><text text-anchor="middle" transform="translate(0,10)" font-family="sans-serif" font-size="13px" font-weight="bold" fill="#000" opacity="1">Active Users</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
-      
+
+      <div
+        class="interactive-chart"
+        id="chart-active_users"
+        data-vega-chart="chart-active_users-spec"
+      ></div>
+      <script type="application/json" id="chart-active_users-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-6e2c2b75a013ee98f3385c9265233aff"}, "datasets": {"data-6e2c2b75a013ee98f3385c9265233aff": [{"active_users": 1560.0, "week": "2026-W03"}, {"active_users": 1450.0, "week": "2026-W02"}, {"active_users": 1320.0, "week": "2026-W01"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "active_users", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "active_users", "title": "Users", "type": "quantitative"}}, "height": 400, "mark": {"opacity": 0.7, "type": "area"}, "title": "Active Users", "width": 800}</script>
+      <noscript>
+        <img src="../charts/active_users.png" alt="Active Users Trend">
+      </noscript>
+
     </div>
-    
+
     <details>
       <summary>Compiled SQL</summary>
       <pre><code>SELECT week, sum(active_users) as active_users
@@ -155,17 +204,84 @@ FROM "product_analytics"."main"."fct_product_usage"
 GROUP BY 1
 </code></pre>
     </details>
-    
+
   </article>
-      
-      <article class="chart-card">
+
+
+
+              <article class="metric-card">
+                <h3>Sessions</h3>
+                <div class="metric-value">14.9k</div>
+
+                <p class="metric-note">Total product sessions</p>
+
+              </article>
+
+
+
+              <article class="chart-card">
+    <h3>Sessions vs Active Users</h3>
+    <div class="chart">
+
+      <div
+        class="interactive-chart"
+        id="chart-sessions_scatter"
+        data-vega-chart="chart-sessions_scatter-spec"
+      ></div>
+      <script type="application/json" id="chart-sessions_scatter-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-0622a634e1c6d54b5b38c546fbda9437"}, "datasets": {"data-0622a634e1c6d54b5b38c546fbda9437": [{"active_users": 420.0, "plan": "Pro", "sessions": 1900.0}, {"active_users": 520.0, "plan": "Pro", "sessions": 2510.0}, {"active_users": 900.0, "plan": "Free", "sessions": 2500.0}, {"active_users": 1040.0, "plan": "Free", "sessions": 3010.0}, {"active_users": 980.0, "plan": "Free", "sessions": 2780.0}, {"active_users": 470.0, "plan": "Pro", "sessions": 2200.0}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "tooltip": [{"field": "active_users", "type": "quantitative"}, {"field": "sessions", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "active_users", "title": "Active Users", "type": "quantitative"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "scales", "name": "param_1e9efca18e7a2868", "select": {"encodings": ["x", "y"], "type": "interval"}}], "title": "Sessions vs Active Users", "width": 800}</script>
+      <noscript>
+        <img src="../charts/sessions_scatter.png" alt="Sessions vs Active Users">
+      </noscript>
+
+    </div>
+
+    <details>
+      <summary>Compiled SQL</summary>
+      <pre><code>SELECT active_users, sessions, plan
+FROM "product_analytics"."main"."fct_product_usage"
+</code></pre>
+    </details>
+
+  </article>
+
+
+        </div>
+      </section>
+
+
+
+
+
+      <section class="section" aria-label="Activation">
+
+        <div class="section-header">
+
+          <h2>Activation</h2>
+
+
+          <p>Compare activated users and activation rates by plan.</p>
+
+        </div>
+
+        <div class="grid" style="--dashboard-columns: 2; --section-columns: 2">
+
+
+              <article class="chart-card">
     <h3>Activation by Plan</h3>
     <div class="chart">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="904" height="464" viewBox="0 0 904 464"><rect width="904" height="464" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(44,27)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h800v400h-800Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,400)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,369)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,338)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,308)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,277)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,246)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,215)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,185)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,154)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,123)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,92)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,62)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,31)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Week' for a discrete scale with 3 values: 2026-W01, 2026-W02, 2026-W03"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(133,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(400,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(667,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(133.33333333333331,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-W01</text><text text-anchor="middle" transform="translate(400,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-W02</text><text text-anchor="middle" transform="translate(666.6666666666667,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-W03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="800" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(400,30)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Week</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Activated Users' for a linear scale with values from 0 to 260"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,400)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,369)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,338)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,308)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,277)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,246)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,215)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,185)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,154)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,123)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,92)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,62)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,31)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,403)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,372.2307692307692)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">20</text><text text-anchor="end" transform="translate(-7,341.46153846153845)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">40</text><text text-anchor="end" transform="translate(-7,310.6923076923077)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">60</text><text text-anchor="end" transform="translate(-7,279.9230769230769)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">80</text><text text-anchor="end" transform="translate(-7,249.15384615384616)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">100</text><text text-anchor="end" transform="translate(-7,218.3846153846154)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">120</text><text text-anchor="end" transform="translate(-7,187.6153846153846)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">140</text><text text-anchor="end" transform="translate(-7,156.84615384615384)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">160</text><text text-anchor="end" transform="translate(-7,126.07692307692308)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">180</text><text text-anchor="end" transform="translate(-7,95.30769230769229)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">200</text><text text-anchor="end" transform="translate(-7,64.53846153846155)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">220</text><text text-anchor="end" transform="translate(-7,33.769230769230745)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">240</text><text text-anchor="end" transform="translate(-7,3)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">260</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,400)" x2="0" y2="-400" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-27.6845703125,200) rotate(-90) translate(0,-2)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Activated Users</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-scope layer_0_pathgroup" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h800v400h-800Z"/><g><g class="mark-line role-mark layer_0_marks" role="graphics-object" aria-roledescription="line mark container"><path aria-label="Week: 2026-W01; Activated Users: 170; plan: Pro" role="graphics-symbol" aria-roledescription="line mark" d="M133.333,138.462L400,76.923L666.667,23.077" stroke="#f58518" stroke-width="2"/></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h800v400h-800Z"/><g><g class="mark-line role-mark layer_0_marks" role="graphics-object" aria-roledescription="line mark container"><path aria-label="Week: 2026-W01; Activated Users: 120; plan: Free" role="graphics-symbol" aria-roledescription="line mark" d="M133.333,215.385L400,184.615L666.667,161.538" stroke="#4c78a8" stroke-width="2"/></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g><g class="mark-symbol role-mark layer_1_marks" role="graphics-object" aria-roledescription="symbol mark container"><path aria-label="Week: 2026-W01; Activated Users: 170; plan: Pro" role="graphics-symbol" aria-roledescription="point" transform="translate(133.33333333333331,138.46153846153845)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#f58518" stroke-width="2" opacity="1"/><path aria-label="Week: 2026-W03; Activated Users: 245; plan: Pro" role="graphics-symbol" aria-roledescription="point" transform="translate(666.6666666666667,23.076923076923084)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#f58518" stroke-width="2" opacity="1"/><path aria-label="Week: 2026-W02; Activated Users: 140; plan: Free" role="graphics-symbol" aria-roledescription="point" transform="translate(400,184.6153846153846)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/><path aria-label="Week: 2026-W02; Activated Users: 210; plan: Pro" role="graphics-symbol" aria-roledescription="point" transform="translate(400,76.92307692307692)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#f58518" stroke-width="2" opacity="1"/><path aria-label="Week: 2026-W01; Activated Users: 120; plan: Free" role="graphics-symbol" aria-roledescription="point" transform="translate(133.33333333333331,215.3846153846154)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/><path aria-label="Week: 2026-W03; Activated Users: 155; plan: Free" role="graphics-symbol" aria-roledescription="point" transform="translate(666.6666666666667,161.53846153846155)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend titled 'plan' for fill color and stroke color with 2 values: Free, Pro"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h37v45h-37Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,16)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h36.5615234375v12.5h-36.5615234375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#4c78a8" stroke="#4c78a8" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">Free</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,16)"><path class="background" aria-hidden="true" d="M0,0h36.5615234375v12.5h-36.5615234375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#f58518" stroke="#f58518" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">Pro</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-text role-legend-title" pointer-events="none"><text text-anchor="start" transform="translate(0,9)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">plan</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-22)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Activation by Plan'" pointer-events="none"><text text-anchor="middle" transform="translate(0,10)" font-family="sans-serif" font-size="13px" font-weight="bold" fill="#000" opacity="1">Activation by Plan</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
-      
+
+      <div
+        class="interactive-chart"
+        id="chart-activation_by_plan"
+        data-vega-chart="chart-activation_by_plan-spec"
+      ></div>
+      <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-01155f344c557ca5a53a12e48fb895a1"}, "datasets": {"data-01155f344c557ca5a53a12e48fb895a1": [{"activated_users": 170.0, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 245.0, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 120.0, "plan": "Free", "week": "2026-W01"}, {"activated_users": 155.0, "plan": "Free", "week": "2026-W03"}, {"activated_users": 210.0, "plan": "Pro", "week": "2026-W02"}, {"activated_users": 140.0, "plan": "Free", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
+      <noscript>
+        <img src="../charts/activation_by_plan.png" alt="Activation by Plan">
+      </noscript>
+
     </div>
-    
+
     <details>
       <summary>Compiled SQL</summary>
       <pre><code>SELECT week, plan, sum(activated_users) as activated_users
@@ -173,29 +289,137 @@ FROM "product_analytics"."main"."fct_product_usage"
 GROUP BY 1, 2
 </code></pre>
     </details>
-    
+
   </article>
-      
-      <article class="chart-card">
-    <h3>Sessions vs Active Users</h3>
+
+
+
+              <article class="chart-card">
+    <h3>Activation Rate by Plan</h3>
     <div class="chart">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="913" height="464" viewBox="0 0 913 464"><rect width="913" height="464" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(53,27)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h800v400h-800Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(36,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(73,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(109,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(145,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(182,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(218,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(255,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(291,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(327,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(364,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(400,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(436,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(473,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(509,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(545,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(582,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(618,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(655,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(691,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(727,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(764,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(800,-400)" x2="0" y2="400" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,400)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,343)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,286)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,229)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,171)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,114)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,57)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Active Users' for a linear scale with values from 0 to 1,100"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(36,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(73,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(109,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(145,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(182,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(218,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(255,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(291,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(327,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(364,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(400,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(436,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(473,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(509,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(545,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(582,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(618,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(655,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(691,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(727,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(764,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(800,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="start" transform="translate(0,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">0</text><text text-anchor="middle" transform="translate(36.36363636363637,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">50</text><text text-anchor="middle" transform="translate(72.72727272727273,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">100</text><text text-anchor="middle" transform="translate(109.09090909090908,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">150</text><text text-anchor="middle" transform="translate(145.45454545454547,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">200</text><text text-anchor="middle" transform="translate(181.8181818181818,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">250</text><text text-anchor="middle" transform="translate(218.18181818181816,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">300</text><text text-anchor="middle" transform="translate(254.54545454545453,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">350</text><text text-anchor="middle" transform="translate(290.90909090909093,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">400</text><text text-anchor="middle" transform="translate(327.2727272727273,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">450</text><text text-anchor="middle" transform="translate(363.6363636363636,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">500</text><text text-anchor="middle" transform="translate(400,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">550</text><text text-anchor="middle" transform="translate(436.3636363636363,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">600</text><text text-anchor="middle" transform="translate(472.72727272727275,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">650</text><text text-anchor="middle" transform="translate(509.09090909090907,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">700</text><text text-anchor="middle" transform="translate(545.4545454545454,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">750</text><text text-anchor="middle" transform="translate(581.8181818181819,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">800</text><text text-anchor="middle" transform="translate(618.1818181818181,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">850</text><text text-anchor="middle" transform="translate(654.5454545454546,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">900</text><text text-anchor="middle" transform="translate(690.9090909090909,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">950</text><text text-anchor="middle" transform="translate(727.2727272727273,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">1,000</text><text text-anchor="middle" transform="translate(763.6363636363636,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="0">1,050</text><text text-anchor="end" transform="translate(800,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">1,100</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="800" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(400,30)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Active Users</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Sessions' for a linear scale with values from 0 to 3,500"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,400)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,343)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,286)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,229)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,171)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,114)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,57)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,403)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,345.8571428571429)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">500</text><text text-anchor="end" transform="translate(-7,288.7142857142857)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">1,000</text><text text-anchor="end" transform="translate(-7,231.57142857142856)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">1,500</text><text text-anchor="end" transform="translate(-7,174.42857142857144)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2,000</text><text text-anchor="end" transform="translate(-7,117.28571428571428)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2,500</text><text text-anchor="end" transform="translate(-7,60.14285714285716)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">3,000</text><text text-anchor="end" transform="translate(-7,3)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">3,500</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,400)" x2="0" y2="-400" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-36.0244140625,200) rotate(-90) translate(0,-2)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Sessions</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-symbol role-mark marks" role="graphics-object" aria-roledescription="symbol mark container"><path aria-label="Active Users: 420; Sessions: 1900; plan: Pro" role="graphics-symbol" aria-roledescription="circle" transform="translate(305.4545454545455,182.85714285714286)" d="M4.472,0A4.472,4.472,0,1,1,-4.472,0A4.472,4.472,0,1,1,4.472,0" fill="#f58518" stroke-width="2" opacity="0.7"/><path aria-label="Active Users: 520; Sessions: 2510; plan: Pro" role="graphics-symbol" aria-roledescription="circle" transform="translate(378.1818181818182,113.14285714285712)" d="M4.472,0A4.472,4.472,0,1,1,-4.472,0A4.472,4.472,0,1,1,4.472,0" fill="#f58518" stroke-width="2" opacity="0.7"/><path aria-label="Active Users: 900; Sessions: 2500; plan: Free" role="graphics-symbol" aria-roledescription="circle" transform="translate(654.5454545454546,114.28571428571428)" d="M4.472,0A4.472,4.472,0,1,1,-4.472,0A4.472,4.472,0,1,1,4.472,0" fill="#4c78a8" stroke-width="2" opacity="0.7"/><path aria-label="Active Users: 1040; Sessions: 3010; plan: Free" role="graphics-symbol" aria-roledescription="circle" transform="translate(756.3636363636364,56.00000000000001)" d="M4.472,0A4.472,4.472,0,1,1,-4.472,0A4.472,4.472,0,1,1,4.472,0" fill="#4c78a8" stroke-width="2" opacity="0.7"/><path aria-label="Active Users: 470; Sessions: 2200; plan: Pro" role="graphics-symbol" aria-roledescription="circle" transform="translate(341.8181818181818,148.57142857142858)" d="M4.472,0A4.472,4.472,0,1,1,-4.472,0A4.472,4.472,0,1,1,4.472,0" fill="#f58518" stroke-width="2" opacity="0.7"/><path aria-label="Active Users: 980; Sessions: 2780; plan: Free" role="graphics-symbol" aria-roledescription="circle" transform="translate(712.7272727272727,82.28571428571429)" d="M4.472,0A4.472,4.472,0,1,1,-4.472,0A4.472,4.472,0,1,1,4.472,0" fill="#4c78a8" stroke-width="2" opacity="0.7"/></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend titled 'plan' for fill color with 2 values: Free, Pro"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h37v40h-37Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,16)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h36.5615234375v11h-36.5615234375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#4c78a8" stroke-width="1.5" opacity="0.7"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">Free</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,13)"><path class="background" aria-hidden="true" d="M0,0h36.5615234375v11h-36.5615234375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#f58518" stroke-width="1.5" opacity="0.7"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">Pro</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-text role-legend-title" pointer-events="none"><text text-anchor="start" transform="translate(0,9)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">plan</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-22)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Sessions vs Active Users'" pointer-events="none"><text text-anchor="middle" transform="translate(0,10)" font-family="sans-serif" font-size="13px" font-weight="bold" fill="#000" opacity="1">Sessions vs Active Users</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
-      
+
+      <div
+        class="interactive-chart"
+        id="chart-activation_rate_by_plan"
+        data-vega-chart="chart-activation_rate_by_plan-spec"
+      ></div>
+      <script type="application/json" id="chart-activation_rate_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-9a087ddfe01bbc2a55ad9d73081b4cf7"}, "datasets": {"data-9a087ddfe01bbc2a55ad9d73081b4cf7": [{"activation_rate": 40.5, "plan": "Pro", "week": "2026-W01"}, {"activation_rate": 47.1, "plan": "Pro", "week": "2026-W03"}, {"activation_rate": 14.3, "plan": "Free", "week": "2026-W02"}, {"activation_rate": 13.3, "plan": "Free", "week": "2026-W01"}, {"activation_rate": 14.9, "plan": "Free", "week": "2026-W03"}, {"activation_rate": 44.7, "plan": "Pro", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activation_rate", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activation_rate", "title": "Activation Rate (%)", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation Rate by Plan", "width": 800}</script>
+      <noscript>
+        <img src="../charts/activation_rate_by_plan.png" alt="Activation Rate by Plan">
+      </noscript>
+
     </div>
-    
+
     <details>
       <summary>Compiled SQL</summary>
-      <pre><code>SELECT active_users, sessions, plan
+      <pre><code>SELECT
+  week,
+  plan,
+  round(sum(activated_users) * 100.0 / nullif(sum(active_users), 0), 1) as activation_rate
 FROM "product_analytics"."main"."fct_product_usage"
+GROUP BY 1, 2
 </code></pre>
     </details>
-    
+
   </article>
-      
-    </section>
-    
+
+
+        </div>
+      </section>
+
+
+
+
+
+      <section class="section" aria-label="Engagement Mix">
+
+        <div class="section-header">
+
+          <h2>Engagement Mix</h2>
+
+
+          <p>Sessions per active user and total session share by plan.</p>
+
+        </div>
+
+        <div class="grid" style="--dashboard-columns: 2; --section-columns: 2; --dashboard-column-template: minmax(0, 65fr) minmax(0, 35fr)">
+
+
+              <article class="chart-card">
+    <h3>Sessions per Active User</h3>
+    <div class="chart">
+
+      <div
+        class="interactive-chart"
+        id="chart-sessions_per_user"
+        data-vega-chart="chart-sessions_per_user-spec"
+      ></div>
+      <script type="application/json" id="chart-sessions_per_user-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-5b4f391bd0e4d9ad76382c96b35c5cf1"}, "datasets": {"data-5b4f391bd0e4d9ad76382c96b35c5cf1": [{"sessions_per_user": 3.33, "week": "2026-W01"}, {"sessions_per_user": 3.43, "week": "2026-W02"}, {"sessions_per_user": 3.54, "week": "2026-W03"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "sessions_per_user", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "sessions_per_user", "title": "Sessions per User", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "title": "Sessions per Active User", "width": 800}</script>
+      <noscript>
+        <img src="../charts/sessions_per_user.png" alt="Sessions per Active User">
+      </noscript>
+
+    </div>
+
+    <details>
+      <summary>Compiled SQL</summary>
+      <pre><code>SELECT
+  week,
+  round(sum(sessions) * 1.0 / nullif(sum(active_users), 0), 2) as sessions_per_user
+FROM "product_analytics"."main"."fct_product_usage"
+GROUP BY 1
+</code></pre>
+    </details>
+
+  </article>
+
+
+
+              <article class="chart-card">
+    <h3>Sessions by Plan</h3>
+    <div class="chart">
+
+      <div
+        class="interactive-chart"
+        id="chart-sessions_by_plan"
+        data-vega-chart="chart-sessions_by_plan-spec"
+      ></div>
+      <script type="application/json" id="chart-sessions_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-7d6d391e44084df820c65abd7acc4907"}, "datasets": {"data-7d6d391e44084df820c65abd7acc4907": [{"plan": "Pro", "sessions": 6610.0}, {"plan": "Free", "sessions": 8290.0}]}, "encoding": {"color": {"field": "plan", "title": null, "type": "nominal"}, "theta": {"field": "sessions", "title": "Sessions", "type": "quantitative"}, "tooltip": [{"field": "plan", "type": "nominal"}, {"field": "sessions", "type": "quantitative"}]}, "height": 400, "mark": {"type": "arc"}, "title": "Sessions by Plan", "width": 800}</script>
+      <noscript>
+        <img src="../charts/sessions_by_plan.png" alt="Sessions by Plan">
+      </noscript>
+
+    </div>
+
+    <details>
+      <summary>Compiled SQL</summary>
+      <pre><code>SELECT
+  plan,
+  sum(sessions) as sessions
+FROM "product_analytics"."main"."fct_product_usage"
+GROUP BY 1
+</code></pre>
+    </details>
+
+  </article>
+
+
+        </div>
+      </section>
+
+
   </main>
-  
+
+  <script>
+    document.querySelectorAll("[data-vega-chart]").forEach((container) => {
+      const specElement = document.getElementById(container.dataset.vegaChart);
+      if (!specElement) {
+        return;
+      }
+      const spec = JSON.parse(specElement.textContent);
+      vegaEmbed(container, spec, { actions: false, renderer: "svg" });
+    });
+  </script>
+
 </body>
 </html>

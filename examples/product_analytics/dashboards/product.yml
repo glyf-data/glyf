@@ -2,7 +2,37 @@ name: product
 title: Product Analytics
 description: Product usage and activation metrics by plan.
 
-charts:
-  - active_users
-  - activation_by_plan
-  - sessions_scatter
+layout:
+  columns: "30% 70%"
+
+sections:
+  - title: Usage Overview
+    description: Active user growth and engagement for the sample period.
+    columns: "30% 70%"
+    items:
+      - metric:
+          label: Active users
+          value: "4.3k"
+          note: Sum of weekly active users across plans
+      - chart: active_users
+        title: Active Users Trend
+      - metric:
+          label: Sessions
+          value: "14.9k"
+          note: Total product sessions
+      - chart: sessions_scatter
+        title: Sessions vs Active Users
+
+  - title: Activation
+    description: Compare activated users and activation rates by plan.
+    columns: 2
+    charts:
+      - activation_by_plan
+      - activation_rate_by_plan
+
+  - title: Engagement Mix
+    description: Sessions per active user and total session share by plan.
+    columns: "65% 35%"
+    charts:
+      - sessions_per_user
+      - sessions_by_plan

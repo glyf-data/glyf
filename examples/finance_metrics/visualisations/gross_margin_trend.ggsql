@@ -1,0 +1,12 @@
+SELECT
+  month,
+  sum(gross_margin) as gross_margin
+FROM {{ ref('fct_finance') }}
+GROUP BY 1
+
+VISUALISE month AS x, gross_margin AS y
+DRAW area
+LABEL title => 'Gross Margin Trend'
+LABEL x_title => 'Month'
+LABEL y_title => 'Gross Margin'
+INTERACT tooltip

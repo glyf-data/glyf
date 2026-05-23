@@ -1,0 +1,13 @@
+SELECT
+  week,
+  plan,
+  round(sum(activated_users) * 100.0 / nullif(sum(active_users), 0), 1) as activation_rate
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1, 2
+
+VISUALISE week AS x, activation_rate AS y, plan AS color
+DRAW line
+LABEL title => 'Activation Rate by Plan'
+LABEL x_title => 'Week'
+LABEL y_title => 'Activation Rate (%)'
+INTERACT tooltip, legend_filter

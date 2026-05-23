@@ -6,3 +6,4 @@ DRAW scatter
 LABEL title => 'Sessions vs Active Users'
 LABEL x_title => 'Active Users'
 LABEL y_title => 'Sessions'
+INTERACT tooltip, zoom

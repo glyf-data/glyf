@@ -1,13 +1,26 @@
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
 
 
+_COLUMN_TRACK_RE = re.compile(
+    r"^(?P<number>\d+(?:\.\d+)?)(?P<unit>%|fr|px|rem|em|ch|vw|vh)$"
+)
+
+
 @dataclass(frozen=True)
 class DashboardLayout:
     kind: str = "grid"
     columns: int | None = None
+    column_widths: tuple[str, ...] = ()
+
+    @property
+    def column_template(self) -> str | None:
+        if not self.column_widths:
+            return None
+        return " ".join(f"minmax(0, {width})" for width in self.column_widths)
 
 
 @dataclass(frozen=True)
@@ -27,7 +40,14 @@ class DashboardSection:
     title: str | None
     description: str | None
     columns: int | None
+    column_widths: tuple[str, ...]
     items: tuple[DashboardItem, ...]
+
+    @property
+    def column_template(self) -> str | None:
+        if not self.column_widths:
+            return None
+        return " ".join(f"minmax(0, {width})" for width in self.column_widths)
 
 
 @dataclass(frozen=True)
@@ -102,9 +122,11 @@ def _parse_layout(raw: object) -> DashboardLayout:
     kind = raw.get("type", raw.get("kind", "grid"))
     if not isinstance(kind, str) or not kind:
         raise ValueError("expected 'layout.type' to be a non-empty string")
+    columns, column_widths = _parse_columns(raw.get("columns"), "layout.columns")
     return DashboardLayout(
         kind=kind,
-        columns=_optional_positive_int(raw.get("columns"), "layout.columns"),
+        columns=columns,
+        column_widths=column_widths,
     )
 
 
@@ -124,13 +146,17 @@ def _parse_sections(raw: object) -> tuple[DashboardSection, ...]:
             item.get("description"),
             f"sections[{index}].description",
         )
-        columns = _optional_positive_int(item.get("columns"), f"sections[{index}].columns")
+        columns, column_widths = _parse_columns(
+            item.get("columns"),
+            f"sections[{index}].columns",
+        )
         items = _parse_section_items(item, index)
         sections.append(
             DashboardSection(
                 title=title,
                 description=description,
                 columns=columns,
+                column_widths=column_widths,
                 items=items,
             )
         )
@@ -245,6 +271,82 @@ def _optional_string(value: object, label: str) -> str | None:
 def _optional_positive_int(value: object, label: str) -> int | None:
     if value is None:
         return None
-    if not isinstance(value, int) or value <= 0:
+    if not _is_positive_int(value):
         raise ValueError(f"expected '{label}' to be a positive integer")
     return value
+
+
+def _parse_columns(value: object, label: str) -> tuple[int | None, tuple[str, ...]]:
+    if value is None:
+        return None, ()
+    if isinstance(value, int):
+        if not _is_positive_int(value):
+            raise ValueError(f"expected '{label}' to be a positive integer")
+        return value, ()
+
+    tracks = _parse_column_tracks(value, label)
+    if not tracks:
+        raise ValueError(f"expected '{label}' to define at least one column")
+    return len(tracks), tuple(tracks)
+
+
+def _parse_column_tracks(value: object, label: str) -> list[str]:
+    if isinstance(value, str):
+        raw_tracks = _split_column_tracks(value)
+    elif isinstance(value, list):
+        raw_tracks = value
+    else:
+        raise ValueError(
+            f"expected '{label}' to be a positive integer, string, or list"
+        )
+
+    tracks: list[str] = []
+    for index, raw_track in enumerate(raw_tracks, start=1):
+        tracks.append(_normalise_column_track(raw_track, f"{label}[{index}]"))
+    return tracks
+
+
+def _split_column_tracks(value: str) -> list[str]:
+    if not value.strip():
+        return []
+    separator = "," if "," in value else None
+    return [track.strip() for track in value.split(separator) if track.strip()]
+
+
+def _normalise_column_track(value: object, label: str) -> str:
+    if isinstance(value, int):
+        if not _is_positive_int(value):
+            raise ValueError(f"expected '{label}' to be a positive column weight")
+        return f"{value}fr"
+    if not isinstance(value, str):
+        raise ValueError(f"expected '{label}' to be a column width string")
+
+    track = value.strip()
+    if track == "auto":
+        return track
+
+    match = _COLUMN_TRACK_RE.match(track)
+    if match is None:
+        raise ValueError(
+            f"expected '{label}' to use %, fr, px, rem, em, ch, vw, vh, or auto"
+        )
+
+    number = float(match.group("number"))
+    if number <= 0:
+        raise ValueError(f"expected '{label}' to be greater than zero")
+
+    normalized_number = _normalise_number_text(match.group("number"))
+    unit = match.group("unit")
+    if unit == "%":
+        return f"{normalized_number}fr"
+    return f"{normalized_number}{unit}"
+
+
+def _normalise_number_text(value: str) -> str:
+    if "." not in value:
+        return value
+    return value.rstrip("0").rstrip(".")
+
+
+def _is_positive_int(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value > 0

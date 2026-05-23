@@ -17,6 +17,8 @@ Deployed docs path: `https://dbtcharts.pages.dev/dashboards/product-analytics/da
 - Active user trend visualisation.
 - Activation by plan.
 - Scatter plot patterns for usage analysis.
+- Rich dashboard sections with asymmetric `30% 70%` and `65% 35%` columns.
+- Interactive ggsql charts with tooltip, legend filtering, and zoom.
 
 ## Run it
 
@@ -36,10 +38,33 @@ name: product
 title: Product Analytics
 description: Product usage and activation metrics by plan.
 
-charts:
-  - active_users
-  - activation_by_plan
-  - sessions_scatter
+layout:
+  columns: "30% 70%"
+
+sections:
+  - title: Usage Overview
+    columns: "30% 70%"
+    items:
+      - metric:
+          label: Active users
+          value: "4.3k"
+      - chart: active_users
+      - metric:
+          label: Sessions
+          value: "14.9k"
+      - chart: sessions_scatter
+
+  - title: Activation
+    columns: 2
+    charts:
+      - activation_by_plan
+      - activation_rate_by_plan
+
+  - title: Engagement Mix
+    columns: "65% 35%"
+    charts:
+      - sessions_per_user
+      - sessions_by_plan
 ```
 
 ## Example chart
@@ -54,4 +79,5 @@ DRAW area
 LABEL title => 'Active Users'
 LABEL x_title => 'Week'
 LABEL y_title => 'Users'
+INTERACT tooltip
 ```

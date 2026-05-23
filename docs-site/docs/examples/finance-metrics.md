@@ -17,6 +17,8 @@ Deployed docs path: `https://dbtcharts.pages.dev/dashboards/finance-metrics/dash
 - Finance dashboard structure.
 - Multiple KPI views in one static site.
 - A clean pattern for adding new metric dashboards.
+- Mixed line, bar, area, scatter, and pie ggsql charts.
+- Section-level dashboard columns such as `65% 35%` and `35% 65%`.
 
 ## Run it
 
@@ -36,10 +38,29 @@ name: finance
 title: Finance Metrics
 description: Bookings, expenses, and margin by month and department.
 
-charts:
-  - bookings_trend
-  - expenses_by_department
-  - margin_share
+layout:
+  columns: "65% 35%"
+
+sections:
+  - title: Financial Performance
+    columns: "65% 35%"
+    charts:
+      - bookings_trend
+      - margin_share
+
+  - title: Expense Control
+    columns: 2
+    charts:
+      - expenses_by_department
+      - gross_margin_trend
+
+  - title: Margin Efficiency
+    columns: "35% 65%"
+    items:
+      - metric:
+          label: March gross margin
+          value: "$37.6k"
+      - chart: margin_vs_expenses
 ```
 
 ## Extend it

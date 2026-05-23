@@ -1,0 +1,12 @@
+SELECT
+  week,
+  round(sum(sessions) * 1.0 / nullif(sum(active_users), 0), 2) as sessions_per_user
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1
+
+VISUALISE week AS x, sessions_per_user AS y
+DRAW bar
+LABEL title => 'Sessions per Active User'
+LABEL x_title => 'Week'
+LABEL y_title => 'Sessions per User'
+INTERACT tooltip

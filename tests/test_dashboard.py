@@ -71,6 +71,48 @@ def test_dashboard_yaml_parses_sections_and_layout_items(tmp_path: Path) -> None
     assert section.items[2].width == 2
 
 
+def test_dashboard_yaml_parses_custom_column_widths(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "layout:\n"
+        "  columns: \"30% 70%\"\n"
+        "sections:\n"
+        "  - title: Revenue\n"
+        "    columns: [25%, 75%]\n"
+        "    charts:\n"
+        "      - revenue\n",
+        encoding="utf-8",
+    )
+
+    dashboard = load_dashboard(dashboard_path)
+
+    assert dashboard.layout_config.columns == 2
+    assert dashboard.layout_config.column_widths == ("30fr", "70fr")
+    assert dashboard.layout_config.column_template == (
+        "minmax(0, 30fr) minmax(0, 70fr)"
+    )
+    assert dashboard.sections[0].columns == 2
+    assert dashboard.sections[0].column_widths == ("25fr", "75fr")
+
+
+def test_dashboard_yaml_rejects_boolean_columns(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "layout:\n"
+        "  columns: true\n"
+        "charts:\n"
+        "  - revenue\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="layout.columns"):
+        load_dashboard(dashboard_path)
+
+
 def test_chart_metadata_loading(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     render_project(project)
@@ -167,6 +209,59 @@ def test_dashboard_generation_renders_sections_and_layout_items(tmp_path: Path) 
     assert "Monthly revenue" in html
     assert "--dashboard-columns: 2" in html
     assert "--item-width: 2" in html
+    assert all(line == line.rstrip() for line in html.splitlines())
+
+
+def test_dashboard_generation_renders_custom_column_widths(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "sections:\n"
+        "  - title: Revenue Overview\n"
+        "    columns: \"30% 70%\"\n"
+        "    charts:\n"
+        "      - revenue\n",
+        encoding="utf-8",
+    )
+
+    generate_dashboards(project)
+
+    html = (
+        project / "target" / "ggsql" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "--dashboard-columns: 2" in html
+    assert "--dashboard-column-template: minmax(0, 30fr) minmax(0, 70fr)" in html
+    assert "@media (max-width: 760px)" in html
+
+
+def test_dashboard_generation_respects_equal_section_columns(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "layout:\n"
+        "  columns: \"30% 70%\"\n"
+        "sections:\n"
+        "  - title: Inherited layout\n"
+        "    charts:\n"
+        "      - revenue\n"
+        "  - title: Equal layout\n"
+        "    columns: 2\n"
+        "    charts:\n"
+        "      - revenue\n",
+        encoding="utf-8",
+    )
+
+    generate_dashboards(project)
+
+    html = (
+        project / "target" / "ggsql" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "--dashboard-column-template: minmax(0, 30fr) minmax(0, 70fr)" in html
+    assert 'style="--dashboard-columns: 2; --section-columns: 2">' in html
 
 
 def test_dashboard_generation_reports_missing_chart(tmp_path: Path) -> None:

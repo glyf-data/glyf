@@ -5,3 +5,5 @@ GROUP BY 1
 VISUALISE department AS x, gross_margin AS y
 DRAW pie
 LABEL title => 'Gross Margin Share'
+LABEL y_title => 'Gross Margin'
+INTERACT tooltip

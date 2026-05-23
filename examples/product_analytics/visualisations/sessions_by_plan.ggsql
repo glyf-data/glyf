@@ -1,0 +1,11 @@
+SELECT
+  plan,
+  sum(sessions) as sessions
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1
+
+VISUALISE plan AS x, sessions AS y
+DRAW pie
+LABEL title => 'Sessions by Plan'
+LABEL y_title => 'Sessions'
+INTERACT tooltip
