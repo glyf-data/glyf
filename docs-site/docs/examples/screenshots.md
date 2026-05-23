@@ -2,31 +2,46 @@
 
 Screenshots keep the examples gallery grounded in real generated output.
 
-Use this checklist when refreshing docs assets so every image shows a dashboard produced by dbt-charts, not generic product artwork.
+Use this checklist when refreshing docs assets so every image shows output produced by dbt-charts, not generic product artwork.
 
-## Screenshot backlog
+## Gallery banner assets
 
-Capture these once the example dashboards have stable output:
+The gallery uses wide `1200x675` PNG banners so cards stay aligned across desktop and mobile layouts.
 
-| Asset | Source | Purpose |
+| Asset | Source output | Rendered dashboard |
 | --- | --- | --- |
-| `simple-dbt-dashboard.png` | `examples/simple_dbt` | Quickstart proof point |
-| `sales-dashboard.png` | `examples/sales_dashboard` | Gallery card and docs walkthrough |
-| `product-analytics-dashboard.png` | `examples/product_analytics` | Product analytics example |
-| `finance-metrics-dashboard.png` | `examples/finance_metrics` | Finance KPI example |
-| `dashboard-chart-detail.png` | Any stable generated chart | Social preview and README usage |
+| `simple-dbt-banner.svg` | `examples/simple_dbt` | `/dashboards/simple-dbt/dashboards/executive.html` |
+| `sales-dashboard-banner.svg` | `examples/sales_dashboard` | `/dashboards/sales-dashboard/dashboards/sales.html` |
+| `product-analytics-banner.svg` | `examples/product_analytics` | `/dashboards/product-analytics/dashboards/product.html` |
+| `finance-metrics-banner.svg` | `examples/finance_metrics` | `/dashboards/finance-metrics/dashboards/finance.html` |
 
 ## Capture guidelines
 
 - Use generated `dbt-charts` output.
-- Prefer the full dashboard viewport plus one close chart detail.
+- Prefer wide rectangle previews that fit gallery cards.
+- Replace the placeholder SVG files with real `1200x675` screenshots when captured.
 - Avoid screenshots with local file paths, private data, or unstable timestamps.
 - Keep light and dark mode screenshots if both modes are visually meaningful.
 - Store assets under `docs-site/static/img/examples/`.
 
-## Gallery improvements
+## Refresh workflow
 
-- Add screenshots to each example page.
-- Replace text-only gallery rows with image-backed example cards.
-- Use one polished screenshot for the social preview image.
-- Link each screenshot back to the example project in GitHub.
+Generate the source outputs first:
+
+```bash
+task dashboard-ci EXAMPLE_PROJECT=examples/simple_dbt
+task dashboard-ci EXAMPLE_PROJECT=examples/sales_dashboard
+task dashboard-ci EXAMPLE_PROJECT=examples/product_analytics
+task dashboard-ci EXAMPLE_PROJECT=examples/finance_metrics
+```
+
+Copy the exported sites into the documentation static tree:
+
+```bash
+docs-site/static/dashboards/simple-dbt/
+docs-site/static/dashboards/sales-dashboard/
+docs-site/static/dashboards/product-analytics/
+docs-site/static/dashboards/finance-metrics/
+```
+
+Normalize preview banners to `1200x675` before committing them.

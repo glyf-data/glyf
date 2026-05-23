@@ -43,6 +43,8 @@ npm run serve
 
 Then open the URL printed by Docusaurus.
 
+Static files under `docs-site/static/` are copied to the site root. For example, dashboard exports committed under `docs-site/static/dashboards/simple-dbt/` are served locally as `/dashboards/simple-dbt/` and deployed as `https://dbtcharts.pages.dev/dashboards/simple-dbt/`.
+
 ## Cloudflare Pages
 
 The docs site defaults to Cloudflare Pages:

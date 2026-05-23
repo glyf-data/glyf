@@ -1,0 +1,10 @@
+{
+  "chart_type": "scatter",
+  "compiled_sql_path": "target/ggsql/compiled/sessions_scatter.sql",
+  "name": "sessions_scatter",
+  "png_path": "target/ggsql/charts/sessions_scatter.png",
+  "svg_path": "target/ggsql/charts/sessions_scatter.svg",
+  "title": "Sessions vs Active Users",
+  "x": "active_users",
+  "y": "sessions"
+}

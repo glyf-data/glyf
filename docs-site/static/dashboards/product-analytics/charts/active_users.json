@@ -1,0 +1,10 @@
+{
+  "chart_type": "area",
+  "compiled_sql_path": "target/ggsql/compiled/active_users.sql",
+  "name": "active_users",
+  "png_path": "target/ggsql/charts/active_users.png",
+  "svg_path": "target/ggsql/charts/active_users.svg",
+  "title": "Active Users",
+  "x": "week",
+  "y": "active_users"
+}

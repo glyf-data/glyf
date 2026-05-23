@@ -1,0 +1,16 @@
+{
+  "chart_type": "scatter",
+  "compiled_sql_path": "target/ggsql/compiled/revenue_scatter.sql",
+  "interactions": [
+    "tooltip",
+    "zoom",
+    "legend_filter"
+  ],
+  "name": "revenue_scatter",
+  "png_path": "target/ggsql/charts/revenue_scatter.png",
+  "svg_path": "target/ggsql/charts/revenue_scatter.svg",
+  "title": "Revenue Scatter",
+  "vega_json_path": "target/ggsql/charts/revenue_scatter.vega.json",
+  "x": "month",
+  "y": "revenue"
+}

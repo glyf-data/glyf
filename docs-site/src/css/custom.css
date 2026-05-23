@@ -548,6 +548,42 @@ body {
   width: 100%;
 }
 
+.exampleGallery {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 1.5rem 0 2rem;
+}
+
+.exampleCard {
+  background: var(--dbtc-paper);
+  border: 1px solid var(--dbtc-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.exampleCard img {
+  aspect-ratio: 16 / 9;
+  display: block;
+  height: auto;
+  object-fit: cover;
+  width: 100%;
+}
+
+.exampleCard__body {
+  padding: 1rem;
+}
+
+.exampleCard__body h3 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem;
+}
+
+.exampleCard__body p {
+  font-size: 0.94rem;
+  margin: 0.55rem 0 0;
+}
+
 @media (max-width: 996px) {
   .workflowGrid,
   .linkGrid,
@@ -587,6 +623,10 @@ body {
 
   .landingHero {
     min-height: auto;
+  }
+
+  .exampleGallery {
+    grid-template-columns: 1fr;
   }
 }
 

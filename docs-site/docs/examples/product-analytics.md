@@ -1,6 +1,16 @@
+import Link from '@docusaurus/Link';
+
 # Product Analytics
 
 `examples/product_analytics` shows product usage and activation metrics by plan.
+
+## Rendered output
+
+![Product analytics screenshot placeholder](/img/examples/product-analytics-banner.svg)
+
+Rendered dashboard: <Link to="pathname:///dashboards/product-analytics/dashboards/product.html">/dashboards/product-analytics/dashboards/product.html</Link>
+
+Deployed docs path: `https://dbtcharts.pages.dev/dashboards/product-analytics/dashboards/product.html`
 
 ## What it demonstrates
 

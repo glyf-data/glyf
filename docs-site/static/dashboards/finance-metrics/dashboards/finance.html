@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finance Metrics</title>
+  
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f7f7f4;
+      color: #1f2933;
+    }
+    body {
+      margin: 0;
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    header {
+      margin-bottom: 28px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      line-height: 1.15;
+    }
+    p {
+      margin: 0;
+      color: #52606d;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(var(--dashboard-columns, auto-fit), minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .grid[data-auto-columns="true"] {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .section {
+      margin-top: 28px;
+    }
+    .section:first-of-type {
+      margin-top: 0;
+    }
+    .section-header {
+      margin-bottom: 14px;
+    }
+    .section-header h2 {
+      margin: 0 0 6px;
+      font-size: 1.25rem;
+    }
+    article {
+      background: #ffffff;
+      border: 1px solid #d9e2ec;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .chart-card {
+      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
+    }
+    .chart-card h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+    .markdown-card {
+      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
+    }
+    .markdown-card h3,
+    .metric-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+    .markdown-card p {
+      margin: 0;
+      white-space: pre-line;
+    }
+    .metric-card {
+      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
+    }
+    .metric-value {
+      color: #102a43;
+      font-size: 1.9rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .metric-note {
+      margin-top: 8px;
+    }
+    .chart svg {
+      width: 100%;
+      height: auto;
+    }
+    .chart img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+    .interactive-chart {
+      width: 100%;
+    }
+    .interactive-chart canvas,
+    .interactive-chart svg {
+      max-width: 100%;
+      height: auto;
+    }
+    details {
+      margin-top: 12px;
+      border-top: 1px solid #e4e7eb;
+      padding-top: 10px;
+    }
+    summary {
+      cursor: pointer;
+      color: #334e68;
+      font-weight: 600;
+    }
+    pre {
+      overflow-x: auto;
+      padding: 12px;
+      background: #f0f4f8;
+      border-radius: 6px;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  
+
+  <main>
+    <header>
+      <h1>Finance Metrics</h1>
+      
+      <p>Bookings, expenses, and margin by month and department.</p>
+      
+    </header>
+
+    
+    <section class="grid" data-auto-columns="true" aria-label="Charts">
+      
+      <article class="chart-card">
+    <h3>Bookings Trend</h3>
+    <div class="chart">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="863" height="464" viewBox="0 0 863 464"><rect width="863" height="464" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(58,27)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h800v400h-800Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,400)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,350)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,300)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,250)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,200)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,150)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,100)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,50)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Month' for a discrete scale with 3 values: 2026-01, 2026-02, 2026-03"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(133,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(400,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(667,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(133.33333333333331,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-01</text><text text-anchor="middle" transform="translate(400,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-02</text><text text-anchor="middle" transform="translate(666.6666666666667,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="800" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(400,30)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Month</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Bookings' for a linear scale with values from 0 to 80,000"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,400)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,350)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,300)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,250)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,200)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,150)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,100)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,50)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,403)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,353)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">10,000</text><text text-anchor="end" transform="translate(-7,303)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">20,000</text><text text-anchor="end" transform="translate(-7,253)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">30,000</text><text text-anchor="end" transform="translate(-7,203)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">40,000</text><text text-anchor="end" transform="translate(-7,153)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">50,000</text><text text-anchor="end" transform="translate(-7,103)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">60,000</text><text text-anchor="end" transform="translate(-7,53)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">70,000</text><text text-anchor="end" transform="translate(-7,3)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">80,000</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,400)" x2="0" y2="-400" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-41.5859375,200) rotate(-90) translate(0,-2)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Bookings</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-line role-mark layer_0_marks" role="graphics-object" aria-roledescription="line mark container"><path aria-label="Month: 2026-01; Bookings: 60000" role="graphics-symbol" aria-roledescription="line mark" d="M133.333,100L400,55L666.667,5" stroke="#4c78a8" stroke-width="2"/></g><g class="mark-symbol role-mark layer_1_marks" role="graphics-object" aria-roledescription="symbol mark container"><path aria-label="Month: 2026-02; Bookings: 69000" role="graphics-symbol" aria-roledescription="point" transform="translate(400,54.999999999999986)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/><path aria-label="Month: 2026-03; Bookings: 79000" role="graphics-symbol" aria-roledescription="point" transform="translate(666.6666666666667,4.999999999999982)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/><path aria-label="Month: 2026-01; Bookings: 60000" role="graphics-symbol" aria-roledescription="point" transform="translate(133.33333333333331,100)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/></g><g class="mark-group role-title"><g transform="translate(400,-22)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Bookings Trend'" pointer-events="none"><text text-anchor="middle" transform="translate(0,10)" font-family="sans-serif" font-size="13px" font-weight="bold" fill="#000" opacity="1">Bookings Trend</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+      
+    </div>
+    
+    <details>
+      <summary>Compiled SQL</summary>
+      <pre><code>SELECT month, sum(bookings) as bookings
+FROM "finance_metrics"."main"."fct_finance"
+GROUP BY 1
+</code></pre>
+    </details>
+    
+  </article>
+      
+      <article class="chart-card">
+    <h3>Expenses by Department</h3>
+    <div class="chart">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="941" height="464" viewBox="0 0 941 464"><rect width="941" height="464" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(58,27)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h800v400h-800Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,400)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,356)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,311)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,267)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,222)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,178)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,133)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,89)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,44)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Month' for a discrete scale with 3 values: 2026-01, 2026-02, 2026-03"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(133,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(400,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(666,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(132.83333333333331,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-01</text><text text-anchor="middle" transform="translate(399.5,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-02</text><text text-anchor="middle" transform="translate(666.1666666666667,15)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">2026-03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="800" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(400,30)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Month</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Expenses' for a linear scale with values from 0 to 45,000"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,400)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,356)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,311)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,267)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,222)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,178)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,133)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,89)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,44)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,403)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,358.55555555555554)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">5,000</text><text text-anchor="end" transform="translate(-7,314.11111111111114)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">10,000</text><text text-anchor="end" transform="translate(-7,269.6666666666667)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">15,000</text><text text-anchor="end" transform="translate(-7,225.22222222222223)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">20,000</text><text text-anchor="end" transform="translate(-7,180.77777777777777)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">25,000</text><text text-anchor="end" transform="translate(-7,136.33333333333334)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">30,000</text><text text-anchor="end" transform="translate(-7,91.88888888888889)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">35,000</text><text text-anchor="end" transform="translate(-7,47.444444444444464)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">40,000</text><text text-anchor="end" transform="translate(-7,3)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">45,000</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,400)" x2="0" y2="-400" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-41.5859375,200) rotate(-90) translate(0,-2)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">Expenses</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-rect role-mark marks" role="graphics-object" aria-roledescription="rect mark container"><path aria-label="Month: 2026-01; Expenses: 22000; department: Product" role="graphics-symbol" aria-roledescription="bar" d="M13.333333333333314,71.11111111111113h240.00000000000003v195.55555555555554h-240.00000000000003Z" fill="#4c78a8"/><path aria-label="Month: 2026-02; Expenses: 23000; department: Product" role="graphics-symbol" aria-roledescription="bar" d="M280,48.88888888888889h240.00000000000003v204.44444444444443h-240.00000000000003Z" fill="#4c78a8"/><path aria-label="Month: 2026-03; Expenses: 17200; department: Sales" role="graphics-symbol" aria-roledescription="bar" d="M546.6666666666667,247.11111111111111h240.00000000000003v152.88888888888889h-240.00000000000003Z" fill="#f58518"/><path aria-label="Month: 2026-02; Expenses: 16500; department: Sales" role="graphics-symbol" aria-roledescription="bar" d="M280,253.33333333333331h240.00000000000003v146.66666666666669h-240.00000000000003Z" fill="#f58518"/><path aria-label="Month: 2026-03; Expenses: 24200; department: Product" role="graphics-symbol" aria-roledescription="bar" d="M546.6666666666667,31.999999999999986h240.00000000000003v215.11111111111114h-240.00000000000003Z" fill="#4c78a8"/><path aria-label="Month: 2026-01; Expenses: 15000; department: Sales" role="graphics-symbol" aria-roledescription="bar" d="M13.333333333333314,266.6666666666667h240.00000000000003v133.33333333333331h-240.00000000000003Z" fill="#f58518"/></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend titled 'department' for fill color with 2 values: Product, Sales"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h60v40h-60Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,16)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h50.462890625v11h-50.462890625Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M-5,-5h10v10h-10Z" fill="#4c78a8" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">Product</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,13)"><path class="background" aria-hidden="true" d="M0,0h50.462890625v11h-50.462890625Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M-5,-5h10v10h-10Z" fill="#f58518" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">Sales</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-text role-legend-title" pointer-events="none"><text text-anchor="start" transform="translate(0,9)" font-family="sans-serif" font-size="11px" font-weight="bold" fill="#000" opacity="1">department</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-22)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Expenses by Department'" pointer-events="none"><text text-anchor="middle" transform="translate(0,10)" font-family="sans-serif" font-size="13px" font-weight="bold" fill="#000" opacity="1">Expenses by Department</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+      
+    </div>
+    
+    <details>
+      <summary>Compiled SQL</summary>
+      <pre><code>SELECT month, department, sum(expenses) as expenses
+FROM "finance_metrics"."main"."fct_finance"
+GROUP BY 1, 2
+</code></pre>
+    </details>
+    
+  </article>
+      
+      <article class="chart-card">
+    <h3>Gross Margin Share</h3>
+    <div class="chart">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="879" height="427" viewBox="0 0 879 427"><rect width="879" height="427" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(5,22)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h800v400h-800Z"/><g><g class="mark-arc role-mark marks" role="graphics-object" aria-roledescription="arc mark container"><path aria-label="gross_margin: −3200; department: Product" role="graphics-symbol" aria-roledescription="arc mark" transform="translate(400,200)" d="M0,-200A200,200,0,0,1,41.37,-195.675L0,0Z" fill="#4c78a8"/><path aria-label="gross_margin: 93300; department: Sales" role="graphics-symbol" aria-roledescription="arc mark" transform="translate(400,200)" d="M0,-200A200,200,0,1,0,41.37,-195.675L0,0Z" fill="#f58518"/></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend for fill color with 2 values: Product, Sales"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h51v24h-51Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h50.462890625v11h-50.462890625Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#4c78a8" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">Product</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,13)"><path class="background" aria-hidden="true" d="M0,0h50.462890625v11h-50.462890625Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#f58518" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="sans-serif" font-size="10px" fill="#000" opacity="1">Sales</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-17)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Gross Margin Share'" pointer-events="none"><text text-anchor="middle" transform="translate(0,10)" font-family="sans-serif" font-size="13px" font-weight="bold" fill="#000" opacity="1">Gross Margin Share</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+      
+    </div>
+    
+    <details>
+      <summary>Compiled SQL</summary>
+      <pre><code>SELECT department, sum(gross_margin) as gross_margin
+FROM "finance_metrics"."main"."fct_finance"
+GROUP BY 1
+</code></pre>
+    </details>
+    
+  </article>
+      
+    </section>
+    
+  </main>
+  
+</body>
+</html>

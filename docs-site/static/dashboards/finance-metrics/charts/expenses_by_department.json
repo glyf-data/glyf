@@ -1,0 +1,10 @@
+{
+  "chart_type": "bar",
+  "compiled_sql_path": "target/ggsql/compiled/expenses_by_department.sql",
+  "name": "expenses_by_department",
+  "png_path": "target/ggsql/charts/expenses_by_department.png",
+  "svg_path": "target/ggsql/charts/expenses_by_department.svg",
+  "title": "Expenses by Department",
+  "x": "month",
+  "y": "expenses"
+}

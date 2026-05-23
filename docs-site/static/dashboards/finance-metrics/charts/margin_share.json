@@ -1,0 +1,10 @@
+{
+  "chart_type": "pie",
+  "compiled_sql_path": "target/ggsql/compiled/margin_share.sql",
+  "name": "margin_share",
+  "png_path": "target/ggsql/charts/margin_share.png",
+  "svg_path": "target/ggsql/charts/margin_share.svg",
+  "title": "Gross Margin Share",
+  "x": "department",
+  "y": "gross_margin"
+}
