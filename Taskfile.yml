@@ -21,9 +21,14 @@ tasks:
       - uv sync --all-groups --python {{.PYTHON_VERSION}}
 
   test:
-    desc: Run the test suite
+    desc: Run the test suite with coverage
     cmds:
-      - uv run pytest
+      - task: coverage
+
+  coverage:
+    desc: Run the test suite and write coverage reports
+    cmds:
+      - uv run pytest --cov=src/dbt_charts --cov-report=term-missing --cov-report=xml
 
   build:
     desc: Build package distributions

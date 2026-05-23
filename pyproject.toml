@@ -82,3 +82,13 @@ include = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+relative_files = true
+source = ["src/dbt_charts"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+skip_empty = true

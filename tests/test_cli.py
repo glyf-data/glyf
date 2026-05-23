@@ -1,5 +1,7 @@
 from pathlib import Path
+from types import SimpleNamespace
 
+import pytest
 from typer.testing import CliRunner
 
 from dbt_charts.cli import app
@@ -250,6 +252,69 @@ def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert (project / "target" / "ggsql" / "dbt-charts-site.zip").exists()
 
 
+@pytest.mark.parametrize(
+    "command",
+    ["list", "validate", "render", "dashboard", "export", "serve"],
+)
+def test_commands_report_config_errors(tmp_path: Path, command: str) -> None:
+    project = copy_basic_project(tmp_path)
+    config = project / "bad_config.yml"
+    config.write_text("[]\n", encoding="utf-8")
+
+    result = runner.invoke(
+        app,
+        [command, "--project", str(project), "--config", str(config)],
+    )
+
+    assert result.exit_code == 1
+    assert "Config error" in result.output
+    assert "Invalid config: expected a YAML mapping" in result.output
+
+
+def test_render_command_reports_pipeline_errors(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "visualisations" / "revenue.ggsql").write_text(
+        "select month, revenue from {{ ref('fct_orders') }}\n\n"
+        "VISUALISE month AS x, revenue AS y\n"
+        "DRAW heatmap\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["render", "--project", str(project)])
+
+    assert result.exit_code == 1
+    assert "Render failed" in result.output
+    assert "unsupported chart type 'heatmap'" in result.output
+
+
+def test_dashboard_command_reports_missing_chart_artifacts(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    chart_artifact = project / "target" / "ggsql" / "charts" / "revenue.json"
+    chart_artifact.parent.mkdir(parents=True, exist_ok=True)
+    chart_artifact.write_text('{"test": "data"}', encoding="utf-8")
+    chart_artifact.unlink()
+
+    result = runner.invoke(app, ["dashboard", "--project", str(project)])
+
+    assert result.exit_code == 1
+    assert "Dashboard generation failed" in result.output
+    assert "missing chart metadata" in result.output
+
+
+def test_export_command_reports_missing_generated_outputs(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    index_file = project / "target" / "ggsql" / "index.html"
+    index_file.parent.mkdir(parents=True, exist_ok=True)
+    index_file.write_text("<html></html>", encoding="utf-8")
+    index_file.unlink()
+
+    result = runner.invoke(app, ["export", "--project", str(project)])
+
+    assert result.exit_code == 1
+    assert "Export failed" in result.output
+    assert "Missing generated outputs" in result.output
+
+
 def test_serve_command_reports_missing_site(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
 
@@ -258,6 +323,48 @@ def test_serve_command_reports_missing_site(tmp_path: Path) -> None:
     assert result.exit_code == 1
     assert "Serve failed" in result.output
     assert "run `dbt-charts dashboard` first" in result.output
+
+
+def test_serve_command_serves_generated_site(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    project = copy_basic_project(tmp_path)
+    site_dir = project / "target" / "ggsql" / "site"
+    site_dir.mkdir(parents=True)
+    (site_dir / "index.html").write_text("<h1>dbt-charts</h1>", encoding="utf-8")
+
+    class FakeHttpServer:
+        def __init__(self) -> None:
+            self.served = False
+            self.closed = False
+
+        def serve_forever(self) -> None:
+            self.served = True
+
+        def server_close(self) -> None:
+            self.closed = True
+
+    captured: dict[str, FakeHttpServer] = {}
+
+    def fake_create_server(target: object) -> SimpleNamespace:
+        server = FakeHttpServer()
+        captured["server"] = server
+        return SimpleNamespace(target=target, server=server)
+
+    monkeypatch.setattr("dbt_charts.commands.serve_cmd.create_server", fake_create_server)
+
+    result = runner.invoke(
+        app,
+        ["serve", "--project", str(project), "--port", "8123"],
+    )
+
+    assert result.exit_code == 0
+    assert "Serving target/ggsql/site" in result.output
+    assert "Open http://127.0.0.1:8123/" in result.output
+    assert "Press Ctrl+C to stop." in result.output
+    assert captured["server"].served
+    assert captured["server"].closed
 
 
 def test_validate_command_reports_malformed_ggsql(tmp_path: Path) -> None:
