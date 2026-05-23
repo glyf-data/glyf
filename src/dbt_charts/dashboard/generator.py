@@ -10,6 +10,11 @@ from dbt_charts.dashboard.artifacts import (
     load_chart_artifact,
 )
 from dbt_charts.dashboard.loader import Dashboard, load_dashboard
+from dbt_charts.dashboard.macros import (
+    DashboardMacroError,
+    DashboardMacroRegistry,
+    resolve_dashboard_components,
+)
 from dbt_charts.output.paths import artifact_paths
 from dbt_charts.project.scanner import ProjectScan, scan_project
 
@@ -40,12 +45,21 @@ def generate_dashboards(
     scan = scan_project(project, config)
     paths = artifact_paths(scan.root, config)
     paths.dashboards_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        macro_registry = DashboardMacroRegistry.from_project(scan.dashboards_dir)
+    except DashboardMacroError as exc:
+        raise DashboardGenerationError(str(exc)) from exc
 
     dashboards: list[GeneratedDashboard] = []
     for dashboard_path in scan.dashboard_files:
         try:
             dashboard = load_dashboard(dashboard_path)
         except ValueError as exc:
+            rel_path = dashboard_path.relative_to(scan.root).as_posix()
+            raise DashboardGenerationError(f"{rel_path}: {exc}") from exc
+        try:
+            dashboard = resolve_dashboard_components(dashboard, macro_registry)
+        except DashboardMacroError as exc:
             rel_path = dashboard_path.relative_to(scan.root).as_posix()
             raise DashboardGenerationError(f"{rel_path}: {exc}") from exc
 

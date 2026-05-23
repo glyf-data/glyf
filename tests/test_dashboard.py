@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import datetime
 
 import pytest
 
@@ -69,6 +70,38 @@ def test_dashboard_yaml_parses_sections_and_layout_items(tmp_path: Path) -> None
     assert section.items[1].text == "Revenue is generated from the fct_orders model."
     assert section.items[2].chart == "revenue"
     assert section.items[2].width == 2
+
+
+def test_dashboard_yaml_parses_toolbar_summary_and_components(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "toolbar:\n"
+        "  visibility: public\n"
+        "  actions: [share, visibility]\n"
+        "summary:\n"
+        "  - \"{{ ui.label_value('Owner', 'Analytics Engineering') }}\"\n"
+        "sections:\n"
+        "  - title: Status\n"
+        "    items:\n"
+        "      - component: \"{{ alert.info('Refresh complete', 'Notification') }}\"\n"
+        "        width: 2\n",
+        encoding="utf-8",
+    )
+
+    dashboard = load_dashboard(dashboard_path)
+
+    assert dashboard.toolbar.visibility == "public"
+    assert dashboard.toolbar.actions == ("share", "visibility")
+    assert dashboard.summary == (
+        "{{ ui.label_value('Owner', 'Analytics Engineering') }}",
+    )
+    assert dashboard.sections[0].items[0].kind == "component"
+    assert dashboard.sections[0].items[0].component == (
+        "{{ alert.info('Refresh complete', 'Notification') }}"
+    )
+    assert dashboard.sections[0].items[0].width == 2
 
 
 def test_dashboard_yaml_parses_custom_column_widths(tmp_path: Path) -> None:
@@ -210,6 +243,98 @@ def test_dashboard_generation_renders_sections_and_layout_items(tmp_path: Path) 
     assert "--dashboard-columns: 2" in html
     assert "--item-width: 2" in html
     assert all(line == line.rstrip() for line in html.splitlines())
+
+
+def test_dashboard_generation_renders_builtin_macro_components(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    generated_year = datetime.now().astimezone().strftime("%Y")
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "toolbar:\n"
+        "  visibility: public\n"
+        "summary:\n"
+        "  - \"{{ ui.label_value('Owner', 'Analytics Engineering') }}\"\n"
+        "  - \"{{ ui.label_value('Generated', time.now('%Y')) }}\"\n"
+        "sections:\n"
+        "  - title: Status\n"
+        "    items:\n"
+        "      - component: \"{{ echo('Refresh complete', 'Notification') }}\"\n"
+        "      - component: \"{{ ui.list(['Revenue', 'Margin'], title='Metrics') }}\"\n"
+        "      - chart: revenue\n",
+        encoding="utf-8",
+    )
+
+    generate_dashboards(project)
+
+    html = (
+        project / "target" / "ggsql" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "Dashboard actions" in html
+    assert "is-public" in html
+    assert "Analytics Engineering" in html
+    assert "Generated" in html
+    assert generated_year in html
+    assert "Notification" in html
+    assert "Refresh complete" in html
+    assert "Metrics" in html
+    assert "Revenue" in html
+    assert "Margin" in html
+
+
+def test_dashboard_generation_loads_project_python_macros(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "macros.py").write_text(
+        "from dbt_charts.dashboard import components as c\n\n"
+        "def finance_owner():\n"
+        "    return c.label_value('Owner', 'Finance Analytics')\n\n"
+        "def stale_data_warning(hours_old):\n"
+        "    if hours_old > 24:\n"
+        "        return c.alert('Data is stale', title='Freshness', tone='warning')\n"
+        "    return c.badge('Fresh', tone='success')\n",
+        encoding="utf-8",
+    )
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "summary:\n"
+        "  - \"{{ finance_owner() }}\"\n"
+        "sections:\n"
+        "  - title: Status\n"
+        "    items:\n"
+        "      - component: \"{{ stale_data_warning(25) }}\"\n"
+        "      - chart: revenue\n",
+        encoding="utf-8",
+    )
+
+    generate_dashboards(project)
+
+    html = (
+        project / "target" / "ggsql" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "Finance Analytics" in html
+    assert "Freshness" in html
+    assert "Data is stale" in html
+    assert "tone-warning" in html
+
+
+def test_dashboard_generation_reports_invalid_macro(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "sections:\n"
+        "  - title: Status\n"
+        "    items:\n"
+        "      - component: \"{{ missing_macro() }}\"\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(DashboardGenerationError, match="missing_macro"):
+        generate_dashboards(project)
 
 
 def test_dashboard_generation_renders_custom_column_widths(tmp_path: Path) -> None:

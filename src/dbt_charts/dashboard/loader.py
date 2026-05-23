@@ -4,10 +4,14 @@ from pathlib import Path
 
 import yaml
 
+from dbt_charts.dashboard.components import ComponentSpec
+
 
 _COLUMN_TRACK_RE = re.compile(
     r"^(?P<number>\d+(?:\.\d+)?)(?P<unit>%|fr|px|rem|em|ch|vw|vh)$"
 )
+_TOOLBAR_ACTIONS = {"share", "visibility"}
+_TOOLBAR_VISIBILITIES = {"public", "private"}
 
 
 @dataclass(frozen=True)
@@ -24,9 +28,18 @@ class DashboardLayout:
 
 
 @dataclass(frozen=True)
+class DashboardToolbar:
+    enabled: bool = True
+    visibility: str = "private"
+    actions: tuple[str, ...] = ("share", "visibility")
+
+
+@dataclass(frozen=True)
 class DashboardItem:
     kind: str
     chart: str | None = None
+    component: str | None = None
+    component_spec: ComponentSpec | None = None
     title: str | None = None
     text: str | None = None
     label: str | None = None
@@ -59,6 +72,9 @@ class Dashboard:
     description: str | None = None
     layout: str | None = None
     layout_config: DashboardLayout = DashboardLayout()
+    toolbar: DashboardToolbar = DashboardToolbar()
+    summary: tuple[str, ...] = ()
+    summary_components: tuple[ComponentSpec, ...] = ()
     sections: tuple[DashboardSection, ...] = ()
 
     @property
@@ -82,6 +98,8 @@ def load_dashboard(path: Path) -> Dashboard:
     title = raw.get("title", name)
     description = raw.get("description")
     layout_raw = raw.get("layout")
+    toolbar_raw = raw.get("toolbar")
+    summary_raw = raw.get("summary", [])
     charts = raw.get("charts", [])
     sections_raw = raw.get("sections", raw.get("groups", []))
 
@@ -95,6 +113,8 @@ def load_dashboard(path: Path) -> Dashboard:
         raise ValueError("expected 'charts' to be a list of chart names")
 
     layout_config = _parse_layout(layout_raw)
+    toolbar = _parse_toolbar(toolbar_raw)
+    summary = _parse_summary(summary_raw)
     sections = _parse_sections(sections_raw)
 
     return Dashboard(
@@ -104,6 +124,8 @@ def load_dashboard(path: Path) -> Dashboard:
         description=description,
         layout=layout_config.kind if layout_raw is not None else None,
         layout_config=layout_config,
+        toolbar=toolbar,
+        summary=summary,
         charts=tuple(charts),
         sections=sections,
     )
@@ -163,6 +185,58 @@ def _parse_sections(raw: object) -> tuple[DashboardSection, ...]:
     return tuple(sections)
 
 
+def _parse_toolbar(raw: object) -> DashboardToolbar:
+    if raw is None:
+        return DashboardToolbar()
+    if isinstance(raw, bool):
+        return DashboardToolbar(enabled=raw)
+    if not isinstance(raw, dict):
+        raise ValueError("expected 'toolbar' to be a boolean or mapping")
+
+    enabled = raw.get("enabled", True)
+    if not isinstance(enabled, bool):
+        raise ValueError("expected 'toolbar.enabled' to be true or false")
+
+    visibility = raw.get("visibility", "private")
+    if not isinstance(visibility, str) or visibility not in _TOOLBAR_VISIBILITIES:
+        joined = ", ".join(sorted(_TOOLBAR_VISIBILITIES))
+        raise ValueError(f"expected 'toolbar.visibility' to be one of: {joined}")
+
+    actions_raw = raw.get("actions", ("share", "visibility"))
+    if not isinstance(actions_raw, (list, tuple)):
+        raise ValueError("expected 'toolbar.actions' to be a list")
+    actions: list[str] = []
+    for index, action in enumerate(actions_raw, start=1):
+        if not isinstance(action, str) or action not in _TOOLBAR_ACTIONS:
+            joined = ", ".join(sorted(_TOOLBAR_ACTIONS))
+            raise ValueError(
+                f"expected 'toolbar.actions[{index}]' to be one of: {joined}"
+            )
+        actions.append(action)
+
+    return DashboardToolbar(
+        enabled=enabled,
+        visibility=visibility,
+        actions=tuple(dict.fromkeys(actions)),
+    )
+
+
+def _parse_summary(raw: object) -> tuple[str, ...]:
+    if raw is None:
+        return ()
+    if not isinstance(raw, list):
+        raise ValueError("expected 'summary' to be a list")
+
+    items: list[str] = []
+    for index, item in enumerate(raw, start=1):
+        if not isinstance(item, str) or not item:
+            raise ValueError(
+                f"expected 'summary[{index}]' to be a non-empty macro expression"
+            )
+        items.append(item)
+    return tuple(items)
+
+
 def _parse_section_items(raw: dict[object, object], section_index: int) -> tuple[DashboardItem, ...]:
     items: list[DashboardItem] = []
 
@@ -197,11 +271,15 @@ def _parse_dashboard_item(raw: object, label: str) -> DashboardItem:
 
     if "chart" in raw:
         return _parse_chart_item(raw, label)
+    if "component" in raw:
+        return _parse_component_item(raw, label)
     if "markdown" in raw:
         return _parse_markdown_item(raw, label)
     if "metric" in raw:
         return _parse_metric_item(raw, label)
-    raise ValueError(f"expected {label} to define chart, markdown, or metric")
+    raise ValueError(
+        f"expected {label} to define chart, component, markdown, or metric"
+    )
 
 
 def _parse_chart_item(raw: object, label: str) -> DashboardItem:
@@ -239,6 +317,17 @@ def _parse_markdown_item(raw: dict[object, object], label: str) -> DashboardItem
     if not isinstance(text, str) or not text:
         raise ValueError(f"expected {label}.markdown.text to be a non-empty string")
     return DashboardItem(kind="markdown", title=title, text=text)
+
+
+def _parse_component_item(raw: dict[object, object], label: str) -> DashboardItem:
+    component = raw.get("component")
+    if not isinstance(component, str) or not component:
+        raise ValueError(f"expected {label}.component to be a non-empty expression")
+    return DashboardItem(
+        kind="component",
+        component=component,
+        width=_optional_positive_int(raw.get("width"), f"{label}.width"),
+    )
 
 
 def _parse_metric_item(raw: dict[object, object], label: str) -> DashboardItem:

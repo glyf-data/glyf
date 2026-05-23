@@ -24,8 +24,12 @@
       margin: 0 auto;
       padding: 32px 20px 48px;
     }
-    header {
+    .dashboard-header {
       margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
     }
     h1 {
       margin: 0 0 8px;
@@ -35,6 +39,47 @@
     p {
       margin: 0;
       color: #52606d;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+    .toolbar-button {
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #334e68;
+    }
+    .toolbar-button svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+    .toolbar-button:disabled {
+      opacity: 1;
+      cursor: not-allowed;
+    }
+    .toolbar-button.is-public {
+      color: #0f766e;
+      border-color: #99f6e4;
+      background: #f0fdfa;
+    }
+    .toolbar-button.is-private {
+      color: #9f580a;
+      border-color: #fed7aa;
+      background: #fff7ed;
+    }
+    .summary-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
     }
     .grid {
       display: grid;
@@ -85,6 +130,84 @@
     .metric-card {
       grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
     }
+    .component-card {
+      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
+    }
+    .component-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+    .summary-component {
+      min-width: 170px;
+      padding: 12px 14px;
+    }
+    .component-label {
+      color: #627d98;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .component-value {
+      margin-top: 4px;
+      color: #102a43;
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .component-note {
+      margin-top: 6px;
+      font-size: 0.9rem;
+    }
+    .component-alert {
+      border-left: 4px solid #60a5fa;
+      background: #eff6ff;
+    }
+    .tone-success {
+      border-color: #34d399;
+      background: #ecfdf5;
+    }
+    .tone-warning {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+    .tone-error {
+      border-color: #f87171;
+      background: #fef2f2;
+    }
+    .component-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #334e68;
+    }
+    .component-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+    .tone-success .component-badge {
+      background: #d1fae5;
+      color: #047857;
+    }
+    .tone-warning .component-badge {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .tone-error .component-badge {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .component-link {
+      color: #0f766e;
+      font-weight: 700;
+    }
     .metric-value {
       color: #102a43;
       font-size: 1.9rem;
@@ -134,8 +257,12 @@
       }
       .chart-card,
       .markdown-card,
-      .metric-card {
+      .metric-card,
+      .component-card {
         grid-column: 1 / -1;
+      }
+      .dashboard-header {
+        flex-direction: column;
       }
     }
   </style>
@@ -143,13 +270,73 @@
 <body>
 
 
-  <main>
-    <header>
-      <h1>Product Analytics</h1>
 
-      <p>Product usage and activation metrics by plan.</p>
+
+
+
+  <main>
+    <header class="dashboard-header">
+      <div>
+        <h1>Product Analytics</h1>
+
+        <p>Product usage and activation metrics by plan.</p>
+
+      </div>
+
+      <nav class="toolbar" aria-label="Dashboard actions">
+
+        <button class="toolbar-button" type="button" aria-label="share dashboard" title="share dashboard" disabled>
+
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <path d="M8.59 13.51 15.42 17.49"></path>
+      <path d="M15.41 6.51 8.59 10.49"></path>
+    </svg>
+
+        </button>
+
+        <button class="toolbar-button is-private" type="button" aria-label="visibility dashboard" title="visibility dashboard" disabled>
+
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+
+        </button>
+
+      </nav>
 
     </header>
+
+
+    <section class="summary-strip" aria-label="Dashboard summary">
+
+      <article class="component-card component-label_value tone-neutral summary-component">
+
+      <div class="component-label">Owner</div>
+      <div class="component-value">Product Analytics</div>
+
+
+  </article>
+
+      <article class="component-card component-label_value tone-neutral summary-component">
+
+      <div class="component-label">Generated</div>
+      <div class="component-value">2026-05-23 21:52</div>
+
+
+  </article>
+
+      <article class="component-card component-badge tone-info summary-component">
+
+      <span class="component-badge">Demo macros</span>
+
+  </article>
+
+    </section>
+
 
 
 
@@ -190,7 +377,7 @@
         id="chart-active_users"
         data-vega-chart="chart-active_users-spec"
       ></div>
-      <script type="application/json" id="chart-active_users-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-6e2c2b75a013ee98f3385c9265233aff"}, "datasets": {"data-6e2c2b75a013ee98f3385c9265233aff": [{"active_users": 1560.0, "week": "2026-W03"}, {"active_users": 1450.0, "week": "2026-W02"}, {"active_users": 1320.0, "week": "2026-W01"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "active_users", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "active_users", "title": "Users", "type": "quantitative"}}, "height": 400, "mark": {"opacity": 0.7, "type": "area"}, "title": "Active Users", "width": 800}</script>
+      <script type="application/json" id="chart-active_users-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-808bbf41b9dfe12dfb6ea80f5cc5f3e1"}, "datasets": {"data-808bbf41b9dfe12dfb6ea80f5cc5f3e1": [{"active_users": 1320.0, "week": "2026-W01"}, {"active_users": 1450.0, "week": "2026-W02"}, {"active_users": 1560.0, "week": "2026-W03"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "active_users", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "active_users", "title": "Users", "type": "quantitative"}}, "height": 400, "mark": {"opacity": 0.7, "type": "area"}, "title": "Active Users", "width": 800}</script>
       <noscript>
         <img src="../charts/active_users.png" alt="Active Users Trend">
       </noscript>
@@ -266,6 +453,36 @@ FROM "product_analytics"."main"."fct_product_usage"
         <div class="grid" style="--dashboard-columns: 2; --section-columns: 2">
 
 
+              <article class="component-card component-alert tone-success">
+
+
+      <h3>Health</h3>
+
+      <p>Activation is tracking above target.</p>
+
+  </article>
+
+
+
+              <article class="component-card component-list tone-neutral">
+
+
+      <h3>Tracked plans</h3>
+
+      <ul class="component-list">
+
+        <li>Free</li>
+
+        <li>Team</li>
+
+        <li>Enterprise</li>
+
+      </ul>
+
+  </article>
+
+
+
               <article class="chart-card">
     <h3>Activation by Plan</h3>
     <div class="chart">
@@ -275,7 +492,7 @@ FROM "product_analytics"."main"."fct_product_usage"
         id="chart-activation_by_plan"
         data-vega-chart="chart-activation_by_plan-spec"
       ></div>
-      <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-01155f344c557ca5a53a12e48fb895a1"}, "datasets": {"data-01155f344c557ca5a53a12e48fb895a1": [{"activated_users": 170.0, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 245.0, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 120.0, "plan": "Free", "week": "2026-W01"}, {"activated_users": 155.0, "plan": "Free", "week": "2026-W03"}, {"activated_users": 210.0, "plan": "Pro", "week": "2026-W02"}, {"activated_users": 140.0, "plan": "Free", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
+      <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-44c0a8ddfbb205c358ed54bd3f1d3058"}, "datasets": {"data-44c0a8ddfbb205c358ed54bd3f1d3058": [{"activated_users": 170.0, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 245.0, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 120.0, "plan": "Free", "week": "2026-W01"}, {"activated_users": 155.0, "plan": "Free", "week": "2026-W03"}, {"activated_users": 140.0, "plan": "Free", "week": "2026-W02"}, {"activated_users": 210.0, "plan": "Pro", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
       <noscript>
         <img src="../charts/activation_by_plan.png" alt="Activation by Plan">
       </noscript>
@@ -303,7 +520,7 @@ GROUP BY 1, 2
         id="chart-activation_rate_by_plan"
         data-vega-chart="chart-activation_rate_by_plan-spec"
       ></div>
-      <script type="application/json" id="chart-activation_rate_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-9a087ddfe01bbc2a55ad9d73081b4cf7"}, "datasets": {"data-9a087ddfe01bbc2a55ad9d73081b4cf7": [{"activation_rate": 40.5, "plan": "Pro", "week": "2026-W01"}, {"activation_rate": 47.1, "plan": "Pro", "week": "2026-W03"}, {"activation_rate": 14.3, "plan": "Free", "week": "2026-W02"}, {"activation_rate": 13.3, "plan": "Free", "week": "2026-W01"}, {"activation_rate": 14.9, "plan": "Free", "week": "2026-W03"}, {"activation_rate": 44.7, "plan": "Pro", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activation_rate", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activation_rate", "title": "Activation Rate (%)", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation Rate by Plan", "width": 800}</script>
+      <script type="application/json" id="chart-activation_rate_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-d8c269a0a8c3072c45633608d1be8669"}, "datasets": {"data-d8c269a0a8c3072c45633608d1be8669": [{"activation_rate": 13.3, "plan": "Free", "week": "2026-W01"}, {"activation_rate": 14.9, "plan": "Free", "week": "2026-W03"}, {"activation_rate": 44.7, "plan": "Pro", "week": "2026-W02"}, {"activation_rate": 14.3, "plan": "Free", "week": "2026-W02"}, {"activation_rate": 40.5, "plan": "Pro", "week": "2026-W01"}, {"activation_rate": 47.1, "plan": "Pro", "week": "2026-W03"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activation_rate", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activation_rate", "title": "Activation Rate (%)", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation Rate by Plan", "width": 800}</script>
       <noscript>
         <img src="../charts/activation_rate_by_plan.png" alt="Activation Rate by Plan">
       </noscript>
@@ -354,7 +571,7 @@ GROUP BY 1, 2
         id="chart-sessions_per_user"
         data-vega-chart="chart-sessions_per_user-spec"
       ></div>
-      <script type="application/json" id="chart-sessions_per_user-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-5b4f391bd0e4d9ad76382c96b35c5cf1"}, "datasets": {"data-5b4f391bd0e4d9ad76382c96b35c5cf1": [{"sessions_per_user": 3.33, "week": "2026-W01"}, {"sessions_per_user": 3.43, "week": "2026-W02"}, {"sessions_per_user": 3.54, "week": "2026-W03"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "sessions_per_user", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "sessions_per_user", "title": "Sessions per User", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "title": "Sessions per Active User", "width": 800}</script>
+      <script type="application/json" id="chart-sessions_per_user-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-92459fd6192961d72d6e9cea1d038a20"}, "datasets": {"data-92459fd6192961d72d6e9cea1d038a20": [{"sessions_per_user": 3.54, "week": "2026-W03"}, {"sessions_per_user": 3.33, "week": "2026-W01"}, {"sessions_per_user": 3.43, "week": "2026-W02"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "sessions_per_user", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "sessions_per_user", "title": "Sessions per User", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "title": "Sessions per Active User", "width": 800}</script>
       <noscript>
         <img src="../charts/sessions_per_user.png" alt="Sessions per Active User">
       </noscript>

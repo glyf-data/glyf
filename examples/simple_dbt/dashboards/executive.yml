@@ -2,6 +2,14 @@ name: executive
 title: Executive Dashboard
 description: Revenue from a minimal dbt-style project.
 
+toolbar:
+  visibility: private
+  actions: [share, visibility]
+
+summary:
+  - "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
+  - "{{ ui.label_value('Generated', time.now('%Y-%m-%d %H:%M')) }}"
+
 layout:
   columns: 3
 
@@ -22,6 +30,13 @@ sections:
       - chart: revenue
         title: Monthly revenue
         width: 2
+
+  - title: Operations
+    description: Macro-backed dashboard components.
+    columns: 2
+    items:
+      - component: "{{ echo('Dashboard refreshed from generated chart artifacts.', 'Notification') }}"
+      - component: "{{ ui.list(['Revenue', 'Region', 'Share'], title='Available cuts') }}"
 
   - title: Breakdowns
     description: Regional and distribution views.

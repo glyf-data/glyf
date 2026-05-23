@@ -24,8 +24,12 @@
       margin: 0 auto;
       padding: 32px 20px 48px;
     }
-    header {
+    .dashboard-header {
       margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
     }
     h1 {
       margin: 0 0 8px;
@@ -35,6 +39,47 @@
     p {
       margin: 0;
       color: #52606d;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+    .toolbar-button {
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #334e68;
+    }
+    .toolbar-button svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+    .toolbar-button:disabled {
+      opacity: 1;
+      cursor: not-allowed;
+    }
+    .toolbar-button.is-public {
+      color: #0f766e;
+      border-color: #99f6e4;
+      background: #f0fdfa;
+    }
+    .toolbar-button.is-private {
+      color: #9f580a;
+      border-color: #fed7aa;
+      background: #fff7ed;
+    }
+    .summary-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
     }
     .grid {
       display: grid;
@@ -85,6 +130,84 @@
     .metric-card {
       grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
     }
+    .component-card {
+      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
+    }
+    .component-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+    .summary-component {
+      min-width: 170px;
+      padding: 12px 14px;
+    }
+    .component-label {
+      color: #627d98;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .component-value {
+      margin-top: 4px;
+      color: #102a43;
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .component-note {
+      margin-top: 6px;
+      font-size: 0.9rem;
+    }
+    .component-alert {
+      border-left: 4px solid #60a5fa;
+      background: #eff6ff;
+    }
+    .tone-success {
+      border-color: #34d399;
+      background: #ecfdf5;
+    }
+    .tone-warning {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+    .tone-error {
+      border-color: #f87171;
+      background: #fef2f2;
+    }
+    .component-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #334e68;
+    }
+    .component-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+    .tone-success .component-badge {
+      background: #d1fae5;
+      color: #047857;
+    }
+    .tone-warning .component-badge {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .tone-error .component-badge {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .component-link {
+      color: #0f766e;
+      font-weight: 700;
+    }
     .metric-value {
       color: #102a43;
       font-size: 1.9rem;
@@ -134,8 +257,12 @@
       }
       .chart-card,
       .markdown-card,
-      .metric-card {
+      .metric-card,
+      .component-card {
         grid-column: 1 / -1;
+      }
+      .dashboard-header {
+        flex-direction: column;
       }
     }
   </style>
@@ -170,13 +297,92 @@
   </article>
   {%- endmacro %}
 
+  {% macro component_card(component, compact=False) -%}
+  <article class="component-card component-{{ component.kind }} tone-{{ component.tone }}{% if compact %} summary-component{% endif %}"{% if component.width and not compact %} style="--item-width: {{ component.width }}"{% endif %}>
+    {% if component.kind == "label_value" %}
+      <div class="component-label">{{ component.label }}</div>
+      <div class="component-value">{{ component.value }}</div>
+      {% if component.note %}
+      <p class="component-note">{{ component.note }}</p>
+      {% endif %}
+    {% elif component.kind == "text" %}
+      {% if component.title %}
+      <h3>{{ component.title }}</h3>
+      {% endif %}
+      <p>{{ component.text }}</p>
+    {% elif component.kind == "alert" %}
+      {% if component.title %}
+      <h3>{{ component.title }}</h3>
+      {% endif %}
+      <p>{{ component.text }}</p>
+    {% elif component.kind == "list" %}
+      {% if component.title %}
+      <h3>{{ component.title }}</h3>
+      {% endif %}
+      <ul class="component-list">
+        {% for value in component.items %}
+        <li>{{ value }}</li>
+        {% endfor %}
+      </ul>
+    {% elif component.kind == "badge" %}
+      <span class="component-badge">{{ component.label }}</span>
+    {% elif component.kind == "link" %}
+      {% if component.title %}
+      <h3>{{ component.title }}</h3>
+      {% endif %}
+      <a class="component-link" href="{{ component.href }}">{{ component.label }}</a>
+    {% endif %}
+  </article>
+  {%- endmacro %}
+
+  {% macro toolbar_icon(action, visibility) -%}
+    {% if action == "share" %}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <path d="M8.59 13.51 15.42 17.49"></path>
+      <path d="M15.41 6.51 8.59 10.49"></path>
+    </svg>
+    {% elif visibility == "public" %}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+    </svg>
+    {% else %}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+    {% endif %}
+  {%- endmacro %}
+
   <main>
-    <header>
-      <h1>{{ dashboard.title }}</h1>
-      {% if dashboard.description %}
-      <p>{{ dashboard.description }}</p>
+    <header class="dashboard-header">
+      <div>
+        <h1>{{ dashboard.title }}</h1>
+        {% if dashboard.description %}
+        <p>{{ dashboard.description }}</p>
+        {% endif %}
+      </div>
+      {% if dashboard.toolbar.enabled and dashboard.toolbar.actions %}
+      <nav class="toolbar" aria-label="Dashboard actions">
+        {% for action in dashboard.toolbar.actions %}
+        <button class="toolbar-button{% if action == 'visibility' %} is-{{ dashboard.toolbar.visibility }}{% endif %}" type="button" aria-label="{{ action }} dashboard" title="{{ action }} dashboard" disabled>
+          {{ toolbar_icon(action, dashboard.toolbar.visibility) }}
+        </button>
+        {% endfor %}
+      </nav>
       {% endif %}
     </header>
+
+    {% if dashboard.summary_components %}
+    <section class="summary-strip" aria-label="Dashboard summary">
+      {% for component in dashboard.summary_components %}
+      {{ component_card(component, True) }}
+      {% endfor %}
+    </section>
+    {% endif %}
 
     {% if dashboard.sections %}
       {% for section in dashboard.sections %}
@@ -203,6 +409,8 @@
           {% for item in section.items %}
             {% if item.kind == "chart" and item.chart %}
               {{ chart_card(chart_artifacts[item.chart], item.title, item.width) }}
+            {% elif item.kind == "component" and item.component_spec %}
+              {{ component_card(item.component_spec) }}
             {% elif item.kind == "markdown" %}
               <article class="markdown-card">
                 {% if item.title %}
