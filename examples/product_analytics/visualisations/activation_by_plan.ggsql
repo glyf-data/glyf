@@ -7,3 +7,4 @@ DRAW line
 LABEL title => 'Activation by Plan'
 LABEL x_title => 'Week'
 LABEL y_title => 'Activated Users'
+INTERACT tooltip, legend_filter

@@ -7,3 +7,4 @@ DRAW bar
 LABEL title => 'Expenses by Department'
 LABEL x_title => 'Month'
 LABEL y_title => 'Expenses'
+INTERACT tooltip, legend_filter

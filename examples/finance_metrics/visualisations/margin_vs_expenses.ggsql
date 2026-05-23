@@ -1,0 +1,12 @@
+SELECT
+  department,
+  expenses,
+  gross_margin
+FROM {{ ref('fct_finance') }}
+
+VISUALISE expenses AS x, gross_margin AS y, department AS color
+DRAW scatter
+LABEL title => 'Margin vs Expenses'
+LABEL x_title => 'Expenses'
+LABEL y_title => 'Gross Margin'
+INTERACT tooltip, legend_filter

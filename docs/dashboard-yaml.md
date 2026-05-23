@@ -32,7 +32,7 @@ layout:
 sections:
   - title: Revenue overview
     description: Revenue signals for the current sample period.
-    columns: 3
+    columns: "30% 70%"
     items:
       - metric:
           label: Total revenue
@@ -45,7 +45,6 @@ sections:
             Use this section to capture dashboard context.
       - chart: revenue
         title: Monthly revenue
-        width: 2
 ```
 
 `groups` is accepted as an alias for `sections`:
@@ -59,6 +58,11 @@ groups:
       - revenue_share_pie
 ```
 
+`layout.columns` and `sections[].columns` can be an integer column count, a
+space-separated string, or a list of track widths. Percentage tracks are treated
+as proportional grid weights, so `columns: "30% 70%"` renders as a two-column
+grid without overflowing around the dashboard gap.
+
 ## Fields
 
 - `name`: output filename stem.
@@ -66,12 +70,14 @@ groups:
 - `description`: optional intro text.
 - `charts`: list of `.ggsql` chart names without the extension.
 - `layout`: optional layout string or mapping.
-- `layout.columns`: optional default number of grid columns for rich sections.
+- `layout.columns`: optional default grid columns for rich sections. Use an
+  integer, a string like `"30% 70%"`, or a list like `[1fr, 2fr]`.
 - `sections`: optional grouped dashboard content.
 - `groups`: optional alias for `sections`.
 - `sections[].title`: optional section heading.
 - `sections[].description`: optional section intro text.
-- `sections[].columns`: optional section-level grid column count.
+- `sections[].columns`: optional section-level grid columns, using the same
+  formats as `layout.columns`.
 - `sections[].charts`: shorthand list of chart names for a section.
 - `sections[].items`: ordered list of chart, markdown, and metric items.
 - `items[].chart`: chart name, with optional `title` and `width`.

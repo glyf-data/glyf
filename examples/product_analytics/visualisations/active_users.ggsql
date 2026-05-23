@@ -7,3 +7,4 @@ DRAW area
 LABEL title => 'Active Users'
 LABEL x_title => 'Week'
 LABEL y_title => 'Users'
+INTERACT tooltip

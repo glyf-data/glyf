@@ -7,3 +7,4 @@ DRAW line
 LABEL title => 'Bookings Trend'
 LABEL x_title => 'Month'
 LABEL y_title => 'Bookings'
+INTERACT tooltip

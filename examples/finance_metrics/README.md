@@ -1,6 +1,7 @@
 # finance_metrics
 
-Finance metrics example with bookings, spend, and gross margin.
+Finance metrics example with bookings, spend, gross margin, and mixed ggsql
+chart types.
 
 ```bash
 cd examples/finance_metrics
