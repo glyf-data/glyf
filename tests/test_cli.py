@@ -289,7 +289,10 @@ def test_render_command_reports_pipeline_errors(tmp_path: Path) -> None:
 
 def test_dashboard_command_reports_missing_chart_artifacts(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
-    (project / "target" / "ggsql" / "charts" / "revenue.json").unlink()
+    chart_artifact = project / "target" / "ggsql" / "charts" / "revenue.json"
+    chart_artifact.parent.mkdir(parents=True, exist_ok=True)
+    chart_artifact.write_text('{"test": "data"}', encoding="utf-8")
+    chart_artifact.unlink()
 
     result = runner.invoke(app, ["dashboard", "--project", str(project)])
 
@@ -300,7 +303,10 @@ def test_dashboard_command_reports_missing_chart_artifacts(tmp_path: Path) -> No
 
 def test_export_command_reports_missing_generated_outputs(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
-    (project / "target" / "ggsql" / "index.html").unlink()
+    index_file = project / "target" / "ggsql" / "index.html"
+    index_file.parent.mkdir(parents=True, exist_ok=True)
+    index_file.write_text("<html></html>", encoding="utf-8")
+    index_file.unlink()
 
     result = runner.invoke(app, ["export", "--project", str(project)])
 
