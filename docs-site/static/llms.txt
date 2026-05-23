@@ -20,6 +20,13 @@ Primary docs:
 - Examples gallery: https://dbtcharts.pages.dev/docs/examples/gallery
 - Troubleshooting: https://dbtcharts.pages.dev/docs/resources/troubleshooting
 
+Rendered example dashboards:
+
+- Simple dbt: https://dbtcharts.pages.dev/dashboards/simple-dbt/dashboards/executive.html
+- Sales dashboard: https://dbtcharts.pages.dev/dashboards/sales-dashboard/dashboards/sales.html
+- Product analytics: https://dbtcharts.pages.dev/dashboards/product-analytics/dashboards/product.html
+- Finance metrics: https://dbtcharts.pages.dev/dashboards/finance-metrics/dashboards/finance.html
+
 AI assistant docs:
 
 - AI Context: https://dbtcharts.pages.dev/docs/ai-context/overview

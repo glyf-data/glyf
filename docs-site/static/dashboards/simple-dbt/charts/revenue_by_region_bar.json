@@ -1,0 +1,10 @@
+{
+  "chart_type": "bar",
+  "compiled_sql_path": "target/ggsql/compiled/revenue_by_region_bar.sql",
+  "name": "revenue_by_region_bar",
+  "png_path": "target/ggsql/charts/revenue_by_region_bar.png",
+  "svg_path": "target/ggsql/charts/revenue_by_region_bar.svg",
+  "title": "Revenue by Region",
+  "x": "month",
+  "y": "revenue"
+}

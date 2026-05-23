@@ -61,6 +61,39 @@ The deployed output is:
 docs-site/build
 ```
 
+## Dashboard child pages
+
+Docusaurus copies everything under `docs-site/static/` into the build root. Committed dashboard exports under:
+
+```text
+docs-site/static/dashboards/
+```
+
+are deployed as child pages under:
+
+```text
+https://dbtcharts.pages.dev/dashboards/
+```
+
+For local development, use root-relative links such as:
+
+```text
+/dashboards/simple-dbt/dashboards/executive.html
+```
+
+This resolves to localhost when running `npm start` or `npm run serve`, and to `dbtcharts.pages.dev` after deployment.
+
+To refresh the deployed child pages:
+
+```bash
+task dashboard-ci EXAMPLE_PROJECT=examples/simple_dbt
+task dashboard-ci EXAMPLE_PROJECT=examples/sales_dashboard
+task dashboard-ci EXAMPLE_PROJECT=examples/product_analytics
+task dashboard-ci EXAMPLE_PROJECT=examples/finance_metrics
+```
+
+Then copy each generated `target/ggsql/site/` folder into the matching `docs-site/static/dashboards/<example>/` folder, build locally, commit, push, and merge to `main`.
+
 The Docusaurus config defaults to:
 
 ```text

@@ -1,6 +1,16 @@
+import Link from '@docusaurus/Link';
+
 # Sales Dashboard
 
 `examples/sales_dashboard` shows a sales performance dashboard with monthly revenue, channel mix, and regional sales.
+
+## Rendered output
+
+![Sales dashboard screenshot placeholder](/img/examples/sales-dashboard-banner.svg)
+
+Rendered dashboard: <Link to="pathname:///dashboards/sales-dashboard/dashboards/sales.html">/dashboards/sales-dashboard/dashboards/sales.html</Link>
+
+Deployed docs path: `https://dbtcharts.pages.dev/dashboards/sales-dashboard/dashboards/sales.html`
 
 ## What it demonstrates
 

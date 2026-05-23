@@ -1,0 +1,10 @@
+{
+  "chart_type": "bar",
+  "compiled_sql_path": "target/ggsql/compiled/channel_revenue.sql",
+  "name": "channel_revenue",
+  "png_path": "target/ggsql/charts/channel_revenue.png",
+  "svg_path": "target/ggsql/charts/channel_revenue.svg",
+  "title": "Channel Revenue",
+  "x": "month",
+  "y": "revenue"
+}

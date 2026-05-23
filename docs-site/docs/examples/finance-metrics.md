@@ -1,6 +1,16 @@
+import Link from '@docusaurus/Link';
+
 # Finance Metrics
 
 `examples/finance_metrics` shows bookings, expenses, and gross margin reporting.
+
+## Rendered output
+
+![Finance metrics screenshot placeholder](/img/examples/finance-metrics-banner.svg)
+
+Rendered dashboard: <Link to="pathname:///dashboards/finance-metrics/dashboards/finance.html">/dashboards/finance-metrics/dashboards/finance.html</Link>
+
+Deployed docs path: `https://dbtcharts.pages.dev/dashboards/finance-metrics/dashboards/finance.html`
 
 ## What it demonstrates
 

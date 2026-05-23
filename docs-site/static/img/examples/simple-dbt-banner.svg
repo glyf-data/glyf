@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Simple dbt screenshot placeholder</title>
+  <desc id="desc">A wide placeholder banner for the Simple dbt dashboard screenshot.</desc>
+  <rect width="1200" height="675" fill="#f6faf8"/>
+  <rect x="40" y="40" width="1120" height="595" rx="8" fill="#ffffff" stroke="#d9e2ec" stroke-width="2"/>
+  <text x="80" y="112" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="700">Simple dbt</text>
+  <text x="80" y="160" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="24">Screenshot placeholder</text>
+  <rect x="80" y="218" width="1040" height="330" rx="8" fill="#eef7f3" stroke="#cbd5e1"/>
+  <polyline points="150,470 330,410 510,430 690,330 870,360 1050,270" fill="none" stroke="#008f5f" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="150" cy="470" r="12" fill="#008f5f"/>
+  <circle cx="330" cy="410" r="12" fill="#008f5f"/>
+  <circle cx="510" cy="430" r="12" fill="#008f5f"/>
+  <circle cx="690" cy="330" r="12" fill="#008f5f"/>
+  <circle cx="870" cy="360" r="12" fill="#008f5f"/>
+  <circle cx="1050" cy="270" r="12" fill="#008f5f"/>
+  <text x="80" y="596" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="20">Replace this 1200x675 banner with the rendered dashboard screenshot.</text>
+</svg>

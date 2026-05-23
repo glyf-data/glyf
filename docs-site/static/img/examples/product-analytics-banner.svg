@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Product Analytics screenshot placeholder</title>
+  <desc id="desc">A wide placeholder banner for the Product Analytics dashboard screenshot.</desc>
+  <rect width="1200" height="675" fill="#f6faf8"/>
+  <rect x="40" y="40" width="1120" height="595" rx="8" fill="#ffffff" stroke="#d9e2ec" stroke-width="2"/>
+  <text x="80" y="112" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="700">Product Analytics</text>
+  <text x="80" y="160" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="24">Screenshot placeholder</text>
+  <rect x="80" y="218" width="1040" height="330" rx="8" fill="#eef7f3" stroke="#cbd5e1"/>
+  <path d="M140 470 C260 390 350 440 470 355 C590 270 690 320 810 255 C930 190 1010 250 1080 205 L1080 488 L140 488 Z" fill="#c7f5e4"/>
+  <path d="M140 470 C260 390 350 440 470 355 C590 270 690 320 810 255 C930 190 1010 250 1080 205" fill="none" stroke="#008f5f" stroke-width="10" stroke-linecap="round"/>
+  <text x="80" y="596" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="20">Replace this 1200x675 banner with the rendered dashboard screenshot.</text>
+</svg>

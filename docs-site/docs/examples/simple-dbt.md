@@ -1,6 +1,16 @@
+import Link from '@docusaurus/Link';
+
 # Simple dbt
 
 `examples/simple_dbt` is the smallest useful project. It is best for learning the core workflow and checking that local dependencies are installed correctly.
+
+## Rendered output
+
+![Simple dbt dashboard screenshot placeholder](/img/examples/simple-dbt-banner.svg)
+
+Rendered dashboard: <Link to="pathname:///dashboards/simple-dbt/dashboards/executive.html">/dashboards/simple-dbt/dashboards/executive.html</Link>
+
+Deployed docs path: `https://dbtcharts.pages.dev/dashboards/simple-dbt/dashboards/executive.html`
 
 ## What it demonstrates
 

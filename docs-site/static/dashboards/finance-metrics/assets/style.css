@@ -1,0 +1,7 @@
+/*
+  Static site asset for dbt-charts exports.
+  Dashboard pages currently inline their critical CSS so they work standalone.
+*/
+:root {
+  color-scheme: light;
+}
