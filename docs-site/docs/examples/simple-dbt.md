@@ -10,7 +10,7 @@ import Link from '@docusaurus/Link';
 
 Rendered dashboard: <Link to="pathname:///dashboards/simple-dbt/dashboards/executive.html">/dashboards/simple-dbt/dashboards/executive.html</Link>
 
-Deployed docs path: `https://dbtcharts.pages.dev/dashboards/simple-dbt/dashboards/executive.html`
+Deployed docs path: `https://glyf.pages.dev/dashboards/simple-dbt/dashboards/executive.html`
 
 ## What it demonstrates
 
@@ -25,10 +25,10 @@ cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
-uv run dbt-charts doctor
-uv run dbt-charts render
-uv run dbt-charts dashboard
-uv run dbt-charts export --clean
+uv run glyf doctor
+uv run glyf render
+uv run glyf dashboard
+uv run glyf export --clean
 ```
 
 ## Example chart

@@ -65,9 +65,9 @@ From an example directory:
 ```bash
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt build --profiles-dir .
-uv run dbt-charts render
-uv run dbt-charts dashboard
-uv run dbt-charts export --clean --zip
+uv run glyf render
+uv run glyf dashboard
+uv run glyf export --clean --zip
 ```
 
 Open:
@@ -83,4 +83,4 @@ Copy the shape, not necessarily the data:
 - Keep dbt models under `models/`.
 - Keep chart SQL under `visualisations/`.
 - Keep dashboard definitions under `dashboards/`.
-- Keep `dbt_charts.yml` at the project root for repeatable local and CI commands.
+- Keep `glyf.yml` at the project root for repeatable local and CI commands.

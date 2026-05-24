@@ -1,19 +1,19 @@
 # Quickstart
 
-Use this flow when you already have a dbt project and want to add dbt-charts without hand-creating folders.
+Use this flow when you already have a dbt project and want to add glyf without hand-creating folders.
 
 ## Install
 
 Install the CLI with your Python package manager:
 
 ```bash
-pip install dbt-charts
+pip install glyf
 ```
 
 Or install it as an isolated `uv` tool:
 
 ```bash
-uv tool install dbt-charts
+uv tool install glyf
 ```
 
 ## Scaffold your dbt project
@@ -22,7 +22,7 @@ Run `init` from the root of your dbt project:
 
 ```bash
 cd path/to/my_dbt_project
-dbt-charts init
+glyf init
 ```
 
 The command prompts for:
@@ -33,11 +33,11 @@ The command prompts for:
 - Starter chart title.
 - Starter chart type.
 
-It creates the standard dbt-charts files:
+It creates the standard glyf files:
 
 ```text
 my_dbt_project/
-  dbt_charts.yml
+  glyf.yml
   visualisations/
     monthly_revenue.ggsql
   dashboards/
@@ -47,10 +47,10 @@ my_dbt_project/
 If you want to rerun the scaffold and replace the starter chart/dashboard files, use:
 
 ```bash
-dbt-charts init --clean
+glyf init --clean
 ```
 
-`--clean` keeps an existing `dbt_charts.yml` and replaces only the starter `.ggsql` and dashboard YAML files selected by the prompts.
+`--clean` keeps an existing `glyf.yml` and replaces only the starter `.ggsql` and dashboard YAML files selected by the prompts.
 
 ## Edit the starter chart
 
@@ -75,7 +75,7 @@ The filename stem becomes the chart name used by dashboard YAML. For example, `v
 
 ## Build dbt first
 
-`dbt-charts` reads dbt artifacts. Run dbt before rendering charts so `target/manifest.json` exists and `ref()` or `source()` calls can be resolved.
+`glyf` reads dbt artifacts. Run dbt before rendering charts so `target/manifest.json` exists and `ref()` or `source()` calls can be resolved.
 
 ```bash
 dbt build
@@ -92,11 +92,11 @@ dbt compile
 Use `doctor` and `validate` before rendering:
 
 ```bash
-dbt-charts doctor
-dbt-charts validate
-dbt-charts render
-dbt-charts dashboard
-dbt-charts export --clean
+glyf doctor
+glyf validate
+glyf render
+glyf dashboard
+glyf export --clean
 ```
 
 Open the generated static site:
@@ -124,7 +124,7 @@ target/ggsql/site/
 
 ## Try the included example
 
-If you are working from the dbt-charts repository, you can run the included demo project:
+If you are working from the glyf repository, you can run the included demo project:
 
 ```bash
 uv sync --all-groups
@@ -132,11 +132,11 @@ cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
-uv run dbt-charts doctor
-uv run dbt-charts validate
-uv run dbt-charts render
-uv run dbt-charts dashboard
-uv run dbt-charts export --clean
+uv run glyf doctor
+uv run glyf validate
+uv run glyf render
+uv run glyf dashboard
+uv run glyf export --clean
 ```
 
 Open:
@@ -148,5 +148,5 @@ examples/simple_dbt/target/ggsql/site/index.html
 ## Next steps
 
 - Learn the [project structure](project-structure.md).
-- Add dbt-charts to an [existing dbt project](existing-dbt-project.md).
+- Add glyf to an [existing dbt project](existing-dbt-project.md).
 - Explore the [examples gallery](../examples/gallery.md).

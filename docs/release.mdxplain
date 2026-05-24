@@ -1,6 +1,6 @@
 # Release Process
 
-`dbt-charts` is alpha-stage software. The current version is `0.1.0`.
+`glyf` is alpha-stage software. The current version is `0.1.0`.
 
 ## Versioning
 
@@ -35,7 +35,7 @@ After building:
 
 ```bash
 uv pip install --force-reinstall dist/*.whl
-dbt-charts --help
+glyf --help
 ```
 
 If you prefer not to modify the active environment, create a temporary virtual
@@ -74,5 +74,5 @@ only after the project has a configured PyPI publishing environment.
 - Confirm `pyproject.toml` metadata.
 - Run `uv run pytest`.
 - Run `uv build`.
-- Install the wheel locally and run `dbt-charts --help`.
+- Install the wheel locally and run `glyf --help`.
 - Tag the release after publish, if publishing.

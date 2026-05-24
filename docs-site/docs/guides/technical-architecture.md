@@ -1,6 +1,6 @@
 # Technical Architecture
 
-`dbt-charts` keeps the core workflow small and artifact-driven.
+`glyf` keeps the core workflow small and artifact-driven.
 
 ```text
 dbt project

@@ -31,7 +31,7 @@ In Cloudflare Zero Trust:
 If preview deployments are enabled later:
 
 1. Go to `Workers & Pages`.
-2. Select the `dbtcharts` Pages project.
+2. Select the `glyf` Pages project.
 3. Open `Settings > General`.
 4. Select `Enable access policy`.
 5. Configure an Allow policy for your email address.
@@ -43,7 +43,7 @@ Cloudflare protects preview deployment URLs separately from the production `*.pa
 For the production URL:
 
 ```text
-https://dbtcharts.pages.dev
+https://glyf.pages.dev
 ```
 
 Cloudflare currently requires an extra Access configuration step:
@@ -55,17 +55,17 @@ Cloudflare currently requires an extra Access configuration step:
 5. Under `Public hostname`, remove the wildcard subdomain.
 6. Save the application.
 7. Return to the Pages project and enable the preview access policy again if needed.
-8. Confirm that there is one Access application for `dbtcharts.pages.dev` and one for preview URLs.
+8. Confirm that there is one Access application for `glyf.pages.dev` and one for preview URLs.
 
 ## Later custom domain
 
-When `docs.dbtcharts.com` is added, create a separate self-hosted Access application for that hostname.
+When `docs.glyf.com` is added, create a separate self-hosted Access application for that hostname.
 
 Use the same GitHub login method and email allow policy.
 
 ## Verification checklist
 
-- Visit `https://dbtcharts.pages.dev` in a private browser window.
+- Visit `https://glyf.pages.dev` in a private browser window.
 - Confirm Cloudflare Access appears before the docs load.
 - Sign in with GitHub.
 - Confirm only the configured email address can proceed.

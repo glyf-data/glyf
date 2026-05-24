@@ -4,10 +4,10 @@ import re
 import pandas as pd
 import pytest
 
-from dbt_charts.config import RenderConfig
-from dbt_charts.ggsql.parser import GgsqlParseError, parse_ggsql
-from dbt_charts.ggsql.renderer import ChartRenderError, render_chart
-from dbt_charts.renderers import chart_renderer
+from glyf.config import RenderConfig
+from glyf.ggsql.parser import GgsqlParseError, parse_ggsql
+from glyf.ggsql.renderer import ChartRenderError, render_chart
+from glyf.renderers import chart_renderer
 
 
 def test_render_chart_writes_png_and_svg(tmp_path: Path) -> None:

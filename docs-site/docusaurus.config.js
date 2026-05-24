@@ -1,22 +1,22 @@
 const lightCodeTheme = require('prism-react-renderer').themes.github;
 const darkCodeTheme = require('prism-react-renderer').themes.dracula;
 
-const siteUrl = (process.env.DOCS_SITE_URL || 'https://dbtcharts.pages.dev').replace(/\/$/, '');
+const siteUrl = (process.env.DOCS_SITE_URL || 'https://glyf.pages.dev').replace(/\/$/, '');
 const rawBaseUrl = process.env.DOCS_SITE_BASE_URL || '/';
 const normalizedBaseUrl = rawBaseUrl.startsWith('/') ? rawBaseUrl : `/${rawBaseUrl}`;
 const baseUrl = normalizedBaseUrl.endsWith('/') ? normalizedBaseUrl : `${normalizedBaseUrl}/`;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'dbt-charts',
-  tagline: 'A lightweight dashboard layer for analytics engineers',
-  favicon: 'img/dbt-charts-mark.svg',
+  title: 'glyf',
+  tagline: 'A semantic visualization layer for analytical systems',
+  favicon: 'img/glyf-mark.svg',
 
   url: siteUrl,
   baseUrl,
 
   organizationName: 'kannandreams',
-  projectName: 'dbt-charts',
+  projectName: 'glyf',
 
   onBrokenLinks: 'throw',
   markdown: {
@@ -37,7 +37,7 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/kannandreams/dbt-charts/edit/main/docs-site/',
+          editUrl: 'https://github.com/kannandreams/glyf/edit/main/docs-site/',
           routeBasePath: 'docs',
         },
         blog: false,
@@ -51,11 +51,11 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      image: 'img/dbt-charts-mark.svg',
+      image: 'img/glyf-mark.svg',
       announcementBar: {
         id: 'release-preview',
         content:
-          'Docs preview for dbt-charts 0.1.0: quickstart, examples gallery, AI context, integrations, and migration planning are available.',
+          'Docs preview for glyf 0.1.0: quickstart, examples gallery, AI context, integrations, and migration planning are available.',
         backgroundColor: '#07130f',
         textColor: '#ffffff',
         isCloseable: true,
@@ -66,10 +66,10 @@ const config = {
         respectPrefersColorScheme: false,
       },
       navbar: {
-        title: 'dbt-charts',
+        title: 'glyf',
         logo: {
-          alt: 'dbt-charts mark',
-          src: 'img/dbt-charts-mark.svg',
+          alt: 'glyf mark',
+          src: 'img/glyf-mark.svg',
         },
         items: [
           {to: '/docs/intro', label: 'Docs', position: 'left'},
@@ -79,7 +79,7 @@ const config = {
           {to: '/docs/ai-context/agents', label: 'Agents', position: 'left'},
           {to: '/docs/integrations/overview', label: 'Integrations', position: 'left'},
           {
-            href: 'https://github.com/kannandreams/dbt-charts',
+            href: 'https://github.com/kannandreams/glyf',
             label: 'GitHub',
             position: 'right',
           },
@@ -109,11 +109,11 @@ const config = {
             items: [
               {label: 'Community', to: '/docs/resources/community'},
               {label: 'Roadmap', to: '/docs/resources/roadmap'},
-              {label: 'GitHub', href: 'https://github.com/kannandreams/dbt-charts'},
+              {label: 'GitHub', href: 'https://github.com/kannandreams/glyf'},
             ],
           },
         ],
-        copyright: `Copyright ${new Date().getFullYear()} dbt-charts contributors. Released under the Apache License 2.0.`,
+        copyright: `Copyright ${new Date().getFullYear()} glyf contributors. Released under the Apache License 2.0.`,
       },
       prism: {
         theme: lightCodeTheme,

@@ -1,8 +1,8 @@
-# Contributing to dbt-charts
+# Contributing to glyf
 
-Thanks for considering a contribution to `dbt-charts`.
+Thanks for considering a contribution to `glyf`.
 
-`dbt-charts` is an early-stage project for SQL-first, chart-as-code dashboards
+`glyf` is an early-stage project for SQL-first, chart-as-code dashboards
 that live beside dbt projects. Contributions are welcome, especially when they
 make the CLI more reliable, the documentation clearer, or the example projects
 easier to learn from.
@@ -59,7 +59,7 @@ pull request comment.
    submit the contribution:
 
 ```text
-I have read and agree to the dbt-charts Contributor License Agreement in CLA.md.
+I have read and agree to the glyf Contributor License Agreement in CLA.md.
 
 GitHub username: @your-username
 Pull request: #123
@@ -129,9 +129,9 @@ task ci
 Run the CLI directly during development:
 
 ```bash
-uv run dbt-charts --help
-uv run dbt-charts doctor --project-dir examples/simple_dbt
-uv run dbt-charts render --project-dir examples/simple_dbt
+uv run glyf --help
+uv run glyf doctor --project-dir examples/simple_dbt
+uv run glyf render --project-dir examples/simple_dbt
 ```
 
 ## Testing Expectations
@@ -177,7 +177,7 @@ is still early.
 
 When opening a bug report, please include:
 
-- the `dbt-charts` version or commit
+- the `glyf` version or commit
 - your Python version
 - the dbt adapter and dbt version, if relevant
 - the command you ran
@@ -205,6 +205,6 @@ what the `.ggsql` or YAML should look like and what output you expect.
 Documentation is part of the product. Clear examples, troubleshooting notes, and
 small corrections are valuable contributions.
 
-When changing docs, prefer practical examples over broad promises. `dbt-charts`
+When changing docs, prefer practical examples over broad promises. `glyf`
 is still alpha-stage, so documentation should be honest about what works today
 and what is still evolving.

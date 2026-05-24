@@ -28,7 +28,7 @@ tasks:
   coverage:
     desc: Run the test suite and write coverage reports
     cmds:
-      - uv run pytest --cov=src/dbt_charts --cov-report=term-missing --cov-report=xml
+      - uv run pytest --cov=src/glyf --cov-report=term-missing --cov-report=xml
 
   build:
     desc: Build package distributions
@@ -40,10 +40,10 @@ tasks:
     cmds:
       - uv run dbt seed --project-dir {{.EXAMPLE_PROJECT}} --profiles-dir {{.EXAMPLE_PROJECT}} --full-refresh --no-partial-parse
       - uv run dbt build --project-dir {{.EXAMPLE_PROJECT}} --profiles-dir {{.EXAMPLE_PROJECT}}
-      - uv run dbt-charts doctor --project-dir {{.EXAMPLE_PROJECT}}
-      - uv run dbt-charts render --project-dir {{.EXAMPLE_PROJECT}}
-      - uv run dbt-charts dashboard --project-dir {{.EXAMPLE_PROJECT}}
-      - uv run dbt-charts export --project-dir {{.EXAMPLE_PROJECT}} --clean --zip
+      - uv run glyf doctor --project-dir {{.EXAMPLE_PROJECT}}
+      - uv run glyf render --project-dir {{.EXAMPLE_PROJECT}}
+      - uv run glyf dashboard --project-dir {{.EXAMPLE_PROJECT}}
+      - uv run glyf export --project-dir {{.EXAMPLE_PROJECT}} --clean --zip
 
   ci:
     desc: Run the same checks used by GitHub Actions

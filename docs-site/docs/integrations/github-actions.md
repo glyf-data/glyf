@@ -3,13 +3,13 @@
 This repository includes a dashboard build example at:
 
 ```text
-.github/workflows/dbt-charts-dashboard.yml
+.github/workflows/glyf-dashboard.yml
 ```
 
 ## Minimal workflow shape
 
 ```yaml
-name: dbt-charts dashboard
+name: glyf dashboard
 
 on:
   workflow_dispatch:
@@ -36,18 +36,18 @@ jobs:
 
       - name: Generate dashboard
         run: |
-          uv run dbt-charts doctor --project-dir examples/simple_dbt
-          uv run dbt-charts render --project-dir examples/simple_dbt
-          uv run dbt-charts dashboard --project-dir examples/simple_dbt
-          uv run dbt-charts export --project-dir examples/simple_dbt --clean --zip
+          uv run glyf doctor --project-dir examples/simple_dbt
+          uv run glyf render --project-dir examples/simple_dbt
+          uv run glyf dashboard --project-dir examples/simple_dbt
+          uv run glyf export --project-dir examples/simple_dbt --clean --zip
 
       - name: Upload static site artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dbt-charts-site
+          name: glyf-site
           path: examples/simple_dbt/target/ggsql/site
 ```
 
 ## Credentials
 
-If your dbt profile needs warehouse credentials, configure them with GitHub Actions secrets and environment variables. Keep `dbt_charts.yml` free of secrets.
+If your dbt profile needs warehouse credentials, configure them with GitHub Actions secrets and environment variables. Keep `glyf.yml` free of secrets.

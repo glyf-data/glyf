@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-from dbt_charts.manifest.loader import load_manifest
-from dbt_charts.manifest.resolver import resolve_refs
+from glyf.manifest.loader import load_manifest
+from glyf.manifest.resolver import resolve_refs
 from tests.helpers import write_basic_manifest
 
 

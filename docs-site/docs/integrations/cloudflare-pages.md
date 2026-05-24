@@ -5,7 +5,7 @@ Cloudflare Pages is the planned host for this documentation site.
 The first hosted URL should use the default Pages domain:
 
 ```text
-https://dbtcharts.pages.dev
+https://glyf.pages.dev
 ```
 
 Cloudflare Pages default domains use this shape:
@@ -14,9 +14,9 @@ Cloudflare Pages default domains use this shape:
 <project-name>.pages.dev
 ```
 
-That means `docs.dbt-charts.pages.dev` is not the right starting format. Use `dbtcharts` as the Pages project name, then add `docs.dbtcharts.com` later as a custom domain.
+That means `docs.glyf.pages.dev` is not the right starting format. Use `glyf` as the Pages project name, then add `docs.glyf.com` later as a custom domain.
 
-If `dbtcharts` is not available in your Cloudflare account, choose the closest available project name and update both `CLOUDFLARE_PROJECT_NAME` and `DOCS_SITE_URL` in the workflow together.
+If `glyf` is not available in your Cloudflare account, choose the closest available project name and update both `CLOUDFLARE_PROJECT_NAME` and `DOCS_SITE_URL` in the workflow together.
 
 ## Deployment model
 
@@ -72,7 +72,7 @@ docs-site/static/dashboards/
 are deployed as child pages under:
 
 ```text
-https://dbtcharts.pages.dev/dashboards/
+https://glyf.pages.dev/dashboards/
 ```
 
 For local development, use root-relative links such as:
@@ -81,7 +81,7 @@ For local development, use root-relative links such as:
 /dashboards/simple-dbt/dashboards/executive.html
 ```
 
-This resolves to localhost when running `npm start` or `npm run serve`, and to `dbtcharts.pages.dev` after deployment.
+This resolves to localhost when running `npm start` or `npm run serve`, and to `glyf.pages.dev` after deployment.
 
 To refresh the deployed child pages:
 
@@ -97,7 +97,7 @@ Then copy each generated `target/ggsql/site/` folder into the matching `docs-sit
 The Docusaurus config defaults to:
 
 ```text
-DOCS_SITE_URL=https://dbtcharts.pages.dev
+DOCS_SITE_URL=https://glyf.pages.dev
 DOCS_SITE_BASE_URL=/
 ```
 
@@ -130,7 +130,7 @@ npm run build
 Later, add:
 
 ```text
-docs.dbtcharts.com
+docs.glyf.com
 ```
 
-Keep the Pages project name as `dbtcharts`. The custom domain should be added in Cloudflare Pages after the default `pages.dev` deployment is working and private access has been validated.
+Keep the Pages project name as `glyf`. The custom domain should be added in Cloudflare Pages after the default `pages.dev` deployment is working and private access has been validated.

@@ -2,7 +2,7 @@
 
 Screenshots keep the examples gallery grounded in real generated output.
 
-Use this checklist when refreshing docs assets so every image shows output produced by dbt-charts, not generic product artwork.
+Use this checklist when refreshing docs assets so every image shows output produced by glyf, not generic product artwork.
 
 ## Gallery banner assets
 
@@ -17,7 +17,7 @@ The gallery uses wide `1200x675` PNG banners so cards stay aligned across deskto
 
 ## Capture guidelines
 
-- Use generated `dbt-charts` output.
+- Use generated `glyf` output.
 - Prefer wide rectangle previews that fit gallery cards.
 - Replace the placeholder SVG files with real `1200x675` screenshots when captured.
 - Avoid screenshots with local file paths, private data, or unstable timestamps.

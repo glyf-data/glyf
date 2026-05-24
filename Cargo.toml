@@ -1,10 +1,10 @@
 [workspace]
-members = ["crates/dbt-charts-core"]
+members = ["crates/glyf-core"]
 resolver = "2"
 
 [workspace.package]
 edition = "2021"
 license = "Apache-2.0"
-repository = "https://github.com/kannandreams/dbt-charts"
+repository = "https://github.com/kannandreams/glyf"
 version = "0.1.0"
 

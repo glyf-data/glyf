@@ -1,6 +1,6 @@
 # Configuration
 
-`dbt_charts.yml` is optional. If it is missing, defaults are used.
+`glyf.yml` is optional. If it is missing, defaults are used.
 
 ```yaml
 visualisations_path: visualisations
@@ -30,11 +30,11 @@ Paths are resolved relative to the dbt project root.
 Use a custom config file:
 
 ```bash
-uv run dbt-charts render --config dbt_charts.yml
+uv run glyf render --config glyf.yml
 ```
 
 Use a config with another project:
 
 ```bash
-uv run dbt-charts render --project-dir examples/simple_dbt --config examples/simple_dbt/dbt_charts.yml
+uv run glyf render --project-dir examples/simple_dbt --config examples/simple_dbt/glyf.yml
 ```

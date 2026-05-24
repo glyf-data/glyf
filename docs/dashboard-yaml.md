@@ -127,7 +127,7 @@ sections:
 Project-specific Python macros can live in `dashboards/macros.py`:
 
 ```python
-from dbt_charts.dashboard import components as c
+from glyf.dashboard import components as c
 
 
 def finance_owner():

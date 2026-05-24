@@ -1,11 +1,11 @@
-# dbt-charts Contributor License Agreement
+# glyf Contributor License Agreement
 
 This Contributor License Agreement ("CLA") applies to contributions submitted to
-the `dbt-charts` project.
+the `glyf` project.
 
 Project owner: **Kannan Kalidasan**
 
-Project: **dbt-charts**
+Project: **glyf**
 
 ## Plain-Language Summary
 
@@ -26,9 +26,9 @@ The sections below are the agreement.
 
 **Project Owner** means Kannan Kalidasan and any GitHub organisation, legal
 entity, or successor project vehicle owned or controlled by Kannan Kalidasan for
-maintaining or distributing `dbt-charts`.
+maintaining or distributing `glyf`.
 
-**Project** means `dbt-charts`, including its source code, documentation,
+**Project** means `glyf`, including its source code, documentation,
 examples, tests, website, and related project materials.
 
 **Contribution** means any original work that you intentionally submit for

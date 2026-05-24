@@ -7,7 +7,7 @@ chart types.
 cd examples/finance_metrics
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt build --profiles-dir .
-uv run dbt-charts render
-uv run dbt-charts dashboard
-uv run dbt-charts export --clean --zip
+uv run glyf render
+uv run glyf dashboard
+uv run glyf export --clean --zip
 ```

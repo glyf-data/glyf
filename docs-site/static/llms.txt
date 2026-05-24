@@ -1,43 +1,43 @@
-# dbt-charts
+# glyf
 
-> A lightweight dashboard layer for analytics engineers.
+> A semantic visualization layer for analytical systems.
 
-dbt-charts helps analytics engineers generate static dashboards from dbt projects.
-It uses .ggsql chart files, dashboard YAML, dbt artifacts, DuckDB execution, and static HTML export.
+glyf helps analytics engineers generate static dashboards from analytical projects.
+It uses .ggsql chart files, dashboard YAML, analytical artifacts, DuckDB execution, and static HTML export. Its first integration reads dbt artifacts.
 
 Primary docs:
 
-- Overview: https://dbtcharts.pages.dev/docs/intro
-- Quickstart: https://dbtcharts.pages.dev/docs/get-started/quickstart
-- Existing dbt project: https://dbtcharts.pages.dev/docs/get-started/existing-dbt-project
-- Project structure: https://dbtcharts.pages.dev/docs/get-started/project-structure
-- Visualisation syntax: https://dbtcharts.pages.dev/docs/guides/visualisation-syntax
-- Dashboard YAML: https://dbtcharts.pages.dev/docs/guides/dashboard-yaml
-- dbt integration: https://dbtcharts.pages.dev/docs/guides/dbt-integration
-- Configuration: https://dbtcharts.pages.dev/docs/guides/configuration
-- CLI reference: https://dbtcharts.pages.dev/docs/reference/cli
-- Configuration reference: https://dbtcharts.pages.dev/docs/reference/configuration
-- Examples gallery: https://dbtcharts.pages.dev/docs/examples/gallery
-- Troubleshooting: https://dbtcharts.pages.dev/docs/resources/troubleshooting
+- Overview: https://glyf.pages.dev/docs/intro
+- Quickstart: https://glyf.pages.dev/docs/get-started/quickstart
+- Existing dbt project: https://glyf.pages.dev/docs/get-started/existing-dbt-project
+- Project structure: https://glyf.pages.dev/docs/get-started/project-structure
+- Visualisation syntax: https://glyf.pages.dev/docs/guides/visualisation-syntax
+- Dashboard YAML: https://glyf.pages.dev/docs/guides/dashboard-yaml
+- dbt integration: https://glyf.pages.dev/docs/guides/dbt-integration
+- Configuration: https://glyf.pages.dev/docs/guides/configuration
+- CLI reference: https://glyf.pages.dev/docs/reference/cli
+- Configuration reference: https://glyf.pages.dev/docs/reference/configuration
+- Examples gallery: https://glyf.pages.dev/docs/examples/gallery
+- Troubleshooting: https://glyf.pages.dev/docs/resources/troubleshooting
 
 Rendered example dashboards:
 
-- Simple dbt: https://dbtcharts.pages.dev/dashboards/simple-dbt/dashboards/executive.html
-- Sales dashboard: https://dbtcharts.pages.dev/dashboards/sales-dashboard/dashboards/sales.html
-- Product analytics: https://dbtcharts.pages.dev/dashboards/product-analytics/dashboards/product.html
-- Finance metrics: https://dbtcharts.pages.dev/dashboards/finance-metrics/dashboards/finance.html
+- Simple dbt: https://glyf.pages.dev/dashboards/simple-dbt/dashboards/executive.html
+- Sales dashboard: https://glyf.pages.dev/dashboards/sales-dashboard/dashboards/sales.html
+- Product analytics: https://glyf.pages.dev/dashboards/product-analytics/dashboards/product.html
+- Finance metrics: https://glyf.pages.dev/dashboards/finance-metrics/dashboards/finance.html
 
 AI assistant docs:
 
-- AI Context: https://dbtcharts.pages.dev/docs/ai-context/overview
-- Agents: https://dbtcharts.pages.dev/docs/ai-context/agents
-- Assistant setup: https://dbtcharts.pages.dev/docs/ai-context/assistant-setup
-- Looker migration: https://dbtcharts.pages.dev/docs/migrations/looker
+- AI Context: https://glyf.pages.dev/docs/ai-context/overview
+- Agents: https://glyf.pages.dev/docs/ai-context/agents
+- Assistant setup: https://glyf.pages.dev/docs/ai-context/assistant-setup
+- Looker migration: https://glyf.pages.dev/docs/migrations/looker
 
 Key project files:
 
 - dbt_project.yml: dbt project definition.
-- dbt_charts.yml: dbt-charts paths and dashboard config.
+- glyf.yml: glyf paths and dashboard config.
 - models/: dbt SQL models.
 - target/manifest.json: dbt artifact used to resolve ref() and source().
 - visualisations/*.ggsql: chart SQL plus visualisation directives.
@@ -47,42 +47,42 @@ Key project files:
 Scaffold workflow:
 
 ```bash
-dbt-charts init
-dbt-charts init --clean
+glyf init
+glyf init --clean
 ```
 
-Use init from a dbt project root. It creates dbt_charts.yml when missing, creates visualisations/ and dashboards/, writes a starter .ggsql file, and writes a starter dashboard YAML file. Use --clean only when replacing the starter chart/dashboard files selected by the prompts.
+Use init from a dbt project root. It creates glyf.yml when missing, creates visualisations/ and dashboards/, writes a starter .ggsql file, and writes a starter dashboard YAML file. Use --clean only when replacing the starter chart/dashboard files selected by the prompts.
 
 Core workflow:
 
 ```bash
 dbt build
-dbt-charts doctor
-dbt-charts validate
-dbt-charts render
-dbt-charts dashboard
-dbt-charts export
+glyf doctor
+glyf validate
+glyf render
+glyf dashboard
+glyf export
 ```
 
 When running from outside the dbt project, pass:
 
 ```bash
-dbt-charts validate --project-dir path/to/dbt_project
+glyf validate --project-dir path/to/dbt_project
 ```
 
 Assistant workflow:
 
-1. If visualisations/ or dashboards/ are missing, suggest dbt-charts init or run it when the user asks for scaffolding.
-2. Read dbt_project.yml, dbt_charts.yml, models/, target/manifest.json, visualisations/, and dashboards/.
+1. If visualisations/ or dashboards/ are missing, suggest glyf init or run it when the user asks for scaffolding.
+2. Read dbt_project.yml, glyf.yml, models/, target/manifest.json, visualisations/, and dashboards/.
 3. Create or update a .ggsql file under visualisations/.
 4. Add the chart name to the relevant dashboard YAML under dashboards/.
-5. Run dbt-charts doctor, validate, render, and dashboard.
+5. Run glyf doctor, validate, render, and dashboard.
 6. Report changed files, validation results, generated artifacts, and anything requiring human review.
 
 Guardrails for agents:
 
 - Do not edit dbt models unless the user asks for model changes.
-- Use only supported dbt-charts .ggsql directives and chart types.
+- Use only supported glyf .ggsql directives and chart types.
 - Keep chart SQL close to dbt model names and existing project conventions.
 - Preserve dashboard YAML unless the requested change requires an update.
 - Explain unresolved refs, missing target/manifest.json, missing chart files, and DuckDB execution errors directly.

@@ -16,7 +16,7 @@ The hosted docs are private for now, so the immediate goal is not search indexin
 Before making the docs public:
 
 - Confirm the production URL.
-- Confirm whether `docs.dbtcharts.com` is live.
+- Confirm whether `docs.glyf.com` is live.
 - Replace planning screenshots with real dashboard captures.
 - Add a social preview image under `docs-site/static/img/`.
 - Update Docusaurus `themeConfig.image` to use the social preview image.
@@ -28,8 +28,8 @@ Before making the docs public:
 
 The preview image should show:
 
-- `dbt-charts` name.
-- The tagline: `A lightweight dashboard layer for analytics engineers`.
+- `glyf` name.
+- The tagline: `A semantic visualization layer for analytical systems`.
 - A compact generated dashboard screenshot.
 - A clean light background that matches the docs theme.
 

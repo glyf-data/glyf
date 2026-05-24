@@ -1,18 +1,18 @@
 # Community
 
-`dbt-charts` is open source software for analytics engineers who want dashboards to fit naturally into dbt projects. Use these links to report issues, propose examples, and discuss integrations.
+`glyf` is open source software for analytics engineers who want dashboards to fit naturally into dbt projects. Use these links to report issues, propose examples, and discuss integrations.
 
 ## Project links
 
-- GitHub repository: [kannandreams/dbt-charts](https://github.com/kannandreams/dbt-charts)
-- Issues: [GitHub issues](https://github.com/kannandreams/dbt-charts/issues)
+- GitHub repository: [kannandreams/glyf](https://github.com/kannandreams/glyf)
+- Issues: [GitHub issues](https://github.com/kannandreams/glyf/issues)
 - Roadmap: [Roadmap](roadmap.md)
 
 ## Good issue reports
 
 Include:
 
-- dbt-charts version.
+- glyf version.
 - Python version.
 - dbt adapter and database.
 - The command that failed.

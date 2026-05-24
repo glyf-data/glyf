@@ -15,9 +15,9 @@ The exported dashboard site is static HTML plus chart artifacts. You can publish
 
 ```bash
 dbt build
-dbt-charts render
-dbt-charts dashboard
-dbt-charts export --clean --zip
+glyf render
+glyf dashboard
+glyf export --clean --zip
 ```
 
 ## Publish
@@ -31,7 +31,7 @@ target/ggsql/site/
 or:
 
 ```text
-target/ggsql/dbt-charts-site.zip
+target/ggsql/glyf-site.zip
 ```
 
 No running Python service is needed after export.

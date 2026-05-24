@@ -1,35 +1,37 @@
-# dbt-charts
+# glyf
 
-[![Tests](https://github.com/kannandreams/dbt-charts/actions/workflows/test.yml/badge.svg)](https://github.com/kannandreams/dbt-charts/actions/workflows/test.yml)
-[![Coverage](https://codecov.io/gh/kannandreams/dbt-charts/branch/main/graph/badge.svg)](https://codecov.io/gh/kannandreams/dbt-charts)
-[![PyPI version](https://img.shields.io/pypi/v/dbt-charts.svg)](https://pypi.org/project/dbt-charts/)
-[![Python versions](https://img.shields.io/pypi/pyversions/dbt-charts.svg)](https://pypi.org/project/dbt-charts/)
-[![License](https://img.shields.io/pypi/l/dbt-charts.svg)](LICENSE)
+[![Tests](https://github.com/kannandreams/glyf/actions/workflows/test.yml/badge.svg)](https://github.com/kannandreams/glyf/actions/workflows/test.yml)
+[![Coverage](https://codecov.io/gh/kannandreams/glyf/branch/main/graph/badge.svg)](https://codecov.io/gh/kannandreams/glyf)
+[![PyPI version](https://img.shields.io/pypi/v/glyf.svg)](https://pypi.org/project/glyf/)
+[![Python versions](https://img.shields.io/pypi/pyversions/glyf.svg)](https://pypi.org/project/glyf/)
+[![License](https://img.shields.io/pypi/l/glyf.svg)](LICENSE)
 
-Chart-as-code dashboards for dbt projects.
+A semantic visualization layer for analytical systems.
 
-`dbt-charts` discovers `.ggsql` visualisation files in a dbt project, resolves dbt
-`ref()` and `source()` calls from `target/manifest.json`, executes chart SQL with
-DuckDB, renders PNG/SVG charts with Altair, and exports static dashboards.
+`glyf` turns analytical metadata and SQL-first visualisation files into
+versioned chart artifacts and static dashboards. Its first integration reads dbt
+project artifacts, resolves dbt `ref()` and `source()` calls from
+`target/manifest.json`, executes chart SQL with DuckDB, renders PNG/SVG charts
+with Altair, and exports publishable dashboard sites.
 
 ## Status
 
 Alpha-stage Python CLI. Useful for local analytics, static dashboard prototypes,
-and repeatable reporting artifacts that live beside dbt projects. It is not a
-dbt adapter, BI server, or hosted dashboard service.
+and repeatable reporting artifacts that live beside analytical systems. It is
+not a dbt adapter, BI server, or hosted dashboard service.
 
 ## Installation
 
 Install the CLI:
 
 ```bash
-pip install dbt-charts
+pip install glyf
 ```
 
 Or keep it isolated with `uv`:
 
 ```bash
-uv tool install dbt-charts
+uv tool install glyf
 ```
 
 When developing from this repository, install dependencies with `uv`:
@@ -81,13 +83,13 @@ report to Codecov for the README coverage badge.
 In a dbt project:
 
 ```bash
-dbt-charts init
+glyf init
 dbt build
-dbt-charts doctor
-dbt-charts validate
-dbt-charts render
-dbt-charts dashboard
-dbt-charts export --clean
+glyf doctor
+glyf validate
+glyf render
+glyf dashboard
+glyf export --clean
 ```
 
 For the included example project:
@@ -98,10 +100,10 @@ cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
-uv run dbt-charts validate
-uv run dbt-charts render
-uv run dbt-charts dashboard
-uv run dbt-charts export --clean
+uv run glyf validate
+uv run glyf render
+uv run glyf dashboard
+uv run glyf export --clean
 ```
 
 Open:
@@ -113,27 +115,27 @@ examples/simple_dbt/target/ggsql/site/index.html
 ## CLI
 
 ```bash
-uv run dbt-charts init
-uv run dbt-charts doctor
-uv run dbt-charts list
-uv run dbt-charts validate
-uv run dbt-charts render
-uv run dbt-charts dashboard
-uv run dbt-charts export --clean --zip
-uv run dbt-charts serve
+uv run glyf init
+uv run glyf doctor
+uv run glyf list
+uv run glyf validate
+uv run glyf render
+uv run glyf dashboard
+uv run glyf export --clean --zip
+uv run glyf serve
 ```
 
 Point at another project:
 
 ```bash
-uv run dbt-charts render --project-dir examples/sales_dashboard
+uv run glyf render --project-dir examples/sales_dashboard
 ```
 
 Preview a generated dashboard locally:
 
 ```bash
-uv run dbt-charts serve --project-dir examples/simple_dbt
-uv run dbt-charts serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
+uv run glyf serve --project-dir examples/simple_dbt
+uv run glyf serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
 ```
 
 ## Example Output
@@ -205,7 +207,7 @@ Near-term themes:
 
 ## License
 
-`dbt-charts` is released under the
+`glyf` is released under the
 [Apache License 2.0](LICENSE).
 
 ## Common Issues
@@ -213,7 +215,7 @@ Near-term themes:
 - Missing `target/manifest.json`: run `dbt compile` or `dbt build`.
 - Unresolved `ref()` or `source()`: check the dbt model/source names in the
   generated manifest.
-- No charts found: check `visualisations_path` in `dbt_charts.yml`.
-- DuckDB execution error: run `dbt seed` and `dbt run` before `dbt-charts render`.
+- No charts found: check `visualisations_path` in `glyf.yml`.
+- DuckDB execution error: run `dbt seed` and `dbt run` before `glyf render`.
 - Rendering dependency error: run `uv sync` to install Altair and
   `vl-convert-python`.

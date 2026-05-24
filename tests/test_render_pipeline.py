@@ -4,8 +4,8 @@ from pathlib import Path
 import duckdb
 import pytest
 
-from dbt_charts.execution.duckdb import execute_sql
-from dbt_charts.pipeline import RenderError, render_project
+from glyf.execution.duckdb import execute_sql
+from glyf.pipeline import RenderError, render_project
 from tests.helpers import copy_basic_project
 
 

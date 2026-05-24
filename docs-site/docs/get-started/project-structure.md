@@ -1,13 +1,13 @@
 # Project Structure
 
-A dbt-charts project is a normal dbt project with chart and dashboard files added.
+A glyf project is a normal dbt project with chart and dashboard files added.
 
-Use `dbt-charts init` from a dbt project root to create the starter structure.
+Use `glyf init` from a dbt project root to create the starter structure.
 
 ```text
 my_dbt_project/
   dbt_project.yml
-  dbt_charts.yml
+  glyf.yml
   models/
   seeds/
   visualisations/
@@ -34,7 +34,7 @@ my_dbt_project/
 
 `dashboards/*.yml` groups rendered charts into static dashboard pages.
 
-`dbt_charts.yml` is optional. It customizes paths, render formats, and dashboard settings.
+`glyf.yml` is optional. It customizes paths, render formats, and dashboard settings.
 
 ## Outputs
 

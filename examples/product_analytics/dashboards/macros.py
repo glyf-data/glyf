@@ -1,4 +1,4 @@
-from dbt_charts.dashboard import components as c
+from glyf.dashboard import components as c
 
 
 def product_owner() -> c.ComponentSpec:

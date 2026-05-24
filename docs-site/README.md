@@ -1,6 +1,6 @@
-# dbt-charts Docs Site
+# glyf Docs Site
 
-This is the Docusaurus website for dbt-charts documentation.
+This is the Docusaurus website for glyf documentation.
 
 ## Local development
 
@@ -43,14 +43,14 @@ npm run serve
 
 Then open the URL printed by Docusaurus.
 
-Static files under `docs-site/static/` are copied to the site root. For example, dashboard exports committed under `docs-site/static/dashboards/simple-dbt/` are served locally as `/dashboards/simple-dbt/` and deployed as `https://dbtcharts.pages.dev/dashboards/simple-dbt/`.
+Static files under `docs-site/static/` are copied to the site root. For example, dashboard exports committed under `docs-site/static/dashboards/simple-dbt/` are served locally as `/dashboards/simple-dbt/` and deployed as `https://glyf.pages.dev/dashboards/simple-dbt/`.
 
 ## Cloudflare Pages
 
 The docs site defaults to Cloudflare Pages:
 
 ```text
-https://dbtcharts.pages.dev
+https://glyf.pages.dev
 ```
 
 Deployments are handled by:
@@ -69,7 +69,7 @@ CLOUDFLARE_API_TOKEN
 The Cloudflare Pages project name is:
 
 ```text
-dbtcharts
+glyf
 ```
 
 If that Pages project name is unavailable, update both `CLOUDFLARE_PROJECT_NAME` and `DOCS_SITE_URL` in the workflow.
@@ -77,7 +77,7 @@ If that Pages project name is unavailable, update both `CLOUDFLARE_PROJECT_NAME`
 The planned custom domain is:
 
 ```text
-docs.dbtcharts.com
+docs.glyf.com
 ```
 
 If another host is needed later, override the build URL and base path:

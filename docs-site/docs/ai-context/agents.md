@@ -2,13 +2,13 @@
 
 Agents can help analytics engineers move faster when the task is narrow, the project context is available, and every change is validated.
 
-In dbt-charts, an agent should behave like a careful contributor: inspect files first, make small chart or dashboard changes, run the CLI checks, and explain what still needs human judgment.
+In glyf, an agent should behave like a careful contributor: inspect files first, make small chart or dashboard changes, run the CLI checks, and explain what still needs human judgment.
 
 ## Good Tasks For Agents
 
 - Inspect a dbt model and draft `.ggsql` visualisations.
 - Add a chart to an existing dashboard YAML file.
-- Run `dbt-charts doctor` and summarize project readiness.
+- Run `glyf doctor` and summarize project readiness.
 - Convert a dashboard request into chart and dashboard file changes.
 - Add a GitHub Actions workflow that exports dashboard artifacts.
 - Explain unresolved refs, missing manifest files, or DuckDB execution errors.
@@ -26,7 +26,7 @@ In dbt-charts, an agent should behave like a careful contributor: inspect files 
 
 Ask agents to:
 
-- Read `dbt_charts.yml` before assuming directory names.
+- Read `glyf.yml` before assuming directory names.
 - Keep chart SQL close to dbt model naming.
 - Use only supported chart types and directives.
 - Run validation commands after editing.
@@ -38,19 +38,19 @@ Ask agents to:
 
 ```text
 Add a chart for <metric> from <dbt model>.
-Read dbt_charts.yml and target/manifest.json first.
+Read glyf.yml and target/manifest.json first.
 Create or update only the required .ggsql and dashboard YAML files.
-Run dbt-charts doctor and validate.
+Run glyf doctor and validate.
 Tell me what changed and what still needs review.
 ```
 
 ## Starting Command Set
 
 ```bash
-uv run dbt-charts doctor --project-dir examples/simple_dbt
-uv run dbt-charts validate --project-dir examples/simple_dbt
-uv run dbt-charts render --project-dir examples/simple_dbt
-uv run dbt-charts dashboard --project-dir examples/simple_dbt
+uv run glyf doctor --project-dir examples/simple_dbt
+uv run glyf validate --project-dir examples/simple_dbt
+uv run glyf render --project-dir examples/simple_dbt
+uv run glyf dashboard --project-dir examples/simple_dbt
 ```
 
 For a real project, replace `examples/simple_dbt` with the path to the dbt project.
