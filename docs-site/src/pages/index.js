@@ -23,6 +23,54 @@ const examples = [
   ['Finance metrics', 'Bookings, expense share, and gross margin signals.', '/docs/examples/finance-metrics'],
 ];
 
+const outputSurfaces = [
+  ['dashboard', 'Dashboard'],
+  ['charts', 'Charts'],
+  ['publish', 'Publish'],
+  ['embed', 'Embed'],
+];
+
+function OutputIcon({type}) {
+  if (type === 'dashboard') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="16" rx="2.5" />
+        <path d="M7 15V11M12 15V8M17 15V12" />
+      </svg>
+    );
+  }
+
+  if (type === 'charts') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 18L9 12.5L13 15.5L20 7" />
+        <path d="M4 20H20" />
+        <circle cx="9" cy="12.5" r="1.4" />
+        <circle cx="13" cy="15.5" r="1.4" />
+        <circle cx="20" cy="7" r="1.4" />
+      </svg>
+    );
+  }
+
+  if (type === 'publish') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 16V4" />
+        <path d="M8 8L12 4L16 8" />
+        <path d="M5 14V18C5 19.1 5.9 20 7 20H17C18.1 20 19 19.1 19 18V14" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 8L5 12L9 16" />
+      <path d="M15 8L19 12L15 16" />
+      <path d="M13 5L11 19" />
+    </svg>
+  );
+}
+
 function HeroMock() {
   return (
     <div className="heroVisual" aria-label="Glyf visualization and dashboard artifact preview">
@@ -117,11 +165,12 @@ function HeroMock() {
         </div>
       </div>
       <div className="heroOutputPills" aria-label="Supported output surfaces">
-        <span>Dashboards</span>
-        <span>Charts</span>
-        <span>Markdown</span>
-        <span>Export artifacts</span>
-        <span>Embed</span>
+        {outputSurfaces.map(([type, label]) => (
+          <span key={type}>
+            <OutputIcon type={type} />
+            {label}
+          </span>
+        ))}
       </div>
     </div>
   );
@@ -149,7 +198,7 @@ function HomepageHeader() {
             <span>Open source</span>
             <span>Apache-2.0</span>
             <span>Python 3.11+</span>
-            <span>dbt artifact integration</span>
+            <span>Rust powered</span>
           </div>
         </div>
         <HeroMock />

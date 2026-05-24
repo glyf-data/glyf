@@ -92,8 +92,9 @@ select {
 
 .navbar__brand {
   color: var(--dbtc-ink);
-  gap: 0.75rem;
+  gap: 1.15rem;
   margin-right: 4.8rem;
+  overflow: visible;
 }
 
 .navbar__logo {
@@ -110,7 +111,15 @@ select {
   color: var(--dbtc-ink);
   font-size: 2.45rem;
   font-weight: 820;
-  line-height: 1;
+  line-height: 1.2;
+  max-width: none;
+  overflow: visible;
+}
+
+.navbar__title.text--truncate {
+  max-width: none;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .navbar__items:not(.navbar__items--right) {
@@ -157,18 +166,60 @@ select {
   order: 2;
   display: inline-flex;
   align-items: center;
-  min-height: 2.65rem;
-  padding: 0.25rem 0.55rem;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  min-height: 3rem;
+  padding: 0;
   border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 999px;
+  border-radius: 14px;
   background: #ffffff;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
 .navbar__items--right [class*='toggleButton'] {
-  width: 2rem;
-  height: 2rem;
+  position: relative;
+  width: 2.25rem;
+  height: 2.25rem;
   color: #0f172a;
+}
+
+.navbar__items--right [class*='toggleButton'] svg {
+  display: none !important;
+}
+
+.navbar__items--right [class*='toggleButton']::before {
+  content: "";
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, transparent 0 34%, currentColor 36% 49%, transparent 51%),
+    conic-gradient(
+      from 0deg,
+      currentColor 0 5deg,
+      transparent 5deg 40deg,
+      currentColor 40deg 50deg,
+      transparent 50deg 85deg,
+      currentColor 85deg 95deg,
+      transparent 95deg 130deg,
+      currentColor 130deg 140deg,
+      transparent 140deg 175deg,
+      currentColor 175deg 185deg,
+      transparent 185deg 220deg,
+      currentColor 220deg 230deg,
+      transparent 230deg 265deg,
+      currentColor 265deg 275deg,
+      transparent 275deg 310deg,
+      currentColor 310deg 320deg,
+      transparent 320deg 360deg
+    );
+}
+
+[data-theme='dark'] .navbar__items--right [class*='toggleButton']::before {
+  background:
+    radial-gradient(circle at 64% 36%, transparent 0 32%, currentColor 34% 35%, transparent 37%),
+    radial-gradient(circle at 48% 50%, currentColor 0 58%, transparent 60%);
 }
 
 .navbarGetStarted {
@@ -1081,6 +1132,7 @@ select {
   min-height: 2.8rem;
   display: inline-flex;
   align-items: center;
+  gap: 0.55rem;
   padding: 0 1rem;
   border: 1px solid rgba(15, 23, 42, 0.11);
   border-radius: 10px;
@@ -1089,6 +1141,22 @@ select {
   font-size: 0.88rem;
   font-weight: 750;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+}
+
+.heroOutputPills svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #00a38a;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.heroOutputPills svg circle {
+  fill: currentColor;
+  stroke: none;
 }
 
 .band--layers {
