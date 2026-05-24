@@ -2,8 +2,8 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from dbt_charts.cli import app
-from dbt_charts.doctor import run_doctor_checks
+from glyf.cli import app
+from glyf.doctor import run_doctor_checks
 from tests.helpers import copy_basic_project
 
 

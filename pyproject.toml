@@ -1,14 +1,14 @@
 [project]
-name = "dbt-charts"
+name = "glyf"
 version = "0.1.0"
-description = "Experimental chart-as-code static dashboards for dbt projects."
+description = "A semantic visualization layer for analytical systems."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 authors = [
     { name = "Kannan Kalidasan" },
 ]
-keywords = ["dbt", "dashboards", "charts", "analytics", "static-site"]
+keywords = ["visualization", "dashboards", "charts", "analytics", "semantic-layer", "static-site", "dbt"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
@@ -36,12 +36,12 @@ dependencies = [
 ]
 
 [project.scripts]
-dbt-charts = "dbt_charts.cli:app"
+glyf = "glyf.cli:app"
 
 [project.urls]
-Repository = "https://github.com/kannandreams/dbt-charts"
-Issues = "https://github.com/kannandreams/dbt-charts/issues"
-Documentation = "https://kannandreams.github.io/dbt-charts/"
+Repository = "https://github.com/kannandreams/glyf"
+Issues = "https://github.com/kannandreams/glyf/issues"
+Documentation = "https://kannandreams.github.io/glyf/"
 
 [dependency-groups]
 dev = [
@@ -56,8 +56,8 @@ requires = ["maturin>=1.8,<2.0"]
 build-backend = "maturin"
 
 [tool.maturin]
-manifest-path = "crates/dbt-charts-core/Cargo.toml"
-module-name = "dbt_charts._core"
+manifest-path = "crates/glyf-core/Cargo.toml"
+module-name = "glyf._core"
 python-source = "src"
 features = ["extension-module"]
 include = [
@@ -86,7 +86,7 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 relative_files = true
-source = ["src/dbt_charts"]
+source = ["src/glyf"]
 
 [tool.coverage.report]
 fail_under = 80

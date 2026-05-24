@@ -2,14 +2,14 @@ from pathlib import Path
 
 import pytest
 
-from dbt_charts.server import ServeError, create_server, resolve_serve_target
+from glyf.server import ServeError, create_server, resolve_serve_target
 
 
 def test_resolve_serve_target_reports_missing_site(tmp_path: Path) -> None:
     project = tmp_path / "project"
     project.mkdir()
 
-    with pytest.raises(ServeError, match="run `dbt-charts dashboard` first"):
+    with pytest.raises(ServeError, match="run `glyf dashboard` first"):
         resolve_serve_target(project)
 
 
@@ -26,7 +26,7 @@ def test_create_server_uses_site_directory_and_ephemeral_port(tmp_path: Path) ->
     project = tmp_path / "project"
     site_dir = project / "target" / "ggsql" / "site"
     site_dir.mkdir(parents=True)
-    (site_dir / "index.html").write_text("<h1>dbt-charts</h1>", encoding="utf-8")
+    (site_dir / "index.html").write_text("<h1>glyf</h1>", encoding="utf-8")
 
     target = resolve_serve_target(project, port=0)
     serve_server = create_server(target)

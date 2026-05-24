@@ -3,27 +3,27 @@
 The CLI entry point is:
 
 ```bash
-dbt-charts
+glyf
 ```
 
 When working from this repository, use:
 
 ```bash
-uv run dbt-charts
+uv run glyf
 ```
 
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
-| `dbt-charts init` | Scaffold dbt-charts config, starter chart, and dashboard files. |
-| `dbt-charts doctor` | Check whether a project is ready for dbt-charts workflows. |
-| `dbt-charts list` | List discovered ggsql project files. |
-| `dbt-charts validate` | Validate discovered files and manifest refs. |
-| `dbt-charts render` | Generate compiled SQL and chart artifacts. |
-| `dbt-charts dashboard` | Generate static dashboard HTML from rendered chart artifacts. |
-| `dbt-charts export` | Copy generated outputs into a publish-ready static site folder. |
-| `dbt-charts serve` | Serve the generated static dashboard site locally. |
+| `glyf init` | Scaffold glyf config, starter chart, and dashboard files. |
+| `glyf doctor` | Check whether a project is ready for glyf workflows. |
+| `glyf list` | List discovered ggsql project files. |
+| `glyf validate` | Validate discovered files and manifest refs. |
+| `glyf render` | Generate compiled SQL and chart artifacts. |
+| `glyf dashboard` | Generate static dashboard HTML from rendered chart artifacts. |
+| `glyf export` | Copy generated outputs into a publish-ready static site folder. |
+| `glyf serve` | Serve the generated static dashboard site locally. |
 
 ## Shared options
 
@@ -32,25 +32,25 @@ Most commands support:
 | Option | Description |
 | --- | --- |
 | `--project-dir`, `--project`, `-p` | Path to a dbt project. Defaults to the current directory. |
-| `--config` | Path to `dbt_charts.yml`. Defaults to `PROJECT/dbt_charts.yml` if present. |
+| `--config` | Path to `glyf.yml`. Defaults to `PROJECT/glyf.yml` if present. |
 
 ## Common workflow
 
 For a new dbt project, scaffold starter files first:
 
 ```bash
-dbt-charts init --project-dir path/to/dbt_project
+glyf init --project-dir path/to/dbt_project
 ```
 
 Then run dbt and generate dashboard artifacts:
 
 ```bash
-uv run dbt-charts doctor --project-dir examples/simple_dbt
-uv run dbt-charts list --project-dir examples/simple_dbt
-uv run dbt-charts validate --project-dir examples/simple_dbt
-uv run dbt-charts render --project-dir examples/simple_dbt
-uv run dbt-charts dashboard --project-dir examples/simple_dbt
-uv run dbt-charts export --project-dir examples/simple_dbt --clean --zip
+uv run glyf doctor --project-dir examples/simple_dbt
+uv run glyf list --project-dir examples/simple_dbt
+uv run glyf validate --project-dir examples/simple_dbt
+uv run glyf render --project-dir examples/simple_dbt
+uv run glyf dashboard --project-dir examples/simple_dbt
+uv run glyf export --project-dir examples/simple_dbt --clean --zip
 ```
 
 ## Example Output
@@ -65,10 +65,10 @@ uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simpl
 
 ### `init`
 
-Use `init` inside a dbt project to create the standard dbt-charts config, starter `.ggsql` file, and dashboard YAML.
+Use `init` inside a dbt project to create the standard glyf config, starter `.ggsql` file, and dashboard YAML.
 
 ```bash title="Command"
-dbt-charts init
+glyf init
 ```
 
 Example prompts:
@@ -84,8 +84,8 @@ Starter chart type [line]:
 Example output:
 
 ```text title="Output"
-Initialized dbt-charts in .
-✓ wrote dbt_charts.yml
+Initialized glyf in .
+✓ wrote glyf.yml
 ✓ ensured visualisations/
 ✓ wrote visualisations/monthly_revenue.ggsql
 ✓ ensured dashboards/
@@ -93,11 +93,11 @@ Initialized dbt-charts in .
 
 Next steps:
   dbt build
-  dbt-charts doctor
-  dbt-charts validate
-  dbt-charts render
-  dbt-charts dashboard
-  dbt-charts export --clean
+  glyf doctor
+  glyf validate
+  glyf render
+  glyf dashboard
+  glyf export --clean
 ```
 
 ### `doctor`
@@ -105,7 +105,7 @@ Next steps:
 Use `doctor` to check whether the dbt project has the required config, manifest, chart files, dashboard files, and output directories.
 
 ```bash title="Command"
-uv run dbt-charts doctor --project-dir examples/simple_dbt
+uv run glyf doctor --project-dir examples/simple_dbt
 ```
 
 Example output:
@@ -113,7 +113,7 @@ Example output:
 ```text title="Output"
 Project: examples/simple_dbt
 [OK] uv: uv executable found
-[OK] config: loaded dbt_charts.yml
+[OK] config: loaded glyf.yml
 [OK] dbt_project.yml: found dbt_project.yml
 [OK] manifest.json: found target/manifest.json
 [OK] visualisations: found 5 .ggsql file(s)
@@ -132,7 +132,7 @@ Project: examples/simple_dbt
 Use `list` to see the `.ggsql` files, dashboard YAML files, and dbt models discovered from the manifest.
 
 ```bash title="Command"
-uv run dbt-charts list --project-dir examples/simple_dbt
+uv run glyf list --project-dir examples/simple_dbt
 ```
 
 Example output:
@@ -160,7 +160,7 @@ Models (1)
 Use `validate` before rendering to catch parser errors, unresolved dbt refs or sources, and dashboard references to missing chart names.
 
 ```bash title="Command"
-uv run dbt-charts validate --project-dir examples/simple_dbt
+uv run glyf validate --project-dir examples/simple_dbt
 ```
 
 Example output:
@@ -177,7 +177,7 @@ Validation passed
 Use `render` to compile chart SQL, execute queries, and write chart artifacts.
 
 ```bash title="Command"
-uv run dbt-charts render --project-dir examples/simple_dbt
+uv run glyf render --project-dir examples/simple_dbt
 ```
 
 Example output:
@@ -195,7 +195,7 @@ Example output:
 Use `dashboard` after `render` to generate dashboard HTML pages from the rendered artifacts and dashboard YAML.
 
 ```bash title="Command"
-uv run dbt-charts dashboard --project-dir examples/simple_dbt
+uv run glyf dashboard --project-dir examples/simple_dbt
 ```
 
 Example output:
@@ -212,7 +212,7 @@ Example output:
 Use `export` to copy the generated dashboard, chart artifacts, compiled SQL, and static assets into the publish-ready site directory.
 
 ```bash title="Command"
-uv run dbt-charts export --project-dir examples/simple_dbt --clean --zip
+uv run glyf export --project-dir examples/simple_dbt --clean --zip
 ```
 
 Example output:
@@ -223,7 +223,7 @@ Example output:
 ✓ copied compiled SQL
 ✓ wrote site assets
 ✓ exported site to target/ggsql/site
-✓ wrote zip archive target/ggsql/dbt-charts-site.zip
+✓ wrote zip archive target/ggsql/glyf-site.zip
 ```
 
 </div>
@@ -232,7 +232,7 @@ Example output:
 
 | Option | Description |
 | --- | --- |
-| `--clean` | Replace starter chart/dashboard files selected by the prompts. Keeps existing `dbt_charts.yml`. |
+| `--clean` | Replace starter chart/dashboard files selected by the prompts. Keeps existing `glyf.yml`. |
 | `--chart-name` | Filename stem for the starter `.ggsql` file. |
 | `--dashboard-name` | Filename stem for the starter dashboard YAML file. |
 | `--model-name` | dbt model name used in the starter `ref()`. |
@@ -244,7 +244,7 @@ Example output:
 | Option | Description |
 | --- | --- |
 | `--clean` | Delete the previous site export before copying. |
-| `--zip` | Create `target/ggsql/dbt-charts-site.zip`. |
+| `--zip` | Create `target/ggsql/glyf-site.zip`. |
 
 ## `serve` options
 
@@ -256,6 +256,6 @@ Example output:
 Preview a generated dashboard:
 
 ```bash
-uv run dbt-charts serve --project-dir examples/simple_dbt
-uv run dbt-charts serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
+uv run glyf serve --project-dir examples/simple_dbt
+uv run glyf serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
 ```

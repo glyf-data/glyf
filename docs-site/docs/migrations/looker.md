@@ -1,8 +1,8 @@
 # Migrating from Looker
 
-Use this page to decide which Looker dashboard ideas are good candidates for dbt-charts.
+Use this page to decide which Looker dashboard ideas are good candidates for glyf.
 
-`dbt-charts` is not a Looker replacement. It is a static dashboard workflow for teams that want selected dashboard outputs to live closer to dbt models, code review, and CI.
+`glyf` is not a Looker replacement. It is a static dashboard workflow for teams that want selected dashboard outputs to live closer to dbt models, code review, and CI.
 
 ## Good candidates
 
@@ -18,12 +18,12 @@ Use this page to decide which Looker dashboard ideas are good candidates for dbt
 3. Move metric definitions into dbt models when they are not already modeled.
 4. Write one `.ggsql` file per chart.
 5. Create a dashboard YAML file that lists the chart names.
-6. Run `dbt-charts validate`, `render`, and `dashboard`.
+6. Run `glyf validate`, `render`, and `dashboard`.
 7. Compare the generated dashboard with the original Looker dashboard before expanding the migration.
 
 ## Questions to resolve before scaling
 
 - Which source should drive the migration: dashboard screenshots, SQL, LookML metadata, or manual chart descriptions?
 - Which filters should become static dashboard variants?
-- Which chart types map cleanly to current dbt-charts syntax?
+- Which chart types map cleanly to current glyf syntax?
 - Which interactive Looker behaviors should stay in Looker instead of moving to static output?

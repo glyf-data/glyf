@@ -1,6 +1,6 @@
 # dbt Integration
 
-`dbt-charts` integrates with dbt through artifacts rather than dbt internals.
+`glyf` integrates with dbt through artifacts rather than dbt internals.
 
 Primary artifact:
 
@@ -45,7 +45,7 @@ Sources are resolved from the manifest `sources` section.
 ## DuckDB execution
 
 The current execution backend is DuckDB. For the examples, `profiles.yml` points
-dbt at a local `.duckdb` database. If that database exists, `dbt-charts` executes
+dbt at a local `.duckdb` database. If that database exists, `glyf` executes
 compiled SQL against it.
 
 If no local DuckDB file exists, examples can still use seed CSV fallback for simple

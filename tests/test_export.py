@@ -1,9 +1,9 @@
 import zipfile
 from pathlib import Path
 
-from dbt_charts.dashboard.generator import generate_dashboards
-from dbt_charts.exporter import export_site
-from dbt_charts.pipeline import render_project
+from glyf.dashboard.generator import generate_dashboards
+from glyf.exporter import export_site
+from glyf.pipeline import render_project
 from tests.helpers import copy_basic_project
 
 
@@ -56,7 +56,7 @@ def test_export_site_zip_writes_archive(tmp_path: Path) -> None:
 
     result = export_site(project, zip_site=True)
 
-    zip_path = project / "target" / "ggsql" / "dbt-charts-site.zip"
+    zip_path = project / "target" / "ggsql" / "glyf-site.zip"
     assert result.zip_path == zip_path
     assert zip_path.exists()
     with zipfile.ZipFile(zip_path) as archive:

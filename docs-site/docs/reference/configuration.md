@@ -1,6 +1,6 @@
 # Configuration Reference
 
-`dbt_charts.yml` controls paths, rendering, and dashboard output.
+`glyf.yml` controls paths, rendering, and dashboard output.
 
 ## Paths
 

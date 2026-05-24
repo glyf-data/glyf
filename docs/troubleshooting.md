@@ -40,12 +40,12 @@ Check:
 
 - `.ggsql` files exist
 - files are under `visualisations/`
-- `visualisations_path` in `dbt_charts.yml` is correct
+- `visualisations_path` in `glyf.yml` is correct
 
 Run:
 
 ```bash
-dbt-charts doctor
+glyf doctor
 ```
 
 ## DuckDB execution error
@@ -83,5 +83,5 @@ DuckDB allows a limited writer concurrency pattern. Run dbt commands sequentiall
 dbt seed
 dbt run
 dbt compile
-dbt-charts render
+glyf render
 ```

@@ -3,8 +3,8 @@ import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 
 const workflow = [
-  ['Build dbt models', 'Run dbt seed, run, build, or compile so the manifest and warehouse tables are available.'],
-  ['Write ggsql', 'Keep chart SQL next to the dbt project and map result columns to visual roles.'],
+  ['Prepare analytics metadata', 'Build or compile the analytical system so relation metadata and warehouse tables are available.'],
+  ['Write ggsql', 'Keep chart SQL next to the project and map result columns to visual roles.'],
   ['Render charts', 'Generate compiled SQL plus SVG, PNG, and optional Vega-Lite JSON artifacts.'],
   ['Export a site', 'Publish the generated dashboard folder to any static host or CI artifact store.'],
 ];
@@ -17,12 +17,12 @@ const examples = [
 ];
 
 const featureLinks = [
-  ['Quickstart', 'Run the included dbt project and export your first static dashboard.', '/docs/get-started/quickstart'],
+  ['Quickstart', 'Run the included analytical project and export your first static dashboard.', '/docs/get-started/quickstart'],
   ['Command reference', 'See every CLI command, option, and common workflow.', '/docs/reference/cli'],
   ['Technical guide', 'Understand parsing, dbt artifact resolution, rendering, and export paths.', '/docs/guides/technical-architecture'],
   ['AI context', 'Use the docs index and prompts as a starting point for coding agents.', '/docs/ai-context/overview'],
-  ['Integrations', 'Connect dbt-charts to CI, static hosting, and deployment workflows.', '/docs/integrations/overview'],
-  ['Looker migration', 'Plan how selected Looker dashboard patterns can move into dbt-charts.', '/docs/migrations/looker'],
+  ['Integrations', 'Connect glyf to CI, static hosting, and deployment workflows.', '/docs/integrations/overview'],
+  ['Looker migration', 'Plan how selected Looker dashboard patterns can move into glyf.', '/docs/migrations/looker'],
 ];
 
 function HomepageHeader() {
@@ -30,10 +30,10 @@ function HomepageHeader() {
     <header className="landingHero">
       <div className="container landingHero__layout">
         <div className="landingHero__content">
-          <p className="eyebrow">dbt-native dashboarding</p>
-          <h1>A lightweight dashboard layer for analytics engineers</h1>
+          <p className="eyebrow">semantic visualization</p>
+          <h1>A semantic visualization layer for analytical systems</h1>
           <p className="landingHero__lead">
-            Built for dbt and powered by ggsql. Compile SQL visualisations into static dashboards, no BI server required.
+            Connect analytical metadata to SQL-first visualisations, rendered chart artifacts, and static dashboards.
           </p>
           <div className="buttonRow">
             <Link className="button button--primary button--lg" to="/docs/get-started/quickstart">
@@ -44,11 +44,11 @@ function HomepageHeader() {
             </Link>
           </div>
         </div>
-        <div className="pipelineVisual" aria-label="dbt pipeline to chart-as-code dashboard">
+        <div className="pipelineVisual" aria-label="analytical metadata to static dashboard">
           <div className="pipelineStage pipelineStage--dbt">
             <div className="stageHeader">
               <span className="stageBadge">dbt</span>
-              <strong>Model pipeline</strong>
+              <strong>Metadata source</strong>
             </div>
             <code>models/fct_revenue.sql</code>
             <code>target/manifest.json</code>
@@ -94,7 +94,7 @@ function Workflow() {
       <div className="container">
         <div className="sectionHeader">
           <p className="eyebrow">Developer workflow</p>
-          <h2>From dbt model to publishable dashboard</h2>
+          <h2>From analytical model to publishable dashboard</h2>
         </div>
         <div className="workflowGrid">
           {workflow.map(([title, description], index) => (
@@ -139,7 +139,7 @@ function Examples() {
           <p className="eyebrow">Examples gallery</p>
           <h2>Use small projects as patterns</h2>
           <p>
-            Each example includes seeds, dbt models, ggsql visualisations, dashboard YAML, and repeatable commands. Use them as starting points for your own analytics project.
+            Each example includes seeds, analytical models, ggsql visualisations, dashboard YAML, and repeatable commands. Use them as starting points for your own analytics project.
           </p>
           <Link className="button button--primary" to="/docs/examples/gallery">
             Open gallery
@@ -166,13 +166,13 @@ function AgentSection() {
           <p className="eyebrow">AI-assisted dashboard workflow</p>
           <h2>Give coding assistants the right project context</h2>
           <p>
-            Point an assistant at the dbt project, manifest, chart files, and dashboard YAML, then ask it to draft `.ggsql`, update the dashboard, run validation, and report what still needs review.
+            Point an assistant at the analytical project, manifest, chart files, and dashboard YAML, then ask it to draft `.ggsql`, update the dashboard, run validation, and report what still needs review.
           </p>
         </div>
         <div className="terminalPanel" aria-label="AI context command examples">
-          <code>curl https://dbtcharts.pages.dev/llms.txt</code>
-          <code>uv run dbt-charts doctor --project-dir examples/simple_dbt</code>
-          <code>uv run dbt-charts render --project-dir examples/simple_dbt</code>
+          <code>curl https://glyf.pages.dev/llms.txt</code>
+          <code>uv run glyf doctor --project-dir examples/simple_dbt</code>
+          <code>uv run glyf render --project-dir examples/simple_dbt</code>
         </div>
       </div>
     </section>
@@ -182,8 +182,8 @@ function AgentSection() {
 export default function Home() {
   return (
     <Layout
-      title="A lightweight dashboard layer for analytics engineers"
-      description="dbt-charts documentation, examples, CLI reference, integrations, and AI context for analytics engineers."
+      title="A semantic visualization layer for analytical systems"
+      description="glyf documentation, examples, CLI reference, integrations, and AI context for analytical systems."
     >
       <HomepageHeader />
       <main>

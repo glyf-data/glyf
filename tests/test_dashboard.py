@@ -3,10 +3,10 @@ from datetime import datetime
 
 import pytest
 
-from dbt_charts.dashboard.artifacts import load_chart_artifact
-from dbt_charts.dashboard.generator import DashboardGenerationError, generate_dashboards
-from dbt_charts.dashboard.loader import load_dashboard
-from dbt_charts.pipeline import render_project
+from glyf.dashboard.artifacts import load_chart_artifact
+from glyf.dashboard.generator import DashboardGenerationError, generate_dashboards
+from glyf.dashboard.loader import load_dashboard
+from glyf.pipeline import render_project
 from tests.helpers import copy_basic_project
 
 
@@ -287,7 +287,7 @@ def test_dashboard_generation_loads_project_python_macros(tmp_path: Path) -> Non
     project = copy_basic_project(tmp_path)
     render_project(project)
     (project / "dashboards" / "macros.py").write_text(
-        "from dbt_charts.dashboard import components as c\n\n"
+        "from glyf.dashboard import components as c\n\n"
         "def finance_owner():\n"
         "    return c.label_value('Owner', 'Finance Analytics')\n\n"
         "def stale_data_warning(hours_old):\n"

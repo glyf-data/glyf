@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import pytest
 from typer.testing import CliRunner
 
-from dbt_charts.cli import app
+from glyf.cli import app
 from tests.helpers import copy_basic_project, copy_simple_dbt_project
 
 
@@ -36,12 +36,12 @@ def test_init_command_creates_starter_files(tmp_path: Path) -> None:
     )
 
     assert result.exit_code == 0
-    assert "Initialized dbt-charts" in result.output
-    assert "✓ wrote dbt_charts.yml" in result.output
+    assert "Initialized glyf" in result.output
+    assert "✓ wrote glyf.yml" in result.output
     assert "✓ wrote visualisations/monthly_revenue.ggsql" in result.output
     assert "✓ wrote dashboards/executive.yml" in result.output
-    assert "dbt-charts validate" in result.output
-    assert (project / "dbt_charts.yml").exists()
+    assert "glyf validate" in result.output
+    assert (project / "glyf.yml").exists()
     assert (project / "visualisations" / "monthly_revenue.ggsql").exists()
     assert (project / "dashboards" / "executive.yml").exists()
     assert "{{ ref('fct_orders') }}" in (
@@ -171,7 +171,7 @@ def test_init_command_clean_replaces_starter_files(tmp_path: Path) -> None:
     )
 
     assert result.exit_code == 0
-    assert "✓ kept dbt_charts.yml" in result.output
+    assert "✓ kept glyf.yml" in result.output
     assert "DRAW bar" in chart_file.read_text(encoding="utf-8")
     assert "{{ ref('fct_revenue') }}" in chart_file.read_text(encoding="utf-8")
 
@@ -249,7 +249,7 @@ def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert "✓ copied chart artifacts" in result.output
     assert "✓ wrote site assets" in result.output
     assert (project / "target" / "ggsql" / "site" / "index.html").exists()
-    assert (project / "target" / "ggsql" / "dbt-charts-site.zip").exists()
+    assert (project / "target" / "ggsql" / "glyf-site.zip").exists()
 
 
 @pytest.mark.parametrize(
@@ -322,7 +322,7 @@ def test_serve_command_reports_missing_site(tmp_path: Path) -> None:
 
     assert result.exit_code == 1
     assert "Serve failed" in result.output
-    assert "run `dbt-charts dashboard` first" in result.output
+    assert "run `glyf dashboard` first" in result.output
 
 
 def test_serve_command_serves_generated_site(
@@ -332,7 +332,7 @@ def test_serve_command_serves_generated_site(
     project = copy_basic_project(tmp_path)
     site_dir = project / "target" / "ggsql" / "site"
     site_dir.mkdir(parents=True)
-    (site_dir / "index.html").write_text("<h1>dbt-charts</h1>", encoding="utf-8")
+    (site_dir / "index.html").write_text("<h1>glyf</h1>", encoding="utf-8")
 
     class FakeHttpServer:
         def __init__(self) -> None:
@@ -352,7 +352,7 @@ def test_serve_command_serves_generated_site(
         captured["server"] = server
         return SimpleNamespace(target=target, server=server)
 
-    monkeypatch.setattr("dbt_charts.commands.serve_cmd.create_server", fake_create_server)
+    monkeypatch.setattr("glyf.commands.serve_cmd.create_server", fake_create_server)
 
     result = runner.invoke(
         app,

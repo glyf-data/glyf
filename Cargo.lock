@@ -343,18 +343,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dbt-charts-core"
-version = "0.1.0"
-dependencies = [
- "ggsql",
- "pyo3",
- "regex",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
-]
-
-[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -465,6 +453,18 @@ dependencies = [
  "tree-sitter",
  "tree-sitter-ggsql",
  "uuid",
+]
+
+[[package]]
+name = "glyf-core"
+version = "0.1.0"
+dependencies = [
+ "ggsql",
+ "pyo3",
+ "regex",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
 ]
 
 [[package]]

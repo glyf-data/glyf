@@ -6,9 +6,9 @@ The current priority is to keep the core CLI deterministic and static-first.
 
 ```bash
 dbt build
-dbt-charts render
-dbt-charts dashboard
-dbt-charts export
+glyf render
+glyf dashboard
+glyf export
 ```
 
 ## Planned themes

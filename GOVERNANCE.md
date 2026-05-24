@@ -1,12 +1,12 @@
-# dbt-charts Governance
+# glyf Governance
 
-This document describes how dbt-charts is organised and how decisions are made.
+This document describes how glyf is organised and how decisions are made.
 
 ---
 
 ## Overview
 
-dbt-charts is maintained by a single owner, **Kannan Kalidasan**, who holds final authority over the project. This is sometimes called the BDFL (Benevolent Dictator For Life) model - common and appropriate for early-stage open source projects.
+glyf is maintained by a single owner, **Kannan Kalidasan**, who holds final authority over the project. This is sometimes called the BDFL (Benevolent Dictator For Life) model - common and appropriate for early-stage open source projects.
 
 The project is organised around three kinds of participants:
 
@@ -20,7 +20,7 @@ There are no committees, voting processes, or consensus requirements at this sta
 
 ## Owner
 
-**Kannan Kalidasan** is the owner and sole maintainer of dbt-charts.
+**Kannan Kalidasan** is the owner and sole maintainer of glyf.
 
 The owner has final authority over:
 
@@ -30,7 +30,7 @@ The owner has final authority over:
 - Licensing, now and in the future
 - This governance document itself
 
-The owner holds copyright over the project. The repository lives at <https://github.com/kannandreams/dbt-charts> and may move to a GitHub organisation owned by the same person in future - ownership and governance remain unchanged if that happens.
+The owner holds copyright over the project. The repository lives at <https://github.com/kannandreams/glyf> and may move to a GitHub organisation owned by the same person in future - ownership and governance remain unchanged if that happens.
 
 ---
 

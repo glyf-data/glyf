@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from dbt_charts.project.scanner import scan_project
+from glyf.project.scanner import scan_project
 from tests.helpers import copy_basic_project
 
 

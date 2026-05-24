@@ -1,13 +1,13 @@
 # Roadmap
 
-This roadmap captures optional future directions after the core `dbt-charts`
+This roadmap captures optional future directions after the core `glyf`
 workflow is usable:
 
 ```bash
 dbt build
-dbt-charts render
-dbt-charts dashboard
-dbt-charts export
+glyf render
+glyf dashboard
+glyf export
 ```
 
 The current priority is to keep the core CLI deterministic and static-first.
@@ -25,7 +25,7 @@ manually opening files from `target/ggsql/site`.
 Proposed command:
 
 ```bash
-uv run dbt-charts serve
+uv run glyf serve
 ```
 
 Expected behavior:
@@ -51,9 +51,9 @@ Suggested first scope:
 
 Acceptance criteria:
 
-- `uv run dbt-charts serve` serves an existing generated site
+- `uv run glyf serve` serves an existing generated site
 - the command prints a clickable local URL
-- missing output produces a clear instruction to run `dbt-charts dashboard`
+- missing output produces a clear instruction to run `glyf dashboard`
 - tests cover default path resolution and missing-site behavior
 
 ### 12B: Watch Mode
@@ -64,12 +64,12 @@ source files change.
 Proposed command:
 
 ```bash
-uv run dbt-charts watch
+uv run glyf watch
 ```
 
 Expected behavior:
 
-- watch `.ggsql` files, dashboard YAML files, and `dbt_charts.yml`
+- watch `.ggsql` files, dashboard YAML files, and `glyf.yml`
 - rerun the smallest useful generation step when files change
 - report failures without stopping the watch process
 - keep the implementation simple enough for local development use
@@ -143,7 +143,7 @@ Possible targets:
 
 Why this matters:
 
-`dbt-charts` already produces static artifacts. Publish adapters would make it
+`glyf` already produces static artifacts. Publish adapters would make it
 easier to move those artifacts from local development into team-accessible
 locations without turning the project into a hosted service.
 
@@ -271,7 +271,7 @@ Possible capabilities:
 
 Why this matters:
 
-Scheduled generation turns `dbt-charts` into a repeatable reporting tool without
+Scheduled generation turns `glyf` into a repeatable reporting tool without
 requiring a server process.
 
 Suggested first scope:
@@ -293,7 +293,7 @@ Acceptance criteria:
 The best next advanced feature after the release baseline is:
 
 ```bash
-uv run dbt-charts serve
+uv run glyf serve
 ```
 
 Serve mode should be prioritized before watch mode because it improves the
@@ -301,7 +301,7 @@ preview experience with minimal architectural risk. Once serve mode is stable,
 watch mode can build on it to provide an automatic local feedback loop:
 
 ```bash
-uv run dbt-charts watch
+uv run glyf watch
 ```
 
 Suggested order:

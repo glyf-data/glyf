@@ -72,7 +72,7 @@
   - `uv add typer rich pyyaml pydantic`
   - `uv add --dev pytest ruff`
   - `uv run pytest`
-  - `uv run dbt-charts list`
+  - `uv run glyf list`
 
   ## Packaging Baseline
 
@@ -85,7 +85,7 @@
   Target structure:
 
   ```text
-  dbt-charts/
+  glyf/
   ├── pyproject.toml
   ├── uv.lock
   ├── .python-version
@@ -95,7 +95,7 @@
   ├── TASKS.md
   ├── DECISIONS.md
   ├── src/
-  │   └── dbt_charts/
+  │   └── glyf/
   │       ├── __init__.py
   │       ├── cli.py
   │       ├── config.py
@@ -170,10 +170,10 @@
 
   Implement:
 
-  - dbt-charts list
-  - dbt-charts validate
-  - dbt-charts render
-  - dbt-charts dashboard
+  - glyf list
+  - glyf validate
+  - glyf render
+  - glyf dashboard
 
   Initial implementation may use placeholder artifacts instead of real rendered charts.
 

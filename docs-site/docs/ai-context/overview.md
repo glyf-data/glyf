@@ -1,8 +1,8 @@
 # AI Context
 
-AI Context gives coding assistants the project-specific information they need to help with dbt-charts safely.
+AI Context gives coding assistants the project-specific information they need to help with glyf safely.
 
-For dbt-charts, that context is simple: where dbt models live, where chart files live, how dashboard YAML is structured, and which commands prove the generated dashboard still works.
+For glyf, that context is simple: where dbt models live, where chart files live, how dashboard YAML is structured, and which commands prove the generated dashboard still works.
 
 Use this section when you want an assistant to draft `.ggsql` visualisations, update dashboard YAML, explain validation failures, or wire a repeatable dashboard workflow into CI.
 
@@ -11,10 +11,10 @@ Use this section when you want an assistant to draft `.ggsql` visualisations, up
 The practical workflow is:
 
 1. You ask for a dashboard change.
-2. The assistant reads `dbt_project.yml`, `dbt_charts.yml`, `models/`, `target/manifest.json`, `visualisations/`, and `dashboards/`.
+2. The assistant reads `dbt_project.yml`, `glyf.yml`, `models/`, `target/manifest.json`, `visualisations/`, and `dashboards/`.
 3. The assistant creates or updates a `.ggsql` file under `visualisations/`.
 4. The assistant adds the chart name to the right dashboard YAML file under `dashboards/`.
-5. The assistant runs `dbt-charts doctor`, `validate`, `render`, and `dashboard`.
+5. The assistant runs `glyf doctor`, `validate`, `render`, and `dashboard`.
 6. The assistant reports the changed files, validation result, and anything that still needs human review.
 
 That loop keeps the assistant close to the same workflow a developer would follow by hand.
@@ -23,7 +23,7 @@ That loop keeps the assistant close to the same workflow a developer would follo
 
 ```text
 Add a monthly revenue chart from the fct_revenue model and include it in the executive dashboard.
-Use dbt-charts syntax only and run validation before you finish.
+Use glyf syntax only and run validation before you finish.
 ```
 
 Expected assistant output:
@@ -31,7 +31,7 @@ Expected assistant output:
 ```text
 Created visualisations/monthly_revenue.ggsql.
 Updated dashboards/executive.yml.
-Ran dbt-charts validate and render.
+Ran glyf validate and render.
 The chart appears in target/ggsql/dashboards/executive.html.
 ```
 
@@ -39,28 +39,28 @@ The chart appears in target/ggsql/dashboards/executive.html.
 
 ```text
 dbt_project.yml
-dbt_charts.yml
+glyf.yml
 models/
 target/manifest.json
 visualisations/
 dashboards/
 ```
 
-The manifest matters because dbt-charts resolves dbt `ref()` and `source()` calls from `target/manifest.json`.
+The manifest matters because glyf resolves dbt `ref()` and `source()` calls from `target/manifest.json`.
 
 ## Validation Commands
 
 ```bash
-dbt-charts doctor
-dbt-charts validate
-dbt-charts render
-dbt-charts dashboard
+glyf doctor
+glyf validate
+glyf render
+glyf dashboard
 ```
 
 When running from outside the dbt project, use:
 
 ```bash
-dbt-charts validate --project-dir path/to/dbt_project
+glyf validate --project-dir path/to/dbt_project
 ```
 
 ## llms.txt
@@ -71,10 +71,10 @@ The docs site includes a compact context index at:
 /llms.txt
 ```
 
-Point assistants at this file when they need a short list of the most useful dbt-charts documentation pages.
+Point assistants at this file when they need a short list of the most useful glyf documentation pages.
 
 ## Related pages
 
 - [Agents](agents.md) describes which tasks are safe for agents and which need human review.
 - [Assistant setup](assistant-setup.md) gives copyable instructions for Codex and Claude-style assistants.
-- [Migrating from Looker](../migrations/looker.md) explains how to evaluate existing dashboard ideas before translating them into dbt-charts.
+- [Migrating from Looker](../migrations/looker.md) explains how to evaluate existing dashboard ideas before translating them into glyf.

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from dbt_charts.ggsql.parser import GgsqlParseError, parse_ggsql
+from glyf.ggsql.parser import GgsqlParseError, parse_ggsql
 
 
 def test_parse_ggsql_extracts_structured_chart() -> None:

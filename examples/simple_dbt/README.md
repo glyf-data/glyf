@@ -1,6 +1,6 @@
 # simple_dbt
 
-A tiny dbt-style project for testing `dbt-charts` against realistic dbt artifact
+A tiny dbt-style project for testing `glyf` against realistic dbt artifact
 shapes.
 
 The committed `target/manifest.json` is intentionally minimal but follows the dbt
@@ -13,8 +13,8 @@ cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
-uv run dbt-charts render
-uv run dbt-charts dashboard
+uv run glyf render
+uv run glyf dashboard
 ```
 
 `--no-partial-parse` is useful if you have previously run this example from a
@@ -26,6 +26,6 @@ From the repository root, use:
 uv run dbt seed --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
 uv run dbt run --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
 uv run dbt compile --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
-uv run dbt-charts render --project-dir examples/simple_dbt
-uv run dbt-charts dashboard --project-dir examples/simple_dbt
+uv run glyf render --project-dir examples/simple_dbt
+uv run glyf dashboard --project-dir examples/simple_dbt
 ```
