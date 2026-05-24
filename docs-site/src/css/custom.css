@@ -1250,16 +1250,16 @@ select {
 
 .landingHero__layout {
   position: relative;
-  grid-template-columns: minmax(520px, 0.78fr) minmax(840px, 1.22fr);
+  grid-template-columns: minmax(760px, 0.92fr) minmax(880px, 1.08fr);
   grid-template-rows: 1fr auto;
-  gap: 0 3.9rem;
+  gap: 0 2.6rem;
   align-items: center;
-  padding: 5.9rem 2.65rem 2.1rem;
+  padding: 4.25rem 2.65rem 1.7rem;
 }
 
 .landingHero__content {
   z-index: 2;
-  max-width: 740px;
+  max-width: 850px;
   color: #071225;
 }
 
@@ -1284,18 +1284,18 @@ select {
 }
 
 .landingHero h1 {
-  max-width: 740px;
+  max-width: 850px;
   margin: 0;
   color: #071225;
-  font-size: 4.55rem;
+  font-size: 4.15rem;
   font-weight: 900;
-  line-height: 1.13;
+  line-height: 1.12;
   letter-spacing: 0;
 }
 
 .landingHero__lead {
   max-width: 690px;
-  margin: 2rem 0 0;
+  margin: 1.55rem 0 0;
   color: #344363;
   font-size: 1.36rem;
   font-weight: 600;
@@ -1304,7 +1304,7 @@ select {
 
 .landingHero .buttonRow {
   gap: 2.4rem;
-  margin-top: 3.1rem;
+  margin-top: 2.55rem;
 }
 
 .heroPrimaryButton,
@@ -1357,7 +1357,7 @@ select {
   display: flex;
   flex-wrap: wrap;
   gap: 0;
-  margin-top: 4rem;
+  margin-top: 3.25rem;
 }
 
 .heroMeta span {
@@ -1410,8 +1410,8 @@ select {
   grid-template-columns: 220px 58px 260px 58px 386px;
   align-items: center;
   justify-content: end;
-  min-height: 570px;
-  padding-bottom: 4.8rem;
+  min-height: 520px;
+  padding-bottom: 4.4rem;
 }
 
 .heroStage {
@@ -1420,7 +1420,7 @@ select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 405px;
+  min-height: 360px;
   padding: 2rem 1.55rem;
   border: 1px solid rgba(7, 18, 37, 0.12);
   border-radius: 18px;
@@ -1505,7 +1505,7 @@ select {
 }
 
 .heroStage--glyf {
-  min-height: 462px;
+  min-height: 410px;
   margin-left: 0.4rem;
   border: 2px solid #20c9c3;
   border-radius: 22px;
@@ -2024,12 +2024,14 @@ select {
   }
 
   .landingHero__layout {
-    grid-template-columns: minmax(440px, 0.78fr) minmax(650px, 1.22fr);
-    gap: 0 2.2rem;
+    grid-template-columns: minmax(620px, 0.9fr) minmax(650px, 1.1fr);
+    gap: 0 1.7rem;
+    padding-top: 3.7rem;
   }
 
   .landingHero h1 {
-    font-size: 3.65rem;
+    max-width: 680px;
+    font-size: 3.45rem;
   }
 
   .landingHero__lead {
@@ -2038,16 +2040,17 @@ select {
 
   .heroPipeline {
     grid-template-columns: 168px 44px 205px 44px 315px;
-    min-height: 500px;
+    min-height: 440px;
+    padding-bottom: 3.7rem;
   }
 
   .heroStage {
-    min-height: 330px;
+    min-height: 305px;
     padding: 1.4rem 1rem;
   }
 
   .heroStage--glyf {
-    min-height: 380px;
+    min-height: 350px;
   }
 
   .stageIcon {
@@ -2083,6 +2086,30 @@ select {
 
   .heroLineage span::after {
     right: -18.2rem;
+  }
+}
+
+@media (max-width: 1280px) and (min-width: 997px) {
+  .landingHero__layout {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+
+  .landingHero__content {
+    max-width: 900px;
+  }
+
+  .landingHero h1 {
+    max-width: 900px;
+    font-size: 3.7rem;
+  }
+
+  .heroPipeline {
+    justify-content: center;
+  }
+
+  .heroCommunityNote {
+    margin-top: 1.2rem;
   }
 }
 
