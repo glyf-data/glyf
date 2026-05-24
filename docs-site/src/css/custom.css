@@ -94,7 +94,7 @@ select {
 .navbar__brand {
   color: var(--dbtc-ink);
   gap: 1.05rem;
-  margin-right: 5.4rem;
+  margin-right: 2rem;
   overflow: visible;
 }
 
@@ -1245,16 +1245,16 @@ select {
 
 .landingHero__layout.container {
   width: 100%;
-  max-width: 1840px;
+  max-width: none;
 }
 
 .landingHero__layout {
   position: relative;
   grid-template-columns: minmax(760px, 0.92fr) minmax(880px, 1.08fr);
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto auto;
   gap: 0 2.6rem;
-  align-items: center;
-  padding: 4.25rem 2.65rem 1.7rem;
+  align-items: start;
+  padding: 3.55rem 2.65rem 1.45rem;
 }
 
 .landingHero__content {
@@ -1268,7 +1268,7 @@ select {
   align-items: center;
   gap: 0.72rem;
   min-height: 2.85rem;
-  margin: 0 0 2.35rem;
+  margin: 0 0 1.85rem;
   padding: 0 1.15rem;
   border-radius: 999px;
   background: rgba(0, 184, 169, 0.1);
@@ -1407,11 +1407,12 @@ select {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 220px 58px 260px 58px 386px;
+  grid-template-columns: 220px 126px 260px 126px 386px;
   align-items: center;
   justify-content: end;
-  min-height: 520px;
-  padding-bottom: 4.4rem;
+  margin-top: 2.55rem;
+  min-height: 500px;
+  padding-bottom: 4.1rem;
 }
 
 .heroStage {
@@ -1677,7 +1678,7 @@ select {
   align-items: center;
   justify-content: center;
   gap: 2.1rem;
-  margin-top: 2.65rem;
+  margin-top: 0.85rem;
   color: #35476b;
   font-size: 1.05rem;
   font-weight: 800;
@@ -2004,7 +2005,7 @@ select {
   }
 
   .navbar__brand {
-    margin-right: 3rem;
+    margin-right: 1.2rem;
   }
 
   .navbar__items:not(.navbar__items--right) {
@@ -2026,7 +2027,7 @@ select {
   .landingHero__layout {
     grid-template-columns: minmax(620px, 0.9fr) minmax(650px, 1.1fr);
     gap: 0 1.7rem;
-    padding-top: 3.7rem;
+    padding-top: 3rem;
   }
 
   .landingHero h1 {
@@ -2039,7 +2040,8 @@ select {
   }
 
   .heroPipeline {
-    grid-template-columns: 168px 44px 205px 44px 315px;
+    grid-template-columns: 168px 74px 205px 74px 315px;
+    margin-top: 2.6rem;
     min-height: 440px;
     padding-bottom: 3.7rem;
   }
@@ -2106,6 +2108,7 @@ select {
 
   .heroPipeline {
     justify-content: center;
+    margin-top: 0;
   }
 
   .heroCommunityNote {
