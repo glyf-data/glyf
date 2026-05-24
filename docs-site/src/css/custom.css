@@ -647,3 +647,478 @@ body {
     width: 100%;
   }
 }
+
+/* Glyf landing page pivot */
+.landingHero {
+  min-height: 0;
+  align-items: stretch;
+  background:
+    linear-gradient(120deg, rgba(0, 168, 112, 0.08), transparent 38%),
+    linear-gradient(180deg, #ffffff 0%, #f7fbfa 100%);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.landingHero::before {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(180deg, black 0%, transparent 88%);
+  opacity: 0.75;
+}
+
+.landingHero__layout {
+  grid-template-columns: minmax(0, 0.95fr) minmax(460px, 1.05fr);
+  padding-top: 4.75rem;
+  padding-bottom: 4.75rem;
+}
+
+.landingHero__content {
+  color: var(--dbtc-ink);
+}
+
+.landingHero h1 {
+  color: var(--dbtc-ink);
+  font-size: 4.25rem;
+  line-height: 1.02;
+  max-width: 760px;
+}
+
+.landingHero__lead {
+  color: #334155;
+  font-size: 1.17rem;
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+.landingHero .eyebrow {
+  color: #006c49;
+}
+
+.landingHero .button.button--secondary {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.14);
+  color: var(--dbtc-ink);
+}
+
+.heroMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.7rem;
+}
+
+.heroMeta span {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 999px;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 650;
+  padding: 0.45rem 0.7rem;
+}
+
+.heroMock {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.12);
+}
+
+.mockPanel {
+  min-height: 170px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.11);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.mockPanel--chart {
+  min-height: 210px;
+}
+
+.mockPanel__topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+}
+
+.mockPanel__topline span:first-child {
+  color: var(--dbtc-ink);
+}
+
+.mockPanel pre {
+  background: transparent;
+  color: #25324a;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.lineChart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.mockPanel--donut,
+.mockPanel--bars {
+  min-height: 160px;
+}
+
+.mockPanel--donut {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mockPanel--donut .mockPanel__topline {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+
+.donutVisual {
+  width: 112px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(#00a870 0 48%, #2563eb 48% 78%, #7c3aed 78% 100%);
+}
+
+.donutVisual span {
+  width: 70px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--dbtc-ink);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.miniLegend {
+  display: grid;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: #334155;
+  font-size: 0.82rem;
+}
+
+.miniLegend span {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: 0.45rem;
+  border-radius: 50%;
+  background: #00a870;
+}
+
+.miniLegend li:nth-child(2) span {
+  background: #2563eb;
+}
+
+.miniLegend li:nth-child(3) span {
+  background: #7c3aed;
+}
+
+.barRows {
+  display: grid;
+  gap: 0.85rem;
+  padding-top: 0.45rem;
+}
+
+.barRows span {
+  display: block;
+  width: var(--w);
+  height: 1rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0ea5e9, #00a870);
+}
+
+.band--layers {
+  background: #f8fafc;
+}
+
+.layerBox {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.sectionHeader--center {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.sectionHeader--center p {
+  color: var(--dbtc-slate);
+}
+
+.layerDiagram {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+.layerCard {
+  min-height: 220px;
+  display: grid;
+  align-content: center;
+  gap: 0.8rem;
+  padding: 1.4rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.layerCard--transform {
+  background: linear-gradient(180deg, rgba(0, 168, 112, 0.09), #ffffff);
+}
+
+.layerCard--quality {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.12), #ffffff);
+}
+
+.layerCard--visualize {
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.1), #ffffff);
+}
+
+.layerLabel {
+  color: #006c49;
+  font-size: 0.76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.layerCard strong {
+  color: var(--dbtc-ink);
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.layerCard p {
+  color: var(--dbtc-slate);
+  margin: 0;
+}
+
+.layerConnector {
+  position: relative;
+  height: 2px;
+  background: rgba(15, 23, 42, 0.25);
+}
+
+.layerConnector::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-right: 2px solid rgba(15, 23, 42, 0.45);
+  border-top: 2px solid rgba(15, 23, 42, 0.45);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.benefitStrip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1.5rem;
+  border: 1px solid rgba(15, 23, 42, 0.09);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.benefitItem {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  background: #ffffff;
+  border-right: 1px solid rgba(15, 23, 42, 0.09);
+}
+
+.benefitItem:last-child {
+  border-right: 0;
+}
+
+.benefitItem strong {
+  color: var(--dbtc-ink);
+}
+
+.benefitItem span {
+  color: var(--dbtc-slate);
+  font-size: 0.9rem;
+}
+
+.ggsqlLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.ggsqlLayout h2 {
+  font-size: 2.45rem;
+  line-height: 1.12;
+}
+
+.ggsqlLayout p {
+  color: var(--dbtc-slate);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.ggsqlBridge {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 54px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #07130f;
+  color: #ffffff;
+}
+
+.ggsqlBridge article {
+  min-height: 300px;
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  padding: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+}
+
+.ggsqlBridge span {
+  color: var(--dbtc-neon);
+  font-size: 0.82rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.ggsqlBridge h3 {
+  color: #ffffff;
+  font-size: 1.25rem;
+}
+
+.ggsqlBridge ul {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.ggsqlBridge li {
+  color: rgba(230, 244, 239, 0.84);
+}
+
+.bridgeMark {
+  align-self: center;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: 3.35rem;
+  height: 3.35rem;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--dbtc-primary);
+  font-size: 2rem;
+  font-weight: 850;
+}
+
+@media (max-width: 996px) {
+  .landingHero__layout,
+  .ggsqlLayout,
+  .layerDiagram,
+  .benefitStrip {
+    grid-template-columns: 1fr;
+  }
+
+  .landingHero h1 {
+    font-size: 3.2rem;
+  }
+
+  .heroMock {
+    grid-template-columns: 1fr;
+  }
+
+  .layerConnector {
+    width: 2px;
+    height: 36px;
+    justify-self: center;
+  }
+
+  .layerConnector::after {
+    right: 50%;
+    top: auto;
+    bottom: 0;
+    transform: translateX(50%) rotate(135deg);
+  }
+
+  .benefitItem {
+    border-right: 0;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.09);
+  }
+
+  .benefitItem:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .landingHero h1 {
+    font-size: 2.45rem;
+  }
+
+  .landingHero__layout,
+  .layerBox {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .heroMock,
+  .ggsqlBridge {
+    padding: 0.7rem;
+  }
+
+  .ggsqlBridge {
+    grid-template-columns: 1fr;
+  }
+
+  .bridgeMark {
+    width: 2.7rem;
+    height: 2.7rem;
+    font-size: 1.45rem;
+  }
+
+  .ggsqlLayout h2 {
+    font-size: 2rem;
+  }
+
+  .mockPanel--donut {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}
