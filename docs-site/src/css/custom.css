@@ -14,6 +14,7 @@
   --ifm-font-family-base: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --ifm-heading-font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --ifm-code-font-size: 95%;
+  --ifm-navbar-height: 112px;
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.96);
   --ifm-navbar-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
   --ifm-footer-background-color: #f8fafc;
@@ -78,8 +79,8 @@ select {
 }
 
 .navbar {
-  height: 86px;
-  padding: 0 1.45rem;
+  height: 112px;
+  padding: 0 2.6rem;
   box-shadow: none;
   border-bottom: 0;
   background: rgba(255, 255, 255, 0.96);
@@ -92,25 +93,25 @@ select {
 
 .navbar__brand {
   color: var(--dbtc-ink);
-  gap: 1.15rem;
-  margin-right: 4.8rem;
+  gap: 1.05rem;
+  margin-right: 5.4rem;
   overflow: visible;
 }
 
 .navbar__logo {
-  width: 52px;
-  height: 52px;
+  width: 62px;
+  height: 62px;
 }
 
 .navbar__logo img {
-  width: 52px;
-  height: 52px;
+  width: 62px;
+  height: 62px;
 }
 
 .navbar__title {
   color: var(--dbtc-ink);
-  font-size: 2.45rem;
-  font-weight: 820;
+  font-size: 3rem;
+  font-weight: 900;
   line-height: 1.2;
   max-width: none;
   overflow: visible;
@@ -123,13 +124,13 @@ select {
 }
 
 .navbar__items:not(.navbar__items--right) {
-  gap: 2.1rem;
+  gap: 3rem;
 }
 
 .navbar__items:not(.navbar__items--right) .navbar__link {
-  color: #111827;
-  font-size: 1rem;
-  font-weight: 700;
+  color: #071225;
+  font-size: 1.28rem;
+  font-weight: 850;
   padding: 0;
 }
 
@@ -138,28 +139,74 @@ select {
 }
 
 .navbar__items--right {
-  gap: 1rem;
+  gap: 2rem;
 }
 
-.navbarGithubMetric {
+.navbarGithubLink {
   order: 1;
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  color: #111827;
-  font-size: 1rem;
-  font-weight: 800;
+  color: #071225;
+  font-size: 1.28rem;
+  font-weight: 900;
   text-decoration: none;
 }
 
-.navbarGithubMetric:hover {
+.navbarGithubLink:hover {
   color: var(--dbtc-primary);
   text-decoration: none;
 }
 
-.navbarGithubMetric svg {
+.navbarGithubLink svg {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+.navbarGithubLink .navbarExternalIcon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.navbarStarGroup {
+  order: 2;
+  display: inline-flex;
+  align-items: stretch;
+  min-height: 4rem;
+  overflow: hidden;
+  border: 1px solid rgba(7, 18, 37, 0.13);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #071225;
+  font-size: 1.24rem;
+  font-weight: 900;
+  text-decoration: none;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.navbarStarGroup:hover {
+  color: #071225;
+  text-decoration: none;
+}
+
+.navbarStarGroup span,
+.navbarStarGroup strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 6.8rem;
+  padding: 0 1.3rem;
+}
+
+.navbarStarGroup strong {
+  min-width: 5.8rem;
+  border-left: 1px solid rgba(7, 18, 37, 0.12);
+}
+
+.navbarStarGroup svg {
   width: 1.55rem;
   height: 1.55rem;
+  margin-right: 0.55rem;
 }
 
 .navbar__items--right [class*='colorModeToggle'] {
@@ -249,7 +296,7 @@ select {
 
 [data-theme='dark'] .navbar__title,
 [data-theme='dark'] .navbar__items:not(.navbar__items--right) .navbar__link,
-[data-theme='dark'] .navbarGithubMetric {
+[data-theme='dark'] .navbarGithubLink {
   color: #f8fafc;
 }
 
@@ -1159,6 +1206,498 @@ select {
   stroke: none;
 }
 
+/* Reference hero design */
+.landingHero {
+  min-height: calc(100vh - 112px);
+  align-items: stretch;
+  background:
+    radial-gradient(circle at 86% 48%, rgba(31, 208, 193, 0.22), transparent 18rem),
+    radial-gradient(circle at 62% 26%, rgba(37, 99, 235, 0.07), transparent 23rem),
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  border-bottom: 0;
+  isolation: isolate;
+}
+
+.landingHero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: transparent;
+  opacity: 1;
+  mask-image: none;
+}
+
+.landingHero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  height: 13rem;
+  background-image:
+    linear-gradient(rgba(7, 18, 37, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(7, 18, 37, 0.055) 1px, transparent 1px);
+  background-size: 66px 66px;
+  mask-image: linear-gradient(180deg, transparent 0%, black 64%, black 100%);
+}
+
+.landingHero__layout.container {
+  width: 100%;
+  max-width: 1840px;
+}
+
+.landingHero__layout {
+  position: relative;
+  grid-template-columns: minmax(520px, 0.78fr) minmax(840px, 1.22fr);
+  grid-template-rows: 1fr auto;
+  gap: 0 3.9rem;
+  align-items: center;
+  padding: 5.9rem 2.65rem 2.1rem;
+}
+
+.landingHero__content {
+  z-index: 2;
+  max-width: 740px;
+  color: #071225;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.72rem;
+  min-height: 2.85rem;
+  margin: 0 0 2.35rem;
+  padding: 0 1.15rem;
+  border-radius: 999px;
+  background: rgba(0, 184, 169, 0.1);
+  color: #00a887;
+  font-size: 1.08rem;
+  font-weight: 850;
+}
+
+.heroBadge svg {
+  width: 1.28rem;
+  height: 1.28rem;
+  fill: currentColor;
+}
+
+.landingHero h1 {
+  max-width: 740px;
+  margin: 0;
+  color: #071225;
+  font-size: 4.55rem;
+  font-weight: 900;
+  line-height: 1.13;
+  letter-spacing: 0;
+}
+
+.landingHero__lead {
+  max-width: 690px;
+  margin: 2rem 0 0;
+  color: #344363;
+  font-size: 1.36rem;
+  font-weight: 600;
+  line-height: 1.62;
+}
+
+.landingHero .buttonRow {
+  gap: 2.4rem;
+  margin-top: 3.1rem;
+}
+
+.heroPrimaryButton,
+.heroGithubButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.85rem;
+  border-radius: 10px;
+  font-size: 1.23rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.heroPrimaryButton {
+  gap: 1rem;
+  min-width: 16.4rem;
+  padding: 0 1.55rem;
+  background: linear-gradient(180deg, #071a35 0%, #031027 100%);
+  color: #ffffff;
+  box-shadow: 0 14px 28px rgba(3, 16, 39, 0.24);
+}
+
+.heroPrimaryButton:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.heroGithubButton {
+  gap: 0.85rem;
+  min-width: 16.9rem;
+  padding: 0 1.55rem;
+  border: 1px solid rgba(7, 18, 37, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  color: #071225;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.heroGithubButton:hover {
+  color: #071225;
+  text-decoration: none;
+}
+
+.heroGithubButton svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.heroMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 4rem;
+}
+
+.heroMeta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.62rem;
+  min-height: 1.7rem;
+  padding: 0 1.55rem;
+  border-right: 1px solid rgba(52, 67, 99, 0.18);
+  color: #263650;
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+.heroMeta span:first-child {
+  padding-left: 0.3rem;
+}
+
+.heroMeta span:last-child {
+  border-right: 0;
+}
+
+.heroMeta svg {
+  width: 1.42rem;
+  height: 1.42rem;
+  fill: none;
+  stroke: #347dff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.heroMeta span:nth-child(2) svg {
+  fill: #ff6847;
+  stroke: none;
+}
+
+.heroMeta span:nth-child(3) svg {
+  stroke: #635bff;
+}
+
+.heroMeta span:nth-child(4) svg {
+  stroke: #21b583;
+}
+
+.heroPipeline {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 220px 58px 260px 58px 386px;
+  align-items: center;
+  justify-content: end;
+  min-height: 570px;
+  padding-bottom: 4.8rem;
+}
+
+.heroStage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 405px;
+  padding: 2rem 1.55rem;
+  border: 1px solid rgba(7, 18, 37, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.84);
+  text-align: center;
+  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.08);
+}
+
+.heroStage h2 {
+  margin: 1.55rem 0 0;
+  color: #071225;
+  font-size: 1.65rem;
+  font-weight: 900;
+  line-height: 1.22;
+}
+
+.heroStage p {
+  margin: 1.35rem 0 0;
+  color: #3f4f70;
+  font-size: 1.18rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.stageIcon {
+  display: grid;
+  place-items: center;
+  width: 7.15rem;
+  height: 7.15rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #f1f6ff 0%, #e6eefb 100%);
+}
+
+.stageIcon svg {
+  width: 3.35rem;
+  height: 3.35rem;
+  fill: none;
+  stroke: #347dff;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stageRule,
+.glyfRule {
+  display: block;
+  width: 3.75rem;
+  height: 2px;
+  margin-top: 1.45rem;
+  background: #dbe3ee;
+}
+
+.heroPipelineArrow {
+  justify-self: center;
+  width: 3.4rem;
+  height: 2.5rem;
+  fill: none;
+  stroke: #0c2370;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dbtLogo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.35rem;
+}
+
+.dbtLogo svg {
+  width: 3.75rem;
+  height: 3.75rem;
+  fill: #ff6847;
+}
+
+.dbtLogo strong {
+  color: #071225;
+  font-size: 2.45rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.heroStage--glyf {
+  min-height: 462px;
+  margin-left: 0.4rem;
+  border: 2px solid #20c9c3;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(247, 252, 255, 0.9));
+  box-shadow:
+    0 26px 58px rgba(37, 99, 235, 0.16),
+    0 0 70px rgba(32, 201, 195, 0.22);
+}
+
+.heroSpark {
+  position: absolute;
+  top: -1.65rem;
+  right: -0.7rem;
+  display: grid;
+  place-items: center;
+  width: 4.35rem;
+  height: 4.35rem;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #20d6cb, #21bcb3);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(33, 188, 179, 0.28);
+}
+
+.heroSpark svg {
+  width: 2.05rem;
+  height: 2.05rem;
+  fill: currentColor;
+}
+
+.glyfStageBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.glyfStageBrand img {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.glyfStageBrand strong {
+  color: #071225;
+  font-size: 3.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.heroStage--glyf h2 {
+  margin-top: 2rem;
+  font-size: 1.75rem;
+  line-height: 1.22;
+}
+
+.glyfRule {
+  background: #20c9c3;
+}
+
+.glyfStageIcons {
+  display: flex;
+  gap: 2.15rem;
+  margin-top: 1.8rem;
+}
+
+.glyfStageIcons span {
+  display: grid;
+  place-items: center;
+  width: 4.05rem;
+  height: 4.05rem;
+  border-radius: 10px;
+  background: rgba(0, 184, 169, 0.1);
+}
+
+.glyfStageIcons span:nth-child(2) {
+  background: rgba(52, 125, 255, 0.1);
+}
+
+.glyfStageIcons span:nth-child(3) {
+  background: rgba(99, 91, 255, 0.1);
+}
+
+.glyfStageIcons svg {
+  width: 2rem;
+  height: 2rem;
+  fill: none;
+  stroke: #12bfa3;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.glyfStageIcons span:nth-child(2) svg {
+  stroke: #347dff;
+}
+
+.glyfStageIcons span:nth-child(3) svg {
+  stroke: #635bff;
+}
+
+.heroLineage {
+  position: absolute;
+  left: 5rem;
+  right: 5rem;
+  bottom: 1rem;
+  height: 5rem;
+  pointer-events: none;
+}
+
+.heroLineage::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1.8rem;
+  border-bottom: 3px dashed #0d2a80;
+  border-radius: 999px;
+}
+
+.heroLineage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 1.8rem;
+  width: 0;
+  height: 4.25rem;
+  border-left: 3px dashed #0d2a80;
+}
+
+.heroLineage span {
+  position: absolute;
+  left: 50%;
+  bottom: 0.65rem;
+  z-index: 1;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  min-height: 3.45rem;
+  padding: 0 1.55rem;
+  border: 1px solid rgba(99, 91, 255, 0.12);
+  border-radius: 10px;
+  background: #f5f7ff;
+  color: #0d2a80;
+  font-size: 1.08rem;
+  font-weight: 900;
+  white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(99, 91, 255, 0.08);
+}
+
+.heroLineage span::before,
+.heroLineage span::after {
+  content: "";
+  position: absolute;
+  bottom: 1.15rem;
+  width: 0;
+  height: 4.25rem;
+  border-left: 3px dashed #0d2a80;
+}
+
+.heroLineage span::before {
+  left: -16.9rem;
+}
+
+.heroLineage span::after {
+  right: -24.1rem;
+}
+
+.heroCommunityNote {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.1rem;
+  margin-top: 2.65rem;
+  color: #35476b;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.heroCommunityNote svg {
+  width: 1.55rem;
+  height: 1.55rem;
+  fill: none;
+  stroke: #35476b;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.heroCommunityNote i {
+  color: #0d2a80;
+  font-style: normal;
+}
+
 .band--layers {
   background: #f8fafc;
 }
@@ -1456,5 +1995,190 @@ select {
   .mockPanel--donut {
     grid-template-columns: 1fr;
     justify-items: center;
+  }
+}
+
+@media (max-width: 1500px) and (min-width: 997px) {
+  .navbar {
+    padding: 0 1.7rem;
+  }
+
+  .navbar__brand {
+    margin-right: 3rem;
+  }
+
+  .navbar__items:not(.navbar__items--right) {
+    gap: 2rem;
+  }
+
+  .navbar__items:not(.navbar__items--right) .navbar__link,
+  .navbarGithubLink,
+  .navbarStarGroup {
+    font-size: 1.05rem;
+  }
+
+  .navbarStarGroup span,
+  .navbarStarGroup strong {
+    min-width: auto;
+    padding: 0 1rem;
+  }
+
+  .landingHero__layout {
+    grid-template-columns: minmax(440px, 0.78fr) minmax(650px, 1.22fr);
+    gap: 0 2.2rem;
+  }
+
+  .landingHero h1 {
+    font-size: 3.65rem;
+  }
+
+  .landingHero__lead {
+    font-size: 1.16rem;
+  }
+
+  .heroPipeline {
+    grid-template-columns: 168px 44px 205px 44px 315px;
+    min-height: 500px;
+  }
+
+  .heroStage {
+    min-height: 330px;
+    padding: 1.4rem 1rem;
+  }
+
+  .heroStage--glyf {
+    min-height: 380px;
+  }
+
+  .stageIcon {
+    width: 5.8rem;
+    height: 5.8rem;
+  }
+
+  .glyfStageBrand img {
+    width: 4.3rem;
+    height: 4.3rem;
+  }
+
+  .glyfStageBrand strong {
+    font-size: 2.45rem;
+  }
+
+  .heroStage h2,
+  .heroStage--glyf h2 {
+    font-size: 1.34rem;
+  }
+
+  .heroStage p {
+    font-size: 1rem;
+  }
+
+  .glyfStageIcons {
+    gap: 1rem;
+  }
+
+  .heroLineage span::before {
+    left: -12.2rem;
+  }
+
+  .heroLineage span::after {
+    right: -18.2rem;
+  }
+}
+
+@media (max-width: 996px) {
+  :root {
+    --ifm-navbar-height: 84px;
+  }
+
+  .navbar {
+    height: 84px;
+    padding: 0 1.1rem;
+  }
+
+  .navbar__logo,
+  .navbar__logo img {
+    width: 46px;
+    height: 46px;
+  }
+
+  .navbar__title {
+    font-size: 2.15rem;
+  }
+
+  .landingHero {
+    min-height: auto;
+  }
+
+  .landingHero__layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding: 4rem 1.4rem 2rem;
+  }
+
+  .landingHero h1 {
+    font-size: 3.35rem;
+  }
+
+  .landingHero__lead {
+    font-size: 1.1rem;
+  }
+
+  .heroPipeline {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+    min-height: 0;
+    padding-bottom: 0;
+  }
+
+  .heroPipelineArrow {
+    transform: rotate(90deg);
+    margin: 0.5rem auto;
+  }
+
+  .heroStage,
+  .heroStage--glyf {
+    min-height: auto;
+    margin-left: 0;
+  }
+
+  .heroLineage {
+    display: none;
+  }
+
+  .heroCommunityNote {
+    flex-wrap: wrap;
+    gap: 0.8rem 1.4rem;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .landingHero h1 {
+    font-size: 2.55rem;
+  }
+
+  .heroBadge {
+    margin-bottom: 1.55rem;
+  }
+
+  .landingHero .buttonRow {
+    gap: 1rem;
+  }
+
+  .heroPrimaryButton,
+  .heroGithubButton {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .heroMeta {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .heroMeta span {
+    padding: 0;
+    border-right: 0;
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
 
 const layerBenefits = [
@@ -23,154 +24,129 @@ const examples = [
   ['Finance metrics', 'Bookings, expense share, and gross margin signals.', '/docs/examples/finance-metrics'],
 ];
 
-const outputSurfaces = [
-  ['dashboard', 'Dashboard'],
-  ['charts', 'Charts'],
-  ['publish', 'Publish'],
-  ['embed', 'Embed'],
-];
+function DbIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <ellipse cx="12" cy="6" rx="6.2" ry="3.1" />
+      <path d="M5.8 6V12C5.8 13.7 8.6 15.1 12 15.1C15.4 15.1 18.2 13.7 18.2 12V6" />
+      <path d="M5.8 12V18C5.8 19.7 8.6 21.1 12 21.1C15.4 21.1 18.2 19.7 18.2 18V12" />
+    </svg>
+  );
+}
 
-function OutputIcon({type}) {
-  if (type === 'dashboard') {
+function DbtMark() {
+  return (
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M12 10L24 18L36 10L40 14L32 24L40 34L36 38L24 30L12 38L8 34L16 24L8 14L12 10Z" />
+    </svg>
+  );
+}
+
+function SmallChartIcon({type}) {
+  if (type === 'bars') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="3" y="4" width="18" height="16" rx="2.5" />
-        <path d="M7 15V11M12 15V8M17 15V12" />
+        <path d="M5 18V12M12 18V8M19 18V5" />
       </svg>
     );
   }
 
-  if (type === 'charts') {
+  if (type === 'line') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 18L9 12.5L13 15.5L20 7" />
+        <path d="M4 17L9 12L13 14L20 7" />
         <path d="M4 20H20" />
-        <circle cx="9" cy="12.5" r="1.4" />
-        <circle cx="13" cy="15.5" r="1.4" />
-        <circle cx="20" cy="7" r="1.4" />
-      </svg>
-    );
-  }
-
-  if (type === 'publish') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 16V4" />
-        <path d="M8 8L12 4L16 8" />
-        <path d="M5 14V18C5 19.1 5.9 20 7 20H17C18.1 20 19 19.1 19 18V14" />
       </svg>
     );
   }
 
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M9 8L5 12L9 16" />
-      <path d="M15 8L19 12L15 16" />
-      <path d="M13 5L11 19" />
+      <path d="M12 4V12H20" />
+      <circle cx="12" cy="12" r="8" />
     </svg>
   );
 }
 
-function HeroMock() {
+function SparkleIcon() {
   return (
-    <div className="heroVisual" aria-label="Glyf visualization and dashboard artifact preview">
-      <div className="heroMock">
-        <div className="mockPanel mockPanel--code">
-          <div className="mockPanel__topline">
-            <span>‹</span>
-            <strong>Glyf SQL (ggsql)</strong>
-          </div>
-          <pre>{`from ref('fct_orders')
-|> group by order_month
-|> measure revenue = sum(revenue)
-|> visualize line
-     x: order_month
-     y: revenue
-     color: region`}</pre>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 3L14.3 9.7L21 12L14.3 14.3L12 21L9.7 14.3L3 12L9.7 9.7L12 3Z" />
+    </svg>
+  );
+}
+
+function HeroTraitIcon({type}) {
+  if (type === 'dbt') {
+    return <DbtMark />;
+  }
+
+  if (type === 'yaml') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 3H14L19 8V21H7V3Z" />
+        <path d="M14 3V8H19" />
+        <path d="M10 14H15M10 17H14" />
+      </svg>
+    );
+  }
+
+  if (type === 'license') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3L19 6V11C19 15.6 16.1 19.8 12 21C7.9 19.8 5 15.6 5 11V6L12 3Z" />
+        <path d="M9 12L11.2 14.2L15.5 9.8" />
+      </svg>
+    );
+  }
+
+  return <DbIcon />;
+}
+
+function PipelineArrow() {
+  return (
+    <svg className="heroPipelineArrow" viewBox="0 0 52 32" aria-hidden="true">
+      <path d="M4 16H45" />
+      <path d="M33 5L45 16L33 27" />
+    </svg>
+  );
+}
+
+function HeroPipeline() {
+  const logoUrl = useBaseUrl('/img/glyf-mark.svg');
+
+  return (
+    <div className="heroPipeline" aria-label="Analytics workflow from data ingestion to Glyf visualization">
+      <article className="heroStage heroStage--ingest">
+        <div className="stageIcon stageIcon--database"><DbIcon /></div>
+        <h2>Data<br />Ingestion</h2>
+        <span className="stageRule" />
+        <p>Sources, APIs,<br />files, streams</p>
+      </article>
+      <PipelineArrow />
+      <article className="heroStage heroStage--transform">
+        <div className="dbtLogo"><DbtMark /><strong>dbt</strong></div>
+        <h2>Transform<br />Data</h2>
+        <span className="stageRule" />
+        <p>dbt models<br />(CTEs, SQL)</p>
+      </article>
+      <PipelineArrow />
+      <article className="heroStage heroStage--glyf">
+        <span className="heroSpark"><SparkleIcon /></span>
+        <div className="glyfStageBrand">
+          <img src={logoUrl} alt="" />
+          <strong>Glyf</strong>
         </div>
-        <div className="mockPanel mockPanel--chart">
-          <div className="mockPanel__topline">
-            <strong>Revenue over time</strong>
-          </div>
-          <div className="lineChart" aria-hidden="true">
-            <svg viewBox="0 0 430 250" role="img">
-              <g stroke="#e8edf3" strokeWidth="1">
-                <path d="M58 38H392" />
-                <path d="M58 82H392" />
-                <path d="M58 126H392" />
-                <path d="M58 170H392" />
-                <path d="M58 214H392" />
-              </g>
-              <g fill="#42526b" fontSize="14" fontWeight="700">
-                <text x="18" y="43">4M</text>
-                <text x="18" y="87">3M</text>
-                <text x="18" y="131">2M</text>
-                <text x="18" y="175">1M</text>
-                <text x="30" y="219">0</text>
-              </g>
-              <g fill="#42526b" fontSize="14" fontWeight="700">
-                <text x="63" y="240">Jan</text>
-                <text x="130" y="240">Feb</text>
-                <text x="197" y="240">Mar</text>
-                <text x="264" y="240">Apr</text>
-                <text x="331" y="240">May</text>
-                <text x="379" y="240">Jun</text>
-              </g>
-              <path d="M68 166 L95 146 L122 152 L149 112 L176 129 L203 119 L230 98 L257 64 L284 82 L311 94 L338 52 L365 69 L392 32" fill="none" stroke="#13b49d" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M68 190 L95 173 L122 181 L149 160 L176 134 L203 143 L230 131 L257 112 L284 83 L311 116 L338 98 L365 111 L392 73" fill="none" stroke="#2176ff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M68 214 L95 202 L122 203 L149 200 L176 184 L203 188 L230 181 L257 185 L284 161 L311 179 L338 157 L365 154 L392 130" fill="none" stroke="#9254ff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-              <g>
-                {[
-                  ['#13b49d', 68, 166], ['#13b49d', 95, 146], ['#13b49d', 122, 152], ['#13b49d', 149, 112], ['#13b49d', 176, 129], ['#13b49d', 203, 119], ['#13b49d', 230, 98], ['#13b49d', 257, 64], ['#13b49d', 284, 82], ['#13b49d', 311, 94], ['#13b49d', 338, 52], ['#13b49d', 365, 69], ['#13b49d', 392, 32],
-                  ['#2176ff', 68, 190], ['#2176ff', 95, 173], ['#2176ff', 122, 181], ['#2176ff', 149, 160], ['#2176ff', 176, 134], ['#2176ff', 203, 143], ['#2176ff', 230, 131], ['#2176ff', 257, 112], ['#2176ff', 284, 83], ['#2176ff', 311, 116], ['#2176ff', 338, 98], ['#2176ff', 365, 111], ['#2176ff', 392, 73],
-                  ['#9254ff', 68, 214], ['#9254ff', 95, 202], ['#9254ff', 122, 203], ['#9254ff', 149, 200], ['#9254ff', 176, 184], ['#9254ff', 203, 188], ['#9254ff', 230, 181], ['#9254ff', 257, 185], ['#9254ff', 284, 161], ['#9254ff', 311, 179], ['#9254ff', 338, 157], ['#9254ff', 365, 154], ['#9254ff', 392, 130],
-                ].map(([fill, cx, cy], index) => (
-                  <circle key={`${fill}-${index}`} cx={cx} cy={cy} r="5" fill={fill} />
-                ))}
-              </g>
-              <g fontSize="13" fontWeight="750" fill="#1f2a44">
-                <circle cx="82" cy="46" r="6" fill="#13b49d" /><text x="98" y="51">US</text>
-                <circle cx="82" cy="76" r="6" fill="#2176ff" /><text x="98" y="81">EMEA</text>
-                <circle cx="82" cy="106" r="6" fill="#9254ff" /><text x="98" y="111">APAC</text>
-              </g>
-            </svg>
-          </div>
+        <h2>Visualize with<br />SQL-style specs<br />&amp; dashboards</h2>
+        <span className="glyfRule" />
+        <div className="glyfStageIcons" aria-hidden="true">
+          <span><SmallChartIcon type="bars" /></span>
+          <span><SmallChartIcon type="line" /></span>
+          <span><SmallChartIcon type="pie" /></span>
         </div>
-        <div className="mockPanel mockPanel--donut">
-          <div className="mockPanel__topline"><strong>Revenue by Region</strong></div>
-          <div className="donutVisual" aria-hidden="true"><span>$12.4M<br />Total</span></div>
-          <ul className="miniLegend">
-            <li><span /> US <b>48%</b></li>
-            <li><span /> EMEA <b>30%</b></li>
-            <li><span /> APAC <b>22%</b></li>
-          </ul>
-        </div>
-        <div className="mockPanel mockPanel--bars">
-          <div className="mockPanel__topline"><strong>Top Products</strong></div>
-          <div className="barChart" aria-hidden="true">
-            {[
-              ['Product A', '94%'],
-              ['Product B', '72%'],
-              ['Product C', '54%'],
-              ['Product D', '40%'],
-              ['Product E', '27%'],
-            ].map(([label, width]) => (
-              <div className="barChart__row" key={label}>
-                <span>{label}</span>
-                <i style={{'--w': width}} />
-              </div>
-            ))}
-          </div>
-          <div className="barAxis" aria-hidden="true"><span>0</span><span>2M</span><span>4M</span><span>6M</span></div>
-        </div>
-      </div>
-      <div className="heroOutputPills" aria-label="Supported output surfaces">
-        {outputSurfaces.map(([type, label]) => (
-          <span key={type}>
-            <OutputIcon type={type} />
-            {label}
-          </span>
-        ))}
+      </article>
+      <div className="heroLineage" aria-hidden="true">
+        <span>End-to-end analytics lineage</span>
       </div>
     </div>
   );
@@ -181,27 +157,42 @@ function HomepageHeader() {
     <header className="landingHero">
       <div className="container landingHero__layout">
         <div className="landingHero__content">
-          <p className="eyebrow eyebrow--pill">SQL-native · open source · community driven</p>
-          <h1>A Semantic Visualization Layer for Analytical Systems</h1>
+          <p className="heroBadge"><SparkleIcon /> Open Source</p>
+          <h1>Glyf &mdash; A Semantic Visualization Layer for Analytical Systems</h1>
           <p className="landingHero__lead">
-            Integrate GGSQL with the dbt ecosystem. Author SQL-based visualizations. Build dashboard specs that preserve analytics lineage.
+            Write visualizations close to your data using SQL-style specs.
+            Integrates with dbt, compiles to a portable IR, and renders charts and dashboards everywhere.
           </p>
           <div className="buttonRow">
-            <Link className="button button--primary button--lg" to="/docs/get-started/quickstart">
-              Get Started <span aria-hidden="true">→</span>
+            <Link className="heroPrimaryButton" to="/docs/get-started/quickstart">
+              <span aria-hidden="true">&gt;_</span> Get Started <span aria-hidden="true">&rarr;</span>
             </Link>
-            <Link className="button button--secondary button--lg heroGithubButton" to="https://github.com/kannandreams/glyf">
-              ☆ Star on GitHub
+            <Link className="heroGithubButton" to="https://github.com/kannandreams/glyf">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.02c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.18 1.18a10.95 10.95 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.23 2.75.11 3.04.74.8 1.19 1.82 1.19 3.08 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.05.78 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z" />
+              </svg>
+              View on GitHub
             </Link>
           </div>
           <div className="heroMeta" aria-label="Project qualities">
-            <span>Open source</span>
-            <span>Apache-2.0</span>
-            <span>Python 3.11+</span>
-            <span>Rust powered</span>
+            <span><HeroTraitIcon /> SQL-Native</span>
+            <span><HeroTraitIcon type="dbt" /> dbt Integration</span>
+            <span><HeroTraitIcon type="yaml" /> YAML Specs</span>
+            <span><HeroTraitIcon type="license" /> Apache 2.0</span>
           </div>
         </div>
-        <HeroMock />
+        <HeroPipeline />
+        <div className="heroCommunityNote">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8.5 11.5C10.4 11.5 12 9.9 12 8S10.4 4.5 8.5 4.5S5 6.1 5 8S6.6 11.5 8.5 11.5Z" />
+            <path d="M15.8 11C17.3 11 18.5 9.8 18.5 8.3S17.3 5.6 15.8 5.6" />
+            <path d="M3.5 19C3.9 15.8 5.7 14.2 8.5 14.2C11.3 14.2 13.1 15.8 13.5 19" />
+            <path d="M14.4 14.5C17.5 14.7 19.4 16.2 20 19" />
+          </svg>
+          <strong>Built by the community</strong>
+          <i aria-hidden="true">&middot;</i>
+          <strong>Apache 2.0 License</strong>
+        </div>
       </div>
     </header>
   );
