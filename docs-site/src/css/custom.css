@@ -65,6 +65,136 @@ body {
   font-weight: 750;
 }
 
+.navbar {
+  height: 86px;
+  padding: 0 1.45rem;
+  box-shadow: none;
+  border-bottom: 0;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(18px);
+}
+
+.navbar__inner {
+  width: 100%;
+}
+
+.navbar__brand {
+  color: var(--dbtc-ink);
+  gap: 0.75rem;
+  margin-right: 4.8rem;
+}
+
+.navbar__logo {
+  width: 52px;
+  height: 52px;
+}
+
+.navbar__logo img {
+  width: 52px;
+  height: 52px;
+}
+
+.navbar__title {
+  color: var(--dbtc-ink);
+  font-size: 2.45rem;
+  font-weight: 820;
+  line-height: 1;
+}
+
+.navbar__items:not(.navbar__items--right) {
+  gap: 2.1rem;
+}
+
+.navbar__items:not(.navbar__items--right) .navbar__link {
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0;
+}
+
+.navbar__items:not(.navbar__items--right) .navbar__link:hover {
+  color: var(--dbtc-primary);
+}
+
+.navbar__items--right {
+  gap: 1rem;
+}
+
+.navbarGithubMetric {
+  order: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.navbarGithubMetric:hover {
+  color: var(--dbtc-primary);
+  text-decoration: none;
+}
+
+.navbarGithubMetric svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.navbar__items--right [class*='colorModeToggle'] {
+  order: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.65rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.navbar__items--right [class*='toggleButton'] {
+  width: 2rem;
+  height: 2rem;
+  color: #0f172a;
+}
+
+.navbarGetStarted {
+  order: 3;
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0 1.25rem !important;
+  border-radius: 10px;
+  background: #00a38a;
+  color: #ffffff !important;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(0, 163, 138, 0.26);
+}
+
+.navbarGetStarted:hover {
+  background: #008f78;
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+[data-theme='dark'] .navbar {
+  background: rgba(7, 19, 15, 0.96);
+  border-bottom: 1px solid rgba(0, 229, 153, 0.16);
+}
+
+[data-theme='dark'] .navbar__title,
+[data-theme='dark'] .navbar__items:not(.navbar__items--right) .navbar__link,
+[data-theme='dark'] .navbarGithubMetric {
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .navbar__items--right [class*='colorModeToggle'] {
+  background: #0d1d17;
+  border-color: rgba(0, 229, 153, 0.22);
+}
+
 .landingHero {
   min-height: 68vh;
   position: relative;
