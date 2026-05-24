@@ -25,58 +25,103 @@ const examples = [
 
 function HeroMock() {
   return (
-    <div className="heroMock" aria-label="Glyf visualization and dashboard artifact preview">
-      <div className="mockPanel mockPanel--code">
-        <div className="mockPanel__topline">
-          <span>Glyf + GGSQL</span>
-          <span>revenue.ggsql</span>
-        </div>
-        <pre>{`from ref('fct_orders')
+    <div className="heroVisual" aria-label="Glyf visualization and dashboard artifact preview">
+      <div className="heroMock">
+        <div className="mockPanel mockPanel--code">
+          <div className="mockPanel__topline">
+            <span>‹</span>
+            <strong>Glyf SQL (ggsql)</strong>
+          </div>
+          <pre>{`from ref('fct_orders')
 |> group by order_month
 |> measure revenue = sum(revenue)
 |> visualize line
      x: order_month
      y: revenue
      color: region`}</pre>
-      </div>
-      <div className="mockPanel mockPanel--chart">
-        <div className="mockPanel__topline">
-          <span>Revenue over time</span>
-          <span>dashboard artifact</span>
         </div>
-        <div className="lineChart" aria-hidden="true">
-          <svg viewBox="0 0 360 170" role="img">
-            <defs>
-              <linearGradient id="chartLine" x1="0" x2="1" y1="0" y2="0">
-                <stop offset="0" stopColor="#0ea5e9" />
-                <stop offset="1" stopColor="#00a870" />
-              </linearGradient>
-            </defs>
-            <path d="M24 140 L72 120 L116 128 L158 84 L202 98 L248 58 L296 76 L336 36" fill="none" stroke="url(#chartLine)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M24 140 L72 120 L116 128 L158 84 L202 98 L248 58 L296 76 L336 36 L336 154 L24 154 Z" fill="rgba(0,168,112,0.1)" />
-            {[24, 72, 116, 158, 202, 248, 296, 336].map((x, index) => (
-              <circle key={x} cx={x} cy={[140, 120, 128, 84, 98, 58, 76, 36][index]} r="5" fill="#ffffff" stroke="#00a870" strokeWidth="3" />
+        <div className="mockPanel mockPanel--chart">
+          <div className="mockPanel__topline">
+            <strong>Revenue over time</strong>
+          </div>
+          <div className="lineChart" aria-hidden="true">
+            <svg viewBox="0 0 430 250" role="img">
+              <g stroke="#e8edf3" strokeWidth="1">
+                <path d="M58 38H392" />
+                <path d="M58 82H392" />
+                <path d="M58 126H392" />
+                <path d="M58 170H392" />
+                <path d="M58 214H392" />
+              </g>
+              <g fill="#42526b" fontSize="14" fontWeight="700">
+                <text x="18" y="43">4M</text>
+                <text x="18" y="87">3M</text>
+                <text x="18" y="131">2M</text>
+                <text x="18" y="175">1M</text>
+                <text x="30" y="219">0</text>
+              </g>
+              <g fill="#42526b" fontSize="14" fontWeight="700">
+                <text x="63" y="240">Jan</text>
+                <text x="130" y="240">Feb</text>
+                <text x="197" y="240">Mar</text>
+                <text x="264" y="240">Apr</text>
+                <text x="331" y="240">May</text>
+                <text x="379" y="240">Jun</text>
+              </g>
+              <path d="M68 166 L95 146 L122 152 L149 112 L176 129 L203 119 L230 98 L257 64 L284 82 L311 94 L338 52 L365 69 L392 32" fill="none" stroke="#13b49d" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M68 190 L95 173 L122 181 L149 160 L176 134 L203 143 L230 131 L257 112 L284 83 L311 116 L338 98 L365 111 L392 73" fill="none" stroke="#2176ff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M68 214 L95 202 L122 203 L149 200 L176 184 L203 188 L230 181 L257 185 L284 161 L311 179 L338 157 L365 154 L392 130" fill="none" stroke="#9254ff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+              <g>
+                {[
+                  ['#13b49d', 68, 166], ['#13b49d', 95, 146], ['#13b49d', 122, 152], ['#13b49d', 149, 112], ['#13b49d', 176, 129], ['#13b49d', 203, 119], ['#13b49d', 230, 98], ['#13b49d', 257, 64], ['#13b49d', 284, 82], ['#13b49d', 311, 94], ['#13b49d', 338, 52], ['#13b49d', 365, 69], ['#13b49d', 392, 32],
+                  ['#2176ff', 68, 190], ['#2176ff', 95, 173], ['#2176ff', 122, 181], ['#2176ff', 149, 160], ['#2176ff', 176, 134], ['#2176ff', 203, 143], ['#2176ff', 230, 131], ['#2176ff', 257, 112], ['#2176ff', 284, 83], ['#2176ff', 311, 116], ['#2176ff', 338, 98], ['#2176ff', 365, 111], ['#2176ff', 392, 73],
+                  ['#9254ff', 68, 214], ['#9254ff', 95, 202], ['#9254ff', 122, 203], ['#9254ff', 149, 200], ['#9254ff', 176, 184], ['#9254ff', 203, 188], ['#9254ff', 230, 181], ['#9254ff', 257, 185], ['#9254ff', 284, 161], ['#9254ff', 311, 179], ['#9254ff', 338, 157], ['#9254ff', 365, 154], ['#9254ff', 392, 130],
+                ].map(([fill, cx, cy], index) => (
+                  <circle key={`${fill}-${index}`} cx={cx} cy={cy} r="5" fill={fill} />
+                ))}
+              </g>
+              <g fontSize="13" fontWeight="750" fill="#1f2a44">
+                <circle cx="82" cy="46" r="6" fill="#13b49d" /><text x="98" y="51">US</text>
+                <circle cx="82" cy="76" r="6" fill="#2176ff" /><text x="98" y="81">EMEA</text>
+                <circle cx="82" cy="106" r="6" fill="#9254ff" /><text x="98" y="111">APAC</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div className="mockPanel mockPanel--donut">
+          <div className="mockPanel__topline"><strong>Revenue by Region</strong></div>
+          <div className="donutVisual" aria-hidden="true"><span>$12.4M<br />Total</span></div>
+          <ul className="miniLegend">
+            <li><span /> US <b>48%</b></li>
+            <li><span /> EMEA <b>30%</b></li>
+            <li><span /> APAC <b>22%</b></li>
+          </ul>
+        </div>
+        <div className="mockPanel mockPanel--bars">
+          <div className="mockPanel__topline"><strong>Top Products</strong></div>
+          <div className="barChart" aria-hidden="true">
+            {[
+              ['Product A', '94%'],
+              ['Product B', '72%'],
+              ['Product C', '54%'],
+              ['Product D', '40%'],
+              ['Product E', '27%'],
+            ].map(([label, width]) => (
+              <div className="barChart__row" key={label}>
+                <span>{label}</span>
+                <i style={{'--w': width}} />
+              </div>
             ))}
-          </svg>
+          </div>
+          <div className="barAxis" aria-hidden="true"><span>0</span><span>2M</span><span>4M</span><span>6M</span></div>
         </div>
       </div>
-      <div className="mockPanel mockPanel--donut">
-        <div className="mockPanel__topline"><span>Region mix</span></div>
-        <div className="donutVisual" aria-hidden="true"><span>$12.4M<br />Total</span></div>
-        <ul className="miniLegend">
-          <li><span /> US 48%</li>
-          <li><span /> EMEA 30%</li>
-          <li><span /> APAC 22%</li>
-        </ul>
-      </div>
-      <div className="mockPanel mockPanel--bars">
-        <div className="mockPanel__topline"><span>Top products</span></div>
-        <div className="barRows" aria-hidden="true">
-          <span style={{'--w': '94%'}} />
-          <span style={{'--w': '78%'}} />
-          <span style={{'--w': '61%'}} />
-          <span style={{'--w': '46%'}} />
-        </div>
+      <div className="heroOutputPills" aria-label="Supported output surfaces">
+        <span>Dashboards</span>
+        <span>Charts</span>
+        <span>Markdown</span>
+        <span>Export artifacts</span>
+        <span>Embed</span>
       </div>
     </div>
   );
@@ -87,22 +132,23 @@ function HomepageHeader() {
     <header className="landingHero">
       <div className="container landingHero__layout">
         <div className="landingHero__content">
-          <p className="eyebrow">SQL-native · open source · analytics engineering</p>
+          <p className="eyebrow eyebrow--pill">SQL-native · open source · community driven</p>
           <h1>A Semantic Visualization Layer for Analytical Systems</h1>
           <p className="landingHero__lead">
-            Glyf connects analytical metadata, GGSQL visualizations, and dashboard specs so teams can trace insight from transformation to published artifact.
+            Integrate GGSQL with the dbt ecosystem. Author SQL-based visualizations. Build dashboard specs that preserve analytics lineage.
           </p>
           <div className="buttonRow">
             <Link className="button button--primary button--lg" to="/docs/get-started/quickstart">
-              Get started
+              Get Started <span aria-hidden="true">→</span>
             </Link>
-            <Link className="button button--secondary button--lg" to="/docs/guides/visualisation-syntax">
-              Explore GGSQL support
+            <Link className="button button--secondary button--lg heroGithubButton" to="https://github.com/kannandreams/glyf">
+              ☆ Star on GitHub
             </Link>
           </div>
           <div className="heroMeta" aria-label="Project qualities">
             <span>Open source</span>
-            <span>Python CLI</span>
+            <span>Apache-2.0</span>
+            <span>Python 3.11+</span>
             <span>dbt artifact integration</span>
           </div>
         </div>
