@@ -3,14 +3,14 @@ import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 
 const featureCards = [
-  ['dbt ref() in every chart', 'Use {{ ref() }} in chart SQL. Glyf reads the dbt manifest and validates queries before publish.'],
-  ['Zero-server static output', 'Produce self-contained HTML and chart assets your team can host in docs, apps, storage, or CI.'],
-  ['Generated React components', 'Compile dashboards to typed .tsx components for product analytics without an embedded BI SDK.'],
-  ['Programmable Python macros', 'Reuse dashboard logic for thresholds, labels, and plan-based views in reviewed Python code.'],
-  ['Visual diff as a build artifact', 'Compare dashboard builds and annotate metric shifts, new categories, and trend reversals.'],
-  ['Pipeline hooks and alerts', 'Declare Slack or webhook alerts in dashboard YAML when metrics cross a threshold.'],
-  ['Agent-ready MCP server', 'Expose the spec graph so agents can inspect model-to-chart impact and downstream breakage.'],
-  ['Version controlled, reviewable', 'Keep chart definitions, layouts, and macros in Git with PR review and normal revert paths.'],
+  ['dbt ref() in every chart', 'Available', 'Use {{ ref() }} in chart SQL. Glyf reads the dbt manifest and validates queries before publish.'],
+  ['Zero-server static output', 'Available', 'Produce self-contained HTML and chart assets your team can host in docs, apps, storage, or CI.'],
+  ['Generated React components', 'Roadmap', 'Compile dashboards to typed .tsx components for product analytics without an embedded BI SDK.'],
+  ['Programmable Python macros', 'Roadmap', 'Reuse dashboard logic for thresholds, labels, and plan-based views in reviewed Python code.'],
+  ['Visual diff as a build artifact', 'Roadmap', 'Compare dashboard builds and annotate metric shifts, new categories, and trend reversals.'],
+  ['Pipeline hooks and alerts', 'Roadmap', 'Declare Slack or webhook alerts in dashboard YAML when metrics cross a threshold.'],
+  ['Agent-ready MCP server', 'Roadmap', 'Expose the spec graph so agents can inspect model-to-chart impact and downstream breakage.'],
+  ['Version controlled, reviewable', 'Available', 'Keep chart definitions, layouts, and macros in Git with PR review and normal revert paths.'],
 ];
 
 const featureLinks = [
@@ -28,7 +28,7 @@ const examples = [
 ];
 
 const problemItems = [
-  ['Expensive BI platforms set the terms', 'Looker, Sigma, Tableau, and embedded analytics products make simple publishing a procurement problem. Glyf keeps the artifact as a file.'],
+  ['BI platforms set the terms', 'BI platforms turn simple publishing into procurement. Glyf keeps visualization output as files your team can build, review, and host.'],
   ['Dashboards live outside the workflow', 'Your dbt models are in Git. Your charts are usually configured through a browser, stored elsewhere, and maintained by whoever last touched the UI.'],
   ['Columns rename. Charts break silently.', 'When dbt models change, dashboard failures often show up late. Glyf moves chart definitions into a build step that can validate earlier.'],
   ['Notebooks become one-off chart systems', 'When a BI platform cannot produce the shape of chart someone needs, the workaround often lives in a notebook and drifts from the pipeline.'],
@@ -323,11 +323,17 @@ function FeaturesSection() {
         <div className="sectionHeader">
           <p className="eyebrow">Features</p>
           <h2>What makes Glyf different.</h2>
+          <p>
+            Core build-step features are available today. Roadmap items show where Glyf is heading.
+          </p>
         </div>
         <div className="featureStrip">
-          {featureCards.map(([title, description]) => (
+          {featureCards.map(([title, status, description]) => (
             <article className="featureStripItem" key={title}>
-              <h3>{title}</h3>
+              <div className="featureCardHeader">
+                <h3>{title}</h3>
+                <span className={`featureStatus featureStatus--${status.toLowerCase().replace(/\s+/g, '-')}`}>{status}</span>
+              </div>
               <p>{description}</p>
             </article>
           ))}
@@ -481,7 +487,7 @@ function FeatureLinks() {
       <div className="container">
         <div className="sectionHeader">
           <p className="eyebrow">Documentation</p>
-          <h2>Start with the docs you need</h2>
+          <h2>Start with the docs you need.</h2>
         </div>
         <div className="linkGrid">
           {featureLinks.map(([title, description, to]) => (

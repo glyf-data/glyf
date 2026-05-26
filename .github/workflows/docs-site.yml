@@ -18,9 +18,9 @@ permissions:
   deployments: write
 
 env:
-  DOCS_SITE_URL: https://dbtcharts.pages.dev
+  DOCS_SITE_URL: https://glyf.pages.dev
   DOCS_SITE_BASE_URL: /
-  CLOUDFLARE_PROJECT_NAME: dbtcharts
+  CLOUDFLARE_PROJECT_NAME: glyf
 
 jobs:
   build-and-deploy:

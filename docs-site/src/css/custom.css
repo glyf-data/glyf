@@ -6948,7 +6948,7 @@ div[class*='codeBlockContent'] pre code,
     #061b13 !important;
   color: rgba(248, 247, 241, 0.78) !important;
   font-size: clamp(1.12rem, 1.8vw, 1.45rem) !important;
-  font-weight: 650 !important;
+  font-weight: 500 !important;
   line-height: 1.42 !important;
   box-shadow: none !important;
 }
@@ -6958,7 +6958,7 @@ div[class*='codeBlockContent'] pre code,
   display: block !important;
   margin-top: 0.35rem !important;
   color: #f8f7f1 !important;
-  font-weight: 850 !important;
+  font-weight: 700 !important;
 }
 
 .solutionDivider,
@@ -6989,7 +6989,7 @@ div[class*='codeBlockContent'] pre code,
 .solutionDivider span,
 [data-theme='dark'] .solutionDivider span {
   color: var(--glyf-attention);
-  font-size: 1.05rem;
+  font-size: clamp(1.55rem, 2.4vw, 2.1rem);
   font-weight: 900;
   letter-spacing: 0.02em;
 }
@@ -7002,4 +7002,67 @@ div[class*='codeBlockContent'] pre code,
 .howSection,
 [data-theme='dark'] .howSection {
   padding-top: 4.25rem !important;
+}
+
+.navbar__title,
+[data-theme='dark'] .navbar__title {
+  font-size: 2.08rem !important;
+}
+
+.featuresSection .sectionHeader p:last-child,
+[data-theme='dark'] .featuresSection .sectionHeader p:last-child {
+  max-width: 620px;
+  margin-top: 0.65rem;
+  color: var(--glyf-muted-light) !important;
+  font-size: 1rem;
+}
+
+.featureCardHeader,
+[data-theme='dark'] .featureCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.featureCardHeader h3,
+[data-theme='dark'] .featureCardHeader h3 {
+  margin: 0 !important;
+}
+
+.featureStatus,
+[data-theme='dark'] .featureStatus {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.45rem;
+  padding: 0 0.5rem;
+  border: 1px solid rgba(36, 101, 29, 0.18);
+  border-radius: 999px;
+  background: rgba(36, 101, 29, 0.08);
+  color: var(--glyf-attention);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.68rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.featureStatus--roadmap,
+[data-theme='dark'] .featureStatus--roadmap {
+  border-color: rgba(64, 64, 58, 0.18);
+  background: rgba(64, 64, 58, 0.07);
+  color: #666861;
+}
+
+@media (min-width: 997px) {
+  .personasSection .sectionHeader {
+    max-width: none !important;
+  }
+
+  .personasSection .sectionHeader h2 {
+    white-space: nowrap;
+  }
 }

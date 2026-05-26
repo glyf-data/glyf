@@ -10,7 +10,7 @@ const baseUrl = normalizedBaseUrl.endsWith('/') ? normalizedBaseUrl : `${normali
 const config = {
   title: 'glyf',
   tagline: 'Visualization belongs in the pipeline',
-  favicon: 'img/glyf-mark.svg',
+  favicon: 'img/glyf-logo.png',
 
   url: siteUrl,
   baseUrl,
@@ -51,7 +51,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      image: 'img/glyf-mark.svg',
+      image: 'img/glyf-logo.png',
       colorMode: {
         defaultMode: 'light',
         disableSwitch: true,
@@ -61,7 +61,7 @@ const config = {
         title: 'Glyf',
         logo: {
           alt: 'Glyf mark',
-          src: 'img/glyf-mark.svg',
+          src: 'img/glyf-logo.png',
         },
         items: [
           {to: '/docs/intro', label: 'Docs', position: 'left'},
