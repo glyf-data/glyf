@@ -1,22 +1,7 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="glyfTeal" x1="31" y1="29" x2="103" y2="73" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#00A884"/>
-      <stop offset="1" stop-color="#20D7B5"/>
-    </linearGradient>
-    <linearGradient id="glyfBlue" x1="31" y1="94" x2="105" y2="74" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#6EC8FF"/>
-      <stop offset="1" stop-color="#259EF4"/>
-    </linearGradient>
-  </defs>
-  <rect x="8" y="8" width="112" height="112" rx="26" fill="#FFFFFF"/>
-  <path d="M107 98V102C107 111.941 98.941 120 89 120H38C21.431 120 8 106.569 8 90V38C8 21.431 21.431 8 38 8H90C106.569 8 120 21.431 120 38V39" stroke="#0B1A2C" stroke-width="12" stroke-linecap="round"/>
-  <path d="M38 34H111" stroke="url(#glyfTeal)" stroke-width="12" stroke-linecap="round"/>
-  <path d="M38 48V66" stroke="url(#glyfTeal)" stroke-width="12" stroke-linecap="round"/>
-  <path d="M35 80L58 58L76 72L101 47" stroke="url(#glyfTeal)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="35" cy="80" r="8" fill="#00A884"/>
-  <circle cx="58" cy="58" r="8" fill="#12C5A0"/>
-  <circle cx="76" cy="72" r="8" fill="#00A884"/>
-  <circle cx="101" cy="47" r="8" fill="#20D7B5"/>
-  <path d="M30 98H96C102.075 98 107 93.075 107 87V66" stroke="url(#glyfBlue)" stroke-width="12" stroke-linecap="round"/>
+  <rect x="10" y="10" width="108" height="108" rx="24" fill="#FFFFFF"/>
+  <rect x="10" y="10" width="108" height="108" rx="24" stroke="#0B1A2C" stroke-width="8"/>
+  <path d="M83 34H47C40.373 34 35 39.373 35 46V82C35 88.627 40.373 94 47 94H83" stroke="#0B1A2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M48 82L61 58L73 70L88 45" stroke="#00A884" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="88" cy="45" r="7" fill="#20D7B5"/>
 </svg>

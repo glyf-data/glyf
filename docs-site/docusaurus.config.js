@@ -9,7 +9,7 @@ const baseUrl = normalizedBaseUrl.endsWith('/') ? normalizedBaseUrl : `${normali
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'glyf',
-  tagline: 'A semantic visualization layer for analytical systems',
+  tagline: 'Visualization belongs in the pipeline',
   favicon: 'img/glyf-mark.svg',
 
   url: siteUrl,
@@ -65,7 +65,6 @@ const config = {
         },
         items: [
           {to: '/docs/intro', label: 'Docs', position: 'left'},
-          {to: '/docs/get-started/quickstart', label: 'Guides', position: 'left'},
           {to: '/docs/examples/gallery', label: 'Examples', position: 'left'},
           {to: '/docs/integrations/overview', label: 'Integrations', position: 'left'},
           {
@@ -96,34 +95,14 @@ const config = {
         ],
       },
       footer: {
-        style: 'light',
+        style: 'dark',
         links: [
-          {
-            title: 'Start',
-            items: [
-              {label: 'Quickstart', to: '/docs/get-started/quickstart'},
-              {label: 'Existing dbt project', to: '/docs/get-started/existing-dbt-project'},
-              {label: 'Examples gallery', to: '/docs/examples/gallery'},
-            ],
-          },
-          {
-            title: 'Build',
-            items: [
-              {label: 'Visualisation syntax', to: '/docs/guides/visualisation-syntax'},
-              {label: 'Dashboard YAML', to: '/docs/guides/dashboard-yaml'},
-              {label: 'CLI reference', to: '/docs/reference/cli'},
-            ],
-          },
-          {
-            title: 'Project',
-            items: [
-              {label: 'Community', to: '/docs/resources/community'},
-              {label: 'Roadmap', to: '/docs/resources/roadmap'},
-              {label: 'GitHub', href: 'https://github.com/kannandreams/glyf'},
-            ],
-          },
+          {label: 'GitHub', href: 'https://github.com/kannandreams/glyf'},
+          {label: 'Docs', to: '/docs/intro'},
+          {label: 'Roadmap', to: '/docs/resources/roadmap'},
+          {label: 'MIT License', href: 'https://github.com/kannandreams/glyf/blob/main/LICENSE'},
         ],
-        copyright: `Copyright ${new Date().getFullYear()} glyf contributors. Released under the Apache License 2.0.`,
+        copyright: '<strong class="footerBrand">Glyf<span>.</span></strong><span class="footerTagline">Visualization is a build step. Treat it like one.</span>',
       },
       prism: {
         theme: lightCodeTheme,
