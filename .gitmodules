@@ -1,3 +1,0 @@
-[submodule "capabilities/agent-forge"]
-	path = capabilities/agent-forge
-	url = https://github.com/kannandreams/agent-forge.git
