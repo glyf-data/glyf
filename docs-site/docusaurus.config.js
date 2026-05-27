@@ -9,8 +9,8 @@ const baseUrl = normalizedBaseUrl.endsWith('/') ? normalizedBaseUrl : `${normali
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'glyf',
-  tagline: 'A semantic visualization layer for analytical systems',
-  favicon: 'img/glyf-mark.svg',
+  tagline: 'Visualization belongs in the pipeline',
+  favicon: 'img/favicon-v2.svg',
 
   url: siteUrl,
   baseUrl,
@@ -51,69 +51,58 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      image: 'img/glyf-mark.svg',
-      announcementBar: {
-        id: 'release-preview',
-        content:
-          'Docs preview for glyf 0.1.0: quickstart, examples gallery, AI context, integrations, and migration planning are available.',
-        backgroundColor: '#07130f',
-        textColor: '#ffffff',
-        isCloseable: true,
-      },
+      image: 'img/glyf-logo-v3.svg',
       colorMode: {
         defaultMode: 'light',
-        disableSwitch: false,
+        disableSwitch: true,
         respectPrefersColorScheme: false,
       },
       navbar: {
-        title: 'glyf',
+        title: 'Glyf',
         logo: {
-          alt: 'glyf mark',
-          src: 'img/glyf-mark.svg',
+          alt: 'Glyf mark',
+          src: 'img/glyf-logo-v3.svg',
         },
         items: [
           {to: '/docs/intro', label: 'Docs', position: 'left'},
           {to: '/docs/examples/gallery', label: 'Examples', position: 'left'},
-          {to: '/docs/reference/cli', label: 'CLI', position: 'left'},
-          {to: '/docs/ai-context/overview', label: 'AI Context', position: 'left'},
-          {to: '/docs/ai-context/agents', label: 'Agents', position: 'left'},
           {to: '/docs/integrations/overview', label: 'Integrations', position: 'left'},
           {
-            href: 'https://github.com/kannandreams/glyf',
-            label: 'GitHub',
+            type: 'dropdown',
+            label: 'Community',
+            position: 'left',
+            items: [
+              {to: '/docs/resources/community', label: 'Community'},
+              {to: '/docs/resources/roadmap', label: 'Roadmap'},
+              {
+                href: 'https://github.com/kannandreams/glyf/blob/main/CONTRIBUTING.md',
+                label: 'Contributing',
+              },
+            ],
+          },
+          {
+            type: 'html',
             position: 'right',
+            value:
+              '<a class="navbarGithubLink" href="https://github.com/kannandreams/glyf" aria-label="Glyf on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.02c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.18 1.18a10.95 10.95 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.23 2.75.11 3.04.74.8 1.19 1.82 1.19 3.08 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.05.78 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg><span>GitHub</span><svg class="navbarExternalIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H17V17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 7L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a>',
+          },
+          {
+            type: 'html',
+            position: 'right',
+            value:
+              '<a class="navbarStarGroup" href="https://github.com/kannandreams/glyf" aria-label="Star Glyf on GitHub"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2L14.7 8.6L20.6 9.5L16.3 13.7L17.3 19.6L12 16.8L6.7 19.6L7.7 13.7L3.4 9.5L9.3 8.6L12 3.2Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>Star</span><strong>1.2k</strong></a>',
           },
         ],
       },
       footer: {
-        style: 'light',
+        style: 'dark',
         links: [
-          {
-            title: 'Start',
-            items: [
-              {label: 'Quickstart', to: '/docs/get-started/quickstart'},
-              {label: 'Existing dbt project', to: '/docs/get-started/existing-dbt-project'},
-              {label: 'Examples gallery', to: '/docs/examples/gallery'},
-            ],
-          },
-          {
-            title: 'Build',
-            items: [
-              {label: 'Visualisation syntax', to: '/docs/guides/visualisation-syntax'},
-              {label: 'Dashboard YAML', to: '/docs/guides/dashboard-yaml'},
-              {label: 'CLI reference', to: '/docs/reference/cli'},
-            ],
-          },
-          {
-            title: 'Project',
-            items: [
-              {label: 'Community', to: '/docs/resources/community'},
-              {label: 'Roadmap', to: '/docs/resources/roadmap'},
-              {label: 'GitHub', href: 'https://github.com/kannandreams/glyf'},
-            ],
-          },
+          {label: 'GitHub', href: 'https://github.com/kannandreams/glyf'},
+          {label: 'Docs', to: '/docs/intro'},
+          {label: 'Roadmap', to: '/docs/resources/roadmap'},
+          {label: 'MIT License', href: 'https://github.com/kannandreams/glyf/blob/main/LICENSE'},
         ],
-        copyright: `Copyright ${new Date().getFullYear()} glyf contributors. Released under the Apache License 2.0.`,
+        copyright: '<strong class="footerBrand">Glyf<span>.</span></strong><span class="footerTagline">Visualization is a build step. Treat it like one.</span>',
       },
       prism: {
         theme: lightCodeTheme,
