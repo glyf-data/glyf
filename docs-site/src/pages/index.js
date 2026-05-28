@@ -3,14 +3,14 @@ import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 
 const featureCards = [
-  ['dbt ref() in every chart', 'Available', 'Use {{ ref() }} in chart SQL. Glyf reads the dbt manifest and validates queries before publish.'],
-  ['Zero-server static output', 'Available', 'Produce self-contained HTML and chart assets your team can host in docs, apps, storage, or CI.'],
-  ['Generated React components', 'Roadmap', 'Compile dashboards to typed .tsx components for product analytics without an embedded BI SDK.'],
-  ['Programmable Python macros', 'Roadmap', 'Reuse dashboard logic for thresholds, labels, and plan-based views in reviewed Python code.'],
-  ['Visual diff as a build artifact', 'Roadmap', 'Compare dashboard builds and annotate metric shifts, new categories, and trend reversals.'],
-  ['Pipeline hooks and alerts', 'Roadmap', 'Declare Slack or webhook alerts in dashboard YAML when metrics cross a threshold.'],
-  ['Agent-ready MCP server', 'Roadmap', 'Expose the spec graph so agents can inspect model-to-chart impact and downstream breakage.'],
-  ['Version controlled, reviewable', 'Available', 'Keep chart definitions, layouts, and macros in Git with PR review and normal revert paths.'],
+  ['dbt ref() in every chart', 'integration', 'Use {{ ref() }} in chart SQL. Glyf reads the dbt manifest and validates queries before publish.'],
+  ['Zero-server static output', 'Exports', 'Produce self-contained HTML and chart assets your team can host in docs, apps, storage, or CI.'],
+  ['Generated React components', 'embedded', 'Compile dashboards to typed .tsx components for product analytics without an embedded BI SDK.'],
+  ['Programmable Python macros', 'customization', 'Reuse dashboard logic for thresholds, labels, and plan-based views in reviewed Python code.'],
+  ['Visual diff as a build artifact', 'Chart Quality', 'Compare dashboard builds and annotate metric shifts, new categories, and trend reversals.'],
+  ['Pipeline hooks and alerts', 'Observability', 'Declare Slack or webhook alerts in dashboard YAML when metrics cross a threshold.'],
+  ['Agent-ready MCP server', 'AI Powered', 'Expose the spec graph so agents can inspect model-to-chart impact and downstream breakage.'],
+  ['Version controlled, reviewable', 'Deploy', 'Keep chart definitions, layouts, and macros in Git with PR review and normal revert paths.'],
 ];
 
 const featureLinks = [
@@ -47,6 +47,30 @@ const personas = [
   ['Data Scientist', 'Charts in SQL, not one-off notebooks.', 'Write SQL-style chart definitions that run in the pipeline, stay current, and live beside the models they query.'],
   ['Data Leader', 'Reduce platform dependency.', 'Glyf is open source, runs locally, and produces outputs your team already knows how to deploy and review.'],
   ['Application Engineer', 'Import or publish a dashboard artifact.', 'The data team owns the spec. You consume rendered output or future components without negotiating with an embedded analytics vendor.'],
+];
+
+const blogPosts = [
+  {
+    title: 'Building Dashboards in the Pipeline',
+    date: 'May 27, 2026',
+    category: 'Product',
+    image: '/img/examples/simple-dbt-banner.svg',
+    to: '/blog/building-dashboards-in-the-pipeline',
+  },
+  {
+    title: 'GGSQL Chart Definitions Beside Your Models',
+    date: 'May 28, 2026',
+    category: 'GGSQL',
+    image: '/img/examples/product-analytics-banner.svg',
+    to: '/blog/ggsql-chart-definitions-beside-your-models',
+  },
+  {
+    title: 'Publishing Static Dashboards from CI',
+    date: 'May 28, 2026',
+    category: 'Deployment',
+    image: '/img/examples/sales-dashboard-banner.svg',
+    to: '/blog/publishing-static-dashboards-from-ci',
+  },
 ];
 
 function DbtMark() {
@@ -248,11 +272,11 @@ function HomepageHeader() {
     <header className="landingHero">
       <div className="container landingHero__layout">
         <div className="landingHero__content">
-          <p className="heroBadge"><SparkleIcon /> Open Source · CLI First · Lower the BI Cost</p>
+          <p className="heroBadge heroVersionTag">v0.1 <span aria-hidden="true">·</span> Public Alpha</p>
           <h1>
-            <span>Visualization</span>
-            <em>belongs in</em>
-            <span>the pipeline.</span>
+            <span>Ship charts</span>
+            <span className="heroHeadlineAccent">from the same pipeline</span>
+            <span>as your data.</span>
           </h1>
           <p className="landingHero__lead">
             Glyf is the open-source build step for data visualization.
@@ -338,6 +362,11 @@ function FeaturesSection() {
             </article>
           ))}
         </div>
+        <div className="featureSectionActions">
+          <Link className="featureMoreButton" to="/docs/resources/roadmap">
+            More features
+          </Link>
+        </div>
       </div>
     </section>
   );
@@ -367,7 +396,7 @@ function HowItWorks() {
 <span className="codeKw">GROUP BY</span> 1{'\n\n'}
 <span className="codeClause">VISUALISE</span> plan <span className="codeKw">AS</span> x{'\n'}
 <span className="codeClause">DRAW</span> pie{'\n'}
-<span className="codeClause">LABEL</span> title <span className="codeOp">=&gt;</span> <span className="codeStr">'Sessions'</span></code></pre>
+<span className="codeClause">LABEL</span> title <span className="codeOp">=&gt;</span> <span className="codeStr">'Sessions by Plan'</span></code></pre>
             </div>
           </article>
           <article className="howCodeStep">
@@ -414,16 +443,40 @@ function PersonasSection() {
           <h2>Built for every role in the data team.</h2>
         </div>
         <div className="personasGrid">
-          {personas.map(([role, title, description], index) => (
+          {personas.map(([role, title, description]) => (
             <article className="personaCard" key={role}>
-              <div className="cardIcon">
-                <VectorIcon type={['database', 'notebook', 'publish', 'component'][index]} />
-              </div>
               <span>{role}</span>
               <h3>{title}</h3>
               <p>{description}</p>
             </article>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BlogSection() {
+  return (
+    <section className="blogSection">
+      <div className="container">
+        <div className="sectionHeader blogSection__header">
+          <p className="eyebrow">Blogs</p>
+          <h2>Latest from the Glyf Blog</h2>
+        </div>
+        <div className="blogGrid">
+          {blogPosts.map((post) => (
+            <Link className="blogCard" to={post.to} key={post.title}>
+              <img src={post.image} alt="" loading="lazy" />
+              <h3>{post.title}</h3>
+              <p>{post.date} <span aria-hidden="true">·</span> {post.category}</p>
+            </Link>
+          ))}
+        </div>
+        <div className="blogSection__actions">
+          <Link className="blogReadMoreButton" to="/blog">
+            Read more
+          </Link>
         </div>
       </div>
     </section>
@@ -532,18 +585,18 @@ function Examples() {
 export default function Home() {
   return (
     <Layout
-      title="Visualization belongs in the pipeline"
+      title="Ship charts from the same pipeline as your data"
       description="Glyf is the open-source build step for dbt-aware visualization artifacts."
     >
       <HomepageHeader />
       <main>
-        <ProblemSection />
         <HowItWorks />
         <FeaturesSection />
         <GgsqlSection />
         <PersonasSection />
-        <FeatureLinks />
         <Examples />
+        <FeatureLinks />
+        <BlogSection />
       </main>
     </Layout>
   );
