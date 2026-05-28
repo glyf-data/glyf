@@ -8029,3 +8029,51 @@ body,
   color: #0047ff !important;
   text-decoration: none !important;
 }
+
+/* Replace the hero code card with the provided SVG diagram. */
+.heroCodeWindow,
+[data-theme='dark'] .heroCodeWindow {
+  width: min(100%, 820px) !important;
+  max-width: 820px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.heroDiagramImage,
+[data-theme='dark'] .heroDiagramImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Feature section with white cards and dark badge capsules. */
+.featuresSection .featureStrip,
+[data-theme='dark'] .featuresSection .featureStrip {
+  background: transparent !important;
+}
+
+.featuresSection .featureStripItem,
+[data-theme='dark'] .featuresSection .featureStripItem {
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.featuresSection .featureStripItem h3,
+.featuresSection .featureStripItem p,
+[data-theme='dark'] .featuresSection .featureStripItem h3,
+[data-theme='dark'] .featuresSection .featureStripItem p {
+  color: #000000 !important;
+}
+
+.featuresSection .featureStatus,
+.featuresSection .featureStatus--roadmap,
+[data-theme='dark'] .featuresSection .featureStatus,
+[data-theme='dark'] .featuresSection .featureStatus--roadmap {
+  border-color: #000000 !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+}

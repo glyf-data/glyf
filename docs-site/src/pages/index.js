@@ -231,37 +231,13 @@ function VectorIcon({type}) {
 
 function HeroCodeWindow() {
   return (
-    <div className="heroCodeVisual" aria-label="GGSQL chart definition compiled by glyf build">
+    <div className="heroCodeVisual" aria-label="Glyf build workflow diagram">
       <div className="heroCodeWindow">
-        <div className="heroCodeTitlebar">
-          <span className="windowDot windowDot--red" />
-          <span className="windowDot windowDot--yellow" />
-          <span className="windowDot windowDot--green" />
-          <strong>sessions_by_plan.ggsql</strong>
-        </div>
-        <pre className="heroCodeBody"><code><span className="codeKw">SELECT</span>{'\n'}
-{'  '}plan,{'\n'}
-{'  '}<span className="codeFn">sum</span>(sessions) <span className="codeKw">as</span> sessions{'\n'}
-<span className="codeKw">FROM</span> <span className="codeRef">{'{{ ref(\'fct_product_usage\') }}'}</span>{'\n'}
-<span className="codeKw">GROUP BY</span> 1{'\n\n'}
-<span className="codeClause">VISUALISE</span> plan <span className="codeKw">AS</span> x, sessions <span className="codeKw">AS</span> y{'\n'}
-<span className="codeClause">DRAW</span> pie{'\n'}
-<span className="codeClause">LABEL</span> title <span className="codeOp">=&gt;</span> <span className="codeStr">'Sessions by Plan'</span>{'\n'}
-<span className="codeClause">INTERACT</span> tooltip</code></pre>
-        <div className="heroBuildCommand" aria-hidden="true">
-          <span>↓</span>
-          <strong>glyf build</strong>
-          <span>↓</span>
-        </div>
-        <div className="heroBuildOutput">
-          <p>Build output</p>
-          <div>
-            <span>product.html</span>
-            <span>ProductDashboard.tsx</span>
-            <span>chart.svg</span>
-            <span>diff.html</span>
-          </div>
-        </div>
+        <img
+          className="heroDiagramImage"
+          src="/img/glyf-hero-diagram-v3.svg"
+          alt="Diagram showing Glyf workflow from data sources through dbt and chart composition to generated outputs."
+        />
       </div>
     </div>
   );
