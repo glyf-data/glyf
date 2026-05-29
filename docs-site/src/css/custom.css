@@ -7066,3 +7066,1014 @@ div[class*='codeBlockContent'] pre code,
     white-space: nowrap;
   }
 }
+
+/* Readability bump for documentation pages and command examples. */
+.navbarGithubLink,
+[data-theme='dark'] .navbarGithubLink {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.52rem !important;
+  min-height: 2.75rem !important;
+  padding: 0 0.9rem !important;
+  border: 1px solid var(--glyf-border-warm) !important;
+  border-radius: 10px !important;
+  background: rgba(248, 247, 241, 0.78) !important;
+  color: var(--glyf-ink-light) !important;
+  font-size: 0.92rem !important;
+  font-weight: 850 !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045) !important;
+}
+
+.navbarGithubLink:hover,
+[data-theme='dark'] .navbarGithubLink:hover {
+  border-color: rgba(36, 101, 29, 0.28) !important;
+  color: var(--glyf-attention) !important;
+  text-decoration: none !important;
+}
+
+.navbarGithubLink svg,
+.navbarGithubLink .navbarStarIcon {
+  width: 1.1rem !important;
+  height: 1.1rem !important;
+  margin: 0 !important;
+}
+
+.navbarGithubLink .navbarExternalIcon {
+  width: 0.92rem !important;
+  height: 0.92rem !important;
+}
+
+.navbarGithubDivider {
+  width: 1px;
+  height: 1.15rem;
+  background: var(--glyf-border-warm);
+}
+
+.navbarVersionTag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.65rem;
+  padding: 0 0.58rem;
+  border: 1px solid rgba(36, 101, 29, 0.22);
+  border-radius: 999px;
+  background: rgba(36, 101, 29, 0.1);
+  color: var(--glyf-attention);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.heroVersionTag,
+[data-theme='dark'] .heroVersionTag {
+  width: fit-content;
+  padding: 0 0.92rem !important;
+  border-color: rgba(36, 101, 29, 0.22) !important;
+  background: rgba(36, 101, 29, 0.08) !important;
+  color: var(--glyf-attention) !important;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.86rem !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+}
+
+.heroVersionTag span {
+  color: rgba(36, 101, 29, 0.52);
+}
+
+.exampleGallery {
+  gap: 1rem;
+  margin-top: 1.8rem;
+}
+
+.exampleCard,
+[data-theme='dark'] .exampleCard {
+  border: 1px solid var(--glyf-border-warm);
+  border-radius: 8px;
+  background: var(--glyf-card-solid);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
+}
+
+.exampleCard__body {
+  padding: 1.1rem;
+}
+
+.exampleCard__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.exampleCard__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.7rem;
+  border: 1px solid rgba(36, 101, 29, 0.16);
+  border-radius: 999px;
+  background: rgba(36, 101, 29, 0.06);
+  color: var(--glyf-attention);
+  font-size: 0.86rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.exampleCard__links a:hover {
+  border-color: rgba(36, 101, 29, 0.3);
+  background: rgba(36, 101, 29, 0.1);
+  text-decoration: none;
+}
+
+.personasSection .personaCard .cardIcon {
+  display: none !important;
+}
+
+.personasSection .personaCard {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+}
+
+.footerCta,
+[data-theme='dark'] .footerCta {
+  padding: 5rem 0;
+  border-top: 1px solid var(--glyf-border-warm);
+  background:
+    radial-gradient(circle at 78% 36%, rgba(36, 101, 29, 0.1), transparent 22rem),
+    var(--glyf-page-2);
+}
+
+.footerCta__inner {
+  max-width: 900px;
+}
+
+.footerCta h2,
+[data-theme='dark'] .footerCta h2 {
+  max-width: 760px;
+  margin: 0;
+  color: var(--glyf-ink-light);
+  font-size: clamp(2.1rem, 4.2vw, 4rem);
+  font-weight: 900;
+  line-height: 1.04;
+}
+
+.footerCta p:not(.eyebrow),
+[data-theme='dark'] .footerCta p:not(.eyebrow) {
+  max-width: 650px;
+  margin: 1rem 0 0;
+  color: var(--glyf-muted-light);
+  font-size: 1.08rem;
+  line-height: 1.64;
+}
+
+.footerCta .button {
+  margin-top: 1.4rem;
+}
+
+.theme-doc-markdown,
+.theme-doc-markdown p,
+.theme-doc-markdown li,
+.theme-doc-markdown table {
+  font-size: 1.03rem;
+  line-height: 1.76;
+}
+
+.theme-doc-markdown pre code,
+.theme-code-block pre code,
+div[class*='codeBlockContent'] pre code,
+.theme-doc-markdown .prism-code code,
+.theme-code-block .prism-code code,
+[data-theme='dark'] .theme-doc-markdown pre code,
+[data-theme='dark'] .theme-code-block pre code,
+[data-theme='dark'] div[class*='codeBlockContent'] pre code,
+[data-theme='dark'] .theme-doc-markdown .prism-code code,
+[data-theme='dark'] .theme-code-block .prism-code code,
+code,
+pre,
+kbd,
+samp {
+  font-size: 13px !important;
+  line-height: 20px !important;
+}
+
+@media (max-width: 640px) {
+  .theme-doc-markdown,
+  .theme-doc-markdown p,
+  .theme-doc-markdown li,
+  .theme-doc-markdown table {
+    font-size: 1rem;
+  }
+}
+
+/* Black and white landing palette with pastel card tints. */
+:root,
+[data-theme='dark'] {
+  --glyf-black: #000000;
+  --glyf-white: #ffffff;
+  --glyf-muted-light: #3f3f46;
+  --glyf-muted-soft: #71717a;
+  --glyf-border-warm: rgba(0, 0, 0, 0.14);
+  --glyf-attention: #000000;
+  --glyf-attention-soft: #f8fafc;
+  --glyf-attention-border: rgba(0, 0, 0, 0.22);
+  --glyf-page: #ffffff;
+  --glyf-page-2: #ffffff;
+  --glyf-page-3: #ffffff;
+  --glyf-card-light: #ffffff;
+  --glyf-card-solid: #ffffff;
+  --glyf-ink-light: #000000;
+  --ifm-background-color: #ffffff;
+  --ifm-font-color-base: #000000;
+  --ifm-heading-color: #000000;
+  --ifm-color-primary: #000000;
+  --dbtc-primary: #000000;
+  --dbtc-neon: #000000;
+  --dbtc-green: #000000;
+  --glyf-green: #000000;
+  --glyf-green-2: #000000;
+  --glyf-accent: #000000;
+  --glyf-tint-indigo: #eef2ff;
+  --glyf-tint-green: #ecfdf5;
+  --glyf-tint-amber: #fffbeb;
+  --glyf-tint-blue: #eff6ff;
+  --glyf-tint-grey: #f8fafc;
+}
+
+html,
+html[data-theme='dark'],
+body,
+[data-theme='dark'] body,
+#__docusaurus,
+.main-wrapper,
+[data-theme='dark'] .main-wrapper {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.navbar,
+[data-theme='dark'] .navbar {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+}
+
+.navbar__title,
+.navbar__link,
+.navbar__item,
+.navbarGithubLink,
+[data-theme='dark'] .navbar__title,
+[data-theme='dark'] .navbar__link,
+[data-theme='dark'] .navbar__item,
+[data-theme='dark'] .navbarGithubLink {
+  color: #000000 !important;
+}
+
+.navbarGithubLink,
+[data-theme='dark'] .navbarGithubLink {
+  border-color: rgba(0, 0, 0, 0.18) !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.navbarGithubLink:hover,
+[data-theme='dark'] .navbarGithubLink:hover {
+  border-color: #000000 !important;
+  color: #000000 !important;
+}
+
+.navbarGithubDivider {
+  background: rgba(0, 0, 0, 0.18) !important;
+}
+
+.navbarVersionTag,
+[data-theme='dark'] .navbarVersionTag {
+  border-color: #c7d2fe !important;
+  background: var(--glyf-tint-indigo) !important;
+  color: #3730a3 !important;
+}
+
+.landingHero,
+[data-theme='dark'] .landingHero {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.045) 1px, transparent 1px),
+    #ffffff !important;
+  background-size: 56px 56px, 56px 56px, auto !important;
+  color: #000000 !important;
+}
+
+.problemSection,
+.howSection,
+.featuresSection,
+.personasSection,
+.examplesSection,
+.band,
+.band--muted,
+.footerCta,
+[data-theme='dark'] .problemSection,
+[data-theme='dark'] .howSection,
+[data-theme='dark'] .featuresSection,
+[data-theme='dark'] .personasSection,
+[data-theme='dark'] .examplesSection,
+[data-theme='dark'] .band,
+[data-theme='dark'] .band--muted,
+[data-theme='dark'] .footerCta {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.featuresSection,
+.personasSection,
+.examplesSection,
+.band--muted,
+.footerCta,
+[data-theme='dark'] .featuresSection,
+[data-theme='dark'] .personasSection,
+[data-theme='dark'] .examplesSection,
+[data-theme='dark'] .band--muted,
+[data-theme='dark'] .footerCta {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.landingHero h1,
+.landingHero h1 span,
+.landingHero h1 .heroHeadlineAccent,
+.sectionHeader h2,
+.splitLayout h2,
+.agentLayout h2,
+.ggsqlLayout h2,
+.footerCta h2,
+[data-theme='dark'] .landingHero h1,
+[data-theme='dark'] .landingHero h1 span,
+[data-theme='dark'] .landingHero h1 .heroHeadlineAccent,
+[data-theme='dark'] .sectionHeader h2,
+[data-theme='dark'] .splitLayout h2,
+[data-theme='dark'] .agentLayout h2,
+[data-theme='dark'] .ggsqlLayout h2,
+[data-theme='dark'] .footerCta h2 {
+  color: #000000 !important;
+}
+
+.landingHero h1 .heroHeadlineAccent,
+[data-theme='dark'] .landingHero h1 .heroHeadlineAccent {
+  display: block !important;
+  font-style: normal !important;
+}
+
+.landingHero h1 em,
+[data-theme='dark'] .landingHero h1 em {
+  font-style: normal !important;
+}
+
+.landingHero__lead,
+.sectionHeader p,
+.splitLayout p,
+.agentLayout p,
+.ggsqlLayout p,
+.problemCard p,
+.personaCard p,
+.docTile p,
+.exampleItem span,
+.exampleCard__body p,
+.howCodeStep p,
+.footerCta p:not(.eyebrow),
+[data-theme='dark'] .landingHero__lead,
+[data-theme='dark'] .sectionHeader p,
+[data-theme='dark'] .splitLayout p,
+[data-theme='dark'] .agentLayout p,
+[data-theme='dark'] .ggsqlLayout p,
+[data-theme='dark'] .problemCard p,
+[data-theme='dark'] .personaCard p,
+[data-theme='dark'] .docTile p,
+[data-theme='dark'] .exampleItem span,
+[data-theme='dark'] .exampleCard__body p,
+[data-theme='dark'] .howCodeStep p,
+[data-theme='dark'] .footerCta p:not(.eyebrow) {
+  color: #3f3f46 !important;
+}
+
+.eyebrow,
+.heroValueLine b,
+.heroSavingsPill,
+.heroVersionTag,
+[data-theme='dark'] .eyebrow,
+[data-theme='dark'] .heroValueLine b,
+[data-theme='dark'] .heroSavingsPill,
+[data-theme='dark'] .heroVersionTag {
+  color: #000000 !important;
+}
+
+.heroVersionTag,
+[data-theme='dark'] .heroVersionTag {
+  border-color: rgba(0, 0, 0, 0.18) !important;
+  background: var(--glyf-tint-grey) !important;
+}
+
+.heroVersionTag span {
+  color: #71717a !important;
+}
+
+.heroValueLine,
+[data-theme='dark'] .heroValueLine {
+  color: #000000 !important;
+}
+
+.heroValueLine span,
+[data-theme='dark'] .heroValueLine span {
+  border-color: transparent !important;
+  background: transparent !important;
+  color: #000000 !important;
+}
+
+.heroPrimaryButton,
+.button.button--primary,
+.splitLayout .button.button--primary,
+.landingHero .button.button--primary,
+[data-theme='dark'] .heroPrimaryButton,
+[data-theme='dark'] .button.button--primary,
+[data-theme='dark'] .splitLayout .button.button--primary,
+[data-theme='dark'] .landingHero .button.button--primary {
+  border-color: #000000 !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.heroPrimaryButton:hover,
+.button.button--primary:hover,
+.splitLayout .button.button--primary:hover,
+.landingHero .button.button--primary:hover,
+[data-theme='dark'] .heroPrimaryButton:hover,
+[data-theme='dark'] .button.button--primary:hover,
+[data-theme='dark'] .splitLayout .button.button--primary:hover,
+[data-theme='dark'] .landingHero .button.button--primary:hover {
+  border-color: #000000 !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.heroGithubButton,
+[data-theme='dark'] .heroGithubButton {
+  border-color: rgba(0, 0, 0, 0.18) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+}
+
+.heroGithubButton:hover,
+[data-theme='dark'] .heroGithubButton:hover {
+  border-color: #000000 !important;
+  color: #000000 !important;
+}
+
+.problemCard,
+.personaCard,
+.docTile,
+.exampleItem,
+.exampleCard,
+.featureStripItem,
+.layerCard,
+.benefitItem,
+.ggsqlBridge article,
+.problemQuote,
+.miniCodeWindow,
+[data-theme='dark'] .problemCard,
+[data-theme='dark'] .personaCard,
+[data-theme='dark'] .docTile,
+[data-theme='dark'] .exampleItem,
+[data-theme='dark'] .exampleCard,
+[data-theme='dark'] .featureStripItem,
+[data-theme='dark'] .layerCard,
+[data-theme='dark'] .benefitItem,
+[data-theme='dark'] .ggsqlBridge article,
+[data-theme='dark'] .problemQuote,
+[data-theme='dark'] .miniCodeWindow {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+}
+
+.featureStripItem:nth-child(5n + 1),
+.personaCard:nth-child(5n + 1),
+.docTile:nth-child(5n + 1),
+.exampleItem:nth-child(5n + 1),
+.exampleCard:nth-child(5n + 1),
+.ggsqlBridge article:nth-child(5n + 1),
+[data-theme='dark'] .featureStripItem:nth-child(5n + 1),
+[data-theme='dark'] .personaCard:nth-child(5n + 1),
+[data-theme='dark'] .docTile:nth-child(5n + 1),
+[data-theme='dark'] .exampleItem:nth-child(5n + 1),
+[data-theme='dark'] .exampleCard:nth-child(5n + 1),
+[data-theme='dark'] .ggsqlBridge article:nth-child(5n + 1) {
+  background: var(--glyf-tint-indigo) !important;
+}
+
+.featureStripItem:nth-child(5n + 2),
+.personaCard:nth-child(5n + 2),
+.docTile:nth-child(5n + 2),
+.exampleItem:nth-child(5n + 2),
+.exampleCard:nth-child(5n + 2),
+.ggsqlBridge article:nth-child(5n + 2),
+[data-theme='dark'] .featureStripItem:nth-child(5n + 2),
+[data-theme='dark'] .personaCard:nth-child(5n + 2),
+[data-theme='dark'] .docTile:nth-child(5n + 2),
+[data-theme='dark'] .exampleItem:nth-child(5n + 2),
+[data-theme='dark'] .exampleCard:nth-child(5n + 2),
+[data-theme='dark'] .ggsqlBridge article:nth-child(5n + 2) {
+  background: var(--glyf-tint-green) !important;
+}
+
+.featureStripItem:nth-child(5n + 3),
+.personaCard:nth-child(5n + 3),
+.docTile:nth-child(5n + 3),
+.exampleItem:nth-child(5n + 3),
+.exampleCard:nth-child(5n + 3),
+[data-theme='dark'] .featureStripItem:nth-child(5n + 3),
+[data-theme='dark'] .personaCard:nth-child(5n + 3),
+[data-theme='dark'] .docTile:nth-child(5n + 3),
+[data-theme='dark'] .exampleItem:nth-child(5n + 3),
+[data-theme='dark'] .exampleCard:nth-child(5n + 3) {
+  background: var(--glyf-tint-amber) !important;
+}
+
+.featureStripItem:nth-child(5n + 4),
+.personaCard:nth-child(5n + 4),
+.docTile:nth-child(5n + 4),
+.exampleItem:nth-child(5n + 4),
+.exampleCard:nth-child(5n + 4),
+[data-theme='dark'] .featureStripItem:nth-child(5n + 4),
+[data-theme='dark'] .personaCard:nth-child(5n + 4),
+[data-theme='dark'] .docTile:nth-child(5n + 4),
+[data-theme='dark'] .exampleItem:nth-child(5n + 4),
+[data-theme='dark'] .exampleCard:nth-child(5n + 4) {
+  background: var(--glyf-tint-blue) !important;
+}
+
+.featureStripItem:nth-child(5n),
+.personaCard:nth-child(5n),
+.docTile:nth-child(5n),
+.exampleItem:nth-child(5n),
+.exampleCard:nth-child(5n),
+[data-theme='dark'] .featureStripItem:nth-child(5n),
+[data-theme='dark'] .personaCard:nth-child(5n),
+[data-theme='dark'] .docTile:nth-child(5n),
+[data-theme='dark'] .exampleItem:nth-child(5n),
+[data-theme='dark'] .exampleCard:nth-child(5n) {
+  background: var(--glyf-tint-grey) !important;
+}
+
+.featureStatus,
+[data-theme='dark'] .featureStatus {
+  border-color: #bbf7d0 !important;
+  background: #dcfce7 !important;
+  color: #166534 !important;
+}
+
+.featureStatus--roadmap,
+[data-theme='dark'] .featureStatus--roadmap {
+  border-color: #fde68a !important;
+  background: var(--glyf-tint-amber) !important;
+  color: #92400e !important;
+}
+
+.personaCard > span,
+.ggsqlBridge span,
+[data-theme='dark'] .personaCard > span,
+[data-theme='dark'] .ggsqlBridge span {
+  border-color: rgba(0, 0, 0, 0.16) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.ggsqlBridge,
+[data-theme='dark'] .ggsqlBridge {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.ggsqlBridge article::before,
+[data-theme='dark'] .ggsqlBridge article::before {
+  background: #000000 !important;
+}
+
+.bridgeMark,
+[data-theme='dark'] .bridgeMark {
+  border-color: rgba(0, 0, 0, 0.16) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+}
+
+.miniCodeWindow,
+[data-theme='dark'] .miniCodeWindow {
+  background: #ffffff !important;
+}
+
+.miniCodeWindow > div,
+[data-theme='dark'] .miniCodeWindow > div {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  background: var(--glyf-tint-grey) !important;
+  color: #000000 !important;
+}
+
+.exampleCard__links a,
+[data-theme='dark'] .exampleCard__links a {
+  border-color: #bfdbfe !important;
+  background: var(--glyf-tint-blue) !important;
+  color: #1e3a8a !important;
+}
+
+.exampleCard__links a:hover,
+[data-theme='dark'] .exampleCard__links a:hover {
+  border-color: #1e3a8a !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.footer.footer--dark,
+[data-theme='dark'] .footer.footer--dark {
+  border-top: 1px solid rgba(0, 0, 0, 0.14) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.footer.footer--dark .footer__title,
+.footer.footer--dark .footer__link-item,
+.footer.footer--dark .footer__copyright,
+.footerBrand,
+.footerTagline,
+[data-theme='dark'] .footer.footer--dark .footer__title,
+[data-theme='dark'] .footer.footer--dark .footer__link-item,
+[data-theme='dark'] .footer.footer--dark .footer__copyright,
+[data-theme='dark'] .footerBrand,
+[data-theme='dark'] .footerTagline {
+  color: #000000 !important;
+}
+
+.footerBrand span {
+  color: #000000 !important;
+}
+
+/* Final landing refinements requested after the black and white pass. */
+
+.landingHero h1 .heroHeadlineAccent,
+[data-theme='dark'] .landingHero h1 .heroHeadlineAccent {
+  width: fit-content !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: #0047ff !important;
+  font-style: normal !important;
+}
+
+.howCodeStep > span,
+[data-theme='dark'] .howCodeStep > span {
+  color: #0047ff !important;
+}
+
+.miniCodeWindow,
+[data-theme='dark'] .miniCodeWindow {
+  border: 1px solid rgba(51, 65, 85, 0.95) !important;
+  background: #0d1017 !important;
+  color: #e5edf8 !important;
+  box-shadow: none !important;
+}
+
+.miniCodeWindow > div,
+[data-theme='dark'] .miniCodeWindow > div {
+  border-bottom: 1px solid rgba(51, 65, 85, 0.9) !important;
+  background: #151b25 !important;
+  color: #8a94a6 !important;
+}
+
+.miniCodeWindow pre,
+.miniCodeWindow pre code,
+[data-theme='dark'] .miniCodeWindow pre,
+[data-theme='dark'] .miniCodeWindow pre code {
+  background: transparent !important;
+  color: #e5edf8 !important;
+}
+
+.personasSection .personaCard > span,
+[data-theme='dark'] .personasSection .personaCard > span {
+  border: 0 !important;
+  background: transparent !important;
+  color: #0047ff !important;
+  font-size: 1.02rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2 !important;
+  text-transform: none !important;
+}
+
+.personasSection .personaCard h3,
+[data-theme='dark'] .personasSection .personaCard h3 {
+  font-size: 1.16rem !important;
+  font-weight: 500 !important;
+}
+
+.blogSection,
+[data-theme='dark'] .blogSection {
+  padding: 5rem 0 5.4rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.blogSection__header {
+  margin-bottom: 3rem !important;
+  text-align: left;
+}
+
+.blogSection h2,
+[data-theme='dark'] .blogSection h2 {
+  margin: 0;
+  color: #000000 !important;
+}
+
+.blogGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.35rem, 3vw, 2rem);
+}
+
+.blogCard,
+[data-theme='dark'] .blogCard {
+  display: block;
+  min-width: 0;
+  color: #000000 !important;
+  text-decoration: none !important;
+}
+
+.blogCard img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.82 / 1;
+  object-fit: cover;
+  border: 0;
+  border-radius: 0;
+  background: var(--glyf-tint-amber);
+}
+
+.blogCard h3,
+[data-theme='dark'] .blogCard h3 {
+  margin: 1.25rem 0 0;
+  color: #525252 !important;
+  font-size: clamp(1.35rem, 2vw, 1.72rem);
+  font-weight: 850;
+  line-height: 1.22;
+  letter-spacing: 0;
+}
+
+.blogCard p,
+[data-theme='dark'] .blogCard p {
+  margin: 0.95rem 0 0;
+  color: #525252 !important;
+  font-size: 1rem;
+  font-weight: 450;
+  line-height: 1.4;
+}
+
+.blogCard p span {
+  padding: 0 0.35rem;
+  color: #737373;
+}
+
+.blogCard:hover h3,
+[data-theme='dark'] .blogCard:hover h3 {
+  color: #000000 !important;
+}
+
+.blogSection__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.4rem;
+}
+
+.blogReadMoreButton,
+[data-theme='dark'] .blogReadMoreButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4rem;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #000000 !important;
+  font-size: 0.9rem;
+  font-weight: 750;
+  line-height: 1;
+  text-decoration: none !important;
+}
+
+.blogReadMoreButton:hover,
+[data-theme='dark'] .blogReadMoreButton:hover {
+  border-color: #000000;
+  background: var(--glyf-tint-grey);
+  color: #000000 !important;
+  text-decoration: none !important;
+}
+
+.footer.footer--dark,
+[data-theme='dark'] .footer.footer--dark {
+  border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: #050505 !important;
+  color: #ffffff !important;
+}
+
+.footer.footer--dark .footer__link-item,
+.footer.footer--dark .footer__copyright,
+.footerBrand,
+.footerTagline,
+[data-theme='dark'] .footer.footer--dark .footer__link-item,
+[data-theme='dark'] .footer.footer--dark .footer__copyright,
+[data-theme='dark'] .footerBrand,
+[data-theme='dark'] .footerTagline {
+  color: #d4d4d8 !important;
+}
+
+.footer.footer--dark .footer__link-item:hover,
+[data-theme='dark'] .footer.footer--dark .footer__link-item:hover {
+  color: #ffffff !important;
+}
+
+.footerBrand {
+  color: #ffffff !important;
+}
+
+.footerBrand span {
+  color: #c7d2fe !important;
+}
+
+@media (max-width: 996px) {
+  .blogGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Navbar mark sizing for the v4 logo. */
+.navbar__brand,
+[data-theme='dark'] .navbar__brand {
+  gap: 0.85rem !important;
+}
+
+.navbar__logo,
+.navbar__logo img,
+[data-theme='dark'] .navbar__logo,
+[data-theme='dark'] .navbar__logo img {
+  width: 74px !important;
+  height: 74px !important;
+  object-fit: contain !important;
+}
+
+@media (max-width: 996px) {
+  .navbar__logo,
+  .navbar__logo img,
+  [data-theme='dark'] .navbar__logo,
+  [data-theme='dark'] .navbar__logo img {
+    width: 56px !important;
+    height: 56px !important;
+  }
+}
+
+/* Keep landing cards strictly black and white. */
+.problemCard,
+.featureStripItem,
+.personaCard,
+.docTile,
+.exampleItem,
+.exampleCard,
+.layerCard,
+.benefitItem,
+.ggsqlBridge article,
+.problemQuote,
+[data-theme='dark'] .problemCard,
+[data-theme='dark'] .featureStripItem,
+[data-theme='dark'] .personaCard,
+[data-theme='dark'] .docTile,
+[data-theme='dark'] .exampleItem,
+[data-theme='dark'] .exampleCard,
+[data-theme='dark'] .layerCard,
+[data-theme='dark'] .benefitItem,
+[data-theme='dark'] .ggsqlBridge article,
+[data-theme='dark'] .problemQuote {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.ggsqlBridge,
+[data-theme='dark'] .ggsqlBridge {
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+}
+
+.featureStripItem:nth-child(n),
+.personaCard:nth-child(n),
+.docTile:nth-child(n),
+.exampleItem:nth-child(n),
+.exampleCard:nth-child(n),
+.ggsqlBridge article:nth-child(n),
+[data-theme='dark'] .featureStripItem:nth-child(n),
+[data-theme='dark'] .personaCard:nth-child(n),
+[data-theme='dark'] .docTile:nth-child(n),
+[data-theme='dark'] .exampleItem:nth-child(n),
+[data-theme='dark'] .exampleCard:nth-child(n),
+[data-theme='dark'] .ggsqlBridge article:nth-child(n) {
+  background: #ffffff !important;
+}
+
+.ggsqlBridge article,
+[data-theme='dark'] .ggsqlBridge article {
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+  border-right: 4px solid #0047ff !important;
+}
+
+.featureStatus,
+.featureStatus--roadmap,
+[data-theme='dark'] .featureStatus,
+[data-theme='dark'] .featureStatus--roadmap {
+  border-color: rgba(0, 0, 0, 0.16) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.featureSectionActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.4rem;
+}
+
+.featureMoreButton,
+[data-theme='dark'] .featureMoreButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.8rem;
+  padding: 0 1.1rem;
+  border: 1px solid #0047ff;
+  border-radius: 8px;
+  background: #0047ff;
+  color: #ffffff !important;
+  font-size: 0.94rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none !important;
+}
+
+.featureMoreButton:hover,
+[data-theme='dark'] .featureMoreButton:hover {
+  border-color: #0047ff;
+  background: #ffffff;
+  color: #0047ff !important;
+  text-decoration: none !important;
+}
+
+/* Replace the hero code card with the provided SVG diagram. */
+.heroCodeWindow,
+[data-theme='dark'] .heroCodeWindow {
+  width: min(100%, 820px) !important;
+  max-width: 820px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.heroDiagramImage,
+[data-theme='dark'] .heroDiagramImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Feature section with white cards and dark badge capsules. */
+.featuresSection .featureStrip,
+[data-theme='dark'] .featuresSection .featureStrip {
+  background: transparent !important;
+}
+
+.featuresSection .featureStripItem,
+[data-theme='dark'] .featuresSection .featureStripItem {
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.featuresSection .featureStripItem h3,
+.featuresSection .featureStripItem p,
+[data-theme='dark'] .featuresSection .featureStripItem h3,
+[data-theme='dark'] .featuresSection .featureStripItem p {
+  color: #000000 !important;
+}
+
+.featuresSection .featureStatus,
+.featuresSection .featureStatus--roadmap,
+[data-theme='dark'] .featuresSection .featureStatus,
+[data-theme='dark'] .featuresSection .featureStatus--roadmap {
+  border-color: #000000 !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+}
