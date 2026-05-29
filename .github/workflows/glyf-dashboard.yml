@@ -1,4 +1,4 @@
-name: dbt-charts dashboard
+name: glyf dashboard
 
 on:
   workflow_dispatch:
@@ -28,26 +28,26 @@ jobs:
           uv run dbt seed --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt --full-refresh --no-partial-parse
           uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
 
-      - name: Check dbt-charts project health
-        run: uv run dbt-charts doctor --project-dir examples/simple_dbt
+      - name: Check glyf project health
+        run: uv run glyf doctor --project-dir examples/simple_dbt
 
-      - name: Generate dbt-charts dashboard
+      - name: Generate glyf dashboard
         run: |
-          uv run dbt-charts render --project-dir examples/simple_dbt
-          uv run dbt-charts dashboard --project-dir examples/simple_dbt
-          uv run dbt-charts export --project-dir examples/simple_dbt --clean --zip
+          uv run glyf render --project-dir examples/simple_dbt
+          uv run glyf dashboard --project-dir examples/simple_dbt
+          uv run glyf export --project-dir examples/simple_dbt --clean --zip
 
       - name: Upload static site artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dbt-charts-site
+          name: glyf-site
           path: examples/simple_dbt/target/ggsql/site
 
       - name: Upload zipped static site
         uses: actions/upload-artifact@v4
         with:
-          name: dbt-charts-site-zip
-          path: examples/simple_dbt/target/ggsql/dbt-charts-site.zip
+          name: glyf-site-zip
+          path: examples/simple_dbt/target/ggsql/glyf-site.zip
 
   # Optional GitHub Pages publishing example.
   # Enable GitHub Pages for Actions in repository settings, then uncomment.
@@ -65,7 +65,7 @@ jobs:
   #     - name: Download static site artifact
   #       uses: actions/download-artifact@v4
   #       with:
-  #         name: dbt-charts-site
+  #         name: glyf-site
   #         path: site
   #
   #     - name: Configure Pages
