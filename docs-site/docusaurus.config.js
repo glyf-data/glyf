@@ -78,7 +78,6 @@ const config = {
             label: 'Resources',
             position: 'left',
             items: [
-              {to: '/blog', label: 'Blog'},
               {to: '/docs/resources/roadmap', label: 'Roadmap'},
               {to: '/docs/resources/community', label: 'Community'},
               {
@@ -87,21 +86,24 @@ const config = {
               },
             ],
           },
+          {to: '/blog', label: 'Blog', position: 'left'},
+          {
+            href: 'https://github.com/kannandreams/glyf/blob/main/CHANGELOG.md',
+            label: 'Changelog',
+            position: 'right',
+          },
           {
             type: 'html',
             position: 'right',
             value:
-              '<a class="navbarGithubLink" href="https://github.com/kannandreams/glyf" aria-label="Open Glyf on GitHub"><span>GitHub</span><svg class="navbarExternalIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H17V17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 7L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span class="navbarVersionTag">v0.1-alpha</span></a>',
+              '<a class="navbarGithubLink" href="https://github.com/kannandreams/glyf" aria-label="Open Glyf on GitHub"><span>GitHub</span><svg class="navbarExternalIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H17V17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 7L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a>',
           },
         ],
       },
       footer: {
         style: 'dark',
         links: [
-          {label: 'GitHub', href: 'https://github.com/kannandreams/glyf'},
-          {label: 'Docs', to: '/docs/intro'},
-          {label: 'Roadmap', to: '/docs/resources/roadmap'},
-          {label: 'Apache License', href: 'https://github.com/kannandreams/glyf/blob/main/LICENSE'},
+          {label: 'License', href: 'https://github.com/kannandreams/glyf/blob/main/LICENSE'},
         ],
         copyright: '<strong class="footerBrand">Glyf<span>.</span></strong><span class="footerTagline">Visualization is a build step. Treat it like one.</span>',
       },

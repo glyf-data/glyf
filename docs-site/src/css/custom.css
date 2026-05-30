@@ -1,5 +1,4 @@
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600&display=swap');
 
 :root {
   --ifm-color-primary: #008f5f;
@@ -8076,4 +8075,479 @@ body,
   border-color: #000000 !important;
   background: #000000 !important;
   color: #ffffff !important;
+}
+
+/* Final typography system and reference-inspired feature tabs. */
+:root,
+[data-theme='dark'] {
+  --ifm-font-family-base: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ifm-heading-font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --ifm-font-family-monospace: 'B612 Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --glyf-display-font: 'Newsreader', Georgia, 'Times New Roman', serif;
+}
+
+body,
+[data-theme='dark'] body,
+.theme-doc-markdown,
+.theme-blog-markdown,
+.markdown,
+.navbar__item,
+.footer,
+.pagination-nav__link {
+  font-family: var(--ifm-font-family-base) !important;
+}
+
+button,
+input,
+textarea,
+select,
+p,
+li,
+dd,
+dt,
+blockquote,
+figcaption,
+table,
+.theme-doc-markdown p,
+.theme-doc-markdown li,
+.theme-blog-markdown p,
+.theme-blog-markdown li {
+  font-family: var(--ifm-font-family-base) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heroTitle,
+.sectionHeader h2,
+.navbar__title,
+.theme-doc-markdown h1,
+.theme-doc-markdown h2,
+.theme-doc-markdown h3,
+.theme-doc-markdown h4,
+.theme-doc-markdown h5,
+.theme-doc-markdown h6,
+.theme-blog-markdown h1,
+.theme-blog-markdown h2,
+.theme-blog-markdown h3,
+.theme-blog-markdown h4,
+.theme-blog-markdown h5,
+.theme-blog-markdown h6 {
+  font-family: var(--ifm-heading-font-family) !important;
+}
+
+code,
+pre,
+kbd,
+samp,
+.heroCodeBody,
+.heroCodeBody code,
+.miniCodeWindow pre,
+.miniCodeWindow pre code,
+.terminalPanel code,
+.cliReferenceExamples .theme-code-block code,
+.theme-doc-markdown pre code,
+.theme-code-block pre code,
+div[class*='codeBlockContent'] pre code,
+.theme-doc-markdown .prism-code code,
+.theme-code-block .prism-code code {
+  font-family: var(--ifm-font-family-monospace) !important;
+}
+
+.eyebrow,
+.landingHero .eyebrow,
+.band--ink .eyebrow,
+.navbar__items .navbar__link,
+.navbarGithubLink,
+.navbarStarGroup,
+.menu__link,
+.table-of-contents__link,
+.breadcrumbs__link,
+.button,
+.pagination-nav__sublabel,
+.pagination-nav__label,
+.footer__title,
+.footer__link-item,
+.heroValueLine,
+.problemCard span,
+.howCodeStep span,
+.theme-doc-markdown [class*='codeBlockTitle'],
+.theme-code-block [class*='codeBlockTitle'],
+.tabs__item {
+  font-family: var(--ifm-font-family-monospace) !important;
+}
+
+.featuresSection .sectionHeader p:last-child,
+[data-theme='dark'] .featuresSection .sectionHeader p:last-child {
+  max-width: 32rem;
+}
+
+.featureTabsShell,
+[data-theme='dark'] .featureTabsShell {
+  margin-top: 2.75rem;
+  background: transparent !important;
+  color: #000000 !important;
+}
+
+.featureTabsBar,
+[data-theme='dark'] .featureTabsBar {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  scrollbar-width: none;
+}
+
+.featureTabsBar::-webkit-scrollbar {
+  display: none;
+}
+
+.featureTabButton,
+[data-theme='dark'] .featureTabButton {
+  flex: 0 0 auto;
+  padding: 0.85rem 1.15rem 0.8rem 0;
+  margin-right: 1.2rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #737373 !important;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.featureTabButton:last-child,
+[data-theme='dark'] .featureTabButton:last-child {
+  margin-right: 0;
+}
+
+.featureTabButton:hover,
+.featureTabButton.is-active,
+[data-theme='dark'] .featureTabButton:hover,
+[data-theme='dark'] .featureTabButton.is-active {
+  border-bottom-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary) !important;
+}
+
+.featureTabButton:focus-visible,
+.featureFooterButton:focus-visible {
+  outline: 2px solid #0047ff;
+  outline-offset: 3px;
+}
+
+.featureTabPanel,
+[data-theme='dark'] .featureTabPanel {
+  padding-top: 0;
+}
+
+.featureList,
+[data-theme='dark'] .featureList {
+  display: flex;
+  flex-direction: column;
+}
+
+.featureRow,
+[data-theme='dark'] .featureRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem 2rem;
+  align-items: start;
+  padding: 1.15rem 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.14);
+  color: #000000 !important;
+}
+
+.featureRow:last-child,
+[data-theme='dark'] .featureRow:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+}
+
+.featureRowMain {
+  min-width: 0;
+}
+
+.featureName,
+[data-theme='dark'] .featureName {
+  color: #000000 !important;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.featureDesc,
+[data-theme='dark'] .featureDesc {
+  max-width: 38rem;
+  margin: 0.35rem 0 0;
+  color: #525252 !important;
+  font-family: var(--ifm-font-family-base) !important;
+  font-size: 0.94rem;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+.featureState,
+[data-theme='dark'] .featureState {
+  padding-top: 0.12rem;
+  color: #737373 !important;
+  white-space: nowrap;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.featureState--soon,
+[data-theme='dark'] .featureState--soon {
+  color: #0047ff !important;
+}
+
+.featurePanelFooter,
+[data-theme='dark'] .featurePanelFooter {
+  display: flex;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 1.85rem;
+}
+
+.featureFooterButton,
+[data-theme='dark'] .featureFooterButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0 0.95rem;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #000000 !important;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-decoration: none !important;
+  text-transform: uppercase;
+}
+
+.featureFooterButton:hover,
+[data-theme='dark'] .featureFooterButton:hover {
+  border-color: #000000;
+  background: #f5f5f5;
+  color: #000000 !important;
+  text-decoration: none !important;
+}
+
+.featureFooterCount,
+[data-theme='dark'] .featureFooterCount {
+  color: #737373 !important;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 996px) {
+  .featureTabsShell,
+  [data-theme='dark'] .featureTabsShell {
+    margin-top: 2.1rem;
+  }
+
+  .featureTabButton,
+  [data-theme='dark'] .featureTabButton {
+    padding-right: 0.85rem;
+    margin-right: 0.8rem;
+  }
+
+  .featureRow,
+  [data-theme='dark'] .featureRow {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .featureState,
+  [data-theme='dark'] .featureState {
+    padding-top: 0;
+  }
+}
+
+.eyebrow,
+[data-theme='dark'] .eyebrow {
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+}
+
+.heroKicker,
+[data-theme='dark'] .heroKicker {
+  margin: 0 0 1rem;
+  color: #525252 !important;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: none;
+}
+
+.landingHero h1,
+[data-theme='dark'] .landingHero h1 {
+  max-width: 760px;
+  font-size: clamp(3rem, 4.8vw, 3.6rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.08 !important;
+}
+
+.landingHero__installBlock,
+[data-theme='dark'] .landingHero__installBlock {
+  display: block;
+  width: fit-content;
+  margin-top: 1.35rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: #f7f7f5 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.landingHero__installBlock pre,
+[data-theme='dark'] .landingHero__installBlock pre {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border: 0;
+  background: transparent !important;
+}
+
+.landingHero__installBlock code,
+[data-theme='dark'] .landingHero__installBlock code {
+  padding: 0;
+  border: 0;
+  background: transparent !important;
+  color: #000000 !important;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.94rem !important;
+  font-weight: 700 !important;
+  line-height: 1.5 !important;
+}
+
+.navbar__title,
+.navbar__items .navbar__link,
+.navbar__items:not(.navbar__items--right) .navbar__link,
+.dropdown__link,
+.navbar__link,
+.navbar__item,
+.navbarGithubLink,
+.footer.footer--dark,
+.footer.footer--dark .footer__title,
+.footer.footer--dark .footer__link-item,
+.footer.footer--dark .footer__copyright,
+.footerBrand,
+.footerTagline,
+[data-theme='dark'] .navbar__title,
+[data-theme='dark'] .navbar__items .navbar__link,
+[data-theme='dark'] .navbar__items:not(.navbar__items--right) .navbar__link,
+[data-theme='dark'] .dropdown__link,
+[data-theme='dark'] .navbar__link,
+[data-theme='dark'] .navbar__item,
+[data-theme='dark'] .navbarGithubLink,
+[data-theme='dark'] .footer.footer--dark,
+[data-theme='dark'] .footer.footer--dark .footer__title,
+[data-theme='dark'] .footer.footer--dark .footer__link-item,
+[data-theme='dark'] .footer.footer--dark .footer__copyright,
+[data-theme='dark'] .footerBrand,
+[data-theme='dark'] .footerTagline {
+  font-family: var(--ifm-font-family-base) !important;
+}
+
+.navbar__title,
+[data-theme='dark'] .navbar__title {
+  font-size: 2.2rem !important;
+  font-weight: 700 !important;
+}
+
+.navbarVersionTag,
+[data-theme='dark'] .navbarVersionTag {
+  display: none !important;
+}
+
+.heroValueLine,
+.heroValueLine span,
+[data-theme='dark'] .heroValueLine,
+[data-theme='dark'] .heroValueLine span {
+  font-family: var(--ifm-font-family-base) !important;
+}
+
+.menu__link,
+.menu__caret,
+.theme-doc-sidebar-menu .menu__link,
+.theme-doc-sidebar-menu .menu__caret,
+.table-of-contents__link,
+.breadcrumbs__link,
+.pagination-nav__label,
+.pagination-nav__sublabel,
+[data-theme='dark'] .menu__link,
+[data-theme='dark'] .menu__caret,
+[data-theme='dark'] .theme-doc-sidebar-menu .menu__link,
+[data-theme='dark'] .theme-doc-sidebar-menu .menu__caret,
+[data-theme='dark'] .table-of-contents__link,
+[data-theme='dark'] .breadcrumbs__link,
+[data-theme='dark'] .pagination-nav__label,
+[data-theme='dark'] .pagination-nav__sublabel {
+  font-family: var(--ifm-font-family-base) !important;
+}
+
+.problemSection,
+.featuresSection,
+.howSection,
+.personasSection,
+.band,
+.band--muted,
+.examplesSection,
+[data-theme='dark'] .problemSection,
+[data-theme='dark'] .featuresSection,
+[data-theme='dark'] .howSection,
+[data-theme='dark'] .personasSection,
+[data-theme='dark'] .band,
+[data-theme='dark'] .band--muted,
+[data-theme='dark'] .examplesSection {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.solutionDivider::before,
+.solutionDivider::after,
+[data-theme='dark'] .solutionDivider::before,
+[data-theme='dark'] .solutionDivider::after {
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.16)) !important;
+}
+
+.solutionDivider::after,
+[data-theme='dark'] .solutionDivider::after {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.16), transparent) !important;
+}
+
+@media (max-width: 996px) {
+  .heroKicker,
+  [data-theme='dark'] .heroKicker {
+    margin-bottom: 0.8rem;
+    font-size: 0.76rem;
+  }
+
+  .landingHero__installBlock pre,
+  [data-theme='dark'] .landingHero__installBlock pre {
+    padding: 0.72rem 0.88rem;
+  }
+
+  .landingHero__installBlock code,
+  [data-theme='dark'] .landingHero__installBlock code {
+    font-size: 0.88rem !important;
+  }
 }
