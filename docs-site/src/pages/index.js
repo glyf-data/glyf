@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
+import CodeBlock from '@theme/CodeBlock';
 
 const featureSections = [
   {
@@ -16,7 +17,7 @@ const featureSections = [
         status: 'live',
         reverse: false,
         visual: 'chartSql',
-        filename: 'charts/revenue_weekly.glyf.sql',
+        filename: 'charts/revenue_weekly.ggsql',
       },
       {
         name: 'Version controlled, reviewable',
@@ -46,7 +47,7 @@ const featureSections = [
       {
         name: 'Generated React components',
         desc: 'Glyf compiles dashboards to typed .tsx components with inferred prop interfaces. Drop them into your product codebase with no BI SDK dependency.',
-        status: 'live',
+        status: 'coming soon',
         reverse: true,
         visual: 'tsxOutput',
         filename: 'dist/RevenueWeekly.tsx — auto-generated',
@@ -388,7 +389,7 @@ function FeatureMcpTrace({variant}) {
         </div>
         <div className="featureMcpLine">
           <span className="featureMcpRole featureMcpRole--glyf">glyf</span>
-          <span className="featureMcpMessage featureMcpMessage--dim">→ patch revenue_weekly.glyf.sql</span>
+          <span className="featureMcpMessage featureMcpMessage--dim">→ patch revenue_weekly.ggsql</span>
         </div>
         <div className="featureMcpLine">
           <span className="featureMcpRole" />
@@ -460,7 +461,7 @@ function FeatureVisual({item}) {
       return (
         <FeatureMacWindow filename={item.filename}>
           <pre><code><span className="codeFn">$</span> git diff main..feat/q3-charts{'\n\n'}
-<span className="featureDiffLine featureDiffLine--context">  charts/revenue_weekly.glyf.sql</span>{'\n'}
+<span className="featureDiffLine featureDiffLine--context">  charts/revenue_weekly.ggsql</span>{'\n'}
 <span className="featureDiffLine featureDiffLine--remove">- GROUP BY date_trunc('week', created_at)</span>{'\n'}
 <span className="featureDiffLine featureDiffLine--add">+ GROUP BY date_trunc('month', created_at)</span>{'\n\n'}
 <span className="featureDiffLine featureDiffLine--context">  dashboards/growth.yaml</span>{'\n'}
@@ -604,7 +605,7 @@ function HomepageHeader() {
             <span>as your data.</span>
           </h1>
           <div className="landingHero__installBlock" aria-label="Install Glyf">
-            <pre><code>uv install glyf</code></pre>
+            <CodeBlock language="bash">uv install glyf</CodeBlock>
           </div>
           <div className="heroValueLine" aria-label="Glyf workflow summary">
             <span>Define Charts</span>
@@ -740,7 +741,6 @@ function FeaturesSection() {
                     <div className="featureStoryNote">
                       <div className="featureStoryName">{item.name}</div>
                       <p className="featureStoryDesc">{item.desc}</p>
-                      <span className={`featureStoryStatus${item.status === 'soon' ? ' is-soon' : ''}`}>{item.status}</span>
                     </div>
                   </div>
                 ))}
@@ -824,7 +824,7 @@ function PersonasSection() {
       <div className="container">
         <div className="sectionHeader">
           <p className="eyebrow">who it's for</p>
-          <h2>Built for every role in the data team.</h2>
+          <h2>Built for everyone who touches data.</h2>
         </div>
         <div className="personasGrid">
           {personas.map(([role, title, description]) => (
@@ -844,47 +844,26 @@ function GgsqlSection() {
   return (
     <section className="band">
       <div className="container ggsqlLayout">
-        <div>
+        <div className="sectionHeader ggsqlSectionHeader">
           <p className="eyebrow">glyf + ggsql</p>
-          <div className="ggsqlCopyBlocks">
-            <div>
-              <h2>GGSQL provides the SQL visualization grammar.</h2>
-              <p>
-                GGSQL is a separate open source project focused on SQL-native visualization:
-                chart grammar, visualization primitives, and query-oriented authoring. Learn
-                more at <a href="https://ggsql.org">ggsql.org</a>.
-              </p>
-            </div>
-            <div>
-              <h2>Glyf brings it into an analytics-engineering workflow.</h2>
-              <p>
-                Glyf supports GGSQL today and adds the surrounding project layer: dbt artifact
-                resolution, dashboard YAML, validation commands, and rendered outputs your team
-                can publish.
-              </p>
-            </div>
-          </div>
         </div>
-        <div className="ggsqlBridge" aria-label="GGSQL and Glyf responsibilities">
-          <article>
-            <span>GGSQL</span>
-            <h3>SQL visualization engine</h3>
-            <ul>
-              <li>SQL-native chart grammar</li>
-              <li>Visualization primitives</li>
-              <li>Query-oriented authoring</li>
-            </ul>
-          </article>
-          <div className="bridgeMark" aria-hidden="true">+</div>
-          <article>
-            <span>Glyf</span>
-            <h3>Integration and dashboard layer</h3>
-            <ul>
-              <li>dbt artifact integration</li>
-              <li>Dashboard YAML specs</li>
-              <li>Rendered artifacts for docs, apps, and CI</li>
-            </ul>
-          </article>
+        <div className="ggsqlCopyBlocks">
+          <div className="ggsqlCopyColumn ggsqlCopyColumn--primary">
+            <h2>GGSQL provides the SQL visualization grammar.</h2>
+            <p>
+              GGSQL is a separate open source project focused on SQL-native visualization:
+              chart grammar, visualization primitives, and query-oriented authoring. Learn
+              more at <a href="https://ggsql.org">ggsql.org</a>.
+            </p>
+          </div>
+          <div className="ggsqlCopyColumn ggsqlCopyColumn--secondary">
+            <h2>Glyf brings it into an analytics-engineering workflow.</h2>
+            <p>
+              Glyf built on top of GGSQL today and adds the surrounding project layer: dbt artifact
+              resolution, dashboard YAML, validation commands, and rendered outputs your team
+              can publish.
+            </p>
+          </div>
         </div>
       </div>
     </section>

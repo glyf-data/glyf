@@ -103,7 +103,7 @@ const config = {
       footer: {
         style: 'dark',
         links: [
-          {label: 'License', href: 'https://github.com/kannandreams/glyf/blob/main/LICENSE'},
+          {label: 'Apache License', href: 'https://github.com/kannandreams/glyf/blob/main/LICENSE'},
         ],
         copyright: '<strong class="footerBrand">Glyf<span>.</span></strong><span class="footerTagline">Visualization is a build step. Treat it like one.</span>',
       },

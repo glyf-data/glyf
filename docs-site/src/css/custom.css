@@ -7507,9 +7507,9 @@ body,
 [data-theme='dark'] .button.button--primary:hover,
 [data-theme='dark'] .splitLayout .button.button--primary:hover,
 [data-theme='dark'] .landingHero .button.button--primary:hover {
-  border-color: #000000 !important;
-  background: #ffffff !important;
-  color: #000000 !important;
+  border-color: #0047ff !important;
+  background: #0047ff !important;
+  color: #ffffff !important;
 }
 
 .heroGithubButton,
@@ -8410,19 +8410,29 @@ div[class*='codeBlockContent'] pre code,
 .landingHero__installBlock,
 [data-theme='dark'] .landingHero__installBlock {
   display: block;
-  width: fit-content;
+  width: min(100%, 24rem);
   margin-top: 1.35rem;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-  background: #f7f7f5 !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.landingHero__installBlock .theme-code-block,
+[data-theme='dark'] .landingHero__installBlock .theme-code-block {
+  margin: 0 !important;
+  border: 1px solid rgba(51, 65, 85, 0.95) !important;
+  border-radius: 8px !important;
+  background: #0d1018 !important;
+  box-shadow: none !important;
 }
 
 .landingHero__installBlock pre,
 [data-theme='dark'] .landingHero__installBlock pre {
   margin: 0;
-  padding: 0.8rem 1rem;
   border: 0;
+  background: transparent !important;
+}
+
+.landingHero__installBlock .prism-code,
+[data-theme='dark'] .landingHero__installBlock .prism-code {
+  padding: 0.85rem 1rem !important;
   background: transparent !important;
 }
 
@@ -8431,10 +8441,10 @@ div[class*='codeBlockContent'] pre code,
   padding: 0;
   border: 0;
   background: transparent !important;
-  color: #000000 !important;
+  color: #dce3f4 !important;
   font-family: var(--ifm-font-family-monospace) !important;
   font-size: 0.94rem !important;
-  font-weight: 700 !important;
+  font-weight: 400 !important;
   line-height: 1.5 !important;
 }
 
@@ -9084,5 +9094,358 @@ div[class*='codeBlockContent'] pre code,
   .featureDiffVisual,
   [data-theme='dark'] .featureDiffVisual {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Final homepage refinements for feature nav, split-field bridge, and hero sizing. */
+
+.featureStoryNavLink,
+[data-theme='dark'] .featureStoryNavLink {
+  color: var(--ifm-color-primary) !important;
+}
+
+.featureStoryNavLink:hover,
+.featureStoryNavLink.is-active,
+[data-theme='dark'] .featureStoryNavLink:hover,
+[data-theme='dark'] .featureStoryNavLink.is-active {
+  border-bottom-color: var(--ifm-color-primary) !important;
+  color: var(--ifm-color-primary) !important;
+}
+
+.heroPrimaryButton:hover,
+.button.button--primary:hover,
+.splitLayout .button.button--primary:hover,
+.landingHero .button.button--primary:hover,
+[data-theme='dark'] .heroPrimaryButton:hover,
+[data-theme='dark'] .button.button--primary:hover,
+[data-theme='dark'] .splitLayout .button.button--primary:hover,
+[data-theme='dark'] .landingHero .button.button--primary:hover {
+  border-color: var(--ifm-color-primary) !important;
+  background: var(--ifm-color-primary) !important;
+  color: #ffffff !important;
+}
+
+.heroCodeVisual,
+[data-theme='dark'] .heroCodeVisual {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-left: auto;
+}
+
+.heroCodeWindow,
+[data-theme='dark'] .heroCodeWindow {
+  width: min(100%, 900px) !important;
+  max-width: 900px !important;
+  margin-left: auto !important;
+}
+
+.heroDiagramImage,
+[data-theme='dark'] .heroDiagramImage {
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+}
+
+.ggsqlBridge,
+[data-theme='dark'] .ggsqlBridge {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid #202020 !important;
+  border-radius: 6px;
+  background: #0b0b0b !important;
+}
+
+.ggsqlBridgePanel,
+[data-theme='dark'] .ggsqlBridgePanel {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2.45rem 2.45rem 2rem;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.ggsqlBridgePanel--core,
+[data-theme='dark'] .ggsqlBridgePanel--core {
+  background: #0d1018 !important;
+  color: #f5f7fb !important;
+}
+
+.ggsqlBridgePanel--integration,
+[data-theme='dark'] .ggsqlBridgePanel--integration {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.ggsqlBridgeSeam,
+[data-theme='dark'] .ggsqlBridgeSeam {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ifm-color-primary) !important;
+}
+
+.ggsqlBridgeSeam span,
+[data-theme='dark'] .ggsqlBridgeSeam span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: #ffffff !important;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: translate(-50%, -50%) rotate(180deg);
+  white-space: nowrap;
+}
+
+.ggsqlBridgeTag,
+[data-theme='dark'] .ggsqlBridgeTag {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ggsqlBridgePanel--core .ggsqlBridgeTag,
+[data-theme='dark'] .ggsqlBridgePanel--core .ggsqlBridgeTag {
+  color: rgba(255, 255, 255, 0.62) !important;
+}
+
+.ggsqlBridgePanel--integration .ggsqlBridgeTag,
+[data-theme='dark'] .ggsqlBridgePanel--integration .ggsqlBridgeTag {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.ggsqlBridge h3,
+[data-theme='dark'] .ggsqlBridge h3 {
+  margin: 0 0 1rem;
+  font-family: var(--ifm-heading-font-family) !important;
+  font-size: 1.72rem;
+  font-weight: 400;
+  line-height: 1.06;
+}
+
+.ggsqlBridge h3 em,
+[data-theme='dark'] .ggsqlBridge h3 em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.ggsqlBridgePanel--core h3,
+[data-theme='dark'] .ggsqlBridgePanel--core h3 {
+  color: #ffffff !important;
+}
+
+.ggsqlBridgePanel--integration h3,
+[data-theme='dark'] .ggsqlBridgePanel--integration h3 {
+  color: #000000 !important;
+}
+
+.ggsqlBridge ul,
+[data-theme='dark'] .ggsqlBridge ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ggsqlBridge li,
+[data-theme='dark'] .ggsqlBridge li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  padding: 0.62rem 0;
+  border-top: 1px solid;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.74rem;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.ggsqlBridge li:last-child,
+[data-theme='dark'] .ggsqlBridge li:last-child {
+  border-bottom: 1px solid;
+}
+
+.ggsqlBridgePanel--core li,
+[data-theme='dark'] .ggsqlBridgePanel--core li {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.ggsqlBridgePanel--integration li,
+[data-theme='dark'] .ggsqlBridgePanel--integration li {
+  border-color: rgba(0, 0, 0, 0.09) !important;
+  color: rgba(0, 0, 0, 0.64) !important;
+}
+
+.ggsqlBridge li::before,
+[data-theme='dark'] .ggsqlBridge li::before {
+  content: '\2014';
+  flex: 0 0 auto;
+  opacity: 0.45;
+}
+
+.ggsqlBridgeMeta,
+[data-theme='dark'] .ggsqlBridgeMeta {
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ggsqlBridgePanel--core .ggsqlBridgeMeta,
+[data-theme='dark'] .ggsqlBridgePanel--core .ggsqlBridgeMeta {
+  color: rgba(255, 255, 255, 0.34) !important;
+}
+
+.ggsqlBridgePanel--integration .ggsqlBridgeMeta,
+[data-theme='dark'] .ggsqlBridgePanel--integration .ggsqlBridgeMeta {
+  color: rgba(0, 0, 0, 0.22) !important;
+}
+
+.ggsqlBridgeFooter,
+[data-theme='dark'] .ggsqlBridgeFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ggsqlBridgeStatus,
+[data-theme='dark'] .ggsqlBridgeStatus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.55rem;
+  padding: 0 0.6rem;
+  border: 1px solid;
+  border-radius: 2px;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ggsqlBridgePanel--core .ggsqlBridgeStatus,
+[data-theme='dark'] .ggsqlBridgePanel--core .ggsqlBridgeStatus {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.44) !important;
+  background: transparent !important;
+}
+
+.ggsqlBridgePanel--integration .ggsqlBridgeStatus,
+[data-theme='dark'] .ggsqlBridgePanel--integration .ggsqlBridgeStatus {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: rgba(0, 0, 0, 0.38) !important;
+  background: transparent !important;
+}
+
+@media (max-width: 996px) {
+  .heroCodeWindow,
+  [data-theme='dark'] .heroCodeWindow {
+    width: min(100%, 760px) !important;
+    max-width: 760px !important;
+  }
+
+  .ggsqlBridge,
+  [data-theme='dark'] .ggsqlBridge {
+    grid-template-columns: 1fr;
+  }
+
+  .ggsqlBridgeSeam,
+  [data-theme='dark'] .ggsqlBridgeSeam {
+    min-height: 42px;
+  }
+
+  .ggsqlBridgeSeam span,
+  [data-theme='dark'] .ggsqlBridgeSeam span {
+    left: 50%;
+    top: 50%;
+    writing-mode: horizontal-tb;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.ggsqlLayout,
+[data-theme='dark'] .ggsqlLayout {
+  display: block !important;
+}
+
+.ggsqlSectionHeader,
+[data-theme='dark'] .ggsqlSectionHeader {
+  margin-bottom: 1.1rem !important;
+}
+
+.ggsqlCopyBlocks,
+[data-theme='dark'] .ggsqlCopyBlocks {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 !important;
+  align-items: start;
+}
+
+.ggsqlCopyColumn,
+[data-theme='dark'] .ggsqlCopyColumn {
+  min-width: 0;
+}
+
+.ggsqlCopyColumn--primary,
+[data-theme='dark'] .ggsqlCopyColumn--primary {
+  padding-right: 2.2rem;
+}
+
+.ggsqlCopyColumn--secondary,
+[data-theme='dark'] .ggsqlCopyColumn--secondary {
+  padding-left: 2.2rem;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.ggsqlCopyColumn h2,
+[data-theme='dark'] .ggsqlCopyColumn h2 {
+  margin: 0 0 0.7rem;
+}
+
+.ggsqlCopyColumn p,
+[data-theme='dark'] .ggsqlCopyColumn p {
+  margin: 0;
+}
+
+@media (max-width: 996px) {
+  .ggsqlCopyBlocks,
+  [data-theme='dark'] .ggsqlCopyBlocks {
+    grid-template-columns: 1fr;
+    gap: 1.5rem !important;
+  }
+
+  .ggsqlCopyColumn--primary,
+  [data-theme='dark'] .ggsqlCopyColumn--primary {
+    padding-right: 0;
+  }
+
+  .ggsqlCopyColumn--secondary,
+  [data-theme='dark'] .ggsqlCopyColumn--secondary {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 1.5rem;
   }
 }
