@@ -1,5 +1,8 @@
 # Quickstart
 
+*Glyf is pronounced like **"glyph"**. \
+In typography, a glyph is the visible form of a symbol; in visualization, Glyf is the visible form of your data pipeline, turning modeled data into charts and dashboards that can be built, reviewed, and published like any other project artifact.*
+
 Use this flow when you already have a dbt project and want to add glyf without hand-creating folders.
 
 ## Install

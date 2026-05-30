@@ -1,16 +1,134 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
+import CodeBlock from '@theme/CodeBlock';
 
-const featureCards = [
-  ['dbt ref() in every chart', 'integration', 'Use {{ ref() }} in chart SQL. Glyf reads the dbt manifest and validates queries before publish.'],
-  ['Zero-server static output', 'Exports', 'Produce self-contained HTML and chart assets your team can host in docs, apps, storage, or CI.'],
-  ['Generated React components', 'embedded', 'Compile dashboards to typed .tsx components for product analytics without an embedded BI SDK.'],
-  ['Programmable Python macros', 'customization', 'Reuse dashboard logic for thresholds, labels, and plan-based views in reviewed Python code.'],
-  ['Visual diff as a build artifact', 'Chart Quality', 'Compare dashboard builds and annotate metric shifts, new categories, and trend reversals.'],
-  ['Pipeline hooks and alerts', 'Observability', 'Declare Slack or webhook alerts in dashboard YAML when metrics cross a threshold.'],
-  ['Agent-ready MCP server', 'AI Powered', 'Expose the spec graph so agents can inspect model-to-chart impact and downstream breakage.'],
-  ['Version controlled, reviewable', 'Deploy', 'Keep chart definitions, layouts, and macros in Git with PR review and normal revert paths.'],
+const featureSections = [
+  {
+    id: 'integration',
+    tag: 'integration',
+    title: 'Your dbt project is the source of truth.',
+    description:
+      'Glyf reads your dbt manifest directly. Charts reference models the same way dbt models reference each other, with ref(). No copy-pasting SQL and no schema drift.',
+    items: [
+      {
+        name: 'dbt ref() in every chart',
+        desc: 'Use {{ ref(\'model\') }} in chart SQL exactly as you would in a dbt model. Glyf resolves each reference to its schema path and validates the query before publish.',
+        status: 'live',
+        reverse: false,
+        visual: 'chartSql',
+        filename: 'charts/revenue_weekly.ggsql',
+      },
+      {
+        name: 'Version controlled, reviewable',
+        desc: 'Chart definitions, layouts, and macros live in Git alongside your dbt project. Reviewers see exact SQL and YAML diffs, not just screenshots.',
+        status: 'live',
+        reverse: true,
+        visual: 'gitDiff',
+        filename: 'terminal — git diff',
+      },
+    ],
+  },
+  {
+    id: 'exports',
+    tag: 'exports',
+    title: 'Charts that live anywhere.',
+    description:
+      'No BI server to maintain. Glyf builds self-contained artifacts that teams can host in docs, apps, CI pipelines, or static storage.',
+    items: [
+      {
+        name: 'Zero-server static output',
+        desc: 'Each glyf build produces self-contained HTML files with data and rendering logic inlined. Drop them into any static host and they just work.',
+        status: 'live',
+        reverse: false,
+        visual: 'buildOutput',
+        filename: 'terminal',
+      },
+      {
+        name: 'Generated React components',
+        desc: 'Glyf compiles dashboards to typed .tsx components with inferred prop interfaces. Drop them into your product codebase with no BI SDK dependency.',
+        status: 'coming soon',
+        reverse: true,
+        visual: 'tsxOutput',
+        filename: 'dist/RevenueWeekly.tsx — auto-generated',
+      },
+    ],
+  },
+  {
+    id: 'customization',
+    tag: 'customization',
+    title: 'Dashboard logic as reviewed code.',
+    description:
+      'Thresholds, color mappings, and conditional labels all live in Python macros and YAML specs. Reusable, testable, and visible in code review.',
+    items: [
+      {
+        name: 'Programmable Python macros',
+        desc: 'Define reusable chart logic like color mappings, thresholds, and conditional labels as Python functions that are typed, tested, and reviewed.',
+        status: 'live',
+        reverse: false,
+        visual: 'pythonMacros',
+        filename: 'macros/thresholds.py',
+      },
+      {
+        name: 'Dashboard YAML specs',
+        desc: 'Define layout, chart ordering, visibility conditions, and macro bindings declaratively in YAML. Changing a dashboard becomes a one-line diff.',
+        status: 'live',
+        reverse: true,
+        visual: 'dashboardYaml',
+        filename: 'dashboards/growth.yaml',
+      },
+    ],
+  },
+  {
+    id: 'observability',
+    tag: 'observability',
+    title: 'Know when something breaks or shifts.',
+    description:
+      'Every build can produce visual diffs and alert hooks. Catch regressions in CI before a dashboard change reaches stakeholders.',
+    items: [
+      {
+        name: 'Visual diff as a build artifact',
+        desc: 'Every glyf build can generate a side-by-side visual diff against the previous build, highlighting metric shifts, new categories, and trend reversals.',
+        status: 'live',
+        reverse: false,
+        visual: 'visualDiff',
+        filename: 'artifacts/visual-diff — build #84 vs #83',
+      },
+      {
+        name: 'Pipeline hooks and alerts',
+        desc: 'Declare Slack or webhook alerts directly in dashboard YAML. Conditions are evaluated against query results at build time with severity-based routing.',
+        status: 'live',
+        reverse: true,
+        visual: 'alertsYaml',
+        filename: 'dashboards/revenue.yaml — alerts block',
+      },
+    ],
+  },
+  {
+    id: 'ai',
+    tag: 'ai',
+    title: 'Agents that understand your chart graph.',
+    description:
+      'Glyf exposes a spec graph over MCP so agents can reason about model-to-chart dependencies, assess downstream impact, and open informed pull requests.',
+    items: [
+      {
+        name: 'Agent-ready MCP server',
+        desc: 'Agents can list charts, fetch specs, and query upstream model dependencies. impact_of_model() returns every downstream chart affected by a schema change.',
+        status: 'soon',
+        reverse: false,
+        visual: 'mcpImpact',
+        filename: 'MCP session — Claude Agent ↔ Glyf',
+      },
+      {
+        name: 'Natural language chart edits',
+        desc: 'Describe a chart change in plain language. Glyf translates it to a SQL diff, validates the build, attaches the visual diff, and opens a pull request.',
+        status: 'soon',
+        reverse: true,
+        visual: 'mcpEdit',
+        filename: 'MCP session — natural language edit',
+      },
+    ],
+  },
 ];
 
 const featureLinks = [
@@ -47,30 +165,6 @@ const personas = [
   ['Data Scientist', 'Charts in SQL, not one-off notebooks.', 'Write SQL-style chart definitions that run in the pipeline, stay current, and live beside the models they query.'],
   ['Data Leader', 'Reduce platform dependency.', 'Glyf is open source, runs locally, and produces outputs your team already knows how to deploy and review.'],
   ['Application Engineer', 'Import or publish a dashboard artifact.', 'The data team owns the spec. You consume rendered output or future components without negotiating with an embedded analytics vendor.'],
-];
-
-const blogPosts = [
-  {
-    title: 'Building Dashboards in the Pipeline',
-    date: 'May 27, 2026',
-    category: 'Product',
-    image: '/img/examples/simple-dbt-banner.svg',
-    to: '/blog/building-dashboards-in-the-pipeline',
-  },
-  {
-    title: 'GGSQL Chart Definitions Beside Your Models',
-    date: 'May 28, 2026',
-    category: 'GGSQL',
-    image: '/img/examples/product-analytics-banner.svg',
-    to: '/blog/ggsql-chart-definitions-beside-your-models',
-  },
-  {
-    title: 'Publishing Static Dashboards from CI',
-    date: 'May 28, 2026',
-    category: 'Deployment',
-    image: '/img/examples/sales-dashboard-banner.svg',
-    to: '/blog/publishing-static-dashboards-from-ci',
-  },
 ];
 
 function DbtMark() {
@@ -243,20 +337,276 @@ function HeroCodeWindow() {
   );
 }
 
+function FeatureMacWindow({filename, children}) {
+  return (
+    <div className="featureMacWindow">
+      <div className="featureMacTitlebar">
+        <span className="featureMacDot featureMacDot--red" />
+        <span className="featureMacDot featureMacDot--yellow" />
+        <span className="featureMacDot featureMacDot--green" />
+        <span className="featureMacFilename">{filename}</span>
+      </div>
+      <div className="featureMacBody">{children}</div>
+    </div>
+  );
+}
+
+function FeatureDiffVisual() {
+  return (
+    <div className="featureDiffVisual">
+      <div className="featureDiffColumn">
+        <div className="featureDiffLabel">Build #83 — before</div>
+        <div className="featureMiniChart">
+          {[55, 72, 60, 85, 90, 78, 82].map((height) => (
+            <span className="featureMiniBar featureMiniBar--before" key={`before-${height}`} style={{height: `${height}%`}} />
+          ))}
+        </div>
+      </div>
+      <div className="featureDiffColumn">
+        <div className="featureDiffLabel">Build #84 — after</div>
+        <div className="featureMiniChart">
+          {[55, 72, 60, 85, 44, 78, 82].map((height, index) => (
+            <span
+              className={`featureMiniBar${index === 4 ? ' featureMiniBar--drop' : ' featureMiniBar--after'}`}
+              key={`after-${height}-${index}`}
+              style={{height: `${height}%`}}
+            />
+          ))}
+        </div>
+        <div className="featureAnnotation">week 5 dropped 47%{'\n'}new category introduced — review needed</div>
+      </div>
+    </div>
+  );
+}
+
+function FeatureMcpTrace({variant}) {
+  if (variant === 'edit') {
+    return (
+      <div className="featureMcpTrace">
+        <div className="featureMcpLine">
+          <span className="featureMcpRole featureMcpRole--agent">agent</span>
+          <span className="featureMcpMessage">"Change revenue_weekly to group by month and add a plan breakdown"</span>
+        </div>
+        <div className="featureMcpLine">
+          <span className="featureMcpRole featureMcpRole--glyf">glyf</span>
+          <span className="featureMcpMessage featureMcpMessage--dim">→ patch revenue_weekly.ggsql</span>
+        </div>
+        <div className="featureMcpLine">
+          <span className="featureMcpRole" />
+          <span className="featureMcpMessage featureMcpMessage--ok">+ GROUP BY date_trunc('month', ...), plan_name</span>
+        </div>
+        <div className="featureMcpLine">
+          <span className="featureMcpRole" />
+          <span className="featureMcpMessage featureMcpMessage--danger">- GROUP BY date_trunc('week', ...)</span>
+        </div>
+        <div className="featureMcpLine">
+          <span className="featureMcpRole featureMcpRole--glyf">glyf</span>
+          <span className="featureMcpMessage featureMcpMessage--dim">→ build passed — visual diff attached</span>
+        </div>
+        <div className="featureMcpLine">
+          <span className="featureMcpRole featureMcpRole--result">result</span>
+          <span className="featureMcpMessage featureMcpMessage--dim">PR opened with diff + visual artifact</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="featureMcpTrace">
+      <div className="featureMcpLine">
+        <span className="featureMcpRole featureMcpRole--agent">agent</span>
+        <span className="featureMcpMessage">list_charts()</span>
+      </div>
+      <div className="featureMcpLine">
+        <span className="featureMcpRole featureMcpRole--glyf">glyf</span>
+        <span className="featureMcpMessage featureMcpMessage--dim">→ revenue_weekly, signups_by_plan, churn_cohort, mrr_breakdown (+9)</span>
+      </div>
+      <div className="featureMcpLine">
+        <span className="featureMcpRole featureMcpRole--agent">agent</span>
+        <span className="featureMcpMessage">impact_of_model("orders")</span>
+      </div>
+      <div className="featureMcpLine">
+        <span className="featureMcpRole featureMcpRole--glyf">glyf</span>
+        <span className="featureMcpMessage featureMcpMessage--dim">→ affects 4 charts: revenue_weekly, mrr_breakdown, ltv_by_cohort, arpu</span>
+      </div>
+      <div className="featureMcpLine">
+        <span className="featureMcpRole featureMcpRole--result">result</span>
+        <span className="featureMcpMessage featureMcpMessage--dim">agent opens PR annotating all downstream charts automatically</span>
+      </div>
+    </div>
+  );
+}
+
+function FeatureVisual({item}) {
+  switch (item.visual) {
+    case 'chartSql':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code><span className="codeMuted">-- reference dbt models directly in chart SQL</span>{'\n'}
+<span className="codeKw">SELECT</span>{'\n'}
+{'  '}date_trunc(<span className="codeStr">'week'</span>, o.created_at) <span className="codeKw">AS</span> week,{'\n'}
+{'  '}sum(o.revenue_usd) <span className="codeKw">AS</span> revenue,{'\n'}
+{'  '}p.plan_name{'\n'}
+<span className="codeKw">FROM</span> <span className="codeRef">{'{{ ref(\'orders\') }}'}</span> o{'\n'}
+<span className="codeKw">JOIN</span> <span className="codeRef">{'{{ ref(\'plans\') }}'}</span> p{'\n'}
+{'  '}<span className="codeKw">ON</span> o.plan_id = p.id{'\n'}
+<span className="codeKw">GROUP BY</span> <span className="codeNum">1</span>, <span className="codeNum">3</span>{'\n\n'}
+<span className="codeMuted">────────────────────────────</span>{'\n'}
+<span className="codeOk">✓</span> resolved orders → analytics.orders{'\n'}
+<span className="codeOk">✓</span> resolved plans → analytics.plans{'\n'}
+<span className="codeOk">✓</span> query valid — 0 errors</code></pre>
+        </FeatureMacWindow>
+      );
+    case 'gitDiff':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code><span className="codeFn">$</span> git diff main..feat/q3-charts{'\n\n'}
+<span className="featureDiffLine featureDiffLine--context">  charts/revenue_weekly.ggsql</span>{'\n'}
+<span className="featureDiffLine featureDiffLine--remove">- GROUP BY date_trunc('week', created_at)</span>{'\n'}
+<span className="featureDiffLine featureDiffLine--add">+ GROUP BY date_trunc('month', created_at)</span>{'\n\n'}
+<span className="featureDiffLine featureDiffLine--context">  dashboards/growth.yaml</span>{'\n'}
+<span className="featureDiffLine featureDiffLine--add">+ - id: new_mrr_cohort</span>{'\n'}
+<span className="featureDiffLine featureDiffLine--add">+   sql: ./new_mrr_cohort.sql</span>{'\n\n'}
+<span className="codeMuted">2 files changed, 3 insertions(+), 1 deletion(-)</span>{'\n\n'}
+<span className="codeOk">✓</span> glyf build passed — 14 charts{'\n'}
+<span className="codeOk">✓</span> visual diff → artifacts/diff.html{'\n'}
+<span className="codeMuted">Ready to merge.</span></code></pre>
+        </FeatureMacWindow>
+      );
+    case 'buildOutput':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code><span className="codeFn">$</span> glyf build --target prod{'\n\n'}
+<span className="codeMuted">Building 12 charts...</span>{'\n'}
+<span className="codeOk">✓</span> revenue_weekly{'\n'}
+<span className="codeOk">✓</span> signups_by_plan{'\n'}
+<span className="codeOk">✓</span> churn_cohort{'\n'}
+<span className="codeMuted">  ... 9 more</span>{'\n\n'}
+<span className="codeMuted">Exporting static assets...</span>{'\n'}
+<span className="codeOk">✓</span> dist/revenue_weekly.html <span className="codeMuted">42kb</span>{'\n'}
+<span className="codeOk">✓</span> dist/signups_by_plan.html <span className="codeMuted">38kb</span>{'\n'}
+<span className="codeOk">✓</span> dist/index.html <span className="codeMuted">8kb</span>{'\n'}
+<span className="codeOk">✓</span> dist/charts.zip <span className="codeMuted">180kb</span>{'\n\n'}
+<span className="codeMuted">No server required.</span>{'\n'}
+<span className="codeMuted">Drop into S3, Notion, GitHub Pages, or CI artifacts.</span></code></pre>
+        </FeatureMacWindow>
+      );
+    case 'tsxOutput':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code><span className="codeMuted">// generated by glyf — do not edit manually</span>{'\n'}
+<span className="codeKw">import</span> {'{ '}<span className="codeFn">GlyfChart</span>{' } '}<span className="codeKw">from</span> <span className="codeStr">'@glyf/react'</span>{'\n\n'}
+<span className="codeKw">export interface</span> <span className="codeFn">RevenueWeeklyProps</span> {'{'}{'\n'}
+{'  '}startDate?: <span className="codeVar">string</span>{'\n'}
+{'  '}planFilter?: <span className="codeVar">string</span>[] {'\n'}
+{'}'}{'\n\n'}
+<span className="codeKw">export function</span> <span className="codeFn">RevenueWeekly</span>({'{ '}startDate, planFilter {'}'}) {'{'}{'\n'}
+{'  '}<span className="codeKw">return</span> ({'\n'}
+{'    '}&#60;<span className="codeFn">GlyfChart</span>{'\n'}
+{'      '}spec=<span className="codeStr">"revenue_weekly"</span>{'\n'}
+{'      '}params={'{'}{'{ '}startDate, planFilter {'}'}{'}'}{'\n'}
+{'    '}/&#62;{'\n'}
+{'  '}){'\n'}
+{'}'}{'\n\n'}
+<span className="codeMuted">// typed props, no BI SDK dependency</span></code></pre>
+        </FeatureMacWindow>
+      );
+    case 'pythonMacros':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code><span className="codeKw">from</span> glyf <span className="codeKw">import</span> macro, ChartContext{'\n\n'}
+<span className="codeFn">@macro</span>{'\n'}
+<span className="codeKw">def</span> <span className="codeFn">plan_color</span>(ctx: <span className="codeVar">ChartContext</span>, plan: <span className="codeVar">str</span>) -&gt; <span className="codeVar">str</span>:{'\n'}
+{'  '}<span className="codeKw">return</span> {'{'}{'\n'}
+{'    '}<span className="codeStr">"starter"</span>: <span className="codeStr">"#94a3b8"</span>,{'\n'}
+{'    '}<span className="codeStr">"growth"</span>: <span className="codeStr">"#6366f1"</span>,{'\n'}
+{'    '}<span className="codeStr">"enterprise"</span>: <span className="codeStr">"#0ea5e9"</span>,{'\n'}
+{'  }'}.get(plan, <span className="codeStr">"#e2e8f0"</span>){'\n\n'}
+<span className="codeFn">@macro</span>{'\n'}
+<span className="codeKw">def</span> <span className="codeFn">alert_threshold</span>(ctx: <span className="codeVar">ChartContext</span>) -&gt; <span className="codeVar">float</span>:{'\n'}
+{'  '}<span className="codeKw">return</span> ctx.config[<span className="codeStr">"alert_pct"</span>]{'\n\n'}
+<span className="codeRef">{'{{ plan_color(\'growth\') }}'}</span> <span className="codeMuted">-- → "#6366f1"</span></code></pre>
+        </FeatureMacWindow>
+      );
+    case 'dashboardYaml':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code>title: <span className="codeStr">Growth Overview</span>{'\n'}
+layout: <span className="codeVar">2col</span>{'\n\n'}
+charts:{'\n'}
+{'  '}- id: <span className="codeStr">revenue_weekly</span>{'\n'}
+{'    '}sql: <span className="codeStr">./revenue_weekly.sql</span>{'\n'}
+{'    '}title: <span className="codeStr">Weekly Revenue</span>{'\n'}
+{'    '}color_macro: <span className="codeFn">plan_color</span>{'\n\n'}
+{'  '}- id: <span className="codeStr">churn_cohort</span>{'\n'}
+{'    '}sql: <span className="codeStr">./churn_cohort.sql</span>{'\n'}
+{'    '}visible_if: <span className="codeStr">"user.plan == \'enterprise\'"</span>{'\n\n'}
+<span className="codeOk">✓</span> <span className="codeMuted">dashboard spec validated — 3 charts</span></code></pre>
+        </FeatureMacWindow>
+      );
+    case 'visualDiff':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <FeatureDiffVisual />
+        </FeatureMacWindow>
+      );
+    case 'alertsYaml':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code>charts:{'\n'}
+{'  '}- id: <span className="codeStr">revenue_weekly</span>{'\n'}
+{'    '}sql: <span className="codeStr">./revenue_weekly.sql</span>{'\n'}
+{'    '}alerts:{'\n'}
+{'      '}- <span className="codeKw">channel</span>: <span className="codeStr">"#data-alerts"</span>{'\n'}
+{'        '}<span className="codeKw">condition</span>: <span className="codeStr">"wow_pct &lt; -0.10"</span>{'\n'}
+{'        '}<span className="codeKw">message</span>: <span className="codeStr">"Revenue dropped &gt;10% WoW"</span>{'\n'}
+{'        '}<span className="codeKw">severity</span>: <span className="codeWarn">warn</span>{'\n\n'}
+{'      '}- <span className="codeKw">channel</span>: <span className="codeStr">"#incidents"</span>{'\n'}
+{'        '}<span className="codeKw">condition</span>: <span className="codeStr">"wow_pct &lt; -0.25"</span>{'\n'}
+{'        '}<span className="codeKw">message</span>: <span className="codeStr">"Revenue dropped &gt;25% — investigate"</span>{'\n'}
+{'        '}<span className="codeKw">severity</span>: <span className="codeHi">critical</span>{'\n\n'}
+<span className="codeOk">✓</span> alert registered revenue_weekly / warn{'\n'}
+<span className="codeOk">✓</span> alert registered revenue_weekly / critical</code></pre>
+        </FeatureMacWindow>
+      );
+    case 'mcpImpact':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <FeatureMcpTrace variant="impact" />
+        </FeatureMacWindow>
+      );
+    case 'mcpEdit':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <FeatureMcpTrace variant="edit" />
+        </FeatureMacWindow>
+      );
+    default:
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <div className="featureImgPlaceholder">
+            <span className="featureImgPlaceholderIcon">□</span>
+            <span className="featureImgPlaceholderLabel">replace with product screenshot</span>
+          </div>
+        </FeatureMacWindow>
+      );
+  }
+}
+
 function HomepageHeader() {
   return (
     <header className="landingHero">
       <div className="container landingHero__layout">
         <div className="landingHero__content">
-          <p className="heroBadge heroVersionTag">v0.1 <span aria-hidden="true">·</span> Public Alpha</p>
+          <p className="heroKicker">visualization build step to data pipeline</p>
           <h1>
             <span>Ship charts</span>
             <span className="heroHeadlineAccent">from the same pipeline</span>
             <span>as your data.</span>
           </h1>
-          <p className="landingHero__lead">
-            Glyf is the open-source build step for data visualization.
-          </p>
+          <div className="landingHero__installBlock" aria-label="Install Glyf">
+            <CodeBlock language="bash">uv install glyf</CodeBlock>
+          </div>
           <div className="heroValueLine" aria-label="Glyf workflow summary">
             <span>Define Charts</span>
             <b aria-hidden="true">·</b>
@@ -285,7 +635,7 @@ function ProblemSection() {
     <section className="problemSection">
       <div className="container">
         <div className="sectionHeader">
-          <p className="eyebrow">The problem</p>
+          <p className="eyebrow">the problem</p>
           <h2>Your pipeline is complete.<br />Except the last mile.</h2>
           <p>
             Every stage of the modern data stack has declarative, version-controlled, testable
@@ -317,31 +667,92 @@ function ProblemSection() {
 }
 
 function FeaturesSection() {
+  const [activeFeatureSection, setActiveFeatureSection] = React.useState(featureSections[0].id);
+  const featureRootRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const root = featureRootRef.current;
+    if (!root || typeof IntersectionObserver === 'undefined') {
+      return undefined;
+    }
+
+    const sections = root.querySelectorAll('[data-feature-anchor]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveFeatureSection(entry.target.id);
+          }
+        });
+      },
+      {rootMargin: '-35% 0px -55% 0px', threshold: 0},
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => {
+      sections.forEach((section) => observer.unobserve(section));
+      observer.disconnect();
+    };
+  }, []);
+
   return (
-    <section className="featuresSection">
+    <section className="featuresSection" ref={featureRootRef}>
       <div className="container">
         <div className="sectionHeader">
-          <p className="eyebrow">Features</p>
+          <p className="eyebrow">features</p>
           <h2>What makes Glyf different.</h2>
           <p>
             Core build-step features are available today. Roadmap items show where Glyf is heading.
+            Each section below shows exactly what the feature looks like in practice.
           </p>
         </div>
-        <div className="featureStrip">
-          {featureCards.map(([title, status, description]) => (
-            <article className="featureStripItem" key={title}>
-              <div className="featureCardHeader">
-                <h3>{title}</h3>
-                <span className={`featureStatus featureStatus--${status.toLowerCase().replace(/\s+/g, '-')}`}>{status}</span>
+        <div className="featureStoryNav" role="navigation" aria-label="Feature section anchors">
+          <a className="featureStoryLogo" href="#features-top">
+            Glyf
+          </a>
+          <div className="featureStoryNavLinks">
+            {featureSections.map((section) => (
+              <a
+                className={`featureStoryNavLink${section.id === activeFeatureSection ? ' is-active' : ''}`}
+                href={`#${section.id}`}
+                key={section.id}
+                onClick={() => setActiveFeatureSection(section.id)}
+              >
+                {section.tag}
+              </a>
+            ))}
+          </div>
+        </div>
+        <div className="featureStories" id="features-top">
+          {featureSections.map((section) => (
+            <article className="featureStorySection" data-feature-anchor id={section.id} key={section.id}>
+              <div className="featureStoryHeader">
+                <div className="featureStoryTag">{section.tag}</div>
+                <h3>{section.title}</h3>
+                <p>{section.description}</p>
               </div>
-              <p>{description}</p>
+              <div className="featureStoryBlocks">
+                {section.items.map((item) => (
+                  <div className={`featureStoryBlock${item.reverse ? ' is-reverse' : ''}`} key={`${section.id}-${item.name}`}>
+                    <div className="featureStoryVisual">
+                      <FeatureVisual item={item} />
+                    </div>
+                    <div className="featureStoryNote">
+                      <div className="featureStoryName">{item.name}</div>
+                      <p className="featureStoryDesc">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </article>
           ))}
-        </div>
-        <div className="featureSectionActions">
-          <Link className="featureMoreButton" to="/docs/resources/roadmap">
-            More features
-          </Link>
+          <div className="featureStoryFooter">
+            <Link className="featureStoryFooterButton" to="/docs/resources/roadmap">
+              View roadmap &rarr;
+            </Link>
+            <span className="featureStoryFooterCount">{featureSections.length} sections</span>
+          </div>
         </div>
       </div>
     </section>
@@ -353,7 +764,7 @@ function HowItWorks() {
     <section className="howSection">
       <div className="container">
         <div className="sectionHeader">
-          <p className="eyebrow">How it works</p>
+          <p className="eyebrow">how it works</p>
           <h2>Charts, dashboards, and outputs in one build step.</h2>
           <p>
             Glyf keeps authoring close to the project: chart grammar in GGSQL, dashboard composition
@@ -365,22 +776,20 @@ function HowItWorks() {
             <span>{workflowSteps[0][0]}</span>
             <h3>{workflowSteps[0][1]}</h3>
             <p>{workflowSteps[0][2]}</p>
-            <div className="miniCodeWindow">
-              <div>sessions_by_plan.ggsql</div>
+            <FeatureMacWindow filename="sessions_by_plan.ggsql">
               <pre><code><span className="codeKw">SELECT</span> plan, <span className="codeFn">sum</span>(sessions){'\n'}
 <span className="codeKw">FROM</span> <span className="codeRef">{'{{ ref(\'fct_usage\') }}'}</span>{'\n'}
 <span className="codeKw">GROUP BY</span> 1{'\n\n'}
 <span className="codeClause">VISUALISE</span> plan <span className="codeKw">AS</span> x{'\n'}
 <span className="codeClause">DRAW</span> pie{'\n'}
 <span className="codeClause">LABEL</span> title <span className="codeOp">=&gt;</span> <span className="codeStr">'Sessions by Plan'</span></code></pre>
-            </div>
+            </FeatureMacWindow>
           </article>
           <article className="howCodeStep">
             <span>{workflowSteps[1][0]}</span>
             <h3>{workflowSteps[1][1]}</h3>
             <p>{workflowSteps[1][2]}</p>
-            <div className="miniCodeWindow">
-              <div>product.yml</div>
+            <FeatureMacWindow filename="product.yml">
               <pre><code><span className="codeKw">sections</span>:{'\n'}
 {'  '}- title: <span className="codeStr">Activation</span>{'\n'}
 {'    '}items:{'\n'}
@@ -388,21 +797,20 @@ function HowItWorks() {
 {'          '}<span className="codeFn">{'{{ activation_health(0.82) }}'}</span>{'\n'}
 {'      '}- chart: sessions_by_plan{'\n'}
 {'      '}- chart: active_users</code></pre>
-            </div>
+            </FeatureMacWindow>
           </article>
           <article className="howCodeStep">
             <span>{workflowSteps[2][0]}</span>
             <h3>{workflowSteps[2][1]}</h3>
             <p>{workflowSteps[2][2]}</p>
-            <div className="miniCodeWindow">
-              <div>Terminal</div>
+            <FeatureMacWindow filename="Terminal">
               <pre><code><span className="codeFn">$</span> glyf build{'\n\n'}
 <span className="codeMuted">✓ Resolved 6 ref() calls</span>{'\n'}
 <span className="codeMuted">✓ Compiled 8 charts</span>{'\n'}
 <span className="codeMuted">✓ Built product.html</span>{'\n'}
 <span className="codeMuted">✓ Wrote chart assets</span>{'\n'}
 <span className="codeFn">✓ Build complete in 2.1s</span></code></pre>
-            </div>
+            </FeatureMacWindow>
           </article>
         </div>
       </div>
@@ -415,8 +823,8 @@ function PersonasSection() {
     <section className="personasSection">
       <div className="container">
         <div className="sectionHeader">
-          <p className="eyebrow">Who it's for</p>
-          <h2>Built for every role in the data team.</h2>
+          <p className="eyebrow">who it's for</p>
+          <h2>Built for everyone who touches data.</h2>
         </div>
         <div className="personasGrid">
           {personas.map(([role, title, description]) => (
@@ -432,78 +840,30 @@ function PersonasSection() {
   );
 }
 
-function BlogSection() {
-  return (
-    <section className="blogSection">
-      <div className="container">
-        <div className="sectionHeader blogSection__header">
-          <p className="eyebrow">Blogs</p>
-          <h2>Latest from the Glyf Blog</h2>
-        </div>
-        <div className="blogGrid">
-          {blogPosts.map((post) => (
-            <Link className="blogCard" to={post.to} key={post.title}>
-              <img src={post.image} alt="" loading="lazy" />
-              <h3>{post.title}</h3>
-              <p>{post.date} <span aria-hidden="true">·</span> {post.category}</p>
-            </Link>
-          ))}
-        </div>
-        <div className="blogSection__actions">
-          <Link className="blogReadMoreButton" to="/blog">
-            Read more
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function GgsqlSection() {
   return (
     <section className="band">
       <div className="container ggsqlLayout">
-        <div>
-          <p className="eyebrow">Glyf + GGSQL</p>
-          <div className="ggsqlCopyBlocks">
-            <div>
-              <h2>GGSQL provides the SQL visualization grammar.</h2>
-              <p>
-                GGSQL is a separate open source project focused on SQL-native visualization:
-                chart grammar, visualization primitives, and query-oriented authoring. Learn
-                more at <a href="https://ggsql.org">ggsql.org</a>.
-              </p>
-            </div>
-            <div>
-              <h2>Glyf brings it into an analytics-engineering workflow.</h2>
-              <p>
-                Glyf supports GGSQL today and adds the surrounding project layer: dbt artifact
-                resolution, dashboard YAML, validation commands, and rendered outputs your team
-                can publish.
-              </p>
-            </div>
-          </div>
+        <div className="sectionHeader ggsqlSectionHeader">
+          <p className="eyebrow">glyf + ggsql</p>
         </div>
-        <div className="ggsqlBridge" aria-label="GGSQL and Glyf responsibilities">
-          <article>
-            <span>GGSQL</span>
-            <h3>SQL visualization engine</h3>
-            <ul>
-              <li>SQL-native chart grammar</li>
-              <li>Visualization primitives</li>
-              <li>Query-oriented authoring</li>
-            </ul>
-          </article>
-          <div className="bridgeMark" aria-hidden="true">+</div>
-          <article>
-            <span>Glyf</span>
-            <h3>Integration and dashboard layer</h3>
-            <ul>
-              <li>dbt artifact integration</li>
-              <li>Dashboard YAML specs</li>
-              <li>Rendered artifacts for docs, apps, and CI</li>
-            </ul>
-          </article>
+        <div className="ggsqlCopyBlocks">
+          <div className="ggsqlCopyColumn ggsqlCopyColumn--primary">
+            <h2>GGSQL provides the SQL visualization grammar.</h2>
+            <p>
+              GGSQL is a separate open source project focused on SQL-native visualization:
+              chart grammar, visualization primitives, and query-oriented authoring. Learn
+              more at <a href="https://ggsql.org">ggsql.org</a>.
+            </p>
+          </div>
+          <div className="ggsqlCopyColumn ggsqlCopyColumn--secondary">
+            <h2>Glyf brings it into an analytics-engineering workflow.</h2>
+            <p>
+              Glyf built on top of GGSQL today and adds the surrounding project layer: dbt artifact
+              resolution, dashboard YAML, validation commands, and rendered outputs your team
+              can publish.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -515,7 +875,7 @@ function FeatureLinks() {
     <section className="band band--muted">
       <div className="container">
         <div className="sectionHeader">
-          <p className="eyebrow">Documentation</p>
+          <p className="eyebrow">documentation</p>
           <h2>Start with the docs you need.</h2>
         </div>
         <div className="linkGrid">
@@ -536,7 +896,7 @@ function Examples() {
     <section className="band examplesSection">
       <div className="container splitLayout">
         <div>
-          <p className="eyebrow">Examples gallery</p>
+          <p className="eyebrow">examples gallery</p>
           <h2>Open gallery of working examples</h2>
           <p>
             Each example includes seeds, analytical models, GGSQL visualisations, dashboard YAML, and repeatable commands. Use them as starting points for your own analytics project.
@@ -571,8 +931,6 @@ export default function Home() {
         <GgsqlSection />
         <PersonasSection />
         <Examples />
-        <FeatureLinks />
-        <BlogSection />
       </main>
     </Layout>
   );
