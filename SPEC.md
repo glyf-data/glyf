@@ -2,7 +2,7 @@
 
 ## Goal
 
-Build a semantic visualization layer for analytical systems. The tool discovers ggsql visualisation files, connects them to analytical metadata, executes SQL, renders chart outputs, and creates static dashboards. The first integration supports dbt artifacts and dbt `ref()` / `source()` resolution.
+Build an Open Source Visualization build tool to data pipeline. The tool discovers ggsql visualisation files, connects them to analytical metadata, executes SQL, renders chart outputs, and creates static dashboards. The first integration supports dbt artifacts and dbt `ref()` / `source()` resolution.
 
 ## Non-goals
 

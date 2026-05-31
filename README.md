@@ -6,7 +6,7 @@
 [![Python versions](https://img.shields.io/pypi/pyversions/glyf.svg)](https://pypi.org/project/glyf/)
 [![License](https://img.shields.io/pypi/l/glyf.svg)](LICENSE)
 
-A semantic visualization layer for analytical systems.
+Open Source Visualization build tool to data pipeline.
 
 `glyf` turns analytical metadata and SQL-first visualisation files into
 versioned chart artifacts and static dashboards. Its first integration reads dbt
@@ -17,11 +17,6 @@ with Altair, and exports publishable dashboard sites.
 `glyf` is artifact-driven, not dbt-runtime-driven. Run dbt first, then run
 `glyf` against the resulting artifacts and relations.
 
-## Status
-
-Alpha-stage Python CLI. Useful for local analytics, static dashboard prototypes,
-and repeatable reporting artifacts that live beside analytical systems. It is
-not a dbt adapter, BI server, or hosted dashboard service.
 
 ## Installation
 
@@ -214,18 +209,3 @@ Near-term themes:
 - snapshot tests for generated HTML
 - optional publish helpers for common static hosts
 - local `serve` and `watch` workflows after the release baseline is stable
-
-## License
-
-`glyf` is released under the
-[Apache License 2.0](LICENSE).
-
-## Common Issues
-
-- Missing `target/manifest.json`: run `dbt compile` or `dbt build`.
-- Unresolved `ref()` or `source()`: check the dbt model/source names in the
-  generated manifest.
-- No charts found: check `visualisations_path` in `glyf.yml`.
-- DuckDB execution error: run `dbt build` before `glyf render`.
-- Rendering dependency error: run `uv sync` to install Altair and
-  `vl-convert-python`.

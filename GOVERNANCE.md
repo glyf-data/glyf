@@ -60,4 +60,4 @@ The owner may update this document at any time. Changes will be committed with a
 
 ---
 
-*Owner: Kannan Kalidasan - kannanpoem1984@gmail.com*
+*Owner: Kannan Kalidasan*
