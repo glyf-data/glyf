@@ -9,7 +9,7 @@ const baseUrl = normalizedBaseUrl.endsWith('/') ? normalizedBaseUrl : `${normali
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'glyf',
-  tagline: 'Visualization belongs in the pipeline',
+  tagline: 'Open Source Visualization build tool to data pipeline',
   favicon: 'img/favicon-v2.svg',
 
   url: siteUrl,

@@ -1,6 +1,6 @@
 # glyf
 
-> A semantic visualization layer for analytical systems.
+> Open Source Visualization build tool to data pipeline.
 
 glyf helps analytics engineers generate static dashboards from analytical projects.
 It uses .ggsql chart files, dashboard YAML, analytical artifacts, DuckDB execution, and static HTML export. Its first integration reads dbt artifacts.
