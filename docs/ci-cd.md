@@ -42,6 +42,7 @@ The workflow:
 - checks out the repository
 - installs `uv`
 - installs dependencies
+- changes into the example dbt project directory
 - runs `dbt seed` and `dbt build`
 - runs `glyf doctor`
 - runs `glyf render`
@@ -49,8 +50,9 @@ The workflow:
 - runs `glyf export`
 - uploads the static site as a workflow artifact
 
-For your own project, change the `examples/simple_dbt` paths to your dbt project
-directory. If your dbt profile needs credentials, provide them through GitHub
+For your own project, run the dbt commands from the dbt project directory so
+profile-relative paths such as DuckDB database files resolve inside that
+project. If your dbt profile needs credentials, provide them through GitHub
 Actions secrets and environment variables.
 
 ## GitHub Pages

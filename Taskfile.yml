@@ -38,8 +38,8 @@ tasks:
   dashboard-ci:
     desc: Run the example dashboard workflow used by GitHub Actions
     cmds:
-      - uv run dbt seed --project-dir {{.EXAMPLE_PROJECT}} --profiles-dir {{.EXAMPLE_PROJECT}} --full-refresh --no-partial-parse
-      - uv run dbt build --project-dir {{.EXAMPLE_PROJECT}} --profiles-dir {{.EXAMPLE_PROJECT}}
+      - cd {{.EXAMPLE_PROJECT}} && uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
+      - cd {{.EXAMPLE_PROJECT}} && uv run dbt build --profiles-dir .
       - uv run glyf doctor --project-dir {{.EXAMPLE_PROJECT}}
       - uv run glyf render --project-dir {{.EXAMPLE_PROJECT}}
       - uv run glyf dashboard --project-dir {{.EXAMPLE_PROJECT}}
