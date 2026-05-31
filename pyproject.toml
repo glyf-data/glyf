@@ -1,7 +1,7 @@
 [project]
 name = "glyf"
 version = "0.1.0"
-description = "A semantic visualization layer for analytical systems."
+description = "visualization build step to data pipeline"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
@@ -41,7 +41,7 @@ glyf = "glyf.cli:app"
 [project.urls]
 Repository = "https://github.com/kannandreams/glyf"
 Issues = "https://github.com/kannandreams/glyf/issues"
-Documentation = "https://kannandreams.github.io/glyf/"
+Documentation = "https://glyf.pages.dev"
 
 [dependency-groups]
 dev = [

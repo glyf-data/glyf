@@ -17,15 +17,10 @@ uv run glyf render
 uv run glyf dashboard
 ```
 
+This creates the example DuckDB database at `target/simple_dbt.duckdb`.
+
 `--no-partial-parse` is useful if you have previously run this example from a
 different working directory and dbt has cached old file paths.
 
-From the repository root, use:
-
-```bash
-uv run dbt seed --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
-uv run dbt run --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
-uv run dbt compile --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
-uv run glyf render --project-dir examples/simple_dbt
-uv run glyf dashboard --project-dir examples/simple_dbt
-```
+Run the dbt commands from the example directory so the DuckDB file stays inside
+that project's `target/` folder.
