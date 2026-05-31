@@ -14,6 +14,9 @@ project artifacts, resolves dbt `ref()` and `source()` calls from
 `target/manifest.json`, executes chart SQL with DuckDB, renders PNG/SVG charts
 with Altair, and exports publishable dashboard sites.
 
+`glyf` is artifact-driven, not dbt-runtime-driven. Run dbt first, then run
+`glyf` against the resulting artifacts and relations.
+
 ## Status
 
 Alpha-stage Python CLI. Useful for local analytics, static dashboard prototypes,
@@ -85,10 +88,8 @@ In a dbt project:
 glyf init
 dbt build
 glyf doctor
-glyf validate
-glyf render
-glyf dashboard
-glyf export --clean
+glyf build
+glyf serve
 ```
 
 For the included example project:
@@ -99,10 +100,8 @@ cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
-uv run glyf validate
-uv run glyf render
-uv run glyf dashboard
-uv run glyf export --clean
+uv run glyf build
+uv run glyf serve
 ```
 
 This creates the example DuckDB database at
@@ -116,26 +115,35 @@ examples/simple_dbt/target/ggsql/site/index.html
 
 ## CLI
 
+High-level workflow commands:
+
 ```bash
 uv run glyf init
 uv run glyf doctor
+uv run glyf build
+uv run glyf serve
+```
+
+Low-level control commands:
+
+```bash
 uv run glyf list
 uv run glyf validate
 uv run glyf render
 uv run glyf dashboard
 uv run glyf export --clean --zip
-uv run glyf serve
 ```
 
 Point at another project:
 
 ```bash
-uv run glyf render --project-dir examples/sales_dashboard
+uv run glyf build --project-dir examples/sales_dashboard
 ```
 
 Preview a generated dashboard locally:
 
 ```bash
+uv run glyf build --project-dir examples/simple_dbt
 uv run glyf serve --project-dir examples/simple_dbt
 uv run glyf serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
 ```

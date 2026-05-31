@@ -40,7 +40,8 @@ def test_init_command_creates_starter_files(tmp_path: Path) -> None:
     assert "✓ wrote glyf.yml" in result.output
     assert "✓ wrote visualisations/monthly_revenue.ggsql" in result.output
     assert "✓ wrote dashboards/executive.yml" in result.output
-    assert "glyf validate" in result.output
+    assert "glyf build" in result.output
+    assert "glyf serve" in result.output
     assert (project / "glyf.yml").exists()
     assert (project / "visualisations" / "monthly_revenue.ggsql").exists()
     assert (project / "dashboards" / "executive.yml").exists()
@@ -219,6 +220,20 @@ def test_render_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert (project / "target" / "ggsql" / "compiled" / "revenue.sql").exists()
 
 
+def test_build_command_runs_full_pipeline(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = runner.invoke(app, ["build", "--project", str(project), "--zip"])
+
+    assert result.exit_code == 0
+    assert "Validation passed" in result.output
+    assert "✓ compiled SQL" in result.output
+    assert "✓ generated dashboard HTML" in result.output
+    assert "✓ exported site to target/ggsql/site" in result.output
+    assert (project / "target" / "ggsql" / "site" / "index.html").exists()
+    assert (project / "target" / "ggsql" / "glyf-site.zip").exists()
+
+
 def test_dashboard_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     render_result = runner.invoke(app, ["render", "--project", str(project)])
@@ -254,7 +269,7 @@ def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
 
 @pytest.mark.parametrize(
     "command",
-    ["list", "validate", "render", "dashboard", "export", "serve"],
+    ["list", "validate", "render", "build", "dashboard", "export", "serve"],
 )
 def test_commands_report_config_errors(tmp_path: Path, command: str) -> None:
     project = copy_basic_project(tmp_path)
@@ -322,7 +337,7 @@ def test_serve_command_reports_missing_site(tmp_path: Path) -> None:
 
     assert result.exit_code == 1
     assert "Serve failed" in result.output
-    assert "run `glyf dashboard` first" in result.output
+    assert "run `glyf build` or `glyf export` first" in result.output
 
 
 def test_serve_command_serves_generated_site(
