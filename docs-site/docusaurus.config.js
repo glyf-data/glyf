@@ -9,7 +9,7 @@ const baseUrl = normalizedBaseUrl.endsWith('/') ? normalizedBaseUrl : `${normali
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'glyf',
-  tagline: 'Visualization belongs in the pipeline',
+  tagline: 'Open Source Visualization build tool to data pipeline',
   favicon: 'img/favicon-v2.svg',
 
   url: siteUrl,
@@ -62,6 +62,14 @@ const config = {
         defaultMode: 'light',
         disableSwitch: true,
         respectPrefersColorScheme: false,
+      },
+      announcementBar: {
+        id: 'glyf-studio',
+        content:
+          '<a class="studioAnnouncementLink" href="https://glyfdata.com" aria-label="Introducing Glyf Studio">Introducing Glyf Studio <span aria-hidden="true">→</span></a>',
+        backgroundColor: '#0047ff',
+        textColor: '#ffffff',
+        isCloseable: false,
       },
       navbar: {
         title: 'Glyf',

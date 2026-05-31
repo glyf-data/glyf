@@ -29,7 +29,7 @@ Before making the docs public:
 The preview image should show:
 
 - `glyf` name.
-- The tagline: `A semantic visualization layer for analytical systems`.
+- The tagline: `Open Source Visualization build tool to data pipeline`.
 - A compact generated dashboard screenshot.
 - A clean light background that matches the docs theme.
 

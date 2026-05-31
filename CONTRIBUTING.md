@@ -10,6 +10,42 @@ easier to learn from.
 This guide explains how to prepare a contribution, set up a local development
 environment, and describe your work when opening a pull request.
 
+## Read This First
+
+`glyf` is still early. Contributions are welcome, but review is selective.
+
+You can still open an issue or PR, but please do so knowing that maintainers may:
+
+- ask you to reduce scope
+- defer the work
+- close the PR
+- rework the idea in a different way later
+
+That is not meant to be unfriendly. It is meant to keep the project coherent
+while the product surface, architecture, and release workflow are still
+stabilizing.
+
+Small, focused changes are much more likely to be reviewed and merged than
+large, opinionated, or speculative ones.
+
+## Discussions
+
+This repository also uses GitHub Discussions.
+
+There will be an active discussion thread every month to gather:
+
+- feedback
+- concerns
+- workflow pain points
+- ideas you want to share
+- questions about direction or adoption
+
+Valuable points raised there will be reviewed and considered as part of how the
+project improves over time.
+
+If you are not sure whether something should be an issue, feature request, or
+pull request, start in Discussions first.
+
 ## Before You Start
 
 Small, focused contributions are easiest to review and merge. Good first
@@ -23,6 +59,27 @@ contributions include:
 For larger changes, please open an issue before writing code. This is especially
 important for new chart syntax, dashboard behavior, dbt integration changes,
 public APIs, packaging changes, or licensing and governance topics.
+
+## What We Are Most Likely To Accept
+
+- small bug fixes
+- small reliability improvements
+- focused performance work
+- documentation improvements with concrete examples
+- constrained usability fixes to the CLI, dashboard generation, or validation
+- tightly scoped maintenance work that clearly improves the project without
+  changing its direction
+
+## What We Are Least Likely To Accept
+
+- large PRs that mix unrelated changes
+- drive-by feature work without prior discussion
+- broad product-scope expansion
+- opinionated rewrites of working subsystems
+- syntax or API changes without a clear motivating workflow
+
+If you open a large PR full of new behavior without prior discussion, it is
+very likely to be closed or redirected into an issue first.
 
 ## Governance and Conduct
 
@@ -154,6 +211,20 @@ version control unless a fixture is intentionally part of a test.
 
 ## Pull Request Guidelines
 
+If you still want to open a PR:
+
+- keep it small
+- explain exactly what changed
+- explain exactly why the change should exist
+- do not mix unrelated fixes together
+- update docs or examples when user-facing behavior changes
+
+If the PR changes the docs site or anything visual, include before/after
+screenshots. If the change depends on motion, timing, transitions, or
+interaction details, include a short screen recording.
+
+If reviewers have to guess what changed, review will slow down considerably.
+
 Before opening a pull request:
 
 1. Keep the change focused on one problem.
@@ -172,6 +243,9 @@ In the pull request description, include:
 The maintainer may ask for changes, decline a PR, or suggest opening a separate
 issue for a larger design discussion. That keeps review clear while the project
 is still early.
+
+Opening a PR does not create an obligation on the maintainer side to review,
+merge, or continue supporting that exact implementation direction.
 
 ## Reporting Bugs
 
@@ -199,6 +273,13 @@ Please include:
 
 For syntax changes, examples are more useful than abstract descriptions. Show
 what the `.ggsql` or YAML should look like and what output you expect.
+
+For non-trivial feature work, open an issue first. That does not guarantee a PR
+will be accepted, but it reduces the chance that you spend time building
+something that does not match the intended product direction.
+
+If the idea is still early, broad, or exploratory, use Discussions before
+opening an issue.
 
 ## Documentation Contributions
 

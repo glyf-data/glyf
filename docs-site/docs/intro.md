@@ -1,6 +1,6 @@
 # glyf
 
-`glyf` is a semantic visualization layer for analytical systems.
+`glyf` is an Open Source Visualization build tool to data pipeline.
 
 It lets analytics engineers define chart queries in `.ggsql`, connect them to analytical metadata, render the results into static chart artifacts, and publish dashboards without running a BI server. The first integration reads dbt artifacts and resolves dbt `ref()` and `source()` calls from `target/manifest.json`.
 
