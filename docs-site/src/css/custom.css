@@ -7164,23 +7164,22 @@ div[class*='codeBlockContent'] pre code,
 }
 
 .exampleCard__links a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2rem;
-  padding: 0 0.7rem;
-  border: 1px solid rgba(36, 101, 29, 0.16);
-  border-radius: 999px;
-  background: rgba(36, 101, 29, 0.06);
-  color: var(--glyf-attention);
-  font-size: 0.86rem;
-  font-weight: 750;
-  text-decoration: none;
+  display: inline;
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ifm-link-color);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
 }
 
 .exampleCard__links a:hover {
-  border-color: rgba(36, 101, 29, 0.3);
-  background: rgba(36, 101, 29, 0.1);
-  text-decoration: none;
+  background: transparent;
+  text-decoration-thickness: 2px;
 }
 
 .personasSection .personaCard .cardIcon {
@@ -7679,16 +7678,16 @@ body,
 
 .exampleCard__links a,
 [data-theme='dark'] .exampleCard__links a {
-  border-color: #bfdbfe !important;
-  background: var(--glyf-tint-blue) !important;
-  color: #1e3a8a !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  color: var(--ifm-link-color) !important;
 }
 
 .exampleCard__links a:hover,
 [data-theme='dark'] .exampleCard__links a:hover {
-  border-color: #1e3a8a !important;
-  background: #ffffff !important;
-  color: #000000 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  color: var(--ifm-link-hover-color) !important;
 }
 
 .footer.footer--dark,

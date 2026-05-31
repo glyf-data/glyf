@@ -6,11 +6,21 @@ import Link from '@docusaurus/Link';
 
 ## Rendered output
 
-![Simple dbt dashboard screenshot placeholder](/img/examples/simple-dbt-banner.svg)
-
-Rendered dashboard: <Link to="pathname:///dashboards/simple-dbt/dashboards/executive.html">/dashboards/simple-dbt/dashboards/executive.html</Link>
+Rendered dashboard: <Link to="pathname:///dashboards/simple-dbt/dashboards/executive.html">Open the full simple dbt dashboard</Link>
 
 Deployed docs path: `https://glyf.pages.dev/dashboards/simple-dbt/dashboards/executive.html`
+
+<iframe
+  src="/dashboards/simple-dbt/dashboards/executive.html"
+  title="Simple dbt dashboard preview"
+  style={{
+    width: '100%',
+    height: '820px',
+    border: '1px solid var(--ifm-color-emphasis-300)',
+    borderRadius: '12px',
+    background: '#ffffff'
+  }}
+/>
 
 ## What it demonstrates
 
@@ -23,12 +33,10 @@ Deployed docs path: `https://glyf.pages.dev/dashboards/simple-dbt/dashboards/exe
 ```bash
 cd examples/simple_dbt
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
-uv run dbt run --profiles-dir .
-uv run dbt compile --profiles-dir .
+uv run dbt build --profiles-dir .
 uv run glyf doctor
-uv run glyf render
-uv run glyf dashboard
-uv run glyf export --clean
+uv run glyf build
+uv run glyf serve
 ```
 
 ## Example chart

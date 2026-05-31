@@ -6,7 +6,7 @@ Use this checklist when refreshing docs assets so every image shows output produ
 
 ## Gallery banner assets
 
-The gallery uses wide `1200x675` PNG banners so cards stay aligned across desktop and mobile layouts.
+The gallery uses wide `1200x675` banner assets so cards stay aligned across desktop and mobile layouts.
 
 | Asset | Source output | Rendered dashboard |
 | --- | --- | --- |
@@ -19,7 +19,7 @@ The gallery uses wide `1200x675` PNG banners so cards stay aligned across deskto
 
 - Use generated `glyf` output.
 - Prefer wide rectangle previews that fit gallery cards.
-- Replace the placeholder SVG files with real `1200x675` screenshots when captured.
+- Replace the current banner SVG files with real `1200x675` screenshots when captured.
 - Avoid screenshots with local file paths, private data, or unstable timestamps.
 - Keep light and dark mode screenshots if both modes are visually meaningful.
 - Store assets under `docs-site/static/img/examples/`.
