@@ -16,13 +16,12 @@ Use it when you want visualizations to live beside analytical code, move through
 
 ## What it is not
 
-`glyf` is not a dbt adapter, hosted BI server, metrics store, or drag-and-drop dashboard editor. The goal is a deterministic CLI workflow:
+`glyf` is not a dbt adapter, hosted BI server, metrics store, or drag-and-drop dashboard editor. `glyf` is artifact-driven, not dbt-runtime-driven. The goal is a deterministic CLI workflow:
 
 ```bash
 dbt build
-glyf render
-glyf dashboard
-glyf export
+glyf build
+glyf serve
 ```
 
 That workflow keeps data transformation in the analytical system, chart definitions in SQL-first files, and dashboard publishing in static artifacts.

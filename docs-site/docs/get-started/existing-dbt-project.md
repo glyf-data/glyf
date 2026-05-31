@@ -4,15 +4,14 @@ Use this path when you already have a dbt project with models and a working prof
 
 ## Install glyf
 
-```bash
-pip install glyf
-```
-
-Or keep the CLI isolated with `uv`:
+Install the CLI from a GitHub Release wheel:
 
 ```bash
-uv tool install glyf
+uv tool install \
+  https://github.com/kannandreams/glyf/releases/download/v0.1.0/glyf-0.1.0-<platform>.whl
 ```
+
+Replace `<platform>` with the wheel asset that matches your OS and architecture.
 
 ## Initialize the project
 
@@ -67,7 +66,8 @@ charts:
 
 ## Build dbt artifacts
 
-`glyf` does not run dbt for you. Build or compile first so `target/manifest.json` exists.
+`glyf` is artifact-driven, not dbt-runtime-driven. It does not run dbt for you.
+Build or compile first so `target/manifest.json` exists.
 
 ```bash
 dbt build
@@ -95,13 +95,15 @@ glyf validate --project-dir path/to/my_dbt_project
 ## Generate dashboards
 
 ```bash
+glyf build
+glyf serve
+```
+
+If you want lower-level control, run the pipeline step by step instead:
+
+```bash
+glyf validate
 glyf render
 glyf dashboard
 glyf export --clean
-```
-
-Preview locally:
-
-```bash
-glyf serve
 ```

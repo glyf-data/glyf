@@ -32,11 +32,9 @@ jobs:
       - name: Check glyf project health
         run: uv run glyf doctor --project-dir examples/simple_dbt
 
-      - name: Generate glyf dashboard
+      - name: Build glyf site
         run: |
-          uv run glyf render --project-dir examples/simple_dbt
-          uv run glyf dashboard --project-dir examples/simple_dbt
-          uv run glyf export --project-dir examples/simple_dbt --clean --zip
+          uv run glyf build --project-dir examples/simple_dbt --zip
 
       - name: Upload static site artifact
         uses: actions/upload-artifact@v4

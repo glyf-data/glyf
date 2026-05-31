@@ -3,6 +3,7 @@ from typing import Annotated
 
 import typer
 
+from glyf.commands.build_cmd import run_build
 from glyf.commands.dashboard_cmd import run_dashboard
 from glyf.commands.doctor_cmd import run_doctor
 from glyf.commands.export_cmd import run_export
@@ -121,6 +122,26 @@ def validate_command(project: ProjectOption = Path("."), config: ConfigOption = 
 def render_command(project: ProjectOption = Path("."), config: ConfigOption = None) -> None:
     """Generate compiled SQL and chart artifacts."""
     run_render(project, config)
+
+
+@app.command("build")
+def build_command(
+    project: ProjectOption = Path("."),
+    config: ConfigOption = None,
+    clean: Annotated[
+        bool,
+        typer.Option(
+            "--clean/--no-clean",
+            help="Clean the previous site export before copying. Enabled by default.",
+        ),
+    ] = True,
+    zip_site: Annotated[
+        bool,
+        typer.Option("--zip", help="Create target/ggsql/glyf-site.zip."),
+    ] = False,
+) -> None:
+    """Run the full glyf artifact pipeline and export a static site."""
+    run_build(project, clean=clean, zip_site=zip_site, config_path=config)
 
 
 @app.command("dashboard")

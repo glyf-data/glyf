@@ -12,18 +12,24 @@ When working from this repository, use:
 uv run glyf
 ```
 
-## Commands
+## High-level commands
 
 | Command | Purpose |
 | --- | --- |
 | `glyf init` | Scaffold glyf config, starter chart, and dashboard files. |
 | `glyf doctor` | Check whether a project is ready for glyf workflows. |
+| `glyf build` | Run the full glyf artifact pipeline and export a static site. |
+| `glyf serve` | Serve the exported static dashboard site locally. |
+
+## Low-level commands
+
+| Command | Purpose |
+| --- | --- |
 | `glyf list` | List discovered ggsql project files. |
 | `glyf validate` | Validate discovered files and manifest refs. |
 | `glyf render` | Generate compiled SQL and chart artifacts. |
 | `glyf dashboard` | Generate static dashboard HTML from rendered chart artifacts. |
 | `glyf export` | Copy generated outputs into a publish-ready static site folder. |
-| `glyf serve` | Serve the generated static dashboard site locally. |
 
 ## Shared options
 
@@ -34,7 +40,7 @@ Most commands support:
 | `--project-dir`, `--project`, `-p` | Path to a dbt project. Defaults to the current directory. |
 | `--config` | Path to `glyf.yml`. Defaults to `PROJECT/glyf.yml` if present. |
 
-## Common workflow
+## Recommended workflow
 
 For a new dbt project, scaffold starter files first:
 
@@ -42,11 +48,23 @@ For a new dbt project, scaffold starter files first:
 glyf init --project-dir path/to/dbt_project
 ```
 
-Then run dbt and generate dashboard artifacts:
+Then run dbt and build the exported site:
 
 ```bash
 uv run glyf doctor --project-dir examples/simple_dbt
-uv run glyf list --project-dir examples/simple_dbt
+uv run glyf build --project-dir examples/simple_dbt --zip
+uv run glyf serve --project-dir examples/simple_dbt
+```
+
+`glyf` is artifact-driven, not dbt-runtime-driven. Run dbt first so the
+manifest and relations exist before you call `glyf`.
+
+## Low-level control
+
+Use the lower-level commands when you want to debug or script specific pipeline
+steps:
+
+```bash
 uv run glyf validate --project-dir examples/simple_dbt
 uv run glyf render --project-dir examples/simple_dbt
 uv run glyf dashboard --project-dir examples/simple_dbt
@@ -94,10 +112,8 @@ Initialized glyf in .
 Next steps:
   dbt build
   glyf doctor
-  glyf validate
-  glyf render
-  glyf dashboard
-  glyf export --clean
+  glyf build
+  glyf serve
 ```
 
 ### `doctor`
@@ -190,6 +206,38 @@ Example output:
 ✓ wrote metadata
 ```
 
+### `build`
+
+Use `build` for the normal artifact pipeline after dbt has already run.
+
+```bash title="Command"
+uv run glyf build --project-dir examples/simple_dbt --zip
+```
+
+Example output:
+
+```text title="Output"
+Validation passed
+  GGSQL files: 5
+  Dashboard YAML files: 1
+  Manifest: present
+✓ discovered charts (5)
+✓ compiled SQL
+✓ executed SQL
+✓ rendered PNG/SVG
+✓ wrote metadata
+✓ discovered dashboard configs
+✓ loaded chart artifacts
+✓ generated dashboard HTML
+✓ generated index page
+✓ copied dashboard HTML
+✓ copied chart artifacts
+✓ copied compiled SQL
+✓ wrote site assets
+✓ exported site to target/ggsql/site
+✓ wrote zip archive target/ggsql/glyf-site.zip
+```
+
 ### `dashboard`
 
 Use `dashboard` after `render` to generate dashboard HTML pages from the rendered artifacts and dashboard YAML.
@@ -246,6 +294,13 @@ Example output:
 | `--clean` | Delete the previous site export before copying. |
 | `--zip` | Create `target/ggsql/glyf-site.zip`. |
 
+## `build` options
+
+| Option | Description |
+| --- | --- |
+| `--clean`, `--no-clean` | Clean the previous site export before copying. Enabled by default. |
+| `--zip` | Create `target/ggsql/glyf-site.zip`. |
+
 ## `serve` options
 
 | Option | Description |
@@ -253,9 +308,10 @@ Example output:
 | `--host` | Host interface to bind. Defaults to `127.0.0.1`. |
 | `--port` | Port to bind. Defaults to `8000`. Use `0` to choose an available port. |
 
-Preview a generated dashboard:
+Serve the exported site locally:
 
 ```bash
+uv run glyf build --project-dir examples/simple_dbt
 uv run glyf serve --project-dir examples/simple_dbt
 uv run glyf serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
 ```

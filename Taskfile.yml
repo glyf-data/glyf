@@ -31,9 +31,22 @@ tasks:
       - uv run pytest --cov=src/glyf --cov-report=term-missing --cov-report=xml
 
   build:
-    desc: Build package distributions
+    desc: Build package distributions for release
     cmds:
       - uv build
+
+  example-build:
+    desc: Run dbt and glyf build for the configured example project
+    cmds:
+      - cd {{.EXAMPLE_PROJECT}} && uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
+      - cd {{.EXAMPLE_PROJECT}} && uv run dbt build --profiles-dir .
+      - uv run glyf doctor --project-dir {{.EXAMPLE_PROJECT}}
+      - uv run glyf build --project-dir {{.EXAMPLE_PROJECT}} --zip
+
+  example-serve:
+    desc: Serve the exported site for the configured example project
+    cmds:
+      - uv run glyf serve --project-dir {{.EXAMPLE_PROJECT}}
 
   dashboard-ci:
     desc: Run the example dashboard workflow used by GitHub Actions
@@ -41,9 +54,7 @@ tasks:
       - cd {{.EXAMPLE_PROJECT}} && uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
       - cd {{.EXAMPLE_PROJECT}} && uv run dbt build --profiles-dir .
       - uv run glyf doctor --project-dir {{.EXAMPLE_PROJECT}}
-      - uv run glyf render --project-dir {{.EXAMPLE_PROJECT}}
-      - uv run glyf dashboard --project-dir {{.EXAMPLE_PROJECT}}
-      - uv run glyf export --project-dir {{.EXAMPLE_PROJECT}} --clean --zip
+      - uv run glyf build --project-dir {{.EXAMPLE_PROJECT}} --zip
 
   ci:
     desc: Run the same checks used by GitHub Actions

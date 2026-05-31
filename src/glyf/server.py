@@ -40,7 +40,7 @@ def resolve_serve_target(
     if not site_dir.exists():
         rel_path = _display_path(root, site_dir)
         raise ServeError(
-            f"{rel_path} does not exist; run `glyf dashboard` first"
+            f"{rel_path} does not exist; run `glyf build` or `glyf export` first"
         )
     if not site_dir.is_dir():
         rel_path = _display_path(root, site_dir)
@@ -48,7 +48,7 @@ def resolve_serve_target(
     if not index_path.exists():
         rel_path = _display_path(root, index_path)
         raise ServeError(
-            f"{rel_path} does not exist; run `glyf dashboard` first"
+            f"{rel_path} does not exist; run `glyf build` or `glyf export` first"
         )
 
     return ServeTarget(

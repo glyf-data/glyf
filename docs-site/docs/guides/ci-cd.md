@@ -10,9 +10,7 @@ From a dbt project root:
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt build --profiles-dir .
 uv run glyf doctor
-uv run glyf render
-uv run glyf dashboard
-uv run glyf export --clean --zip
+uv run glyf build --zip
 ```
 
 The publish-ready files are written to:

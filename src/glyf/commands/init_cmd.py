@@ -123,10 +123,8 @@ def run_init(
     typer.echo("Next steps:")
     typer.echo("  dbt build")
     typer.echo("  glyf doctor")
-    typer.echo("  glyf validate")
-    typer.echo("  glyf render")
-    typer.echo("  glyf dashboard")
-    typer.echo("  glyf export --clean")
+    typer.echo("  glyf build")
+    typer.echo("  glyf serve")
 
 
 def _normalize_name(value: str, label: str) -> str:
