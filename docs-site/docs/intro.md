@@ -33,4 +33,3 @@ That workflow keeps data transformation in the analytical system, chart definiti
 - Use [Existing dbt project](get-started/existing-dbt-project.md) when adding glyf to your own repo.
 - Browse [Examples gallery](examples/gallery.md) for project patterns.
 - Keep [CLI reference](reference/cli.md) open when wiring scripts or CI.
-- Read [Technical architecture](guides/technical-architecture.md) before contributing.

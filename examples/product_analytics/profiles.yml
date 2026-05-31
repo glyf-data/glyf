@@ -3,5 +3,5 @@ product_analytics:
   outputs:
     dev:
       type: duckdb
-      path: product_analytics.duckdb
+      path: target/product_analytics.duckdb
       schema: main
