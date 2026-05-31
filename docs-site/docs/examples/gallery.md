@@ -9,7 +9,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
 <div className="exampleGallery">
   <article className="exampleCard">
     <Link to="pathname:///dashboards/simple-dbt/dashboards/executive.html">
-      <img src="/img/examples/simple-dbt-banner.svg" alt="Simple dbt dashboard screenshot placeholder" />
+      <img src="/img/examples/simple-dbt-banner.svg" alt="Simple dbt dashboard preview banner" />
     </Link>
     <div className="exampleCard__body">
       <h3><a href="https://github.com/kannandreams/glyf/tree/main/examples/simple_dbt">Simple dbt</a></h3>
@@ -25,7 +25,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
 
   <article className="exampleCard">
     <Link to="pathname:///dashboards/sales-dashboard/dashboards/sales.html">
-      <img src="/img/examples/sales-dashboard-banner.svg" alt="Sales dashboard screenshot placeholder" />
+      <img src="/img/examples/sales-dashboard-banner.svg" alt="Sales dashboard preview banner" />
     </Link>
     <div className="exampleCard__body">
       <h3><a href="https://github.com/kannandreams/glyf/tree/main/examples/sales_dashboard">Sales Dashboard</a></h3>
@@ -41,7 +41,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
 
   <article className="exampleCard">
     <Link to="pathname:///dashboards/product-analytics/dashboards/product.html">
-      <img src="/img/examples/product-analytics-banner.svg" alt="Product analytics screenshot placeholder" />
+      <img src="/img/examples/product-analytics-banner.svg" alt="Product analytics dashboard preview banner" />
     </Link>
     <div className="exampleCard__body">
       <h3><a href="https://github.com/kannandreams/glyf/tree/main/examples/product_analytics">Product Analytics</a></h3>
@@ -57,7 +57,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
 
   <article className="exampleCard">
     <Link to="pathname:///dashboards/finance-metrics/dashboards/finance.html">
-      <img src="/img/examples/finance-metrics-banner.svg" alt="Finance metrics screenshot placeholder" />
+      <img src="/img/examples/finance-metrics-banner.svg" alt="Finance metrics dashboard preview banner" />
     </Link>
     <div className="exampleCard__body">
       <h3><a href="https://github.com/kannandreams/glyf/tree/main/examples/finance_metrics">Finance Metrics</a></h3>
@@ -72,8 +72,6 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
   </article>
 </div>
 
-See [Screenshots](screenshots.md) for the committed banner assets and refresh steps.
-
 ## Run an example
 
 From an example directory:
@@ -81,15 +79,14 @@ From an example directory:
 ```bash
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt build --profiles-dir .
-uv run glyf render
-uv run glyf dashboard
-uv run glyf export --clean --zip
+uv run glyf build --zip
+uv run glyf serve
 ```
 
 Open:
 
 ```text
-target/ggsql/site/index.html
+http://127.0.0.1:8000
 ```
 
 ## Use examples as templates

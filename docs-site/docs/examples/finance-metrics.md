@@ -6,11 +6,21 @@ import Link from '@docusaurus/Link';
 
 ## Rendered output
 
-![Finance metrics screenshot placeholder](/img/examples/finance-metrics-banner.svg)
-
-Rendered dashboard: <Link to="pathname:///dashboards/finance-metrics/dashboards/finance.html">/dashboards/finance-metrics/dashboards/finance.html</Link>
+Rendered dashboard: <Link to="pathname:///dashboards/finance-metrics/dashboards/finance.html">Open the full finance metrics dashboard</Link>
 
 Deployed docs path: `https://glyf.pages.dev/dashboards/finance-metrics/dashboards/finance.html`
+
+<iframe
+  src="/dashboards/finance-metrics/dashboards/finance.html"
+  title="Finance metrics dashboard preview"
+  style={{
+    width: '100%',
+    height: '900px',
+    border: '1px solid var(--ifm-color-emphasis-300)',
+    borderRadius: '12px',
+    background: '#ffffff'
+  }}
+/>
 
 ## What it demonstrates
 
@@ -26,9 +36,8 @@ Deployed docs path: `https://glyf.pages.dev/dashboards/finance-metrics/dashboard
 cd examples/finance_metrics
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt build --profiles-dir .
-uv run glyf render
-uv run glyf dashboard
-uv run glyf export --clean --zip
+uv run glyf build --zip
+uv run glyf serve
 ```
 
 ## Dashboard YAML
