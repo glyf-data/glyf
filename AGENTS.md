@@ -1,192 +1,188 @@
 # Agent Instructions
 
-  ## Shared Capability Library
+## Shared Capability Library
 
-  Use the shared capability library mounted in this repository at `capabilities/agent-forge/`.
+Use the vendored capability library committed directly in this repository at `capabilities/agent-forge/`.
 
-  Primary reference:
-  - `capabilities/agent-forge/docs/capabilities_index.md`
+These files are local project files now, not an external submodule or mounted dependency.
 
-  Use these topic files for this project:
-  - `capabilities/agent-forge/skills/python/uv_project_setup.md`
-  - `capabilities/agent-forge/skills/python/packaging_standards.md`
-  - `capabilities/agent-forge/skills/architecture/cli_first_tool_design.md`
-  - `capabilities/agent-forge/skills/architecture/artifact_driven_integration.md`
-  - `capabilities/agent-forge/skills/testing/test_strategy.md`
+Primary reference:
+- `capabilities/agent-forge/docs/capabilities_index.md`
 
-  Apply the shared guidance from those files unless a project-specific rule below overrides it.
+Use these topic files for this project:
+- `capabilities/agent-forge/skills/python/uv_project_setup.md`
+- `capabilities/agent-forge/skills/python/packaging_standards.md`
+- `capabilities/agent-forge/skills/architecture/cli_first_tool_design.md`
+- `capabilities/agent-forge/skills/architecture/artifact_driven_integration.md`
+- `capabilities/agent-forge/skills/testing/test_strategy.md`
 
-  ## Project Scope
+Apply the shared guidance from those files unless a project-specific rule below overrides it.
 
-  This project is a CLI-first Python tool that reads dbt-generated artifacts and produces ggsql outputs.
+## Project Scope
 
-  Initial implementation priority:
-  - project discovery
-  - manifest loading
-  - ggsql parsing
-  - `ref()` resolution
-  - artifact generation
+This project is a CLI-first Python tool with a Rust-first core engine.
 
-  Do not initially implement:
-  - frontend UI
-  - live dashboard server
-  - realtime rendering
-  - async orchestration
-  - browser-based editing
+Architecture preference:
+- Prefer Rust for core engine logic.
+- Use Python as the wrapper and orchestration layer.
+- Preserve the public Python API even when logic moves into Rust.
 
-  ## Project Constraints
+Current core boundary:
+- `crates/glyf-core` owns ggsql validation.
+- `crates/glyf-core` owns manifest extraction from `target/manifest.json`.
+- `crates/glyf-core` owns dbt `ref()` and `source()` resolution.
+- `crates/glyf-core` compiles into the Python extension module `glyf._core` through PyO3 and maturin.
 
-  - Keep v1 simple.
-  - Keep implementation incremental.
-  - Keep architecture modular.
-  - Prioritize correctness over features.
-  - Avoid premature abstractions.
-  - Prefer deterministic behavior.
-  - Keep CLI outputs human-readable.
-  - Do not couple tightly to dbt internals.
-  - Use dbt-generated artifacts instead of dbt runtime execution.
-  - Primary artifact: `target/manifest.json`
-  - Generate files into `target/ggsql/`
-  - Support `ref()` first.
-  - Defer `source()` support until later.
-  - Parse only the artifact fields needed for the current feature set.
-  - Use `uv` commands in all examples.
-  - Do not use `pip install`.
+Current Python wrapper boundary:
+- `src/glyf/ggsql/parser.py` keeps Python-facing parsing helpers, dataclasses, and errors, but delegates parsing to `glyf._core`.
+- `src/glyf/manifest/loader.py` keeps Python-facing manifest dataclasses and errors, but delegates manifest loading to `glyf._core`.
+- `src/glyf/manifest/resolver.py` keeps Python-facing resolution types, but delegates core resolution to `glyf._core`.
+- CLI commands, pipeline orchestration, dashboard generation, rendering, and file IO remain in Python unless there is a clear reason to move them.
 
-  ## Python Environment
+Implementation priority:
+- project discovery
+- manifest loading
+- ggsql parsing and validation
+- `ref()` resolution
+- artifact generation
 
-  Use `uv` for:
-  - virtual environments
-  - dependency installation
-  - command execution
-  - dependency locking
+Do not initially implement:
+- frontend UI
+- live dashboard server features beyond current scope
+- realtime rendering
+- async orchestration
+- browser-based editing
 
-  Avoid:
-  - `pipenv`
-  - `poetry`
-  - `conda`
+## Project Constraints
 
-  Preferred commands:
-  - `uv venv`
-  - `uv sync`
-  - `uv add typer rich pyyaml pydantic`
-  - `uv add --dev pytest ruff`
-  - `uv run pytest`
-  - `uv run glyf list`
+- Keep v1 simple.
+- Keep implementation incremental.
+- Keep architecture modular.
+- Prioritize correctness over features.
+- Avoid premature abstractions.
+- Prefer deterministic behavior.
+- Keep CLI outputs human-readable.
+- Do not couple tightly to dbt internals.
+- Use dbt-generated artifacts instead of dbt runtime execution.
+- Primary artifact: `target/manifest.json`
+- Generate files into `target/glyf/`
+- Support `ref()` first.
+- Preserve `source()` support where it already exists.
+- Parse only the artifact fields needed for the current feature set.
+- Keep Python wrappers thin and stable.
+- Move validation and heavy parsing into Rust before adding new Python-only core logic.
+- Keep Rust/Python data contracts explicit and tested.
+- Use `uv` commands in all Python examples.
+- Do not use `pip install`.
 
-  ## Packaging Baseline
+## Environment
 
-  Project should use:
-  - `pyproject.toml`
-  - `uv.lock`
-  - `.python-version`
-  - `src/` layout
+Use `uv` for:
+- virtual environments
+- Python dependency installation
+- Python command execution
+- dependency locking
 
-  Target structure:
+Use Rust tooling for the core crate:
+- `cargo fmt`
+- `cargo test`
+- `uv run maturin develop`
 
-  ```text
-  glyf/
-  ├── pyproject.toml
-  ├── uv.lock
-  ├── .python-version
-  ├── README.md
-  ├── SPEC.md
-  ├── ARCHITECTURE.md
-  ├── TASKS.md
-  ├── DECISIONS.md
-  ├── src/
-  │   └── glyf/
-  │       ├── __init__.py
-  │       ├── cli.py
-  │       ├── config.py
-  │       ├── constants.py
-  │       ├── commands/
-  │       │   ├── __init__.py
-  │       │   ├── list_cmd.py
-  │       │   ├── render_cmd.py
-  │       │   └── dashboard_cmd.py
-  │       ├── manifest/
-  │       │   ├── __init__.py
-  │       │   ├── loader.py
-  │       │   ├── parser.py
-  │       │   └── resolver.py
-  │       ├── ggsql/
-  │       │   ├── __init__.py
-  │       │   ├── models.py
-  │       │   ├── renderer.py
-  │       │   └── serializer.py
-  │       ├── output/
-  │       │   ├── __init__.py
-  │       │   ├── writer.py
-  │       │   └── paths.py
-  │       ├── dashboard/
-  │       │   ├── __init__.py
-  │       │   ├── generator.py
-  │       │   └── templates/
-  │       │       └── dashboard.html.j2
-  │       └── utils/
-  │           ├── __init__.py
-  │           ├── logging.py
-  │           ├── files.py
-  │           └── errors.py
-  ├── tests/
-  │   ├── __init__.py
-  │   ├── test_cli.py
-  │   ├── test_manifest_loader.py
-  │   ├── test_renderer.py
-  │   ├── fixtures/
-  │   │   ├── manifest.json
-  │   │   └── sample_project/
-  │   └── snapshots/
-  ├── examples/
-  │   ├── minimal_dbt_project/
-  │   │   ├── dbt_project.yml
-  │   │   ├── models/
-  │   │   │   └── example.sql
-  │   │   └── target/
-  │   │       └── manifest.json
-  │   ├── sample_outputs/
-  │   │   ├── rendered.sql
-  │   │   └── dashboard.html
-  │   └── cli_examples.md
-  ├── scripts/
-  │   ├── dev.sh
-  │   └── release.sh
-  ├── .gitignore
-  ├── LICENSE
-  └── AGENTS.md
+Avoid:
+- `pipenv`
+- `poetry`
+- `conda`
 
-  ## Coding Rules
+Preferred commands:
+- `uv sync`
+- `uv run maturin develop`
+- `uv run pytest`
+- `cargo test -p glyf-core`
+- `cargo fmt --all`
+- `uv run glyf validate`
+- `uv run glyf render`
 
-  - Small modules.
-  - Typed Python.
-  - Clear error messages.
-  - Prefer standard library where possible.
-  - Keep dependencies minimal.
-  - Keep functions composable and testable.
-  - Prefer explicit naming over clever abstractions.
+## Packaging Baseline
 
-  ## First Milestone
+Project packaging should reflect the mixed Rust/Python layout:
+- `pyproject.toml` uses `maturin` as the build backend.
+- `Cargo.toml` defines the Rust workspace.
+- `crates/glyf-core/Cargo.toml` defines the PyO3 extension crate.
+- `src/glyf/_core` is produced by the Rust extension build.
+- `src/` remains the Python source root.
 
-  Implement:
+Representative structure:
 
-  - glyf list
-  - glyf validate
-  - glyf render
-  - glyf dashboard
+```text
+glyf/
+├── pyproject.toml
+├── Cargo.toml
+├── Cargo.lock
+├── src/
+│   └── glyf/
+│       ├── cli.py
+│       ├── pipeline.py
+│       ├── commands/
+│       ├── dashboard/
+│       ├── execution/
+│       ├── ggsql/
+│       │   ├── models.py
+│       │   └── parser.py
+│       ├── manifest/
+│       │   ├── loader.py
+│       │   └── resolver.py
+│       ├── output/
+│       └── project/
+├── crates/
+│   └── glyf-core/
+│       ├── Cargo.toml
+│       └── src/lib.rs
+├── tests/
+├── examples/
+└── AGENTS.md
+```
 
-  Initial implementation may use placeholder artifacts instead of real rendered charts.
+## Coding Rules
 
-  ## Testing Expectations
+- Small modules.
+- Typed Python.
+- Clear error messages.
+- Prefer standard library where possible.
+- Keep dependencies minimal.
+- Keep functions composable and testable.
+- Prefer explicit naming over clever abstractions.
+- In Rust, prefer small pure helpers around parsing and conversion logic.
+- In Python, keep wrapper code focused on API compatibility, file IO, and orchestration.
+- When changing Rust return shapes, update Python adapters in the same change.
+- Do not duplicate core parsing or manifest logic in Python if Rust already owns it.
 
-  Add tests for:
+## First Preference For New Work
 
-  - project discovery
-  - manifest loading
-  - ggsql parsing
-  - ref() resolution
-  - dashboard config parsing
+When implementing or refactoring core behavior:
+- add or change logic in `crates/glyf-core` first
+- expose the behavior through `glyf._core`
+- adapt Python wrapper modules to preserve existing dataclasses, exceptions, and calling conventions
 
-  Use:
+Use Python-first changes only when the work is clearly outside the core boundary, such as:
+- CLI UX
+- dashboard templating
+- file generation
+- process orchestration
+- integration with Python visualization libraries
 
-  - uv run pytest
+## Testing Expectations
+
+Add or update tests for:
+- project discovery
+- manifest loading
+- ggsql parsing and validation
+- `ref()` resolution
+- `source()` resolution when touched
+- Python wrapper compatibility
+- dashboard config parsing
+
+Use:
+- `uv run pytest`
+- `cargo test -p glyf-core`
+
+If a change crosses the Rust/Python boundary, test both layers.

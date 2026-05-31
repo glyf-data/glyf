@@ -1,7 +1,5 @@
 # Release Process
 
-`glyf` is alpha-stage software. The current version is `0.1.0`.
-
 ## Versioning
 
 Use semantic versioning once the public API stabilizes:
@@ -9,9 +7,6 @@ Use semantic versioning once the public API stabilizes:
 - patch: bug fixes and docs-only changes
 - minor: backwards-compatible features
 - major: breaking CLI, config, or artifact contract changes
-
-For now, keep the package version at `0.1.0` until the first public alpha is
-explicitly tagged.
 
 ## Build Process
 
@@ -34,7 +29,8 @@ dist/
 After building:
 
 ```bash
-uv pip install --force-reinstall dist/*.whl
+uv tool uninstall glyf
+uv tool install dist/glyf-*.whl
 glyf --help
 ```
 
@@ -43,7 +39,7 @@ environment and install the wheel there.
 
 ## Publish Process
 
-Publishing to PyPI is intentionally manual.
+The recommended release channel is GitHub Releases with attached wheel files.
 
 1. Confirm tests pass:
 
@@ -59,14 +55,32 @@ Publishing to PyPI is intentionally manual.
 
 3. Inspect `dist/`.
 
-4. Publish with trusted publishing or a scoped token:
+4. Update `CHANGELOG.md` and confirm the package version in `pyproject.toml`.
+
+5. Create and push a release tag:
 
    ```bash
-   uv publish
+   git tag v0.1.0
+   git push origin v0.1.0
    ```
 
-The optional GitHub Actions publish workflow is manual-only and should be enabled
-only after the project has a configured PyPI publishing environment.
+6. Wait for the GitHub Actions release workflow to build wheels and publish a
+   GitHub Release with the generated artifacts.
+
+Users can then install `glyf` directly from a GitHub Release wheel:
+
+```bash
+uv tool install \
+  https://github.com/kannandreams/glyf/releases/download/v0.1.0/glyf-0.1.0-<platform>.whl
+```
+
+The release workflow lives in:
+
+```text
+.github/workflows/release.yml
+```
+
+PyPI publishing is intentionally deferred.
 
 ## Release Checklist
 
@@ -75,4 +89,4 @@ only after the project has a configured PyPI publishing environment.
 - Run `uv run pytest`.
 - Run `uv build`.
 - Install the wheel locally and run `glyf --help`.
-- Tag the release after publish, if publishing.
+- Push a `v*` tag and verify the GitHub Release artifacts.

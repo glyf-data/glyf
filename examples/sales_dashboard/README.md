@@ -11,6 +11,8 @@ uv run glyf dashboard
 uv run glyf export --clean --zip
 ```
 
+This creates the example DuckDB database at `target/sales_dashboard.duckdb`.
+
 Expected generated output:
 
 ```text

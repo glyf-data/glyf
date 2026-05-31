@@ -11,3 +11,5 @@ uv run glyf render
 uv run glyf dashboard
 uv run glyf export --clean --zip
 ```
+
+This creates the example DuckDB database at `target/finance_metrics.duckdb`.

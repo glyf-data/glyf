@@ -25,8 +25,9 @@ jobs:
 
       - name: Build dbt project
         run: |
-          uv run dbt seed --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt --full-refresh --no-partial-parse
-          uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
+          cd examples/simple_dbt
+          uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
+          uv run dbt build --profiles-dir .
 
       - name: Check glyf project health
         run: uv run glyf doctor --project-dir examples/simple_dbt

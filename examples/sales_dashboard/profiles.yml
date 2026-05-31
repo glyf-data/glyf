@@ -3,5 +3,5 @@ sales_dashboard:
   outputs:
     dev:
       type: duckdb
-      path: sales_dashboard.duckdb
+      path: target/sales_dashboard.duckdb
       schema: main

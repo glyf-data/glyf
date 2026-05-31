@@ -3,5 +3,5 @@ simple_dbt:
   outputs:
     dev:
       type: duckdb
-      path: simple_dbt.duckdb
+      path: target/simple_dbt.duckdb
       schema: main

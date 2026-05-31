@@ -21,7 +21,10 @@ def execute_sql(project_root: Path, sql: str) -> pd.DataFrame:
 
 def _duckdb_database(project_root: Path) -> str:
     database_name = f"{project_root.name}.duckdb"
-    for database_path in (project_root / database_name, Path.cwd() / database_name):
+    for database_path in (
+        project_root / "target" / database_name,
+        project_root / database_name,
+    ):
         if database_path.exists():
             return database_path.as_posix()
     return ":memory:"

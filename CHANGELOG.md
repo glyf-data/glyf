@@ -14,3 +14,4 @@ Initial experimental alpha release.
 - Static dashboard generation and exportable site folder.
 - Optional `glyf.yml` project configuration.
 - Example dbt projects and documentation.
+- GitHub Release workflow for platform wheels and source distribution artifacts.

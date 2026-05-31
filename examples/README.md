@@ -22,4 +22,7 @@ uv run glyf dashboard
 uv run glyf export --clean --zip
 ```
 
+Each example keeps its local DuckDB file under that example's `target/`
+directory.
+
 Open `target/ggsql/site/index.html`.

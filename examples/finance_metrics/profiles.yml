@@ -3,5 +3,5 @@ finance_metrics:
   outputs:
     dev:
       type: duckdb
-      path: finance_metrics.duckdb
+      path: target/finance_metrics.duckdb
       schema: main

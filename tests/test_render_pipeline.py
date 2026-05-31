@@ -77,21 +77,18 @@ def test_render_project_writes_interactive_metadata_and_vega_json(
     assert (project / metadata["vega_json_path"]).exists()
 
 
-def test_duckdb_execution_uses_working_directory_database(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_duckdb_execution_uses_project_target_database(tmp_path: Path) -> None:
     project = tmp_path / "simple_dbt"
     project.mkdir()
-    database = tmp_path / "simple_dbt.duckdb"
+    target_dir = project / "target"
+    target_dir.mkdir()
+    database = target_dir / "simple_dbt.duckdb"
     with duckdb.connect(database.as_posix()) as connection:
         connection.execute("CREATE SCHEMA IF NOT EXISTS main")
         connection.execute(
             "CREATE TABLE main.fct_orders AS "
             "SELECT '2026-01' AS month, 1200 AS revenue"
         )
-
-    monkeypatch.chdir(tmp_path)
 
     data = execute_sql(
         project,

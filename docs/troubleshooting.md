@@ -55,8 +55,7 @@ Usually this means the relation exists in the manifest but not in DuckDB yet.
 Run:
 
 ```bash
-dbt seed
-dbt run
+dbt build
 ```
 
 For changed seed schemas, use:
@@ -64,6 +63,9 @@ For changed seed schemas, use:
 ```bash
 dbt seed --full-refresh
 ```
+
+For the bundled examples, run dbt from inside the example directory so the
+database file is created under that example's `target/` folder.
 
 ## Rendering dependency error
 
