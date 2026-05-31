@@ -918,6 +918,119 @@ function Examples() {
   );
 }
 
+function AssistantPlaceholder() {
+  return (
+    <section className="band band--ink assistantSection">
+      <div className="container assistantLayout">
+        <div className="assistantCopy">
+          <p className="eyebrow">desktop app</p>
+          <h2><span className="assistantHeadingMark">Glyf</span> Studio</h2>
+          <div className="assistantBody">
+            <p>
+              The CLI builds and publishes.
+              <br />
+              Glyf Studio is the desktop workspace for everyone else on the team. Remove the gap between your data team and your business team.
+            </p>
+          </div>
+          <div className="assistantActions">
+            <a className="assistantCta" href="https://glyfdata.com">
+              Explore Glyf Studio
+            </a>
+          </div>
+        </div>
+        <div className="assistantMock" aria-label="Glyf Studio placeholder preview">
+          <div className="assistantWindow">
+            <div className="assistantWindow__titlebar">
+              <div className="assistantWindow__dots" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </div>
+              <strong>Glyf Studio</strong>
+            </div>
+            <div className="assistantWindow__body">
+              <div className="assistantPanel assistantPanel--source">
+                <div className="assistantPanel__label">Source</div>
+                <div className="assistantSourceList">
+                  <div className="assistantSourceOption is-active">
+                    <strong>sales.html</strong>
+                    <span>target/ggsql/site/</span>
+                    <em className="assistantSourceBadge assistantSourceBadge--local">Local</em>
+                  </div>
+                  <div className="assistantSourceOption">
+                    <strong>release-014</strong>
+                    <span>s3://analytics-artifacts/glyf/</span>
+                    <em className="assistantSourceBadge assistantSourceBadge--s3">S3</em>
+                  </div>
+                  <div className="assistantSourceOption">
+                    <strong>q2-review</strong>
+                    <span>shared bundle</span>
+                    <em className="assistantSourceBadge assistantSourceBadge--url">URL</em>
+                  </div>
+                </div>
+              </div>
+              <div className="assistantDivider" aria-hidden="true" />
+              <div className="assistantPanel assistantPanel--preview">
+                <div className="assistantTabs">
+                  <span className="assistantTab is-active">sales.html</span>
+                  <span className="assistantTab">pr diff</span>
+                </div>
+                <div className="assistantPreviewShell">
+                  <div className="assistantPreviewCanvas">
+                    <div className="assistantPreviewStat">
+                      <small>Revenue · this month</small>
+                      <strong>$184k</strong>
+                      <span>↑ 12% vs last month</span>
+                    </div>
+                    <div className="assistantPreviewChart assistantPreviewChart--bars">
+                      <div className="assistantPreviewChartLabel">Weekly revenue</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="assistantDivider" aria-hidden="true" />
+              <div className="assistantPanel assistantPanel--agent">
+                <div className="assistantPanel__label">Agent</div>
+                <div className="assistantAgentMessages">
+                  <div className="assistantMessage assistantMessage--agent">
+                    <div className="assistantMessageRole">Agent</div>
+                    <div className="assistantBubble">
+                      sales.html loaded. Revenue, signups, churn visible.
+                    </div>
+                  </div>
+                  <div className="assistantMessage assistantMessage--user">
+                    <div className="assistantMessageRole">You</div>
+                    <div className="assistantBubble">
+                      add a plan breakdown to the revenue chart and open a PR
+                    </div>
+                  </div>
+                  <div className="assistantMessage assistantMessage--status">
+                    <div className="assistantBubble">drafting SQL diff...</div>
+                  </div>
+                  <div className="assistantMessage assistantMessage--agent">
+                    <div className="assistantMessageRole">Agent</div>
+                    <div className="assistantBubble">
+                      Done. Added plan_name to GROUP BY and updated color macro.
+                      <div className="assistantPrRow">
+                        <span className="assistantPrDot" />
+                        <span>PR submitted · feat/revenue-plan-breakdown</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="assistantInputRow">
+                  <div className="assistantInput">ask or request a change...</div>
+                  <button className="assistantSendButton" type="button" aria-label="Send">→</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <Layout
@@ -931,6 +1044,7 @@ export default function Home() {
         <GgsqlSection />
         <PersonasSection />
         <Examples />
+        <AssistantPlaceholder />
       </main>
     </Layout>
   );
