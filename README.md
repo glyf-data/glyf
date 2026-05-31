@@ -22,17 +22,16 @@ not a dbt adapter, BI server, or hosted dashboard service.
 
 ## Installation
 
-Install the CLI:
+Install from a GitHub Release wheel:
 
 ```bash
-pip install glyf
+uv tool install \
+  https://github.com/kannandreams/glyf/releases/download/v0.1.0/glyf-0.1.0-<platform>.whl
 ```
 
-Or keep it isolated with `uv`:
+Replace `<platform>` with the wheel asset that matches your OS and architecture.
 
-```bash
-uv tool install glyf
-```
+PyPI publishing is intentionally deferred for now.
 
 When developing from this repository, install dependencies with `uv`:
 
@@ -105,6 +104,9 @@ uv run glyf render
 uv run glyf dashboard
 uv run glyf export --clean
 ```
+
+This creates the example DuckDB database at
+`examples/simple_dbt/target/simple_dbt.duckdb`.
 
 Open:
 
@@ -216,6 +218,6 @@ Near-term themes:
 - Unresolved `ref()` or `source()`: check the dbt model/source names in the
   generated manifest.
 - No charts found: check `visualisations_path` in `glyf.yml`.
-- DuckDB execution error: run `dbt seed` and `dbt run` before `glyf render`.
+- DuckDB execution error: run `dbt build` before `glyf render`.
 - Rendering dependency error: run `uv sync` to install Altair and
   `vl-convert-python`.
