@@ -7,17 +7,14 @@ Use this flow when you already have a dbt project and want to add glyf without h
 
 ## Install
 
-Install the CLI with your Python package manager:
+Install the CLI from a GitHub Release wheel:
 
 ```bash
-pip install glyf
+uv tool install \
+  https://github.com/kannandreams/glyf/releases/download/v0.1.0/glyf-0.1.0-<platform>.whl
 ```
 
-Or install it as an isolated `uv` tool:
-
-```bash
-uv tool install glyf
-```
+Replace `<platform>` with the wheel asset that matches your OS and architecture.
 
 ## Scaffold your dbt project
 
@@ -92,14 +89,12 @@ dbt compile
 
 ## Check and generate
 
-Use `doctor` and `validate` before rendering:
+Use `doctor` before the first build:
 
 ```bash
 glyf doctor
-glyf validate
-glyf render
-glyf dashboard
-glyf export --clean
+glyf build
+glyf serve
 ```
 
 Open the generated static site:
@@ -136,10 +131,8 @@ uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
 uv run glyf doctor
-uv run glyf validate
-uv run glyf render
-uv run glyf dashboard
-uv run glyf export --clean
+uv run glyf build
+uv run glyf serve
 ```
 
 Open:
@@ -153,3 +146,6 @@ examples/simple_dbt/target/ggsql/site/index.html
 - Learn the [project structure](project-structure.md).
 - Add glyf to an [existing dbt project](existing-dbt-project.md).
 - Explore the [examples gallery](../examples/gallery.md).
+
+For lower-level control during debugging or CI, use `glyf validate`, `glyf render`,
+`glyf dashboard`, and `glyf export` separately.

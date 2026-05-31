@@ -605,7 +605,7 @@ function HomepageHeader() {
             <span>as your data.</span>
           </h1>
           <div className="landingHero__installBlock" aria-label="Install Glyf">
-            <CodeBlock language="bash">uv install glyf</CodeBlock>
+            <CodeBlock language="bash">uv tool install glyf</CodeBlock>
           </div>
           <div className="heroValueLine" aria-label="Glyf workflow summary">
             <span>Define Charts</span>

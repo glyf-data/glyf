@@ -31,15 +31,14 @@ jobs:
 
       - name: Build dbt project
         run: |
-          uv run dbt seed --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt --full-refresh --no-partial-parse
-          uv run dbt build --project-dir examples/simple_dbt --profiles-dir examples/simple_dbt
+          cd examples/simple_dbt
+          uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
+          uv run dbt build --profiles-dir .
 
-      - name: Generate dashboard
+      - name: Build glyf site
         run: |
           uv run glyf doctor --project-dir examples/simple_dbt
-          uv run glyf render --project-dir examples/simple_dbt
-          uv run glyf dashboard --project-dir examples/simple_dbt
-          uv run glyf export --project-dir examples/simple_dbt --clean --zip
+          uv run glyf build --project-dir examples/simple_dbt --zip
 
       - name: Upload static site artifact
         uses: actions/upload-artifact@v4
