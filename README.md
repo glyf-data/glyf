@@ -2,9 +2,8 @@
 
 [![Tests](https://github.com/kannandreams/glyf/actions/workflows/test.yml/badge.svg)](https://github.com/kannandreams/glyf/actions/workflows/test.yml)
 [![Coverage](https://codecov.io/gh/kannandreams/glyf/branch/main/graph/badge.svg)](https://codecov.io/gh/kannandreams/glyf)
-[![PyPI version](https://img.shields.io/pypi/v/glyf.svg)](https://pypi.org/project/glyf/)
-[![Python versions](https://img.shields.io/pypi/pyversions/glyf.svg)](https://pypi.org/project/glyf/)
-[![License](https://img.shields.io/pypi/l/glyf.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB.svg?logo=python&logoColor=white)](/Users/atlas/Documents/orbital/forge/glyf/pyproject.toml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-black.svg)](LICENSE)
 
 Open Source Visualization build tool to data pipeline.
 
