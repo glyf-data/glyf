@@ -14,9 +14,8 @@ uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt run --profiles-dir .
 uv run dbt compile --profiles-dir .
 uv run glyf doctor
-uv run glyf render
-uv run glyf dashboard
-uv run glyf export --clean
+uv run glyf build
+uv run glyf serve
 ```
 
 This creates the example DuckDB database at `target/simple_dbt.duckdb`.
@@ -34,10 +33,10 @@ From your dbt project root:
 ```bash
 dbt build
 glyf doctor
-glyf render
-glyf dashboard
-glyf export
+glyf build
+glyf serve
 ```
 
-`glyf` does not run dbt for you. It uses dbt artifacts, especially
+`glyf` is artifact-driven, not dbt-runtime-driven. It does not run dbt for you.
+It uses dbt artifacts, especially
 `target/manifest.json`.

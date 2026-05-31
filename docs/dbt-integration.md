@@ -1,6 +1,7 @@
 # dbt Integration
 
 `glyf` integrates with dbt through artifacts rather than dbt internals.
+It is artifact-driven, not dbt-runtime-driven.
 
 Primary artifact:
 
@@ -51,6 +52,26 @@ exists, `glyf` executes compiled SQL against it.
 If no local DuckDB file exists, examples can still use seed CSV fallback for simple
 demo execution.
 
-`glyf render` does not run `dbt seed`, `dbt run`, `dbt build`, or `dbt compile`
-for you. Run dbt first so both `target/manifest.json` and the DuckDB relations
-exist before rendering.
+`glyf build`, `glyf render`, and the other CLI commands do not run `dbt seed`,
+`dbt run`, `dbt build`, or `dbt compile` for you. Run dbt first so both
+`target/manifest.json` and the DuckDB relations exist before rendering.
+
+## Practical workflow
+
+Run dbt first, then run glyf:
+
+```bash
+dbt build
+glyf doctor
+glyf build
+glyf serve
+```
+
+Use low-level commands only when you need more control:
+
+```bash
+glyf validate
+glyf render
+glyf dashboard
+glyf export --clean
+```

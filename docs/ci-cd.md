@@ -12,9 +12,7 @@ From a dbt project root:
 uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
 uv run dbt build --profiles-dir .
 uv run glyf doctor
-uv run glyf render
-uv run glyf dashboard
-uv run glyf export --clean --zip
+uv run glyf build --zip
 ```
 
 The publish-ready files are written to:
@@ -45,9 +43,7 @@ The workflow:
 - changes into the example dbt project directory
 - runs `dbt seed` and `dbt build`
 - runs `glyf doctor`
-- runs `glyf render`
-- runs `glyf dashboard`
-- runs `glyf export`
+- runs `glyf build`
 - uploads the static site as a workflow artifact
 
 For your own project, run the dbt commands from the dbt project directory so
@@ -76,4 +72,4 @@ You can publish `target/ggsql/site/` to any static host, including:
 - Azure Static Web Apps
 - any internal static file host
 
-Use `glyf export --zip` when the target platform expects a single archive.
+Use `glyf build --zip` when the target platform expects a single archive.
