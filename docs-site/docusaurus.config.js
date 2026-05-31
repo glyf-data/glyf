@@ -63,6 +63,14 @@ const config = {
         disableSwitch: true,
         respectPrefersColorScheme: false,
       },
+      announcementBar: {
+        id: 'glyf-studio',
+        content:
+          '<a class="studioAnnouncementLink" href="https://glyfdata.com" aria-label="Introducing Glyf Studio">Introducing Glyf Studio <span aria-hidden="true">→</span></a>',
+        backgroundColor: '#0047ff',
+        textColor: '#ffffff',
+        isCloseable: false,
+      },
       navbar: {
         title: 'Glyf',
         logo: {

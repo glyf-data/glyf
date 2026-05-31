@@ -6864,6 +6864,95 @@ div[class*='codeBlockContent'] pre code,
   color: #dbe7f3 !important;
 }
 
+/* Prism token contrast for YAML, shell, and SQL on dark code blocks. */
+.theme-doc-markdown .token.comment,
+.theme-code-block .token.comment,
+[data-theme='dark'] .theme-doc-markdown .token.comment,
+[data-theme='dark'] .theme-code-block .token.comment {
+  color: #7e90a8 !important;
+  opacity: 1 !important;
+}
+
+.theme-doc-markdown .token.punctuation,
+.theme-doc-markdown .token.operator,
+.theme-code-block .token.punctuation,
+.theme-code-block .token.operator,
+[data-theme='dark'] .theme-doc-markdown .token.punctuation,
+[data-theme='dark'] .theme-doc-markdown .token.operator,
+[data-theme='dark'] .theme-code-block .token.punctuation,
+[data-theme='dark'] .theme-code-block .token.operator {
+  color: #cfd9e6 !important;
+  opacity: 1 !important;
+}
+
+.theme-doc-markdown .token.attr-name,
+.theme-doc-markdown .token.property,
+.theme-doc-markdown .token.key,
+.theme-code-block .token.attr-name,
+.theme-code-block .token.property,
+.theme-code-block .token.key,
+[data-theme='dark'] .theme-doc-markdown .token.attr-name,
+[data-theme='dark'] .theme-doc-markdown .token.property,
+[data-theme='dark'] .theme-doc-markdown .token.key,
+[data-theme='dark'] .theme-code-block .token.attr-name,
+[data-theme='dark'] .theme-code-block .token.property,
+[data-theme='dark'] .theme-code-block .token.key {
+  color: #7dd3fc !important;
+  opacity: 1 !important;
+}
+
+.theme-doc-markdown .token.string,
+.theme-doc-markdown .token.char,
+.theme-doc-markdown .token.inserted,
+.theme-code-block .token.string,
+.theme-code-block .token.char,
+.theme-code-block .token.inserted,
+[data-theme='dark'] .theme-doc-markdown .token.string,
+[data-theme='dark'] .theme-doc-markdown .token.char,
+[data-theme='dark'] .theme-doc-markdown .token.inserted,
+[data-theme='dark'] .theme-code-block .token.string,
+[data-theme='dark'] .theme-code-block .token.char,
+[data-theme='dark'] .theme-code-block .token.inserted {
+  color: #b9f27c !important;
+}
+
+.theme-doc-markdown .token.number,
+.theme-doc-markdown .token.boolean,
+.theme-doc-markdown .token.constant,
+.theme-code-block .token.number,
+.theme-code-block .token.boolean,
+.theme-code-block .token.constant,
+[data-theme='dark'] .theme-doc-markdown .token.number,
+[data-theme='dark'] .theme-doc-markdown .token.boolean,
+[data-theme='dark'] .theme-doc-markdown .token.constant,
+[data-theme='dark'] .theme-code-block .token.number,
+[data-theme='dark'] .theme-code-block .token.boolean,
+[data-theme='dark'] .theme-code-block .token.constant {
+  color: #f7c67a !important;
+}
+
+.theme-doc-markdown .token.function,
+.theme-doc-markdown .token.keyword,
+.theme-code-block .token.function,
+.theme-code-block .token.keyword,
+[data-theme='dark'] .theme-doc-markdown .token.function,
+[data-theme='dark'] .theme-doc-markdown .token.keyword,
+[data-theme='dark'] .theme-code-block .token.function,
+[data-theme='dark'] .theme-code-block .token.keyword {
+  color: #ff9bc2 !important;
+}
+
+.theme-doc-markdown .token.class-name,
+.theme-doc-markdown .token.builtin,
+.theme-code-block .token.class-name,
+.theme-code-block .token.builtin,
+[data-theme='dark'] .theme-doc-markdown .token.class-name,
+[data-theme='dark'] .theme-doc-markdown .token.builtin,
+[data-theme='dark'] .theme-code-block .token.class-name,
+[data-theme='dark'] .theme-code-block .token.builtin {
+  color: #9ab3ff !important;
+}
+
 .theme-doc-markdown .token.comment,
 .theme-doc-markdown .token.prolog,
 .theme-doc-markdown .token.doctype,
@@ -8401,8 +8490,8 @@ div[class*='codeBlockContent'] pre code,
 .landingHero h1,
 [data-theme='dark'] .landingHero h1 {
   max-width: 760px;
-  font-size: clamp(3rem, 4.8vw, 3.6rem) !important;
-  font-weight: 700 !important;
+  font-size: clamp(2.35rem, 4vw, 3rem) !important;
+  font-weight: 400 !important;
   line-height: 1.08 !important;
 }
 
@@ -8581,6 +8670,35 @@ div[class*='codeBlockContent'] pre code,
   margin-bottom: 2.5rem !important;
 }
 
+.featureIntroButton,
+[data-theme='dark'] .featureIntroButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  margin-top: 0.85rem;
+  padding: 0 1rem;
+  border: 1px solid #000000;
+  border-radius: 6px;
+  background: #000000;
+  color: #ffffff !important;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-decoration: none !important;
+  text-transform: uppercase;
+}
+
+.featureIntroButton:hover,
+[data-theme='dark'] .featureIntroButton:hover {
+  background: #111111;
+  border-color: #111111;
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
 .featureStoryNav,
 [data-theme='dark'] .featureStoryNav {
   position: sticky;
@@ -8706,27 +8824,21 @@ div[class*='codeBlockContent'] pre code,
 
 .featureStoryBlocks,
 [data-theme='dark'] .featureStoryBlocks {
-  display: flex;
-  flex-direction: column;
-  gap: 2.3rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
 }
 
 .featureStoryBlock,
 [data-theme='dark'] .featureStoryBlock {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.92fr);
-  gap: 2rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
   align-items: start;
-}
-
-.featureStoryBlock.is-reverse,
-[data-theme='dark'] .featureStoryBlock.is-reverse {
-  direction: rtl;
-}
-
-.featureStoryBlock.is-reverse > *,
-[data-theme='dark'] .featureStoryBlock.is-reverse > * {
-  direction: ltr;
+  padding: 1.1rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background: #fafafa !important;
 }
 
 .featureStoryVisual,
@@ -9064,6 +9176,11 @@ div[class*='codeBlockContent'] pre code,
   [data-theme='dark'] .featureStoryNav {
     top: calc(var(--ifm-navbar-height) - 1px);
     margin-bottom: 2rem;
+  }
+
+  .featureStoryBlocks,
+  [data-theme='dark'] .featureStoryBlocks {
+    grid-template-columns: 1fr;
   }
 
   .featureStoryBlock,
@@ -10150,48 +10267,136 @@ div[class*='codeBlockContent'] pre code,
 .landingHero__layout.container,
 [data-theme='dark'] .landingHero__layout,
 [data-theme='dark'] .landingHero__layout.container {
-  grid-template-columns: minmax(340px, 0.72fr) minmax(760px, 1.28fr) !important;
-  gap: clamp(3.5rem, 6vw, 7.5rem) !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: clamp(2rem, 4vw, 3rem) !important;
   align-items: center !important;
+  justify-items: center !important;
 }
 
 .heroCodeVisual,
 [data-theme='dark'] .heroCodeVisual {
-  justify-self: end !important;
+  justify-self: center !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: flex-end !important;
+  justify-content: center !important;
   width: 100% !important;
-  padding-right: clamp(0rem, 1vw, 0.75rem) !important;
+  padding-right: 0 !important;
 }
 
 .heroCodeWindow,
 [data-theme='dark'] .heroCodeWindow {
-  width: min(100%, 1040px) !important;
-  max-width: 1040px !important;
-  margin-left: auto !important;
+  width: min(100%, 920px) !important;
+  max-width: 920px !important;
+  margin: 0 auto !important;
 }
 
 .heroDiagramImage,
 [data-theme='dark'] .heroDiagramImage {
   display: block !important;
   width: 100% !important;
-  max-width: 1040px !important;
+  max-width: 920px !important;
   height: auto !important;
-  margin-left: auto !important;
+  margin: 0 auto !important;
 }
 
-@media (min-width: 1400px) {
-  .heroCodeWindow,
-  [data-theme='dark'] .heroCodeWindow {
-    width: min(100%, 1120px) !important;
-    max-width: 1120px !important;
-  }
+.landingHero__content,
+[data-theme='dark'] .landingHero__content {
+  max-width: 56rem !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  align-items: center !important;
+}
 
-  .heroDiagramImage,
-  [data-theme='dark'] .heroDiagramImage {
-    max-width: 1120px !important;
-  }
+.landingHero h1,
+[data-theme='dark'] .landingHero h1 {
+  max-width: 24ch !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  font-size: clamp(2.2rem, 3.8vw, 2.95rem) !important;
+  line-height: 1.12 !important;
+}
+
+.landingHero__lead,
+[data-theme='dark'] .landingHero__lead {
+  max-width: 42rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  color: #666666 !important;
+  font-size: clamp(1.02rem, 1.45vw, 1.14rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.65 !important;
+}
+
+.buttonRow,
+[data-theme='dark'] .buttonRow {
+  justify-content: center !important;
+  margin-top: 1.4rem !important;
+}
+
+/* Announcement ribbon above navbar */
+div[class*='announcementBar'],
+[data-theme='dark'] div[class*='announcementBar'] {
+  background: #0047ff !important;
+  border-bottom: 0 !important;
+  padding: 0 !important;
+}
+
+div[class*='announcementBarContent'],
+[data-theme='dark'] div[class*='announcementBarContent'] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 40px !important;
+  padding: 0.45rem 1rem !important;
+  text-align: center !important;
+}
+
+.studioAnnouncementLink,
+[data-theme='dark'] .studioAnnouncementLink {
+  color: #ffffff !important;
+  font-family: 'B612 Mono', var(--ifm-font-family-monospace) !important;
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.2 !important;
+  text-decoration: none !important;
+}
+
+.studioAnnouncementLink:hover,
+[data-theme='dark'] .studioAnnouncementLink:hover {
+  color: #ffffff !important;
+  opacity: 0.9;
+  text-decoration: none !important;
+}
+
+.studioAnnouncementLink span,
+[data-theme='dark'] .studioAnnouncementLink span {
+  display: inline-block !important;
+  margin-left: 0.3rem !important;
+  font-family: var(--ifm-font-family-base) !important;
+  font-size: 0.86rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+}
+
+/* Final landing-page section headline weight override */
+.problemSection .sectionHeader h2,
+.howSection .sectionHeader h2,
+.featuresSection .sectionHeader h2,
+.personasSection .sectionHeader h2,
+.ggsqlCopyColumn h2,
+.assistantCopy h2,
+[data-theme='dark'] .problemSection .sectionHeader h2,
+[data-theme='dark'] .howSection .sectionHeader h2,
+[data-theme='dark'] .featuresSection .sectionHeader h2,
+[data-theme='dark'] .personasSection .sectionHeader h2,
+[data-theme='dark'] .ggsqlCopyColumn h2,
+[data-theme='dark'] .assistantCopy h2 {
+  font-weight: 400 !important;
+  font-size: clamp(2.2rem, 3.8vw, 2.95rem) !important;
+  line-height: 1.12 !important;
 }
 
 @media (max-width: 996px) {
@@ -10212,13 +10417,13 @@ div[class*='codeBlockContent'] pre code,
 
   .heroCodeWindow,
   [data-theme='dark'] .heroCodeWindow {
-    width: min(100%, 840px) !important;
-    max-width: 840px !important;
+    width: min(100%, 760px) !important;
+    max-width: 760px !important;
   }
 
   .heroDiagramImage,
   [data-theme='dark'] .heroDiagramImage {
-    max-width: 840px !important;
+    max-width: 760px !important;
   }
 }
 

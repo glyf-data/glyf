@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
-import CodeBlock from '@theme/CodeBlock';
 
 const featureSections = [
   {
@@ -136,13 +135,6 @@ const featureLinks = [
   ['Command reference', 'See every CLI command, option, and common workflow.', '/docs/reference/cli'],
   ['Technical guide', 'Understand parsing, dbt artifact resolution, rendering, and output paths.', '/docs/guides/technical-architecture'],
   ['GGSQL syntax', 'Write SQL-native visualizations with the supported ggsql directives.', '/docs/guides/visualisation-syntax'],
-];
-
-const examples = [
-  ['Simple dbt', 'A compact revenue dashboard and chart syntax sampler.', '/docs/examples/simple-dbt'],
-  ['Sales dashboard', 'Monthly revenue, channel mix, and regional sales.', '/docs/examples/sales-dashboard'],
-  ['Product analytics', 'Active users, activation rate, and plan behavior.', '/docs/examples/product-analytics'],
-  ['Finance metrics', 'Bookings, expense share, and gross margin signals.', '/docs/examples/finance-metrics'],
 ];
 
 const problemItems = [
@@ -461,12 +453,12 @@ function FeatureVisual({item}) {
       return (
         <FeatureMacWindow filename={item.filename}>
           <pre><code><span className="codeFn">$</span> git diff main..feat/q3-charts{'\n\n'}
-<span className="featureDiffLine featureDiffLine--context">  charts/revenue_weekly.ggsql</span>{'\n'}
-<span className="featureDiffLine featureDiffLine--remove">- GROUP BY date_trunc('week', created_at)</span>{'\n'}
-<span className="featureDiffLine featureDiffLine--add">+ GROUP BY date_trunc('month', created_at)</span>{'\n\n'}
-<span className="featureDiffLine featureDiffLine--context">  dashboards/growth.yaml</span>{'\n'}
-<span className="featureDiffLine featureDiffLine--add">+ - id: new_mrr_cohort</span>{'\n'}
-<span className="featureDiffLine featureDiffLine--add">+   sql: ./new_mrr_cohort.sql</span>{'\n\n'}
+<span className="featureDiffLine featureDiffLine--context">  charts/revenue_weekly.ggsql</span>
+<span className="featureDiffLine featureDiffLine--remove">- GROUP BY date_trunc('week', created_at)</span>
+<span className="featureDiffLine featureDiffLine--add">+ GROUP BY date_trunc('month', created_at)</span>{'\n'}
+<span className="featureDiffLine featureDiffLine--context">  dashboards/growth.yaml</span>
+<span className="featureDiffLine featureDiffLine--add">+ - id: new_mrr_cohort</span>
+<span className="featureDiffLine featureDiffLine--add">+   sql: ./new_mrr_cohort.sql</span>
 <span className="codeMuted">2 files changed, 3 insertions(+), 1 deletion(-)</span>{'\n\n'}
 <span className="codeOk">✓</span> glyf build passed — 14 charts{'\n'}
 <span className="codeOk">✓</span> visual diff → artifacts/diff.html{'\n'}
@@ -507,8 +499,8 @@ function FeatureVisual({item}) {
 {'      '}params={'{'}{'{ '}startDate, planFilter {'}'}{'}'}{'\n'}
 {'    '}/&#62;{'\n'}
 {'  '}){'\n'}
-{'}'}{'\n\n'}
-<span className="codeMuted">// typed props, no BI SDK dependency</span></code></pre>
+{'}'}
+<span className="codeMuted"> // typed props, no BI SDK dependency</span></code></pre>
         </FeatureMacWindow>
       );
     case 'pythonMacros':
@@ -598,22 +590,14 @@ function HomepageHeader() {
     <header className="landingHero">
       <div className="container landingHero__layout">
         <div className="landingHero__content">
-          <p className="heroKicker">visualization build step to data pipeline</p>
           <h1>
-            <span>Ship charts</span>
-            <span className="heroHeadlineAccent">from the same pipeline</span>
-            <span>as your data.</span>
+            <span>Open Source Visualization build tool to data pipeline</span>
           </h1>
-          <div className="landingHero__installBlock" aria-label="Install Glyf">
-            <CodeBlock language="bash">uv tool install glyf</CodeBlock>
-          </div>
-          <div className="heroValueLine" aria-label="Glyf workflow summary">
-            <span>Define Charts</span>
-            <b aria-hidden="true">·</b>
-            <span>Compose Dashboards</span>
-            <b aria-hidden="true">·</b>
-            <span>Publish Anywhere</span>
-          </div>
+          <p className="landingHero__lead">
+            Ship charts from the same pipeline as your data.
+            <br />
+            Define charts, compose dashboards and publish anywhere.
+          </p>
           <div className="buttonRow">
             <Link className="heroPrimaryButton" to="/docs/get-started/quickstart">
               <span aria-hidden="true">&gt;_</span> Get Started <span aria-hidden="true">&rarr;</span>
@@ -706,6 +690,9 @@ function FeaturesSection() {
             Core build-step features are available today. Roadmap items show where Glyf is heading.
             Each section below shows exactly what the feature looks like in practice.
           </p>
+          <Link className="featureIntroButton" to="/docs/resources/roadmap">
+            View roadmap &rarr;
+          </Link>
         </div>
         <div className="featureStoryNav" role="navigation" aria-label="Feature section anchors">
           <a className="featureStoryLogo" href="#features-top">
@@ -734,7 +721,7 @@ function FeaturesSection() {
               </div>
               <div className="featureStoryBlocks">
                 {section.items.map((item) => (
-                  <div className={`featureStoryBlock${item.reverse ? ' is-reverse' : ''}`} key={`${section.id}-${item.name}`}>
+                  <div className="featureStoryBlock" key={`${section.id}-${item.name}`}>
                     <div className="featureStoryVisual">
                       <FeatureVisual item={item} />
                     </div>
@@ -747,12 +734,6 @@ function FeaturesSection() {
               </div>
             </article>
           ))}
-          <div className="featureStoryFooter">
-            <Link className="featureStoryFooterButton" to="/docs/resources/roadmap">
-              View roadmap &rarr;
-            </Link>
-            <span className="featureStoryFooterCount">{featureSections.length} sections</span>
-          </div>
         </div>
       </div>
     </section>
@@ -891,33 +872,6 @@ function FeatureLinks() {
   );
 }
 
-function Examples() {
-  return (
-    <section className="band examplesSection">
-      <div className="container splitLayout">
-        <div>
-          <p className="eyebrow">examples gallery</p>
-          <h2>Open gallery of working examples</h2>
-          <p>
-            Each example includes seeds, analytical models, GGSQL visualisations, dashboard YAML, and repeatable commands. Use them as starting points for your own analytics project.
-          </p>
-          <Link className="button button--primary" to="/docs/examples/gallery">
-            Open gallery
-          </Link>
-        </div>
-        <div className="exampleList">
-          {examples.map(([title, description, to]) => (
-            <Link className="exampleItem" to={to} key={title}>
-              <strong>{title}</strong>
-              <span>{description}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function AssistantPlaceholder() {
   return (
     <section className="band band--ink assistantSection">
@@ -1043,7 +997,6 @@ export default function Home() {
         <FeaturesSection />
         <GgsqlSection />
         <PersonasSection />
-        <Examples />
         <AssistantPlaceholder />
       </main>
     </Layout>
