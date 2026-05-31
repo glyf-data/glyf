@@ -10399,6 +10399,55 @@ div[class*='announcementBarContent'],
   line-height: 1.12 !important;
 }
 
+.personasSection .personaCard > span,
+[data-theme='dark'] .personasSection .personaCard > span {
+  font-weight: 400 !important;
+}
+
+/* Final docs typography override */
+.theme-doc-markdown h1,
+[data-theme='dark'] .theme-doc-markdown h1 {
+  font-size: clamp(1.95rem, 3.1vw, 2.45rem) !important;
+  line-height: 1.16 !important;
+  font-weight: 500 !important;
+  margin-bottom: 1rem !important;
+}
+
+.theme-doc-markdown h2,
+[data-theme='dark'] .theme-doc-markdown h2 {
+  font-size: clamp(1.45rem, 2.2vw, 1.8rem) !important;
+  line-height: 1.24 !important;
+  font-weight: 500 !important;
+  margin-top: 2.2rem !important;
+  margin-bottom: 0.8rem !important;
+}
+
+.theme-doc-markdown h3,
+[data-theme='dark'] .theme-doc-markdown h3 {
+  font-size: clamp(1.15rem, 1.6vw, 1.32rem) !important;
+  line-height: 1.3 !important;
+  font-weight: 500 !important;
+  margin-top: 1.65rem !important;
+  margin-bottom: 0.55rem !important;
+}
+
+.theme-doc-markdown h4,
+[data-theme='dark'] .theme-doc-markdown h4 {
+  font-size: 1rem !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+  margin-top: 1.3rem !important;
+  margin-bottom: 0.45rem !important;
+}
+
+.theme-doc-markdown p,
+.theme-doc-markdown li,
+[data-theme='dark'] .theme-doc-markdown p,
+[data-theme='dark'] .theme-doc-markdown li {
+  font-size: 0.98rem !important;
+  line-height: 1.72 !important;
+}
+
 @media (max-width: 996px) {
   .landingHero__layout,
   .landingHero__layout.container,
