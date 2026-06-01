@@ -60,8 +60,8 @@ The recommended release channel is GitHub Releases with attached wheel files.
 5. Create and push a release tag:
 
    ```bash
-   git tag v0.1.0
-   git push origin v0.1.0
+   git tag v0.2.0
+   git push origin v0.2.0
    ```
 
 6. Wait for the GitHub Actions release workflow to build wheels and publish a
@@ -71,7 +71,7 @@ Users can then install `glyf` directly from a GitHub Release wheel:
 
 ```bash
 uv tool install \
-  https://github.com/kannandreams/glyf/releases/download/v0.1.0/glyf-0.1.0-<platform>.whl
+  https://github.com/kannandreams/glyf/releases/download/v0.2.0/glyf-0.2.0-<platform>.whl
 ```
 
 The release workflow lives in:

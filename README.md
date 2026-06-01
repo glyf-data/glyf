@@ -23,7 +23,7 @@ Install from a GitHub Release wheel:
 
 ```bash
 uv tool install \
-  https://github.com/kannandreams/glyf/releases/download/v0.1.0/glyf-0.1.0-<platform>.whl
+  https://github.com/kannandreams/glyf/releases/download/v0.2.0/glyf-0.2.0-<platform>.whl
 ```
 
 Replace `<platform>` with the wheel asset that matches your OS and architecture.
