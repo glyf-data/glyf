@@ -1,0 +1,85 @@
+{% import "components/icons.j2" as icons %}
+
+{% macro tone_icon(tone) -%}
+  {% if tone == "warning" %}
+  {{ icons.icon("warning", "glyf-alert-icon") }}
+  {% elif tone == "error" %}
+  {{ icons.icon("x-circle", "glyf-alert-icon") }}
+  {% elif tone == "success" %}
+  {{ icons.icon("check", "glyf-alert-icon") }}
+  {% else %}
+  {{ icons.icon("info", "glyf-alert-icon") }}
+  {% endif %}
+{%- endmacro %}
+
+{% macro render_component_body(component) -%}
+  {% if component.kind == "label_value" %}
+  <div class="glyf-component-label">{{ component.label }}</div>
+  <div class="glyf-component-value">{{ component.value }}</div>
+  {% if component.note %}
+  <div class="glyf-component-note">{{ component.note }}</div>
+  {% endif %}
+  {% elif component.kind == "text" %}
+  {% if component.title %}
+  <div class="glyf-card-title">{{ component.title }}</div>
+  {% endif %}
+  <p class="glyf-markdown-text">{{ component.text }}</p>
+  {% elif component.kind == "alert" %}
+  <div class="glyf-alert glyf-tone-{{ component.tone }}">
+    {{ tone_icon(component.tone) }}
+    <div>
+      {% if component.title %}
+      <span class="glyf-alert-title">{{ component.title }}</span>
+      {% endif %}
+      <span>{{ component.text }}</span>
+    </div>
+  </div>
+  {% elif component.kind == "list" %}
+  {% if component.title %}
+  <div class="glyf-card-title">{{ component.title }}</div>
+  {% endif %}
+  <ul class="glyf-list">
+    {% for value in component.items %}
+    <li>{{ value }}</li>
+    {% endfor %}
+  </ul>
+  {% elif component.kind == "badge" %}
+  <span class="glyf-badge">{{ component.label }}</span>
+  {% elif component.kind == "link" %}
+  {% if component.title %}
+  <div class="glyf-card-title">{{ component.title }}</div>
+  {% endif %}
+  <a class="glyf-link" href="{{ component.href }}">{{ component.label }}</a>
+  {% endif %}
+{%- endmacro %}
+
+{% macro render_component_card(component, width=None) -%}
+<article class="glyf-card glyf-component-card"{% if width or component.width %} style="--glyf-item-width: {{ width or component.width }}"{% endif %}>
+  <div class="glyf-card-body">
+    {{ render_component_body(component) }}
+  </div>
+</article>
+{%- endmacro %}
+
+{% macro render_metric_card(item) -%}
+<article class="glyf-card glyf-metric-card"{% if item.width %} style="--glyf-item-width: {{ item.width }}"{% endif %}>
+  <div class="glyf-card-body">
+    <div class="glyf-metric-label">{{ item.label }}</div>
+    <div class="glyf-metric-value">{{ item.value }}</div>
+    {% if item.note %}
+    <div class="glyf-metric-note">{{ item.note }}</div>
+    {% endif %}
+  </div>
+</article>
+{%- endmacro %}
+
+{% macro render_markdown_card(item) -%}
+<article class="glyf-card glyf-markdown-card"{% if item.width %} style="--glyf-item-width: {{ item.width }}"{% endif %}>
+  <div class="glyf-card-body">
+    {% if item.title %}
+    <div class="glyf-card-title">{{ item.title }}</div>
+    {% endif %}
+    <p class="glyf-markdown-text">{{ item.text }}</p>
+  </div>
+</article>
+{%- endmacro %}

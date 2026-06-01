@@ -42,7 +42,7 @@ Key project files:
 - target/manifest.json: dbt artifact used to resolve ref() and source().
 - visualisations/*.ggsql: chart SQL plus visualisation directives.
 - dashboards/*.yml: dashboard definitions and chart ordering.
-- target/ggsql/: generated compiled SQL, chart artifacts, dashboards, and exported site.
+- target/glyf/: generated compiled SQL, chart artifacts, dashboards, and exported site.
 
 Scaffold workflow:
 

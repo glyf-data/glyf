@@ -1,444 +1,188 @@
+{%- import "components/icons.j2" as icons -%}
+{%- import "components/toolbar.j2" as toolbar -%}
+{%- import "components/chart_card.j2" as chart_cards -%}
+{%- import "components/component_card.j2" as component_cards -%}
+{%- import "components/source_drawer.j2" as source_drawer -%}
+{%- import "components/ai_panel.j2" as ai_panel -%}
 <!doctype html>
 <html lang="en" data-theme="{{ dashboard_config.theme }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ dashboard.title }}</title>
+  {% if assets.inline_css %}
+  <style>{{ assets.inline_css }}</style>
+  {% else %}
+  <link rel="stylesheet" href="../{{ assets.css_href }}">
+  {% endif %}
   {% if has_interactive_charts %}
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
   {% endif %}
-  <style>
-    :root {
-      color-scheme: light;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f7f7f4;
-      color: #1f2933;
-    }
-    body {
-      margin: 0;
-    }
-    main {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 32px 20px 48px;
-    }
-    .dashboard-header {
-      margin-bottom: 28px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 18px;
-    }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 2rem;
-      line-height: 1.15;
-    }
-    p {
-      margin: 0;
-      color: #52606d;
-    }
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      flex: 0 0 auto;
-    }
-    .toolbar-button {
-      width: 38px;
-      height: 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      background: #ffffff;
-      color: #334e68;
-    }
-    .toolbar-button svg {
-      width: 18px;
-      height: 18px;
-      stroke-width: 2;
-    }
-    .toolbar-button:disabled {
-      opacity: 1;
-      cursor: not-allowed;
-    }
-    .toolbar-button.is-public {
-      color: #0f766e;
-      border-color: #99f6e4;
-      background: #f0fdfa;
-    }
-    .toolbar-button.is-private {
-      color: #9f580a;
-      border-color: #fed7aa;
-      background: #fff7ed;
-    }
-    .summary-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: var(--dashboard-column-template, repeat(var(--dashboard-columns, auto-fit), minmax(280px, 1fr)));
-      gap: 18px;
-    }
-    .grid[data-auto-columns="true"] {
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
-    .section {
-      margin-top: 28px;
-    }
-    .section:first-of-type {
-      margin-top: 0;
-    }
-    .section-header {
-      margin-bottom: 14px;
-    }
-    .section-header h2 {
-      margin: 0 0 6px;
-      font-size: 1.25rem;
-    }
-    article {
-      background: #ffffff;
-      border: 1px solid #d9e2ec;
-      border-radius: 8px;
-      padding: 16px;
-    }
-    .chart-card {
-      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
-    }
-    .chart-card h3 {
-      margin: 0 0 12px;
-      font-size: 1rem;
-    }
-    .markdown-card {
-      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
-    }
-    .markdown-card h3,
-    .metric-card h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-    .markdown-card p {
-      margin: 0;
-      white-space: pre-line;
-    }
-    .metric-card {
-      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
-    }
-    .component-card {
-      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
-    }
-    .component-card h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-    .summary-component {
-      min-width: 170px;
-      padding: 12px 14px;
-    }
-    .component-label {
-      color: #627d98;
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .component-value {
-      margin-top: 4px;
-      color: #102a43;
-      font-size: 1.1rem;
-      font-weight: 800;
-      line-height: 1.2;
-    }
-    .component-note {
-      margin-top: 6px;
-      font-size: 0.9rem;
-    }
-    .component-alert {
-      border-left: 4px solid #60a5fa;
-      background: #eff6ff;
-    }
-    .tone-success {
-      border-color: #34d399;
-      background: #ecfdf5;
-    }
-    .tone-warning {
-      border-color: #f59e0b;
-      background: #fffbeb;
-    }
-    .tone-error {
-      border-color: #f87171;
-      background: #fef2f2;
-    }
-    .component-list {
-      margin: 0;
-      padding-left: 18px;
-      color: #334e68;
-    }
-    .component-badge {
-      display: inline-flex;
-      align-items: center;
-      width: fit-content;
-      min-height: 28px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: #3730a3;
-      font-size: 0.86rem;
-      font-weight: 800;
-    }
-    .tone-success .component-badge {
-      background: #d1fae5;
-      color: #047857;
-    }
-    .tone-warning .component-badge {
-      background: #fef3c7;
-      color: #92400e;
-    }
-    .tone-error .component-badge {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-    .component-link {
-      color: #0f766e;
-      font-weight: 700;
-    }
-    .metric-value {
-      color: #102a43;
-      font-size: 1.9rem;
-      font-weight: 800;
-      line-height: 1.1;
-    }
-    .metric-note {
-      margin-top: 8px;
-    }
-    .chart svg {
-      width: 100%;
-      height: auto;
-    }
-    .chart img {
-      display: block;
-      max-width: 100%;
-      height: auto;
-    }
-    .interactive-chart {
-      width: 100%;
-    }
-    .interactive-chart canvas,
-    .interactive-chart svg {
-      max-width: 100%;
-      height: auto;
-    }
-    details {
-      margin-top: 12px;
-      border-top: 1px solid #e4e7eb;
-      padding-top: 10px;
-    }
-    summary {
-      cursor: pointer;
-      color: #334e68;
-      font-weight: 600;
-    }
-    pre {
-      overflow-x: auto;
-      padding: 12px;
-      background: #f0f4f8;
-      border-radius: 6px;
-      font-size: 0.875rem;
-    }
-    @media (max-width: 760px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .chart-card,
-      .markdown-card,
-      .metric-card,
-      .component-card {
-        grid-column: 1 / -1;
-      }
-      .dashboard-header {
-        flex-direction: column;
-      }
-    }
-  </style>
 </head>
 <body>
-  {% macro chart_card(chart, title=None, width=None) -%}
-  <article class="chart-card"{% if width %} style="--item-width: {{ width }}"{% endif %}>
-    <h3>{{ title or chart.metadata.title or chart.metadata.name }}</h3>
-    <div class="chart">
-      {% if chart.vega_spec %}
-      <div
-        class="interactive-chart"
-        id="chart-{{ chart.metadata.name }}"
-        data-vega-chart="chart-{{ chart.metadata.name }}-spec"
-      ></div>
-      <script type="application/json" id="chart-{{ chart.metadata.name }}-spec">{{ chart.vega_spec | tojson }}</script>
-      <noscript>
-        <img src="../charts/{{ chart.metadata.png_path.name }}" alt="{{ title or chart.metadata.title or chart.metadata.name }}">
-      </noscript>
-      {% elif dashboard_config.embed_charts and chart.svg %}
-      {{ chart.svg | safe }}
-      {% else %}
-      <img src="../charts/{{ chart.metadata.png_path.name }}" alt="{{ title or chart.metadata.title or chart.metadata.name }}">
-      {% endif %}
-    </div>
-    {% if dashboard_config.show_compiled_sql and chart.compiled_sql %}
-    <details>
-      <summary>Compiled SQL</summary>
-      <pre><code>{{ chart.compiled_sql }}</code></pre>
-    </details>
-    {% endif %}
-  </article>
-  {%- endmacro %}
-
-  {% macro component_card(component, compact=False) -%}
-  <article class="component-card component-{{ component.kind }} tone-{{ component.tone }}{% if compact %} summary-component{% endif %}"{% if component.width and not compact %} style="--item-width: {{ component.width }}"{% endif %}>
-    {% if component.kind == "label_value" %}
-      <div class="component-label">{{ component.label }}</div>
-      <div class="component-value">{{ component.value }}</div>
-      {% if component.note %}
-      <p class="component-note">{{ component.note }}</p>
-      {% endif %}
-    {% elif component.kind == "text" %}
-      {% if component.title %}
-      <h3>{{ component.title }}</h3>
-      {% endif %}
-      <p>{{ component.text }}</p>
-    {% elif component.kind == "alert" %}
-      {% if component.title %}
-      <h3>{{ component.title }}</h3>
-      {% endif %}
-      <p>{{ component.text }}</p>
-    {% elif component.kind == "list" %}
-      {% if component.title %}
-      <h3>{{ component.title }}</h3>
-      {% endif %}
-      <ul class="component-list">
-        {% for value in component.items %}
-        <li>{{ value }}</li>
-        {% endfor %}
-      </ul>
-    {% elif component.kind == "badge" %}
-      <span class="component-badge">{{ component.label }}</span>
-    {% elif component.kind == "link" %}
-      {% if component.title %}
-      <h3>{{ component.title }}</h3>
-      {% endif %}
-      <a class="component-link" href="{{ component.href }}">{{ component.label }}</a>
-    {% endif %}
-  </article>
-  {%- endmacro %}
-
-  {% macro toolbar_icon(action, visibility) -%}
-    {% if action == "share" %}
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-      <circle cx="18" cy="5" r="3"></circle>
-      <circle cx="6" cy="12" r="3"></circle>
-      <circle cx="18" cy="19" r="3"></circle>
-      <path d="M8.59 13.51 15.42 17.49"></path>
-      <path d="M15.41 6.51 8.59 10.49"></path>
-    </svg>
-    {% elif visibility == "public" %}
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-      <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
-    </svg>
-    {% else %}
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-    </svg>
-    {% endif %}
-  {%- endmacro %}
-
-  <main>
-    <header class="dashboard-header">
-      <div>
-        <h1>{{ dashboard.title }}</h1>
-        {% if dashboard.description %}
-        <p>{{ dashboard.description }}</p>
-        {% endif %}
+  <div class="glyf-page">
+    <header class="glyf-header">
+      <div class="glyf-header-top">
+        <div class="glyf-header-main">
+          <nav class="glyf-breadcrumb" aria-label="Breadcrumb">
+            <a href="../index.html">dashboards</a>
+            <span>/</span>
+            <span>{{ dashboard.name }}</span>
+          </nav>
+          <div class="glyf-title-row">
+            <h1 class="glyf-title">{{ dashboard.title }}</h1>
+            <span class="glyf-badge{% if dashboard.toolbar.visibility == 'public' %} glyf-badge-green{% endif %}">
+              {{ dashboard.toolbar.visibility }}
+            </span>
+          </div>
+          {% if dashboard.description %}
+          <p class="glyf-subtitle">{{ dashboard.description }}</p>
+          {% else %}
+          <p class="glyf-subtitle">Static dashboard generated from glyf artifacts.</p>
+          {% endif %}
+          <div class="glyf-tags" aria-label="Dashboard tags">
+            <span class="glyf-badge">glyf</span>
+            <span class="glyf-badge glyf-badge-blue">dbt</span>
+            {% for chart in charts[:3] %}
+            <span class="glyf-badge">{{ chart.metadata.chart_type }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {{ toolbar.render_toolbar(dashboard) }}
       </div>
-      {% if dashboard.toolbar.enabled and dashboard.toolbar.actions %}
-      <nav class="toolbar" aria-label="Dashboard actions">
-        {% for action in dashboard.toolbar.actions %}
-        <button class="toolbar-button{% if action == 'visibility' %} is-{{ dashboard.toolbar.visibility }}{% endif %}" type="button" aria-label="{{ action }} dashboard" title="{{ action }} dashboard" disabled>
-          {{ toolbar_icon(action, dashboard.toolbar.visibility) }}
-        </button>
-        {% endfor %}
-      </nav>
-      {% endif %}
     </header>
 
-    {% if dashboard.summary_components %}
-    <section class="summary-strip" aria-label="Dashboard summary">
-      {% for component in dashboard.summary_components %}
-      {{ component_card(component, True) }}
-      {% endfor %}
-    </section>
-    {% endif %}
-
-    {% if dashboard.sections %}
-      {% for section in dashboard.sections %}
-      {% set section_columns = section.columns or dashboard.layout_config.columns or 3 %}
-      {% if section.column_template %}
-      {% set column_template = section.column_template %}
-      {% elif section.columns %}
-      {% set column_template = none %}
-      {% else %}
-      {% set column_template = dashboard.layout_config.column_template %}
-      {% endif %}
-      <section class="section" aria-label="{{ section.title or 'Dashboard section' }}">
-        {% if section.title or section.description %}
-        <div class="section-header">
-          {% if section.title %}
-          <h2>{{ section.title }}</h2>
-          {% endif %}
-          {% if section.description %}
-          <p>{{ section.description }}</p>
-          {% endif %}
+    <div class="glyf-meta-bar">
+      <div class="glyf-meta-left">
+        <div class="glyf-meta-item">
+          {{ icons.icon("clock") }}
+          Refreshed <strong>on build</strong>
         </div>
+        <div class="glyf-meta-item">
+          {{ icons.icon("user") }}
+          Owner <strong>data team</strong>
+        </div>
+        <div class="glyf-meta-item glyf-mono">
+          {{ icons.icon("code") }}
+          <span>{{ charts | length }} chart{% if charts | length != 1 %}s{% endif %}</span>
+        </div>
+      </div>
+      <div class="glyf-meta-right">
+        {% if dashboard_config.show_compiled_sql %}
+        <button class="glyf-source-toggle" type="button" id="glyf-source-button" data-glyf-source-button>
+          {{ icons.icon("code") }}
+          Source
+        </button>
         {% endif %}
-        <div class="grid" style="--dashboard-columns: {{ section_columns }}; --section-columns: {{ section_columns }}{% if column_template %}; --dashboard-column-template: {{ column_template }}{% endif %}">
-          {% for item in section.items %}
-            {% if item.kind == "chart" and item.chart %}
-              {{ chart_card(chart_artifacts[item.chart], item.title, item.width) }}
-            {% elif item.kind == "component" and item.component_spec %}
-              {{ component_card(item.component_spec) }}
-            {% elif item.kind == "markdown" %}
-              <article class="markdown-card">
-                {% if item.title %}
-                <h3>{{ item.title }}</h3>
-                {% endif %}
-                <p>{{ item.text }}</p>
-              </article>
-            {% elif item.kind == "metric" %}
-              <article class="metric-card"{% if item.width %} style="--item-width: {{ item.width }}"{% endif %}>
-                <h3>{{ item.label }}</h3>
-                <div class="metric-value">{{ item.value }}</div>
-                {% if item.note %}
-                <p class="metric-note">{{ item.note }}</p>
-                {% endif %}
-              </article>
+        <select class="glyf-version-select" aria-label="Dashboard version">
+          <option>v current</option>
+          <option disabled>v previous</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="glyf-control-bar">
+      <span class="glyf-control-label">Filters</span>
+      <div class="glyf-filter-chip">
+        {{ icons.icon("info") }}
+        None
+        <span class="glyf-filter-value">static</span>
+      </div>
+      <button class="glyf-filter-add" type="button" disabled>
+        {{ icons.icon("plus") }}
+        Add filter
+      </button>
+      <span class="glyf-static-note">
+        {{ icons.icon("lock") }}
+        static render
+      </span>
+    </div>
+
+    <div class="glyf-main">
+      {{ source_drawer.render_source_drawer(charts, dashboard_config) }}
+
+      <main class="glyf-content">
+        {% if dashboard.sections %}
+          {% for section in dashboard.sections %}
+          {% set section_columns = section.columns or dashboard.layout_config.columns or 3 %}
+          {% if section.column_template %}
+          {% set column_template = section.column_template %}
+          {% elif section.columns %}
+          {% set column_template = none %}
+          {% else %}
+          {% set column_template = dashboard.layout_config.column_template %}
+          {% endif %}
+          <section class="glyf-section" aria-label="{{ section.title or 'Dashboard section' }}">
+            {% if section.title or section.description %}
+            <div class="glyf-section-head">
+              {% if section.title %}
+              <h2 class="glyf-section-title">{{ section.title }}</h2>
+              {% endif %}
+              {% if section.description %}
+              <p class="glyf-section-description">{{ section.description }}</p>
+              {% endif %}
+            </div>
             {% endif %}
+            <div
+              class="glyf-chart-grid"
+              style="--glyf-columns: {{ section_columns }}{% if column_template %}; --glyf-column-template: {{ column_template }}{% endif %}"
+            >
+              {% for item in section.items %}
+                {% if item.kind == "chart" and item.chart %}
+                  {{ chart_cards.render_chart_card(chart_artifacts[item.chart], dashboard_config, item.title, item.width) }}
+                {% elif item.kind == "component" and item.component_spec %}
+                  {{ component_cards.render_component_card(item.component_spec, item.width) }}
+                {% elif item.kind == "markdown" %}
+                  {{ component_cards.render_markdown_card(item) }}
+                {% elif item.kind == "metric" %}
+                  {{ component_cards.render_metric_card(item) }}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </section>
           {% endfor %}
+        {% else %}
+        <section class="glyf-section" aria-label="Charts">
+          <div class="glyf-chart-grid" data-auto-columns="true">
+            {% for chart in charts %}
+            {{ chart_cards.render_chart_card(chart, dashboard_config) }}
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+      </main>
+    </div>
+
+    {{ ai_panel.render_ai_panel(dashboard) }}
+
+    <div class="glyf-modal-backdrop" id="glyf-lookback-modal" data-glyf-modal>
+      <div class="glyf-modal" role="dialog" aria-modal="true" aria-label="Lookback chart versions">
+        <div class="glyf-modal-head">
+          <div class="glyf-modal-title">Lookback chart versions</div>
+          <button class="glyf-close-btn" type="button" aria-label="Close lookback" data-glyf-lookback-close>x</button>
         </div>
-      </section>
-      {% endfor %}
-    {% else %}
-    <section class="grid" data-auto-columns="true" aria-label="Charts">
-      {% for chart in charts %}
-      {{ chart_card(chart) }}
-      {% endfor %}
-    </section>
-    {% endif %}
-  </main>
+        <div>
+          <div class="glyf-version-row">
+            <div>
+              <div class="glyf-version-title">current build</div>
+              <div class="glyf-version-date">generated locally</div>
+            </div>
+            <span class="glyf-badge glyf-badge-green">current</span>
+          </div>
+          <div class="glyf-version-row">
+            <div>
+              <div class="glyf-version-title">previous build</div>
+              <div class="glyf-version-date">not available in static output</div>
+            </div>
+            <span class="glyf-badge">static</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {% if has_interactive_charts %}
   <script>
     document.querySelectorAll("[data-vega-chart]").forEach((container) => {
@@ -451,5 +195,53 @@
     });
   </script>
   {% endif %}
+  <script>
+    const sourceButton = document.querySelector("[data-glyf-source-button]");
+    const sourceDrawer = document.getElementById("glyf-source-drawer");
+    if (sourceButton && sourceDrawer) {
+      sourceButton.addEventListener("click", () => {
+        sourceButton.classList.toggle("is-active");
+        sourceDrawer.classList.toggle("is-open");
+      });
+    }
+
+    const aiButton = document.querySelector("[data-glyf-ai-button]");
+    const aiClose = document.querySelector("[data-glyf-ai-close]");
+    const aiPanel = document.getElementById("glyf-ai-panel");
+    const toggleAi = () => {
+      if (!aiPanel || !aiButton) {
+        return;
+      }
+      aiPanel.classList.toggle("is-open");
+      aiButton.classList.toggle("is-active");
+    };
+    if (aiButton) {
+      aiButton.addEventListener("click", toggleAi);
+    }
+    if (aiClose) {
+      aiClose.addEventListener("click", toggleAi);
+    }
+
+    const lookbackButton = document.querySelector("[data-glyf-lookback]");
+    const lookbackClose = document.querySelector("[data-glyf-lookback-close]");
+    const lookbackModal = document.getElementById("glyf-lookback-modal");
+    if (lookbackButton && lookbackModal) {
+      lookbackButton.addEventListener("click", () => {
+        lookbackModal.classList.add("is-open");
+      });
+    }
+    if (lookbackClose && lookbackModal) {
+      lookbackClose.addEventListener("click", () => {
+        lookbackModal.classList.remove("is-open");
+      });
+    }
+    if (lookbackModal) {
+      lookbackModal.addEventListener("click", (event) => {
+        if (event.target === lookbackModal) {
+          lookbackModal.classList.remove("is-open");
+        }
+      });
+    }
+  </script>
 </body>
 </html>

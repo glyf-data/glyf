@@ -22,11 +22,11 @@
 Integrations should treat this directory as the deployable artifact:
 
 ```text
-target/ggsql/site/
+target/glyf/site/
 ```
 
 Use this archive when a platform expects a single file:
 
 ```text
-target/ggsql/glyf-site.zip
+target/glyf/glyf-site.zip
 ```

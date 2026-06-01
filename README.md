@@ -104,7 +104,7 @@ This creates the example DuckDB database at
 Open:
 
 ```text
-examples/simple_dbt/target/ggsql/site/index.html
+examples/simple_dbt/target/glyf/site/index.html
 ```
 
 ## CLI
@@ -144,10 +144,10 @@ uv run glyf serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
 
 ## Example Output
 
-Generated files are written under `target/ggsql/`:
+Generated files are written under `target/glyf/`:
 
 ```text
-target/ggsql/
+target/glyf/
   compiled/
   charts/
   dashboards/
@@ -158,7 +158,7 @@ target/ggsql/
 The publish-ready site lives in:
 
 ```text
-target/ggsql/site/
+target/glyf/site/
 ```
 
 ## Examples

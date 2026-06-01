@@ -15,16 +15,16 @@ def test_resolve_serve_target_reports_missing_site(tmp_path: Path) -> None:
 
 def test_resolve_serve_target_reports_missing_index(tmp_path: Path) -> None:
     project = tmp_path / "project"
-    site_dir = project / "target" / "ggsql" / "site"
+    site_dir = project / "target" / "glyf" / "site"
     site_dir.mkdir(parents=True)
 
-    with pytest.raises(ServeError, match="target/ggsql/site/index.html"):
+    with pytest.raises(ServeError, match="target/glyf/site/index.html"):
         resolve_serve_target(project)
 
 
 def test_create_server_uses_site_directory_and_ephemeral_port(tmp_path: Path) -> None:
     project = tmp_path / "project"
-    site_dir = project / "target" / "ggsql" / "site"
+    site_dir = project / "target" / "glyf" / "site"
     site_dir.mkdir(parents=True)
     (site_dir / "index.html").write_text("<h1>glyf</h1>", encoding="utf-8")
 

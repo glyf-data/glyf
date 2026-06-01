@@ -137,7 +137,7 @@ def build_command(
     ] = True,
     zip_site: Annotated[
         bool,
-        typer.Option("--zip", help="Create target/ggsql/glyf-site.zip."),
+        typer.Option("--zip", help="Create target/glyf/glyf-site.zip."),
     ] = False,
 ) -> None:
     """Run the full glyf artifact pipeline and export a static site."""
@@ -160,7 +160,7 @@ def export_command(
     ] = False,
     zip_site: Annotated[
         bool,
-        typer.Option("--zip", help="Create target/ggsql/glyf-site.zip."),
+        typer.Option("--zip", help="Create target/glyf/glyf-site.zip."),
     ] = False,
 ) -> None:
     """Copy generated outputs into a publish-ready static site folder."""

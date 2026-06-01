@@ -23,7 +23,7 @@ This creates the example DuckDB database at `target/simple_dbt.duckdb`.
 Open:
 
 ```text
-target/ggsql/site/index.html
+target/glyf/site/index.html
 ```
 
 ## Use an existing dbt project

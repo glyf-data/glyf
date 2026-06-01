@@ -5,11 +5,11 @@
 ```yaml
 visualisations_path: visualisations
 dashboards_path: dashboards
-output_path: target/ggsql
-compiled_path: target/ggsql/compiled
-charts_path: target/ggsql/charts
-dashboards_output_path: target/ggsql/dashboards
-site_path: target/ggsql/site
+output_path: target/glyf
+compiled_path: target/glyf/compiled
+charts_path: target/glyf/charts
+dashboards_output_path: target/glyf/dashboards
+site_path: target/glyf/site
 
 render:
   renderer: altair
@@ -24,6 +24,9 @@ dashboard:
   embed_charts: true
   show_compiled_sql: true
 ```
+
+`dashboard.show_compiled_sql` controls whether the dashboard renders a `Source`
+drawer for compiled SQL. SQL is no longer shown inline below each chart.
 
 Paths are resolved relative to the dbt project root.
 

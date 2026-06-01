@@ -71,5 +71,5 @@ glyf validate --project-dir path/to/dbt_project
 - The assistant used model names that exist in the dbt manifest.
 - `.ggsql` directives match the supported syntax.
 - Dashboard YAML references existing chart names.
-- Generated artifacts are under `target/ggsql/`.
+- Generated artifacts are under `target/glyf/`.
 - The assistant reported any unresolved refs, missing artifacts, or DuckDB execution errors.

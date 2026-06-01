@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-
 from glyf.config import GlyfConfig
 from glyf.dashboard.artifacts import (
     ChartArtifact,
@@ -15,6 +13,7 @@ from glyf.dashboard.macros import (
     DashboardMacroRegistry,
     resolve_dashboard_components,
 )
+from glyf.dashboard.renderer import DashboardRenderer
 from glyf.output.paths import artifact_paths
 from glyf.project.scanner import ProjectScan, scan_project
 
@@ -45,6 +44,8 @@ def generate_dashboards(
     scan = scan_project(project, config)
     paths = artifact_paths(scan.root, config)
     paths.dashboards_dir.mkdir(parents=True, exist_ok=True)
+    renderer = DashboardRenderer()
+    assets = renderer.prepare_assets(paths.root)
     try:
         macro_registry = DashboardMacroRegistry.from_project(scan.dashboards_dir)
     except DashboardMacroError as exc:
@@ -81,7 +82,13 @@ def generate_dashboards(
 
         output_path = paths.dashboards_dir / f"{dashboard.name}.html"
         output_path.write_text(
-            _render_dashboard(dashboard, chart_artifacts, ordered_chart_artifacts, config),
+            renderer.render_dashboard(
+                dashboard,
+                chart_artifacts,
+                ordered_chart_artifacts,
+                config,
+                assets,
+            ).html,
             encoding="utf-8",
         )
         dashboards.append(
@@ -94,45 +101,13 @@ def generate_dashboards(
 
     index_path = paths.root / "index.html"
     index_path.parent.mkdir(parents=True, exist_ok=True)
-    index_path.write_text(_render_index(tuple(dashboards)), encoding="utf-8")
+    index_path.write_text(
+        renderer.render_index(tuple(dashboards), assets),
+        encoding="utf-8",
+    )
 
     return DashboardGenerationResult(
         scan=scan,
         dashboards=tuple(dashboards),
         index_path=index_path,
     )
-
-
-def _environment() -> Environment:
-    templates_dir = Path(__file__).parent / "templates"
-    return Environment(
-        loader=FileSystemLoader(templates_dir),
-        autoescape=select_autoescape(("html", "xml")),
-    )
-
-
-def _render_dashboard(
-    dashboard: Dashboard,
-    chart_artifacts: dict[str, ChartArtifact],
-    charts: tuple[ChartArtifact, ...],
-    config: GlyfConfig,
-) -> str:
-    template = _environment().get_template("dashboard.html.j2")
-    return _strip_trailing_whitespace(
-        template.render(
-            dashboard=dashboard,
-            chart_artifacts=chart_artifacts,
-            charts=charts,
-            has_interactive_charts=any(chart.vega_spec is not None for chart in charts),
-            dashboard_config=config.dashboard,
-        )
-    )
-
-
-def _strip_trailing_whitespace(value: str) -> str:
-    return "\n".join(line.rstrip() for line in value.splitlines()) + "\n"
-
-
-def _render_index(dashboards: tuple[GeneratedDashboard, ...]) -> str:
-    template = _environment().get_template("index.html.j2")
-    return _strip_trailing_whitespace(template.render(dashboards=dashboards))

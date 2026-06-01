@@ -12,7 +12,7 @@ def test_export_site_creates_publish_ready_folder(tmp_path: Path) -> None:
 
     result = export_site(project)
 
-    site = project / "target" / "ggsql" / "site"
+    site = project / "target" / "glyf" / "site"
     assert result.site_dir == site
     assert (site / "index.html").exists()
     assert (site / "dashboards" / "executive.html").exists()
@@ -20,7 +20,7 @@ def test_export_site_creates_publish_ready_folder(tmp_path: Path) -> None:
     assert (site / "charts" / "revenue.svg").exists()
     assert (site / "charts" / "revenue.png").exists()
     assert (site / "compiled" / "revenue.sql").exists()
-    assert (site / "assets" / "style.css").exists()
+    assert (site / "assets" / "dashboard.css").exists()
 
 
 def test_export_site_preserves_relative_links(tmp_path: Path) -> None:
@@ -28,7 +28,7 @@ def test_export_site_preserves_relative_links(tmp_path: Path) -> None:
 
     export_site(project)
 
-    site = project / "target" / "ggsql" / "site"
+    site = project / "target" / "glyf" / "site"
     index_html = (site / "index.html").read_text(encoding="utf-8")
     dashboard_html = (site / "dashboards" / "executive.html").read_text(
         encoding="utf-8"
@@ -42,13 +42,13 @@ def test_export_site_preserves_relative_links(tmp_path: Path) -> None:
 def test_export_site_clean_removes_previous_files(tmp_path: Path) -> None:
     project = _rendered_project(tmp_path)
     export_site(project)
-    stale_file = project / "target" / "ggsql" / "site" / "stale.txt"
+    stale_file = project / "target" / "glyf" / "site" / "stale.txt"
     stale_file.write_text("old", encoding="utf-8")
 
     export_site(project, clean=True)
 
     assert not stale_file.exists()
-    assert (project / "target" / "ggsql" / "site" / "index.html").exists()
+    assert (project / "target" / "glyf" / "site" / "index.html").exists()
 
 
 def test_export_site_zip_writes_archive(tmp_path: Path) -> None:
@@ -56,7 +56,7 @@ def test_export_site_zip_writes_archive(tmp_path: Path) -> None:
 
     result = export_site(project, zip_site=True)
 
-    zip_path = project / "target" / "ggsql" / "glyf-site.zip"
+    zip_path = project / "target" / "glyf" / "glyf-site.zip"
     assert result.zip_path == zip_path
     assert zip_path.exists()
     with zipfile.ZipFile(zip_path) as archive:
@@ -68,7 +68,7 @@ def test_export_site_zip_writes_archive(tmp_path: Path) -> None:
     assert "charts/revenue.png" in names
     assert "charts/revenue.json" in names
     assert "compiled/revenue.sql" in names
-    assert "assets/style.css" in names
+    assert "assets/dashboard.css" in names
 
 
 def _rendered_project(tmp_path: Path) -> Path:

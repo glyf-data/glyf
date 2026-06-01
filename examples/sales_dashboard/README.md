@@ -16,8 +16,8 @@ This creates the example DuckDB database at `target/sales_dashboard.duckdb`.
 Expected generated output:
 
 ```text
-target/ggsql/site/index.html
-target/ggsql/charts/monthly_revenue.svg
-target/ggsql/charts/channel_revenue.svg
-target/ggsql/charts/regional_revenue.svg
+target/glyf/site/index.html
+target/glyf/charts/monthly_revenue.svg
+target/glyf/charts/channel_revenue.svg
+target/glyf/charts/regional_revenue.svg
 ```

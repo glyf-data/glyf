@@ -1,9 +1,9 @@
 {
   "chart_type": "line",
-  "compiled_sql_path": "target/ggsql/compiled/revenue.sql",
+  "compiled_sql_path": "target/glyf/compiled/revenue.sql",
   "name": "revenue",
-  "png_path": "target/ggsql/charts/revenue.png",
-  "svg_path": "target/ggsql/charts/revenue.svg",
+  "png_path": "target/glyf/charts/revenue.png",
+  "svg_path": "target/glyf/charts/revenue.svg",
   "title": "Monthly Revenue",
   "x": "month",
   "y": "revenue"

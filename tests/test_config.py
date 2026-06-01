@@ -19,7 +19,7 @@ def test_missing_config_uses_defaults(tmp_path: Path) -> None:
 
     assert config.visualisations_path == Path("visualisations")
     assert config.dashboards_path == Path("dashboards")
-    assert config.output_path == Path("target/ggsql")
+    assert config.output_path == Path("target/glyf")
     assert config.render.formats == ("svg", "png")
     assert config.render.default_width == 800
     assert config.render.default_height == 400
@@ -31,11 +31,11 @@ def test_valid_config_loads_correctly(tmp_path: Path) -> None:
     config_path.write_text(
         "visualisations_path: viz\n"
         "dashboards_path: boards\n"
-        "output_path: out/ggsql\n"
-        "compiled_path: out/ggsql/sql\n"
-        "charts_path: out/ggsql/chart-files\n"
-        "dashboards_output_path: out/ggsql/pages\n"
-        "site_path: out/ggsql/public\n"
+        "output_path: out/glyf\n"
+        "compiled_path: out/glyf/sql\n"
+        "charts_path: out/glyf/chart-files\n"
+        "dashboards_output_path: out/glyf/pages\n"
+        "site_path: out/glyf/public\n"
         "render:\n"
         "  formats:\n"
         "    - svg\n"
@@ -52,7 +52,7 @@ def test_valid_config_loads_correctly(tmp_path: Path) -> None:
 
     assert config.visualisations_path == Path("viz")
     assert config.dashboards_path == Path("boards")
-    assert config.compiled_path == Path("out/ggsql/sql")
+    assert config.compiled_path == Path("out/glyf/sql")
     assert config.render.formats == ("svg",)
     assert config.render.default_width == 640
     assert config.render.default_height == 360

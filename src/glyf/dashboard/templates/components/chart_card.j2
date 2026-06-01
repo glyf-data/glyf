@@ -1,0 +1,28 @@
+{% macro render_chart_card(chart, dashboard_config, title=None, width=None) -%}
+<article class="glyf-card glyf-chart-card"{% if width %} style="--glyf-item-width: {{ width }}"{% endif %}>
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">{{ title or chart.metadata.title or chart.metadata.name }}</div>
+      <div class="glyf-card-subtitle">{{ chart.metadata.x }} -> {{ chart.metadata.y }}</div>
+    </div>
+    <span class="glyf-badge glyf-mono">{{ chart.metadata.chart_type }}</span>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+    {% if chart.vega_spec %}
+    <div
+      class="glyf-interactive-chart"
+      id="chart-{{ chart.metadata.name }}"
+      data-vega-chart="chart-{{ chart.metadata.name }}-spec"
+    ></div>
+    <script type="application/json" id="chart-{{ chart.metadata.name }}-spec">{{ chart.vega_spec | tojson }}</script>
+    <noscript>
+      <img src="../charts/{{ chart.metadata.png_path.name }}" alt="{{ title or chart.metadata.title or chart.metadata.name }}">
+    </noscript>
+    {% elif dashboard_config.embed_charts and chart.svg %}
+    {{ chart.svg | safe }}
+    {% else %}
+    <img src="../charts/{{ chart.metadata.png_path.name }}" alt="{{ title or chart.metadata.title or chart.metadata.name }}">
+    {% endif %}
+  </div>
+</article>
+{%- endmacro %}

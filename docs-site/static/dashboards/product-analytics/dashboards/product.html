@@ -5,627 +5,664 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Product Analytics</title>
 
+  <link rel="stylesheet" href="../assets/dashboard.css">
+
+
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
 
-  <style>
-    :root {
-      color-scheme: light;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f7f7f4;
-      color: #1f2933;
-    }
-    body {
-      margin: 0;
-    }
-    main {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 32px 20px 48px;
-    }
-    .dashboard-header {
-      margin-bottom: 28px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 18px;
-    }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 2rem;
-      line-height: 1.15;
-    }
-    p {
-      margin: 0;
-      color: #52606d;
-    }
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      flex: 0 0 auto;
-    }
-    .toolbar-button {
-      width: 38px;
-      height: 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      background: #ffffff;
-      color: #334e68;
-    }
-    .toolbar-button svg {
-      width: 18px;
-      height: 18px;
-      stroke-width: 2;
-    }
-    .toolbar-button:disabled {
-      opacity: 1;
-      cursor: not-allowed;
-    }
-    .toolbar-button.is-public {
-      color: #0f766e;
-      border-color: #99f6e4;
-      background: #f0fdfa;
-    }
-    .toolbar-button.is-private {
-      color: #9f580a;
-      border-color: #fed7aa;
-      background: #fff7ed;
-    }
-    .summary-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: var(--dashboard-column-template, repeat(var(--dashboard-columns, auto-fit), minmax(280px, 1fr)));
-      gap: 18px;
-    }
-    .grid[data-auto-columns="true"] {
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
-    .section {
-      margin-top: 28px;
-    }
-    .section:first-of-type {
-      margin-top: 0;
-    }
-    .section-header {
-      margin-bottom: 14px;
-    }
-    .section-header h2 {
-      margin: 0 0 6px;
-      font-size: 1.25rem;
-    }
-    article {
-      background: #ffffff;
-      border: 1px solid #d9e2ec;
-      border-radius: 8px;
-      padding: 16px;
-    }
-    .chart-card {
-      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
-    }
-    .chart-card h3 {
-      margin: 0 0 12px;
-      font-size: 1rem;
-    }
-    .markdown-card {
-      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
-    }
-    .markdown-card h3,
-    .metric-card h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-    .markdown-card p {
-      margin: 0;
-      white-space: pre-line;
-    }
-    .metric-card {
-      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
-    }
-    .component-card {
-      grid-column: span min(var(--item-width, 1), var(--section-columns, 3));
-    }
-    .component-card h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-    .summary-component {
-      min-width: 170px;
-      padding: 12px 14px;
-    }
-    .component-label {
-      color: #627d98;
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .component-value {
-      margin-top: 4px;
-      color: #102a43;
-      font-size: 1.1rem;
-      font-weight: 800;
-      line-height: 1.2;
-    }
-    .component-note {
-      margin-top: 6px;
-      font-size: 0.9rem;
-    }
-    .component-alert {
-      border-left: 4px solid #60a5fa;
-      background: #eff6ff;
-    }
-    .tone-success {
-      border-color: #34d399;
-      background: #ecfdf5;
-    }
-    .tone-warning {
-      border-color: #f59e0b;
-      background: #fffbeb;
-    }
-    .tone-error {
-      border-color: #f87171;
-      background: #fef2f2;
-    }
-    .component-list {
-      margin: 0;
-      padding-left: 18px;
-      color: #334e68;
-    }
-    .component-badge {
-      display: inline-flex;
-      align-items: center;
-      width: fit-content;
-      min-height: 28px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: #3730a3;
-      font-size: 0.86rem;
-      font-weight: 800;
-    }
-    .tone-success .component-badge {
-      background: #d1fae5;
-      color: #047857;
-    }
-    .tone-warning .component-badge {
-      background: #fef3c7;
-      color: #92400e;
-    }
-    .tone-error .component-badge {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-    .component-link {
-      color: #0f766e;
-      font-weight: 700;
-    }
-    .metric-value {
-      color: #102a43;
-      font-size: 1.9rem;
-      font-weight: 800;
-      line-height: 1.1;
-    }
-    .metric-note {
-      margin-top: 8px;
-    }
-    .chart svg {
-      width: 100%;
-      height: auto;
-    }
-    .chart img {
-      display: block;
-      max-width: 100%;
-      height: auto;
-    }
-    .interactive-chart {
-      width: 100%;
-    }
-    .interactive-chart canvas,
-    .interactive-chart svg {
-      max-width: 100%;
-      height: auto;
-    }
-    details {
-      margin-top: 12px;
-      border-top: 1px solid #e4e7eb;
-      padding-top: 10px;
-    }
-    summary {
-      cursor: pointer;
-      color: #334e68;
-      font-weight: 600;
-    }
-    pre {
-      overflow-x: auto;
-      padding: 12px;
-      background: #f0f4f8;
-      border-radius: 6px;
-      font-size: 0.875rem;
-    }
-    @media (max-width: 760px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .chart-card,
-      .markdown-card,
-      .metric-card,
-      .component-card {
-        grid-column: 1 / -1;
-      }
-      .dashboard-header {
-        flex-direction: column;
-      }
-    }
-  </style>
 </head>
 <body>
+  <div class="glyf-page">
+    <header class="glyf-header">
+      <div class="glyf-header-top">
+        <div class="glyf-header-main">
+          <nav class="glyf-breadcrumb" aria-label="Breadcrumb">
+            <a href="../index.html">dashboards</a>
+            <span>/</span>
+            <span>product</span>
+          </nav>
+          <div class="glyf-title-row">
+            <h1 class="glyf-title">Product Analytics</h1>
+            <span class="glyf-badge">
+              private
+            </span>
+          </div>
 
+          <p class="glyf-subtitle">Product usage and activation metrics by plan.</p>
 
+          <div class="glyf-tags" aria-label="Dashboard tags">
+            <span class="glyf-badge">glyf</span>
+            <span class="glyf-badge glyf-badge-blue">dbt</span>
 
+            <span class="glyf-badge">area</span>
 
+            <span class="glyf-badge">scatter</span>
 
+            <span class="glyf-badge">line</span>
 
-  <main>
-    <header class="dashboard-header">
-      <div>
-        <h1>Product Analytics</h1>
+          </div>
+        </div>
+        <div class="glyf-actions" aria-label="Dashboard actions">
 
-        <p>Product usage and activation metrics by plan.</p>
+  <button class="glyf-star-btn" type="button" data-glyf-star>
 
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 16.9 6.6 19.8l1-6.1-4.4-4.3 6.1-.9Z"></path>
+  </svg>
+
+    <span class="glyf-star-count">0</span>
+  </button>
+  <div class="glyf-action-divider" aria-hidden="true"></div>
+  <button class="glyf-icon-btn" type="button" data-tip="Share" aria-label="Share dashboard">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="18" cy="5" r="3"></circle>
+    <circle cx="6" cy="12" r="3"></circle>
+    <circle cx="18" cy="19" r="3"></circle>
+    <path d="M8.59 13.51 15.42 17.49"></path>
+    <path d="M15.41 6.51 8.59 10.49"></path>
+  </svg>
+
+  </button>
+  <button
+    class="glyf-icon-btn"
+    type="button"
+    data-tip="Visibility: Private"
+    aria-label="Visibility: private"
+  >
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7 11V8.5C7 5.5 9.2 4 12 4s5 1.5 5 4.5V11"></path>
+    <rect x="5" y="11" width="14" height="9"></rect>
+  </svg>
+
+  </button>
+  <button class="glyf-icon-btn" type="button" data-tip="Lookback" aria-label="Open lookback" data-glyf-lookback>
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+    <path d="M3 4v6h6"></path>
+  </svg>
+
+  </button>
+  <button class="glyf-icon-btn" type="button" data-tip="Feedback" aria-label="Send feedback">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"></path>
+  </svg>
+
+  </button>
+  <div class="glyf-action-divider" aria-hidden="true"></div>
+
+  <button class="glyf-icon-btn" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M13 2 4 14h8l-1 8 9-12h-8Z"></path>
+  </svg>
+
+  </button>
+</div>
       </div>
-
-      <nav class="toolbar" aria-label="Dashboard actions">
-
-        <button class="toolbar-button" type="button" aria-label="share dashboard" title="share dashboard" disabled>
-
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-      <circle cx="18" cy="5" r="3"></circle>
-      <circle cx="6" cy="12" r="3"></circle>
-      <circle cx="18" cy="19" r="3"></circle>
-      <path d="M8.59 13.51 15.42 17.49"></path>
-      <path d="M15.41 6.51 8.59 10.49"></path>
-    </svg>
-
-        </button>
-
-        <button class="toolbar-button is-private" type="button" aria-label="visibility dashboard" title="visibility dashboard" disabled>
-
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-    </svg>
-
-        </button>
-
-      </nav>
-
     </header>
 
+    <div class="glyf-meta-bar">
+      <div class="glyf-meta-left">
+        <div class="glyf-meta-item">
 
-    <section class="summary-strip" aria-label="Dashboard summary">
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M12 6v6l4 2"></path>
+  </svg>
 
-      <article class="component-card component-label_value tone-neutral summary-component">
-
-      <div class="component-label">Owner</div>
-      <div class="component-value">Product Analytics</div>
-
-
-  </article>
-
-      <article class="component-card component-label_value tone-neutral summary-component">
-
-      <div class="component-label">Generated</div>
-      <div class="component-value">2026-05-23 21:52</div>
-
-
-  </article>
-
-      <article class="component-card component-badge tone-info summary-component">
-
-      <span class="component-badge">Demo macros</span>
-
-  </article>
-
-    </section>
-
-
-
-
-
-
-
-
-      <section class="section" aria-label="Usage Overview">
-
-        <div class="section-header">
-
-          <h2>Usage Overview</h2>
-
-
-          <p>Active user growth and engagement for the sample period.</p>
-
+          Refreshed <strong>on build</strong>
         </div>
+        <div class="glyf-meta-item">
 
-        <div class="grid" style="--dashboard-columns: 2; --section-columns: 2; --dashboard-column-template: minmax(0, 30fr) minmax(0, 70fr)">
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+    <circle cx="12" cy="7" r="4"></circle>
+  </svg>
 
+          Owner <strong>data team</strong>
+        </div>
+        <div class="glyf-meta-item glyf-mono">
 
-              <article class="metric-card">
-                <h3>Active users</h3>
-                <div class="metric-value">4.3k</div>
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M16 18 22 12 16 6"></path>
+    <path d="M8 6 2 12 8 18"></path>
+  </svg>
 
-                <p class="metric-note">Sum of weekly active users across plans</p>
+          <span>6 charts</span>
+        </div>
+      </div>
+      <div class="glyf-meta-right">
 
-              </article>
+        <button class="glyf-source-toggle" type="button" id="glyf-source-button" data-glyf-source-button>
 
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M16 18 22 12 16 6"></path>
+    <path d="M8 6 2 12 8 18"></path>
+  </svg>
 
+          Source
+        </button>
 
-              <article class="chart-card">
-    <h3>Active Users Trend</h3>
-    <div class="chart">
-
-      <div
-        class="interactive-chart"
-        id="chart-active_users"
-        data-vega-chart="chart-active_users-spec"
-      ></div>
-      <script type="application/json" id="chart-active_users-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-808bbf41b9dfe12dfb6ea80f5cc5f3e1"}, "datasets": {"data-808bbf41b9dfe12dfb6ea80f5cc5f3e1": [{"active_users": 1320.0, "week": "2026-W01"}, {"active_users": 1450.0, "week": "2026-W02"}, {"active_users": 1560.0, "week": "2026-W03"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "active_users", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "active_users", "title": "Users", "type": "quantitative"}}, "height": 400, "mark": {"opacity": 0.7, "type": "area"}, "title": "Active Users", "width": 800}</script>
-      <noscript>
-        <img src="../charts/active_users.png" alt="Active Users Trend">
-      </noscript>
-
+        <select class="glyf-version-select" aria-label="Dashboard version">
+          <option>v current</option>
+          <option disabled>v previous</option>
+        </select>
+      </div>
     </div>
 
-    <details>
-      <summary>Compiled SQL</summary>
-      <pre><code>SELECT week, sum(active_users) as active_users
+    <div class="glyf-control-bar">
+      <span class="glyf-control-label">Filters</span>
+      <div class="glyf-filter-chip">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M12 10v6"></path>
+    <path d="M12 7h.01"></path>
+  </svg>
+
+        None
+        <span class="glyf-filter-value">static</span>
+      </div>
+      <button class="glyf-filter-add" type="button" disabled>
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 5v14"></path>
+    <path d="M5 12h14"></path>
+  </svg>
+
+        Add filter
+      </button>
+      <span class="glyf-static-note">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7 11V8.5C7 5.5 9.2 4 12 4s5 1.5 5 4.5V11"></path>
+    <rect x="5" y="11" width="14" height="9"></rect>
+  </svg>
+
+        static render
+      </span>
+    </div>
+
+    <div class="glyf-main">
+
+<aside class="glyf-source-drawer" id="glyf-source-drawer" aria-label="Chart sources">
+  <div class="glyf-source-drawer-inner">
+    <div class="glyf-drawer-section">
+      <div class="glyf-drawer-heading">Chart sources</div>
+
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Active Users</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
+
+        <pre class="glyf-source-sql"><code>SELECT week, sum(active_users) as active_users
 FROM "product_analytics"."main"."fct_product_usage"
 GROUP BY 1
 </code></pre>
-    </details>
 
-  </article>
+      </div>
 
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Sessions vs Active Users</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
 
-
-              <article class="metric-card">
-                <h3>Sessions</h3>
-                <div class="metric-value">14.9k</div>
-
-                <p class="metric-note">Total product sessions</p>
-
-              </article>
-
-
-
-              <article class="chart-card">
-    <h3>Sessions vs Active Users</h3>
-    <div class="chart">
-
-      <div
-        class="interactive-chart"
-        id="chart-sessions_scatter"
-        data-vega-chart="chart-sessions_scatter-spec"
-      ></div>
-      <script type="application/json" id="chart-sessions_scatter-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-0622a634e1c6d54b5b38c546fbda9437"}, "datasets": {"data-0622a634e1c6d54b5b38c546fbda9437": [{"active_users": 420.0, "plan": "Pro", "sessions": 1900.0}, {"active_users": 520.0, "plan": "Pro", "sessions": 2510.0}, {"active_users": 900.0, "plan": "Free", "sessions": 2500.0}, {"active_users": 1040.0, "plan": "Free", "sessions": 3010.0}, {"active_users": 980.0, "plan": "Free", "sessions": 2780.0}, {"active_users": 470.0, "plan": "Pro", "sessions": 2200.0}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "tooltip": [{"field": "active_users", "type": "quantitative"}, {"field": "sessions", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "active_users", "title": "Active Users", "type": "quantitative"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "scales", "name": "param_1e9efca18e7a2868", "select": {"encodings": ["x", "y"], "type": "interval"}}], "title": "Sessions vs Active Users", "width": 800}</script>
-      <noscript>
-        <img src="../charts/sessions_scatter.png" alt="Sessions vs Active Users">
-      </noscript>
-
-    </div>
-
-    <details>
-      <summary>Compiled SQL</summary>
-      <pre><code>SELECT active_users, sessions, plan
+        <pre class="glyf-source-sql"><code>SELECT active_users, sessions, plan
 FROM "product_analytics"."main"."fct_product_usage"
 </code></pre>
-    </details>
 
-  </article>
+      </div>
 
-
-        </div>
-      </section>
-
-
-
-
-
-      <section class="section" aria-label="Activation">
-
-        <div class="section-header">
-
-          <h2>Activation</h2>
-
-
-          <p>Compare activated users and activation rates by plan.</p>
-
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Activation by Plan</span>
+          <span class="glyf-source-version">compiled</span>
         </div>
 
-        <div class="grid" style="--dashboard-columns: 2; --section-columns: 2">
-
-
-              <article class="component-card component-alert tone-success">
-
-
-      <h3>Health</h3>
-
-      <p>Activation is tracking above target.</p>
-
-  </article>
-
-
-
-              <article class="component-card component-list tone-neutral">
-
-
-      <h3>Tracked plans</h3>
-
-      <ul class="component-list">
-
-        <li>Free</li>
-
-        <li>Team</li>
-
-        <li>Enterprise</li>
-
-      </ul>
-
-  </article>
-
-
-
-              <article class="chart-card">
-    <h3>Activation by Plan</h3>
-    <div class="chart">
-
-      <div
-        class="interactive-chart"
-        id="chart-activation_by_plan"
-        data-vega-chart="chart-activation_by_plan-spec"
-      ></div>
-      <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-44c0a8ddfbb205c358ed54bd3f1d3058"}, "datasets": {"data-44c0a8ddfbb205c358ed54bd3f1d3058": [{"activated_users": 170.0, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 245.0, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 120.0, "plan": "Free", "week": "2026-W01"}, {"activated_users": 155.0, "plan": "Free", "week": "2026-W03"}, {"activated_users": 140.0, "plan": "Free", "week": "2026-W02"}, {"activated_users": 210.0, "plan": "Pro", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
-      <noscript>
-        <img src="../charts/activation_by_plan.png" alt="Activation by Plan">
-      </noscript>
-
-    </div>
-
-    <details>
-      <summary>Compiled SQL</summary>
-      <pre><code>SELECT week, plan, sum(activated_users) as activated_users
+        <pre class="glyf-source-sql"><code>SELECT week, plan, sum(activated_users) as activated_users
 FROM "product_analytics"."main"."fct_product_usage"
 GROUP BY 1, 2
 </code></pre>
-    </details>
 
-  </article>
+      </div>
 
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Activation Rate by Plan</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
 
-
-              <article class="chart-card">
-    <h3>Activation Rate by Plan</h3>
-    <div class="chart">
-
-      <div
-        class="interactive-chart"
-        id="chart-activation_rate_by_plan"
-        data-vega-chart="chart-activation_rate_by_plan-spec"
-      ></div>
-      <script type="application/json" id="chart-activation_rate_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-d8c269a0a8c3072c45633608d1be8669"}, "datasets": {"data-d8c269a0a8c3072c45633608d1be8669": [{"activation_rate": 13.3, "plan": "Free", "week": "2026-W01"}, {"activation_rate": 14.9, "plan": "Free", "week": "2026-W03"}, {"activation_rate": 44.7, "plan": "Pro", "week": "2026-W02"}, {"activation_rate": 14.3, "plan": "Free", "week": "2026-W02"}, {"activation_rate": 40.5, "plan": "Pro", "week": "2026-W01"}, {"activation_rate": 47.1, "plan": "Pro", "week": "2026-W03"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activation_rate", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activation_rate", "title": "Activation Rate (%)", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation Rate by Plan", "width": 800}</script>
-      <noscript>
-        <img src="../charts/activation_rate_by_plan.png" alt="Activation Rate by Plan">
-      </noscript>
-
-    </div>
-
-    <details>
-      <summary>Compiled SQL</summary>
-      <pre><code>SELECT
+        <pre class="glyf-source-sql"><code>SELECT
   week,
   plan,
   round(sum(activated_users) * 100.0 / nullif(sum(active_users), 0), 1) as activation_rate
 FROM "product_analytics"."main"."fct_product_usage"
 GROUP BY 1, 2
 </code></pre>
-    </details>
 
-  </article>
+      </div>
 
-
-        </div>
-      </section>
-
-
-
-
-
-      <section class="section" aria-label="Engagement Mix">
-
-        <div class="section-header">
-
-          <h2>Engagement Mix</h2>
-
-
-          <p>Sessions per active user and total session share by plan.</p>
-
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Sessions per Active User</span>
+          <span class="glyf-source-version">compiled</span>
         </div>
 
-        <div class="grid" style="--dashboard-columns: 2; --section-columns: 2; --dashboard-column-template: minmax(0, 65fr) minmax(0, 35fr)">
-
-
-              <article class="chart-card">
-    <h3>Sessions per Active User</h3>
-    <div class="chart">
-
-      <div
-        class="interactive-chart"
-        id="chart-sessions_per_user"
-        data-vega-chart="chart-sessions_per_user-spec"
-      ></div>
-      <script type="application/json" id="chart-sessions_per_user-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-92459fd6192961d72d6e9cea1d038a20"}, "datasets": {"data-92459fd6192961d72d6e9cea1d038a20": [{"sessions_per_user": 3.54, "week": "2026-W03"}, {"sessions_per_user": 3.33, "week": "2026-W01"}, {"sessions_per_user": 3.43, "week": "2026-W02"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "sessions_per_user", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "sessions_per_user", "title": "Sessions per User", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "title": "Sessions per Active User", "width": 800}</script>
-      <noscript>
-        <img src="../charts/sessions_per_user.png" alt="Sessions per Active User">
-      </noscript>
-
-    </div>
-
-    <details>
-      <summary>Compiled SQL</summary>
-      <pre><code>SELECT
+        <pre class="glyf-source-sql"><code>SELECT
   week,
   round(sum(sessions) * 1.0 / nullif(sum(active_users), 0), 2) as sessions_per_user
 FROM "product_analytics"."main"."fct_product_usage"
 GROUP BY 1
 </code></pre>
-    </details>
 
-  </article>
+      </div>
 
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Sessions by Plan</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
 
-
-              <article class="chart-card">
-    <h3>Sessions by Plan</h3>
-    <div class="chart">
-
-      <div
-        class="interactive-chart"
-        id="chart-sessions_by_plan"
-        data-vega-chart="chart-sessions_by_plan-spec"
-      ></div>
-      <script type="application/json" id="chart-sessions_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-7d6d391e44084df820c65abd7acc4907"}, "datasets": {"data-7d6d391e44084df820c65abd7acc4907": [{"plan": "Pro", "sessions": 6610.0}, {"plan": "Free", "sessions": 8290.0}]}, "encoding": {"color": {"field": "plan", "title": null, "type": "nominal"}, "theta": {"field": "sessions", "title": "Sessions", "type": "quantitative"}, "tooltip": [{"field": "plan", "type": "nominal"}, {"field": "sessions", "type": "quantitative"}]}, "height": 400, "mark": {"type": "arc"}, "title": "Sessions by Plan", "width": 800}</script>
-      <noscript>
-        <img src="../charts/sessions_by_plan.png" alt="Sessions by Plan">
-      </noscript>
-
-    </div>
-
-    <details>
-      <summary>Compiled SQL</summary>
-      <pre><code>SELECT
+        <pre class="glyf-source-sql"><code>SELECT
   plan,
   sum(sessions) as sessions
 FROM "product_analytics"."main"."fct_product_usage"
 GROUP BY 1
 </code></pre>
-    </details>
 
-  </article>
+      </div>
+
+    </div>
+  </div>
+</aside>
 
 
+      <main class="glyf-content">
+
+
+
+
+
+
+          <section class="glyf-section" aria-label="Usage Overview">
+
+            <div class="glyf-section-head">
+
+              <h2 class="glyf-section-title">Usage Overview</h2>
+
+
+              <p class="glyf-section-description">Active user growth and engagement for the sample period.</p>
+
+            </div>
+
+            <div
+              class="glyf-chart-grid"
+              style="--glyf-columns: 2; --glyf-column-template: minmax(0, 30fr) minmax(0, 70fr)"
+            >
+
+
+                  <article class="glyf-card glyf-metric-card">
+  <div class="glyf-card-body">
+    <div class="glyf-metric-label">Active users</div>
+    <div class="glyf-metric-value">4.3k</div>
+
+    <div class="glyf-metric-note">Sum of weekly active users across plans</div>
+
+  </div>
+</article>
+
+
+
+                  <article class="glyf-card glyf-chart-card">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">Active Users Trend</div>
+      <div class="glyf-card-subtitle">week -> active_users</div>
+    </div>
+    <span class="glyf-badge glyf-mono">area</span>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+
+    <div
+      class="glyf-interactive-chart"
+      id="chart-active_users"
+      data-vega-chart="chart-active_users-spec"
+    ></div>
+    <script type="application/json" id="chart-active_users-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-49be8baa5ca8466fb8ee7a8fd96a68b7"}, "datasets": {"data-49be8baa5ca8466fb8ee7a8fd96a68b7": [{"active_users": 1560.0, "week": "2026-W03"}, {"active_users": 1320.0, "week": "2026-W01"}, {"active_users": 1450.0, "week": "2026-W02"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "active_users", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "active_users", "title": "Users", "type": "quantitative"}}, "height": 400, "mark": {"opacity": 0.7, "type": "area"}, "title": "Active Users", "width": 800}</script>
+    <noscript>
+      <img src="../charts/active_users.png" alt="Active Users Trend">
+    </noscript>
+
+  </div>
+</article>
+
+
+
+                  <article class="glyf-card glyf-metric-card">
+  <div class="glyf-card-body">
+    <div class="glyf-metric-label">Sessions</div>
+    <div class="glyf-metric-value">14.9k</div>
+
+    <div class="glyf-metric-note">Total product sessions</div>
+
+  </div>
+</article>
+
+
+
+                  <article class="glyf-card glyf-chart-card">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">Sessions vs Active Users</div>
+      <div class="glyf-card-subtitle">active_users -> sessions</div>
+    </div>
+    <span class="glyf-badge glyf-mono">scatter</span>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+
+    <div
+      class="glyf-interactive-chart"
+      id="chart-sessions_scatter"
+      data-vega-chart="chart-sessions_scatter-spec"
+    ></div>
+    <script type="application/json" id="chart-sessions_scatter-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-5016a06d3000d83fdae05c695d3b02e5"}, "datasets": {"data-5016a06d3000d83fdae05c695d3b02e5": [{"active_users": 420.0, "plan": "Pro", "sessions": 1900.0}, {"active_users": 520.0, "plan": "Pro", "sessions": 2510.0}, {"active_users": 980.0, "plan": "Free", "sessions": 2780.0}, {"active_users": 900.0, "plan": "Free", "sessions": 2500.0}, {"active_users": 1040.0, "plan": "Free", "sessions": 3010.0}, {"active_users": 470.0, "plan": "Pro", "sessions": 2200.0}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "tooltip": [{"field": "active_users", "type": "quantitative"}, {"field": "sessions", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "active_users", "title": "Active Users", "type": "quantitative"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "scales", "name": "param_1e9efca18e7a2868", "select": {"encodings": ["x", "y"], "type": "interval"}}], "title": "Sessions vs Active Users", "width": 800}</script>
+    <noscript>
+      <img src="../charts/sessions_scatter.png" alt="Sessions vs Active Users">
+    </noscript>
+
+  </div>
+</article>
+
+
+            </div>
+          </section>
+
+
+
+
+
+          <section class="glyf-section" aria-label="Activation">
+
+            <div class="glyf-section-head">
+
+              <h2 class="glyf-section-title">Activation</h2>
+
+
+              <p class="glyf-section-description">Compare activated users and activation rates by plan.</p>
+
+            </div>
+
+            <div
+              class="glyf-chart-grid"
+              style="--glyf-columns: 2"
+            >
+
+
+                  <article class="glyf-card glyf-component-card">
+  <div class="glyf-card-body">
+
+  <div class="glyf-alert glyf-tone-success">
+
+
+  <svg class="glyf-alert-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="m8 12 3 3 5-6"></path>
+  </svg>
+
+
+    <div>
+
+      <span class="glyf-alert-title">Health</span>
+
+      <span>Activation is tracking above target.</span>
+    </div>
+  </div>
+
+  </div>
+</article>
+
+
+
+                  <article class="glyf-card glyf-component-card">
+  <div class="glyf-card-body">
+
+
+  <div class="glyf-card-title">Tracked plans</div>
+
+  <ul class="glyf-list">
+
+    <li>Free</li>
+
+    <li>Team</li>
+
+    <li>Enterprise</li>
+
+  </ul>
+
+  </div>
+</article>
+
+
+
+                  <article class="glyf-card glyf-chart-card">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">Activation by Plan</div>
+      <div class="glyf-card-subtitle">week -> activated_users</div>
+    </div>
+    <span class="glyf-badge glyf-mono">line</span>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+
+    <div
+      class="glyf-interactive-chart"
+      id="chart-activation_by_plan"
+      data-vega-chart="chart-activation_by_plan-spec"
+    ></div>
+    <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-7cadd8e81fb25b05d69f29399f371eb8"}, "datasets": {"data-7cadd8e81fb25b05d69f29399f371eb8": [{"activated_users": 170.0, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 245.0, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 140.0, "plan": "Free", "week": "2026-W02"}, {"activated_users": 120.0, "plan": "Free", "week": "2026-W01"}, {"activated_users": 155.0, "plan": "Free", "week": "2026-W03"}, {"activated_users": 210.0, "plan": "Pro", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
+    <noscript>
+      <img src="../charts/activation_by_plan.png" alt="Activation by Plan">
+    </noscript>
+
+  </div>
+</article>
+
+
+
+                  <article class="glyf-card glyf-chart-card">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">Activation Rate by Plan</div>
+      <div class="glyf-card-subtitle">week -> activation_rate</div>
+    </div>
+    <span class="glyf-badge glyf-mono">line</span>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+
+    <div
+      class="glyf-interactive-chart"
+      id="chart-activation_rate_by_plan"
+      data-vega-chart="chart-activation_rate_by_plan-spec"
+    ></div>
+    <script type="application/json" id="chart-activation_rate_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-126740a285e29a448f6ff7f9b61c5c6f"}, "datasets": {"data-126740a285e29a448f6ff7f9b61c5c6f": [{"activation_rate": 44.7, "plan": "Pro", "week": "2026-W02"}, {"activation_rate": 40.5, "plan": "Pro", "week": "2026-W01"}, {"activation_rate": 47.1, "plan": "Pro", "week": "2026-W03"}, {"activation_rate": 14.3, "plan": "Free", "week": "2026-W02"}, {"activation_rate": 13.3, "plan": "Free", "week": "2026-W01"}, {"activation_rate": 14.9, "plan": "Free", "week": "2026-W03"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activation_rate", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activation_rate", "title": "Activation Rate (%)", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation Rate by Plan", "width": 800}</script>
+    <noscript>
+      <img src="../charts/activation_rate_by_plan.png" alt="Activation Rate by Plan">
+    </noscript>
+
+  </div>
+</article>
+
+
+            </div>
+          </section>
+
+
+
+
+
+          <section class="glyf-section" aria-label="Engagement Mix">
+
+            <div class="glyf-section-head">
+
+              <h2 class="glyf-section-title">Engagement Mix</h2>
+
+
+              <p class="glyf-section-description">Sessions per active user and total session share by plan.</p>
+
+            </div>
+
+            <div
+              class="glyf-chart-grid"
+              style="--glyf-columns: 2; --glyf-column-template: minmax(0, 65fr) minmax(0, 35fr)"
+            >
+
+
+                  <article class="glyf-card glyf-chart-card">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">Sessions per Active User</div>
+      <div class="glyf-card-subtitle">week -> sessions_per_user</div>
+    </div>
+    <span class="glyf-badge glyf-mono">bar</span>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+
+    <div
+      class="glyf-interactive-chart"
+      id="chart-sessions_per_user"
+      data-vega-chart="chart-sessions_per_user-spec"
+    ></div>
+    <script type="application/json" id="chart-sessions_per_user-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-92459fd6192961d72d6e9cea1d038a20"}, "datasets": {"data-92459fd6192961d72d6e9cea1d038a20": [{"sessions_per_user": 3.54, "week": "2026-W03"}, {"sessions_per_user": 3.33, "week": "2026-W01"}, {"sessions_per_user": 3.43, "week": "2026-W02"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "sessions_per_user", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "sessions_per_user", "title": "Sessions per User", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "title": "Sessions per Active User", "width": 800}</script>
+    <noscript>
+      <img src="../charts/sessions_per_user.png" alt="Sessions per Active User">
+    </noscript>
+
+  </div>
+</article>
+
+
+
+                  <article class="glyf-card glyf-chart-card">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">Sessions by Plan</div>
+      <div class="glyf-card-subtitle">plan -> sessions</div>
+    </div>
+    <span class="glyf-badge glyf-mono">pie</span>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+
+    <div
+      class="glyf-interactive-chart"
+      id="chart-sessions_by_plan"
+      data-vega-chart="chart-sessions_by_plan-spec"
+    ></div>
+    <script type="application/json" id="chart-sessions_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-7d6d391e44084df820c65abd7acc4907"}, "datasets": {"data-7d6d391e44084df820c65abd7acc4907": [{"plan": "Pro", "sessions": 6610.0}, {"plan": "Free", "sessions": 8290.0}]}, "encoding": {"color": {"field": "plan", "title": null, "type": "nominal"}, "theta": {"field": "sessions", "title": "Sessions", "type": "quantitative"}, "tooltip": [{"field": "plan", "type": "nominal"}, {"field": "sessions", "type": "quantitative"}]}, "height": 400, "mark": {"type": "arc"}, "title": "Sessions by Plan", "width": 800}</script>
+    <noscript>
+      <img src="../charts/sessions_by_plan.png" alt="Sessions by Plan">
+    </noscript>
+
+  </div>
+</article>
+
+
+            </div>
+          </section>
+
+
+      </main>
+    </div>
+
+    <aside class="glyf-ai-panel" id="glyf-ai-panel" aria-label="AI summary">
+  <div class="glyf-ai-panel-head">
+    <div class="glyf-ai-panel-title">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M13 2 4 14h8l-1 8 9-12h-8Z"></path>
+  </svg>
+
+      AI Summary
+    </div>
+    <button class="glyf-close-btn" type="button" aria-label="Close AI summary" data-glyf-ai-close>x</button>
+  </div>
+  <div class="glyf-ai-panel-body">
+
+
+
+  <div>
+    <div class="glyf-ai-section-label">Owner</div>
+    <div class="glyf-ai-summary-block">
+      Product Analytics
+
+    </div>
+  </div>
+
+
+
+  <div>
+    <div class="glyf-ai-section-label">Generated</div>
+    <div class="glyf-ai-summary-block">
+      2026-06-01 23:47
+
+    </div>
+  </div>
+
+
+
+  <div>
+    <div class="glyf-ai-section-label">Context</div>
+    <div class="glyf-ai-summary-block">
+  <span class="glyf-badge">Demo macros</span>
+  </div>
+  </div>
+
+
+
+    <div class="glyf-ai-meta">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M13 2 4 14h8l-1 8 9-12h-8Z"></path>
+  </svg>
+
+      precomputed summary slot
+    </div>
+  </div>
+</aside>
+
+    <div class="glyf-modal-backdrop" id="glyf-lookback-modal" data-glyf-modal>
+      <div class="glyf-modal" role="dialog" aria-modal="true" aria-label="Lookback chart versions">
+        <div class="glyf-modal-head">
+          <div class="glyf-modal-title">Lookback chart versions</div>
+          <button class="glyf-close-btn" type="button" aria-label="Close lookback" data-glyf-lookback-close>x</button>
         </div>
-      </section>
+        <div>
+          <div class="glyf-version-row">
+            <div>
+              <div class="glyf-version-title">current build</div>
+              <div class="glyf-version-date">generated locally</div>
+            </div>
+            <span class="glyf-badge glyf-badge-green">current</span>
+          </div>
+          <div class="glyf-version-row">
+            <div>
+              <div class="glyf-version-title">previous build</div>
+              <div class="glyf-version-date">not available in static output</div>
+            </div>
+            <span class="glyf-badge">static</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-
-  </main>
 
   <script>
     document.querySelectorAll("[data-vega-chart]").forEach((container) => {
@@ -638,5 +675,53 @@ GROUP BY 1
     });
   </script>
 
+  <script>
+    const sourceButton = document.querySelector("[data-glyf-source-button]");
+    const sourceDrawer = document.getElementById("glyf-source-drawer");
+    if (sourceButton && sourceDrawer) {
+      sourceButton.addEventListener("click", () => {
+        sourceButton.classList.toggle("is-active");
+        sourceDrawer.classList.toggle("is-open");
+      });
+    }
+
+    const aiButton = document.querySelector("[data-glyf-ai-button]");
+    const aiClose = document.querySelector("[data-glyf-ai-close]");
+    const aiPanel = document.getElementById("glyf-ai-panel");
+    const toggleAi = () => {
+      if (!aiPanel || !aiButton) {
+        return;
+      }
+      aiPanel.classList.toggle("is-open");
+      aiButton.classList.toggle("is-active");
+    };
+    if (aiButton) {
+      aiButton.addEventListener("click", toggleAi);
+    }
+    if (aiClose) {
+      aiClose.addEventListener("click", toggleAi);
+    }
+
+    const lookbackButton = document.querySelector("[data-glyf-lookback]");
+    const lookbackClose = document.querySelector("[data-glyf-lookback-close]");
+    const lookbackModal = document.getElementById("glyf-lookback-modal");
+    if (lookbackButton && lookbackModal) {
+      lookbackButton.addEventListener("click", () => {
+        lookbackModal.classList.add("is-open");
+      });
+    }
+    if (lookbackClose && lookbackModal) {
+      lookbackClose.addEventListener("click", () => {
+        lookbackModal.classList.remove("is-open");
+      });
+    }
+    if (lookbackModal) {
+      lookbackModal.addEventListener("click", (event) => {
+        if (event.target === lookbackModal) {
+          lookbackModal.classList.remove("is-open");
+        }
+      });
+    }
+  </script>
 </body>
 </html>

@@ -1,9 +1,9 @@
 {
   "chart_type": "area",
-  "compiled_sql_path": "target/ggsql/compiled/revenue_area.sql",
+  "compiled_sql_path": "target/glyf/compiled/revenue_area.sql",
   "name": "revenue_area",
-  "png_path": "target/ggsql/charts/revenue_area.png",
-  "svg_path": "target/ggsql/charts/revenue_area.svg",
+  "png_path": "target/glyf/charts/revenue_area.png",
+  "svg_path": "target/glyf/charts/revenue_area.svg",
   "title": "Revenue Area",
   "x": "month",
   "y": "revenue"

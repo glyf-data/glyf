@@ -27,11 +27,11 @@ class DashboardConfig:
 class GlyfConfig:
     visualisations_path: Path = Path("visualisations")
     dashboards_path: Path = Path("dashboards")
-    output_path: Path = Path("target/ggsql")
-    compiled_path: Path = Path("target/ggsql/compiled")
-    charts_path: Path = Path("target/ggsql/charts")
-    dashboards_output_path: Path = Path("target/ggsql/dashboards")
-    site_path: Path = Path("target/ggsql/site")
+    output_path: Path = Path("target/glyf")
+    compiled_path: Path = Path("target/glyf/compiled")
+    charts_path: Path = Path("target/glyf/charts")
+    dashboards_output_path: Path = Path("target/glyf/dashboards")
+    site_path: Path = Path("target/glyf/site")
     render: RenderConfig = RenderConfig()
     dashboard: DashboardConfig = DashboardConfig()
 
@@ -57,15 +57,15 @@ def load_config(project_root: Path, config_path: Path | None = None) -> GlyfConf
     return GlyfConfig(
         visualisations_path=_path_value(raw, "visualisations_path", "visualisations"),
         dashboards_path=_path_value(raw, "dashboards_path", "dashboards"),
-        output_path=_path_value(raw, "output_path", "target/ggsql"),
-        compiled_path=_path_value(raw, "compiled_path", "target/ggsql/compiled"),
-        charts_path=_path_value(raw, "charts_path", "target/ggsql/charts"),
+        output_path=_path_value(raw, "output_path", "target/glyf"),
+        compiled_path=_path_value(raw, "compiled_path", "target/glyf/compiled"),
+        charts_path=_path_value(raw, "charts_path", "target/glyf/charts"),
         dashboards_output_path=_path_value(
             raw,
             "dashboards_output_path",
-            "target/ggsql/dashboards",
+            "target/glyf/dashboards",
         ),
-        site_path=_path_value(raw, "site_path", "target/ggsql/site"),
+        site_path=_path_value(raw, "site_path", "target/glyf/site"),
         render=_render_config(raw.get("render", {})),
         dashboard=_dashboard_config(raw.get("dashboard", {})),
     )

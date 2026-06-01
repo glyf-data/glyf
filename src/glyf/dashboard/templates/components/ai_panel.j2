@@ -1,0 +1,61 @@
+{% import "components/icons.j2" as icons %}
+{% import "components/component_card.j2" as components %}
+
+{% macro render_ai_component(component) -%}
+  {% if component.kind == "text" %}
+  <div>
+    <div class="glyf-ai-section-label">{{ component.title or "Overview" }}</div>
+    <div class="glyf-ai-summary-block">{{ component.text }}</div>
+  </div>
+  {% elif component.kind == "alert" %}
+  <div>
+    <div class="glyf-ai-section-label">{{ component.title or "Signal" }}</div>
+    {{ components.render_component_body(component) }}
+  </div>
+  {% elif component.kind == "label_value" %}
+  <div>
+    <div class="glyf-ai-section-label">{{ component.label }}</div>
+    <div class="glyf-ai-summary-block">
+      {{ component.value }}
+      {% if component.note %}
+      <br>{{ component.note }}
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div>
+    <div class="glyf-ai-section-label">{{ component.title or "Context" }}</div>
+    <div class="glyf-ai-summary-block">{{ components.render_component_body(component) }}</div>
+  </div>
+  {% endif %}
+{%- endmacro %}
+
+{% macro render_ai_panel(dashboard) -%}
+<aside class="glyf-ai-panel" id="glyf-ai-panel" aria-label="AI summary">
+  <div class="glyf-ai-panel-head">
+    <div class="glyf-ai-panel-title">
+      {{ icons.icon("spark") }}
+      AI Summary
+    </div>
+    <button class="glyf-close-btn" type="button" aria-label="Close AI summary" data-glyf-ai-close>x</button>
+  </div>
+  <div class="glyf-ai-panel-body">
+    {% if dashboard.summary_components %}
+      {% for component in dashboard.summary_components %}
+      {{ render_ai_component(component) }}
+      {% endfor %}
+    {% else %}
+    <div>
+      <div class="glyf-ai-section-label">Overview</div>
+      <div class="glyf-ai-summary-block">
+        No AI summary has been generated for this dashboard yet.
+      </div>
+    </div>
+    {% endif %}
+    <div class="glyf-ai-meta">
+      {{ icons.icon("spark") }}
+      precomputed summary slot
+    </div>
+  </div>
+</aside>
+{%- endmacro %}

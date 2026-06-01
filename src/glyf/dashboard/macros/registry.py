@@ -15,11 +15,11 @@ from jinja2.sandbox import SandboxedEnvironment
 from glyf.dashboard import components
 from glyf.dashboard.components import ComponentError, ComponentSpec
 from glyf.dashboard.loader import Dashboard, DashboardItem, DashboardSection
-from glyf.dashboard.macros import alert, time, ui
+from glyf.dashboard.macros import ai, alert, time, ui
 
 
 _EXPRESSION_RE = re.compile(r"^\s*\{\{\s*(?P<expression>.*?)\s*\}\}\s*$", re.S)
-_RESERVED_NAMES = {"ui", "alert", "time"}
+_RESERVED_NAMES = {"ui", "alert", "time", "ai"}
 
 
 class DashboardMacroError(ValueError):
@@ -131,8 +131,14 @@ def _builtin_context() -> dict[str, object]:
         "warning": alert.warning,
     }
     time_namespace = {"now": time.now}
+    ai_namespace = {
+        "insight": ai.insight,
+        "signal": ai.signal,
+        "summary": ai.summary,
+    }
 
     return {
+        "ai": ai_namespace,
         "ui": ui_namespace,
         "alert": alert_namespace,
         "time": time_namespace,

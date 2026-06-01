@@ -100,13 +100,13 @@ glyf serve
 Open the generated static site:
 
 ```text
-target/ggsql/site/index.html
+target/glyf/site/index.html
 ```
 
 ## Expected output
 
 ```text
-target/ggsql/
+target/glyf/
   compiled/
   charts/
   dashboards/
@@ -117,7 +117,7 @@ target/ggsql/
 The publish-ready dashboard site lives in:
 
 ```text
-target/ggsql/site/
+target/glyf/site/
 ```
 
 ## Try the included example
@@ -138,7 +138,7 @@ uv run glyf serve
 Open:
 
 ```text
-examples/simple_dbt/target/ggsql/site/index.html
+examples/simple_dbt/target/glyf/site/index.html
 ```
 
 ## Next steps

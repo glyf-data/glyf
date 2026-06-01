@@ -56,8 +56,8 @@ LABEL y_title => 'Revenue'
 ## Generated artifacts
 
 ```text
-target/ggsql/site/index.html
-target/ggsql/charts/monthly_revenue.svg
-target/ggsql/charts/channel_revenue.svg
-target/ggsql/charts/regional_revenue.svg
+target/glyf/site/index.html
+target/glyf/charts/monthly_revenue.svg
+target/glyf/charts/channel_revenue.svg
+target/glyf/charts/regional_revenue.svg
 ```

@@ -32,7 +32,7 @@ Expected assistant output:
 Created visualisations/monthly_revenue.ggsql.
 Updated dashboards/executive.yml.
 Ran glyf validate and render.
-The chart appears in target/ggsql/dashboards/executive.html.
+The chart appears in target/glyf/dashboards/executive.html.
 ```
 
 ## Files An Assistant Should Inspect

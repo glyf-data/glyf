@@ -1,0 +1,94 @@
+{% macro icon(name, class_name="") -%}
+  {% if name == "share" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="18" cy="5" r="3"></circle>
+    <circle cx="6" cy="12" r="3"></circle>
+    <circle cx="18" cy="19" r="3"></circle>
+    <path d="M8.59 13.51 15.42 17.49"></path>
+    <path d="M15.41 6.51 8.59 10.49"></path>
+  </svg>
+  {% elif name == "eye" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M2 12S6 5 12 5s10 7 10 7-4 7-10 7S2 12 2 12Z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+  </svg>
+  {% elif name == "lock" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7 11V8.5C7 5.5 9.2 4 12 4s5 1.5 5 4.5V11"></path>
+    <rect x="5" y="11" width="14" height="9"></rect>
+  </svg>
+  {% elif name == "history" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+    <path d="M3 4v6h6"></path>
+  </svg>
+  {% elif name == "message" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"></path>
+  </svg>
+  {% elif name == "spark" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M13 2 4 14h8l-1 8 9-12h-8Z"></path>
+  </svg>
+  {% elif name == "code" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M16 18 22 12 16 6"></path>
+    <path d="M8 6 2 12 8 18"></path>
+  </svg>
+  {% elif name == "clock" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M12 6v6l4 2"></path>
+  </svg>
+  {% elif name == "user" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+    <circle cx="12" cy="7" r="4"></circle>
+  </svg>
+  {% elif name == "calendar" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+    <path d="M16 2v6"></path>
+    <path d="M8 2v6"></path>
+    <path d="M3 10h18"></path>
+  </svg>
+  {% elif name == "globe" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M2 12h20"></path>
+    <path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10Z"></path>
+  </svg>
+  {% elif name == "plus" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 5v14"></path>
+    <path d="M5 12h14"></path>
+  </svg>
+  {% elif name == "info" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M12 10v6"></path>
+    <path d="M12 7h.01"></path>
+  </svg>
+  {% elif name == "warning" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 4 21 20H3Z"></path>
+    <path d="M12 9v5"></path>
+    <path d="M12 17h.01"></path>
+  </svg>
+  {% elif name == "check" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="m8 12 3 3 5-6"></path>
+  </svg>
+  {% elif name == "x-circle" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="m9 9 6 6"></path>
+    <path d="m15 9-6 6"></path>
+  </svg>
+  {% elif name == "star" %}
+  <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 16.9 6.6 19.8l1-6.1-4.4-4.3 6.1-.9Z"></path>
+  </svg>
+  {% endif %}
+{%- endmacro %}
