@@ -1,0 +1,34 @@
+{% import "components/icons.j2" as icons %}
+
+{% macro render_toolbar(dashboard) -%}
+<div class="glyf-actions" aria-label="Dashboard actions">
+  {% if dashboard.toolbar.enabled %}
+  <button class="glyf-star-btn" type="button" data-glyf-star>
+    {{ icons.icon("star") }}
+    <span class="glyf-star-count">0</span>
+  </button>
+  <div class="glyf-action-divider" aria-hidden="true"></div>
+  <button class="glyf-icon-btn" type="button" data-tip="Share" aria-label="Share dashboard">
+    {{ icons.icon("share") }}
+  </button>
+  <button
+    class="glyf-icon-btn{% if dashboard.toolbar.visibility == 'public' %} is-active{% endif %}"
+    type="button"
+    data-tip="Visibility: {{ dashboard.toolbar.visibility | title }}"
+    aria-label="Visibility: {{ dashboard.toolbar.visibility }}"
+  >
+    {{ icons.icon("eye" if dashboard.toolbar.visibility == "public" else "lock") }}
+  </button>
+  <button class="glyf-icon-btn" type="button" data-tip="Lookback" aria-label="Open lookback" data-glyf-lookback>
+    {{ icons.icon("history") }}
+  </button>
+  <button class="glyf-icon-btn" type="button" data-tip="Feedback" aria-label="Send feedback">
+    {{ icons.icon("message") }}
+  </button>
+  <div class="glyf-action-divider" aria-hidden="true"></div>
+  {% endif %}
+  <button class="glyf-icon-btn" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
+    {{ icons.icon("spark") }}
+  </button>
+</div>
+{%- endmacro %}

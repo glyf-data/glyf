@@ -53,7 +53,7 @@ LABEL title => 'Revenue'
 ## Expected output
 
 ```text
-target/ggsql/site/index.html
-target/ggsql/charts/revenue.svg
-target/ggsql/charts/revenue.png
+target/glyf/site/index.html
+target/glyf/charts/revenue.svg
+target/glyf/charts/revenue.png
 ```

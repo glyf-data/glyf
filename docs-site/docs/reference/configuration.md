@@ -8,11 +8,11 @@
 | --- | --- | --- |
 | `visualisations_path` | `visualisations` | Directory containing `.ggsql` files. |
 | `dashboards_path` | `dashboards` | Directory containing dashboard YAML files. |
-| `output_path` | `target/ggsql` | Root output directory. |
-| `compiled_path` | `target/ggsql/compiled` | Compiled SQL output directory. |
-| `charts_path` | `target/ggsql/charts` | Rendered chart artifact directory. |
-| `dashboards_output_path` | `target/ggsql/dashboards` | Generated dashboard HTML directory. |
-| `site_path` | `target/ggsql/site` | Exported static site directory. |
+| `output_path` | `target/glyf` | Root output directory. |
+| `compiled_path` | `target/glyf/compiled` | Compiled SQL output directory. |
+| `charts_path` | `target/glyf/charts` | Rendered chart artifact directory. |
+| `dashboards_output_path` | `target/glyf/dashboards` | Generated dashboard HTML directory. |
+| `site_path` | `target/glyf/site` | Exported static site directory. |
 
 ## Render
 
@@ -29,4 +29,4 @@
 | --- | --- | --- |
 | `dashboard.theme` | `light` | Dashboard visual theme. |
 | `dashboard.embed_charts` | `true` | Embed chart artifacts into dashboard HTML. |
-| `dashboard.show_compiled_sql` | `true` | Show compiled SQL in generated dashboard pages. |
+| `dashboard.show_compiled_sql` | `true` | Enable the `Source` drawer with compiled SQL for each chart. |

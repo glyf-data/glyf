@@ -1,0 +1,24 @@
+{% macro render_source_drawer(charts, dashboard_config) -%}
+{% if dashboard_config.show_compiled_sql %}
+<aside class="glyf-source-drawer" id="glyf-source-drawer" aria-label="Chart sources">
+  <div class="glyf-source-drawer-inner">
+    <div class="glyf-drawer-section">
+      <div class="glyf-drawer-heading">Chart sources</div>
+      {% for chart in charts %}
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>{{ chart.metadata.title or chart.metadata.name }}</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
+        {% if chart.compiled_sql %}
+        <pre class="glyf-source-sql"><code>{{ chart.compiled_sql }}</code></pre>
+        {% else %}
+        <pre class="glyf-source-sql"><code>No compiled SQL artifact was found.</code></pre>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</aside>
+{% endif %}
+{%- endmacro %}

@@ -30,7 +30,7 @@ Dashboards that only use `charts` render as a responsive chart grid.
 
 The toolbar is predefined. It is not a free-form plugin surface today.
 
-Current supported values:
+Current YAML-supported values:
 
 | Field | Supported values | Default |
 | --- | --- | --- |
@@ -62,16 +62,20 @@ toolbar:
     - share
 ```
 
+Generated dashboards also render static controls for star, lookback, feedback,
+and AI Summary. Those controls are part of the generated dashboard shell today;
+they do not require YAML fields yet.
+
 ### Summary
 
-`summary` is an optional list of macro expressions rendered as typed summary
-components above the dashboard body.
+`summary` is an optional list of macro expressions rendered in the dashboard AI
+Summary panel.
 
 ```yaml
 summary:
+  - "{{ ai.summary('Revenue moved up this month.') }}"
+  - "{{ ai.insight('Starter churn needs review.', tone='warning') }}"
   - "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
-  - "{{ ui.label_value('Generated', time.now('%Y-%m-%d %H:%M')) }}"
-  - "{{ ui.badge('Reviewed', tone='success') }}"
 ```
 
 Important boundary:
@@ -165,7 +169,7 @@ Inside each section, glyf currently supports four item kinds:
 | `description` | Optional intro text. |
 | `charts` | List of `.ggsql` chart names without the extension. |
 | `toolbar` | Optional toolbar configuration, or `false` to hide it. |
-| `summary` | Optional list of macro expressions rendered as summary components. |
+| `summary` | Optional list of macro expressions rendered in the AI Summary panel. |
 | `layout` | Optional layout string or mapping. |
 | `sections` | Optional grouped dashboard content. |
 | `groups` | Alias for `sections`. |
@@ -226,6 +230,9 @@ Built-in namespaces:
 | `alert.success(value, title=None, width=None)` | Success alert. |
 | `alert.warning(value, title=None, width=None)` | Warning alert. |
 | `alert.error(value, title=None, width=None)` | Error alert. |
+| `ai.summary(value, title='Overview', width=None)` | Text block for the AI Summary panel. |
+| `ai.insight(value, title=None, tone='info', width=None)` | Signal-style item for the AI Summary panel. |
+| `ai.signal(value, title=None, tone='info', width=None)` | Alias for `ai.insight`. |
 | `time.now(format='%Y-%m-%d %H:%M', timezone=None)` | Formatted timestamp string. |
 
 Convenience aliases:
@@ -283,18 +290,18 @@ sections:
 ```
 
 Built-in namespaces are reserved. Custom macros cannot replace `ui`, `alert`,
-or `time`.
+`ai`, or `time`.
 
 ## Output paths
 
 Generated dashboard HTML is written to:
 
 ```text
-target/ggsql/dashboards/<name>.html
+target/glyf/dashboards/<name>.html
 ```
 
 The dashboard index is written to:
 
 ```text
-target/ggsql/index.html
+target/glyf/index.html
 ```

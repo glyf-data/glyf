@@ -134,7 +134,7 @@ Use these topic files for this project:
 
 - keep v1 simple
 - use `target/manifest.json`
-- generate outputs into `target/ggsql/`
+- generate outputs into `target/glyf/`
 ```
 
 ## What Stays Local

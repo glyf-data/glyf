@@ -1,14 +1,14 @@
 {
   "chart_type": "bar",
-  "compiled_sql_path": "target/ggsql/compiled/sessions_per_user.sql",
+  "compiled_sql_path": "target/glyf/compiled/sessions_per_user.sql",
   "interactions": [
     "tooltip"
   ],
   "name": "sessions_per_user",
-  "png_path": "target/ggsql/charts/sessions_per_user.png",
-  "svg_path": "target/ggsql/charts/sessions_per_user.svg",
+  "png_path": "target/glyf/charts/sessions_per_user.png",
+  "svg_path": "target/glyf/charts/sessions_per_user.svg",
   "title": "Sessions per Active User",
-  "vega_json_path": "target/ggsql/charts/sessions_per_user.vega.json",
+  "vega_json_path": "target/glyf/charts/sessions_per_user.vega.json",
   "x": "week",
   "y": "sessions_per_user"
 }

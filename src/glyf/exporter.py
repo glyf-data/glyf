@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from glyf.config import GlyfConfig
+from glyf.dashboard.assets import copy_dashboard_assets
 from glyf.output.paths import artifact_paths
 from glyf.project.scanner import ProjectScan, scan_project
 
@@ -40,7 +41,7 @@ def export_site(
     _copy_tree(paths.dashboards_dir, paths.site_dir / "dashboards")
     _copy_tree(paths.charts_dir, paths.site_dir / "charts")
     _copy_tree(paths.compiled_dir, paths.site_dir / "compiled")
-    _write_assets(paths.site_dir / "assets")
+    copy_dashboard_assets(paths.root, paths.site_dir)
 
     zip_path = None
     if zip_site:
@@ -56,6 +57,7 @@ def _ensure_generated_outputs(root: Path) -> None:
         root / "dashboards",
         root / "charts",
         root / "compiled",
+        root / "assets",
     ]
     missing = [path.relative_to(root).as_posix() for path in required if not path.exists()]
     if missing:
@@ -73,21 +75,6 @@ def _copy_file(source: Path, destination: Path) -> None:
 
 def _copy_tree(source: Path, destination: Path) -> None:
     shutil.copytree(source, destination, dirs_exist_ok=True)
-
-
-def _write_assets(assets_dir: Path) -> None:
-    assets_dir.mkdir(parents=True, exist_ok=True)
-    (assets_dir / "style.css").write_text(
-        """/*
-  Static site asset for glyf exports.
-  Dashboard pages currently inline their critical CSS so they work standalone.
-*/
-:root {
-  color-scheme: light;
-}
-""",
-        encoding="utf-8",
-    )
 
 
 def _write_zip(site_dir: Path, zip_path: Path) -> None:

@@ -92,7 +92,7 @@ task dashboard-ci EXAMPLE_PROJECT=examples/product_analytics
 task dashboard-ci EXAMPLE_PROJECT=examples/finance_metrics
 ```
 
-Then copy each generated `target/ggsql/site/` folder into the matching `docs-site/static/dashboards/<example>/` folder, build locally, commit, push, and merge to `main`.
+Then copy each generated `target/glyf/site/` folder into the matching `docs-site/static/dashboards/<example>/` folder, build locally, commit, push, and merge to `main`.
 
 The Docusaurus config defaults to:
 

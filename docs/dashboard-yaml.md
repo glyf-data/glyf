@@ -16,7 +16,7 @@ charts:
 Existing dashboards that only use `charts` continue to render as a simple
 responsive chart grid.
 
-## Toolbar and Summary Components
+## Toolbar and AI Summary
 
 Generated dashboards include a BI-style toolbar by default. Configure it with
 `toolbar` when the page should show public/private state or a subset of actions:
@@ -27,13 +27,18 @@ toolbar:
   actions: [share, visibility]
 ```
 
-Use `summary` for macro-backed dashboard metadata or quick context. Summary
-entries are Jinja expressions that return typed dashboard components:
+Generated dashboards also render static controls for star, lookback, feedback,
+and AI Summary. Those controls are part of the generated dashboard shell today;
+they do not require YAML fields yet.
+
+Use `summary` for macro-backed AI Summary content. Summary entries are Jinja
+expressions that return typed dashboard components:
 
 ```yaml
 summary:
+  - "{{ ai.summary('Revenue moved up this month.') }}"
+  - "{{ ai.insight('Starter churn needs review.', tone='warning') }}"
   - "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
-  - "{{ ui.label_value('Generated', time.now('%Y-%m-%d %H:%M')) }}"
 ```
 
 ## Rich Layout
@@ -112,6 +117,10 @@ Built-in namespaces:
 - `alert.success(value, title=None)`: success alert.
 - `alert.warning(value, title=None)`: warning alert.
 - `alert.error(value, title=None)`: error alert.
+- `ai.summary(value, title='Overview')`: text block for the AI Summary panel.
+- `ai.insight(value, title=None, tone='info')`: signal-style item for the AI
+  Summary panel.
+- `ai.signal(value, title=None, tone='info')`: alias for `ai.insight`.
 - `time.now(format='%Y-%m-%d %H:%M', timezone=None)`: formatted timestamp.
 
 Convenience aliases are available for common calls:
@@ -159,9 +168,9 @@ sections:
 - `description`: optional intro text.
 - `toolbar`: optional dashboard action bar configuration. Use `false` to hide it.
 - `toolbar.visibility`: `public` or `private`.
-- `toolbar.actions`: list of toolbar actions. Currently supports `share` and
-  `visibility`.
-- `summary`: optional list of macro expressions rendered as summary components.
+- `toolbar.actions`: list of YAML-configured toolbar actions. Currently
+  supports `share` and `visibility`.
+- `summary`: optional list of macro expressions rendered in the AI Summary panel.
 - `charts`: list of `.ggsql` chart names without the extension.
 - `layout`: optional layout string or mapping.
 - `layout.columns`: optional default grid columns for rich sections. Use an
@@ -184,11 +193,11 @@ sections:
 Generated HTML is written to:
 
 ```text
-target/ggsql/dashboards/<name>.html
+target/glyf/dashboards/<name>.html
 ```
 
 The dashboard index is written to:
 
 ```text
-target/ggsql/index.html
+target/glyf/index.html
 ```

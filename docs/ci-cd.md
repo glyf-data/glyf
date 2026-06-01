@@ -1,7 +1,7 @@
 # CI/CD for glyf
 
 `glyf` generates a static site from dbt artifacts and rendered chart outputs.
-The site in `target/ggsql/site/` can be uploaded by any CI/CD system that can run
+The site in `target/glyf/site/` can be uploaded by any CI/CD system that can run
 Python commands.
 
 ## Local workflow
@@ -18,13 +18,13 @@ uv run glyf build --zip
 The publish-ready files are written to:
 
 ```text
-target/ggsql/site/
+target/glyf/site/
 ```
 
 The optional zip archive is written to:
 
 ```text
-target/ggsql/glyf-site.zip
+target/glyf/glyf-site.zip
 ```
 
 ## GitHub Actions workflow
@@ -57,14 +57,14 @@ The workflow includes a commented `publish-pages` job. To use it:
 
 1. Enable GitHub Pages from GitHub Actions in repository settings.
 2. Uncomment the `publish-pages` job.
-3. Ensure the site artifact path points at your generated `target/ggsql/site/`.
+3. Ensure the site artifact path points at your generated `target/glyf/site/`.
 
 No external CDN is required. The exported HTML uses relative links, and chart
 SVGs/PNGs are copied into the site folder.
 
 ## Other static hosts
 
-You can publish `target/ggsql/site/` to any static host, including:
+You can publish `target/glyf/site/` to any static host, including:
 
 - Cloudflare Pages
 - Netlify

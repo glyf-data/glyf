@@ -25,13 +25,13 @@ glyf export --clean --zip
 Upload:
 
 ```text
-target/ggsql/site/
+target/glyf/site/
 ```
 
 or:
 
 ```text
-target/ggsql/glyf-site.zip
+target/glyf/glyf-site.zip
 ```
 
 No running Python service is needed after export.

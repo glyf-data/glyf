@@ -20,7 +20,7 @@ release baseline is stable.
 ### 12A: Serve Mode
 
 Add a local preview server so users can inspect generated dashboards without
-manually opening files from `target/ggsql/site`.
+manually opening files from `target/glyf/site`.
 
 Proposed command:
 
@@ -30,7 +30,7 @@ uv run glyf serve
 
 Expected behavior:
 
-- serve the generated static site from `target/ggsql/site`
+- serve the generated static site from `target/glyf/site`
 - print the local URL in the terminal
 - validate that the site exists before starting
 - keep the server lightweight and local-only by default

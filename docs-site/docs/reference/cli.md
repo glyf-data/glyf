@@ -136,11 +136,11 @@ Project: examples/simple_dbt
 [OK] dashboards: found 1 dashboard YAML file(s)
 [OK] visualisation files: 5 .ggsql file(s) discovered
 [OK] dashboard files: 1 dashboard YAML file(s) discovered
-[OK] output directory: found target/ggsql
-[OK] compiled directory: found target/ggsql/compiled
-[OK] charts directory: found target/ggsql/charts
-[OK] dashboards output directory: found target/ggsql/dashboards
-[OK] site directory: found target/ggsql/site
+[OK] output directory: found target/glyf
+[OK] compiled directory: found target/glyf/compiled
+[OK] charts directory: found target/glyf/charts
+[OK] dashboards output directory: found target/glyf/dashboards
+[OK] site directory: found target/glyf/site
 ```
 
 ### `list`
@@ -234,8 +234,8 @@ Validation passed
 ✓ copied chart artifacts
 ✓ copied compiled SQL
 ✓ wrote site assets
-✓ exported site to target/ggsql/site
-✓ wrote zip archive target/ggsql/glyf-site.zip
+✓ exported site to target/glyf/site
+✓ wrote zip archive target/glyf/glyf-site.zip
 ```
 
 ### `dashboard`
@@ -270,8 +270,8 @@ Example output:
 ✓ copied chart artifacts
 ✓ copied compiled SQL
 ✓ wrote site assets
-✓ exported site to target/ggsql/site
-✓ wrote zip archive target/ggsql/glyf-site.zip
+✓ exported site to target/glyf/site
+✓ wrote zip archive target/glyf/glyf-site.zip
 ```
 
 </div>
@@ -292,14 +292,14 @@ Example output:
 | Option | Description |
 | --- | --- |
 | `--clean` | Delete the previous site export before copying. |
-| `--zip` | Create `target/ggsql/glyf-site.zip`. |
+| `--zip` | Create `target/glyf/glyf-site.zip`. |
 
 ## `build` options
 
 | Option | Description |
 | --- | --- |
 | `--clean`, `--no-clean` | Clean the previous site export before copying. Enabled by default. |
-| `--zip` | Create `target/ggsql/glyf-site.zip`. |
+| `--zip` | Create `target/glyf/glyf-site.zip`. |
 
 ## `serve` options
 

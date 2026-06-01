@@ -1,9 +1,9 @@
 {
   "chart_type": "pie",
-  "compiled_sql_path": "target/ggsql/compiled/revenue_share_pie.sql",
+  "compiled_sql_path": "target/glyf/compiled/revenue_share_pie.sql",
   "name": "revenue_share_pie",
-  "png_path": "target/ggsql/charts/revenue_share_pie.png",
-  "svg_path": "target/ggsql/charts/revenue_share_pie.svg",
+  "png_path": "target/glyf/charts/revenue_share_pie.png",
+  "svg_path": "target/glyf/charts/revenue_share_pie.svg",
   "title": "Revenue Share",
   "x": "region",
   "y": "revenue"

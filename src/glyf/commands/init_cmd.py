@@ -14,11 +14,11 @@ from glyf.ggsql.parser import SUPPORTED_CHART_TYPES
 
 DEFAULT_CONFIG = """visualisations_path: visualisations
 dashboards_path: dashboards
-output_path: target/ggsql
-compiled_path: target/ggsql/compiled
-charts_path: target/ggsql/charts
-dashboards_output_path: target/ggsql/dashboards
-site_path: target/ggsql/site
+output_path: target/glyf
+compiled_path: target/glyf/compiled
+charts_path: target/glyf/charts
+dashboards_output_path: target/glyf/dashboards
+site_path: target/glyf/site
 
 render:
   renderer: altair

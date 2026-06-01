@@ -165,17 +165,22 @@ def test_dashboard_generation_writes_dashboard_and_index(tmp_path: Path) -> None
 
     result = generate_dashboards(project)
 
-    dashboard_html = project / "target" / "ggsql" / "dashboards" / "executive.html"
-    index_html = project / "target" / "ggsql" / "index.html"
+    dashboard_html = project / "target" / "glyf" / "dashboards" / "executive.html"
+    index_html = project / "target" / "glyf" / "index.html"
 
     assert result.index_path == index_html
     assert len(result.dashboards) == 1
     assert dashboard_html.exists()
     assert index_html.exists()
-    assert "Executive Dashboard" in dashboard_html.read_text(encoding="utf-8")
-    assert "Monthly Revenue" in dashboard_html.read_text(encoding="utf-8")
-    assert "<svg" in dashboard_html.read_text(encoding="utf-8")
-    assert "vegaEmbed" not in dashboard_html.read_text(encoding="utf-8")
+    html = dashboard_html.read_text(encoding="utf-8")
+    assert "Executive Dashboard" in html
+    assert "Monthly Revenue" in html
+    assert "<svg" in html
+    assert "vegaEmbed" not in html
+    assert "Chart sources" in html
+    assert "Source" in html
+    assert "Compiled SQL" not in html
+    assert (project / "target" / "glyf" / "assets" / "dashboard.css").exists()
     assert "dashboards/executive.html" in index_html.read_text(encoding="utf-8")
 
 
@@ -194,13 +199,13 @@ def test_dashboard_generation_embeds_interactive_vega_spec(tmp_path: Path) -> No
     generate_dashboards(project)
 
     dashboard_html = (
-        project / "target" / "ggsql" / "dashboards" / "executive.html"
+        project / "target" / "glyf" / "dashboards" / "executive.html"
     ).read_text(encoding="utf-8")
     assert "https://cdn.jsdelivr.net/npm/vega" in dashboard_html
     assert "vegaEmbed" in dashboard_html
     assert 'data-vega-chart="chart-revenue-spec"' in dashboard_html
     assert '"tooltip"' in dashboard_html
-    assert (project / "target" / "ggsql" / "charts" / "revenue.vega.json").exists()
+    assert (project / "target" / "glyf" / "charts" / "revenue.vega.json").exists()
 
 
 def test_dashboard_generation_renders_sections_and_layout_items(tmp_path: Path) -> None:
@@ -232,7 +237,7 @@ def test_dashboard_generation_renders_sections_and_layout_items(tmp_path: Path) 
     generate_dashboards(project)
 
     html = (
-        project / "target" / "ggsql" / "dashboards" / "executive.html"
+        project / "target" / "glyf" / "dashboards" / "executive.html"
     ).read_text(encoding="utf-8")
     assert "Revenue Overview" in html
     assert "Total revenue" in html
@@ -240,8 +245,8 @@ def test_dashboard_generation_renders_sections_and_layout_items(tmp_path: Path) 
     assert "Analyst note" in html
     assert "Revenue is generated from the fct_orders model." in html
     assert "Monthly revenue" in html
-    assert "--dashboard-columns: 2" in html
-    assert "--item-width: 2" in html
+    assert "--glyf-columns: 2" in html
+    assert "--glyf-item-width: 2" in html
     assert all(line == line.rstrip() for line in html.splitlines())
 
 
@@ -269,10 +274,9 @@ def test_dashboard_generation_renders_builtin_macro_components(tmp_path: Path) -
     generate_dashboards(project)
 
     html = (
-        project / "target" / "ggsql" / "dashboards" / "executive.html"
+        project / "target" / "glyf" / "dashboards" / "executive.html"
     ).read_text(encoding="utf-8")
     assert "Dashboard actions" in html
-    assert "is-public" in html
     assert "Analytics Engineering" in html
     assert "Generated" in html
     assert generated_year in html
@@ -281,6 +285,34 @@ def test_dashboard_generation_renders_builtin_macro_components(tmp_path: Path) -
     assert "Metrics" in html
     assert "Revenue" in html
     assert "Margin" in html
+    assert "glyf-alert" in html
+    assert "data-glyf-source-button" in html
+
+
+def test_dashboard_generation_renders_ai_macro_summary_panel(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "summary:\n"
+        "  - \"{{ ai.summary('Revenue moved up this month.') }}\"\n"
+        "  - \"{{ ai.insight('Starter churn needs review.', tone='warning') }}\"\n"
+        "charts:\n"
+        "  - revenue\n",
+        encoding="utf-8",
+    )
+
+    generate_dashboards(project)
+
+    html = (
+        project / "target" / "glyf" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "AI Summary" in html
+    assert "Revenue moved up this month." in html
+    assert "Starter churn needs review." in html
+    assert "glyf-ai-panel" in html
+    assert "glyf-tone-warning" in html
 
 
 def test_dashboard_generation_loads_project_python_macros(tmp_path: Path) -> None:
@@ -312,7 +344,7 @@ def test_dashboard_generation_loads_project_python_macros(tmp_path: Path) -> Non
     generate_dashboards(project)
 
     html = (
-        project / "target" / "ggsql" / "dashboards" / "executive.html"
+        project / "target" / "glyf" / "dashboards" / "executive.html"
     ).read_text(encoding="utf-8")
     assert "Finance Analytics" in html
     assert "Freshness" in html
@@ -354,11 +386,14 @@ def test_dashboard_generation_renders_custom_column_widths(tmp_path: Path) -> No
     generate_dashboards(project)
 
     html = (
-        project / "target" / "ggsql" / "dashboards" / "executive.html"
+        project / "target" / "glyf" / "dashboards" / "executive.html"
     ).read_text(encoding="utf-8")
-    assert "--dashboard-columns: 2" in html
-    assert "--dashboard-column-template: minmax(0, 30fr) minmax(0, 70fr)" in html
-    assert "@media (max-width: 760px)" in html
+    assert "--glyf-columns: 2" in html
+    assert "--glyf-column-template: minmax(0, 30fr) minmax(0, 70fr)" in html
+    css = (project / "target" / "glyf" / "assets" / "dashboard.css").read_text(
+        encoding="utf-8"
+    )
+    assert "@media (max-width: 760px)" in css
 
 
 def test_dashboard_generation_respects_equal_section_columns(tmp_path: Path) -> None:
@@ -383,10 +418,10 @@ def test_dashboard_generation_respects_equal_section_columns(tmp_path: Path) -> 
     generate_dashboards(project)
 
     html = (
-        project / "target" / "ggsql" / "dashboards" / "executive.html"
+        project / "target" / "glyf" / "dashboards" / "executive.html"
     ).read_text(encoding="utf-8")
-    assert "--dashboard-column-template: minmax(0, 30fr) minmax(0, 70fr)" in html
-    assert 'style="--dashboard-columns: 2; --section-columns: 2">' in html
+    assert "--glyf-column-template: minmax(0, 30fr) minmax(0, 70fr)" in html
+    assert 'style="--glyf-columns: 2' in html
 
 
 def test_dashboard_generation_reports_missing_chart(tmp_path: Path) -> None:

@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: glyf-site
-          path: examples/simple_dbt/target/ggsql/site
+          path: examples/simple_dbt/target/glyf/site
 ```
 
 ## Credentials

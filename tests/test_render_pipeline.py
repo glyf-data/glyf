@@ -17,10 +17,10 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
     assert len(result.charts) == 1
     assert list(result.charts[0].data.columns) == ["month", "revenue"]
 
-    compiled_sql = project / "target" / "ggsql" / "compiled" / "revenue.sql"
-    metadata_json = project / "target" / "ggsql" / "charts" / "revenue.json"
-    png = project / "target" / "ggsql" / "charts" / "revenue.png"
-    svg = project / "target" / "ggsql" / "charts" / "revenue.svg"
+    compiled_sql = project / "target" / "glyf" / "compiled" / "revenue.sql"
+    metadata_json = project / "target" / "glyf" / "charts" / "revenue.json"
+    png = project / "target" / "glyf" / "charts" / "revenue.png"
+    svg = project / "target" / "glyf" / "charts" / "revenue.svg"
 
     assert compiled_sql.read_text(encoding="utf-8") == (
         "SELECT month, revenue\nFROM main.fct_orders\n"
@@ -28,9 +28,9 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
     assert json.loads(metadata_json.read_text(encoding="utf-8")) == {
         "name": "revenue",
         "chart_type": "line",
-        "compiled_sql_path": "target/ggsql/compiled/revenue.sql",
-        "png_path": "target/ggsql/charts/revenue.png",
-        "svg_path": "target/ggsql/charts/revenue.svg",
+        "compiled_sql_path": "target/glyf/compiled/revenue.sql",
+        "png_path": "target/glyf/charts/revenue.png",
+        "svg_path": "target/glyf/charts/revenue.svg",
         "title": "Monthly Revenue",
         "x": "month",
         "y": "revenue",
@@ -70,10 +70,10 @@ def test_render_project_writes_interactive_metadata_and_vega_json(
 
     render_project(project)
 
-    metadata_json = project / "target" / "ggsql" / "charts" / "revenue.json"
+    metadata_json = project / "target" / "glyf" / "charts" / "revenue.json"
     metadata = json.loads(metadata_json.read_text(encoding="utf-8"))
     assert metadata["interactions"] == ["tooltip", "zoom"]
-    assert metadata["vega_json_path"] == "target/ggsql/charts/revenue.vega.json"
+    assert metadata["vega_json_path"] == "target/glyf/charts/revenue.vega.json"
     assert (project / metadata["vega_json_path"]).exists()
 
 

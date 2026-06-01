@@ -38,13 +38,13 @@ my_dbt_project/
 
 ## Outputs
 
-`target/ggsql/compiled/` stores compiled SQL.
+`target/glyf/compiled/` stores compiled SQL.
 
-`target/ggsql/charts/` stores rendered chart artifacts.
+`target/glyf/charts/` stores rendered chart artifacts.
 
-`target/ggsql/dashboards/` stores generated dashboard pages.
+`target/glyf/dashboards/` stores generated dashboard pages.
 
-`target/ggsql/site/` stores the publish-ready static site.
+`target/glyf/site/` stores the publish-ready static site.
 
 ## Naming convention
 

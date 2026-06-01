@@ -217,7 +217,7 @@ def test_render_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert "✓ executed SQL" in result.output
     assert "✓ rendered PNG/SVG" in result.output
     assert "✓ wrote metadata" in result.output
-    assert (project / "target" / "ggsql" / "compiled" / "revenue.sql").exists()
+    assert (project / "target" / "glyf" / "compiled" / "revenue.sql").exists()
 
 
 def test_build_command_runs_full_pipeline(tmp_path: Path) -> None:
@@ -229,9 +229,9 @@ def test_build_command_runs_full_pipeline(tmp_path: Path) -> None:
     assert "Validation passed" in result.output
     assert "✓ compiled SQL" in result.output
     assert "✓ generated dashboard HTML" in result.output
-    assert "✓ exported site to target/ggsql/site" in result.output
-    assert (project / "target" / "ggsql" / "site" / "index.html").exists()
-    assert (project / "target" / "ggsql" / "glyf-site.zip").exists()
+    assert "✓ exported site to target/glyf/site" in result.output
+    assert (project / "target" / "glyf" / "site" / "index.html").exists()
+    assert (project / "target" / "glyf" / "glyf-site.zip").exists()
 
 
 def test_dashboard_command_outputs_pipeline_steps(tmp_path: Path) -> None:
@@ -246,8 +246,8 @@ def test_dashboard_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert "✓ loaded chart artifacts" in result.output
     assert "✓ generated dashboard HTML" in result.output
     assert "✓ generated index page" in result.output
-    assert (project / "target" / "ggsql" / "dashboards" / "executive.html").exists()
-    assert (project / "target" / "ggsql" / "index.html").exists()
+    assert (project / "target" / "glyf" / "dashboards" / "executive.html").exists()
+    assert (project / "target" / "glyf" / "index.html").exists()
 
 
 def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
@@ -263,8 +263,8 @@ def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert "✓ copied dashboard HTML" in result.output
     assert "✓ copied chart artifacts" in result.output
     assert "✓ wrote site assets" in result.output
-    assert (project / "target" / "ggsql" / "site" / "index.html").exists()
-    assert (project / "target" / "ggsql" / "glyf-site.zip").exists()
+    assert (project / "target" / "glyf" / "site" / "index.html").exists()
+    assert (project / "target" / "glyf" / "glyf-site.zip").exists()
 
 
 @pytest.mark.parametrize(
@@ -304,7 +304,7 @@ def test_render_command_reports_pipeline_errors(tmp_path: Path) -> None:
 
 def test_dashboard_command_reports_missing_chart_artifacts(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
-    chart_artifact = project / "target" / "ggsql" / "charts" / "revenue.json"
+    chart_artifact = project / "target" / "glyf" / "charts" / "revenue.json"
     chart_artifact.parent.mkdir(parents=True, exist_ok=True)
     chart_artifact.write_text('{"test": "data"}', encoding="utf-8")
     chart_artifact.unlink()
@@ -318,7 +318,7 @@ def test_dashboard_command_reports_missing_chart_artifacts(tmp_path: Path) -> No
 
 def test_export_command_reports_missing_generated_outputs(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
-    index_file = project / "target" / "ggsql" / "index.html"
+    index_file = project / "target" / "glyf" / "index.html"
     index_file.parent.mkdir(parents=True, exist_ok=True)
     index_file.write_text("<html></html>", encoding="utf-8")
     index_file.unlink()
@@ -345,7 +345,7 @@ def test_serve_command_serves_generated_site(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     project = copy_basic_project(tmp_path)
-    site_dir = project / "target" / "ggsql" / "site"
+    site_dir = project / "target" / "glyf" / "site"
     site_dir.mkdir(parents=True)
     (site_dir / "index.html").write_text("<h1>glyf</h1>", encoding="utf-8")
 
@@ -375,7 +375,7 @@ def test_serve_command_serves_generated_site(
     )
 
     assert result.exit_code == 0
-    assert "Serving target/ggsql/site" in result.output
+    assert "Serving target/glyf/site" in result.output
     assert "Open http://127.0.0.1:8123/" in result.output
     assert "Press Ctrl+C to stop." in result.output
     assert captured["server"].served
