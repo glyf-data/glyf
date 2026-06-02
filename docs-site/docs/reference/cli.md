@@ -183,9 +183,11 @@ Example output:
 
 ```text title="Output"
 Validation passed
-  GGSQL files: 5
-  Dashboard YAML files: 1
-  Manifest: present
+✓ validated project structure
+✓ loaded manifest
+✓ validated GGSQL files (5)
+✓ validated dashboard specs (1)
+✓ validated dashboard chart refs
 ```
 
 ### `render`
@@ -217,19 +219,41 @@ uv run glyf build --project-dir examples/simple_dbt --zip
 Example output:
 
 ```text title="Output"
+✓ validated project
+✓ rendered chart artifacts
+✓ generated dashboard HTML
+✓ exported static site
+```
+
+Use `--verbose` to show the detailed low-level output from `validate`,
+`render`, `dashboard`, and `export`:
+
+```bash title="Command"
+uv run glyf build --project-dir examples/simple_dbt --zip --verbose
+```
+
+Verbose output:
+
+```text title="Output"
+Running validate
 Validation passed
-  GGSQL files: 5
-  Dashboard YAML files: 1
-  Manifest: present
+✓ validated project structure
+✓ loaded manifest
+✓ validated GGSQL files (5)
+✓ validated dashboard specs (1)
+✓ validated dashboard chart refs
+Running render
 ✓ discovered charts (5)
 ✓ compiled SQL
 ✓ executed SQL
 ✓ rendered PNG/SVG
 ✓ wrote metadata
+Running dashboard
 ✓ discovered dashboard configs
 ✓ loaded chart artifacts
 ✓ generated dashboard HTML
 ✓ generated index page
+Running export
 ✓ copied dashboard HTML
 ✓ copied chart artifacts
 ✓ copied compiled SQL
@@ -300,6 +324,7 @@ Example output:
 | --- | --- |
 | `--clean`, `--no-clean` | Clean the previous site export before copying. Enabled by default. |
 | `--zip` | Create `target/glyf/glyf-site.zip`. |
+| `--verbose`, `-v` | Show detailed output from `validate`, `render`, `dashboard`, and `export`. |
 
 ## `serve` options
 

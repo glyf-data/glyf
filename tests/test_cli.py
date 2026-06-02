@@ -195,6 +195,7 @@ def test_validate_command_passes_basic_example(tmp_path: Path) -> None:
 
     assert result.exit_code == 0
     assert "Validation passed" in result.output
+    assert "✓ validated dashboard specs (1)" in result.output
 
 
 def test_project_dir_option_validates_simple_dbt_example(tmp_path: Path) -> None:
@@ -226,12 +227,30 @@ def test_build_command_runs_full_pipeline(tmp_path: Path) -> None:
     result = runner.invoke(app, ["build", "--project", str(project), "--zip"])
 
     assert result.exit_code == 0
-    assert "Validation passed" in result.output
-    assert "✓ compiled SQL" in result.output
+    assert "✓ validated project" in result.output
+    assert "✓ rendered chart artifacts" in result.output
     assert "✓ generated dashboard HTML" in result.output
-    assert "✓ exported site to target/glyf/site" in result.output
+    assert "✓ exported static site" in result.output
+    assert "✓ compiled SQL" not in result.output
     assert (project / "target" / "glyf" / "site" / "index.html").exists()
     assert (project / "target" / "glyf" / "glyf-site.zip").exists()
+
+
+def test_build_verbose_outputs_low_level_pipeline_steps(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = runner.invoke(app, ["build", "--project", str(project), "--verbose"])
+
+    assert result.exit_code == 0
+    assert "Running validate" in result.output
+    assert "Validation passed" in result.output
+    assert "✓ validated dashboard specs (1)" in result.output
+    assert "Running render" in result.output
+    assert "✓ compiled SQL" in result.output
+    assert "Running dashboard" in result.output
+    assert "✓ generated dashboard HTML" in result.output
+    assert "Running export" in result.output
+    assert "✓ exported site to target/glyf/site" in result.output
 
 
 def test_dashboard_command_outputs_pipeline_steps(tmp_path: Path) -> None:
