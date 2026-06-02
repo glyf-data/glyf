@@ -32,17 +32,17 @@
 
           <p class="glyf-subtitle">Bookings, expenses, and margin by month and department.</p>
 
+
           <div class="glyf-tags" aria-label="Dashboard tags">
-            <span class="glyf-badge">glyf</span>
-            <span class="glyf-badge glyf-badge-blue">dbt</span>
 
-            <span class="glyf-badge">line</span>
+            <span class="glyf-badge">finance</span>
 
-            <span class="glyf-badge">pie</span>
+            <span class="glyf-badge">margin</span>
 
-            <span class="glyf-badge">bar</span>
+            <span class="glyf-badge">bookings</span>
 
           </div>
+
         </div>
         <div class="glyf-actions" aria-label="Dashboard actions">
 
@@ -120,7 +120,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong>on build</strong>
+          Refreshed <strong title="2026-06-02T23:16:35Z">02 Jun 2026, 23:16 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -173,7 +173,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">generated locally</span>
+              <span class="glyf-version-option-note">built 02 Jun 2026, 23:16 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -337,7 +337,7 @@ FROM "finance_metrics"."main"."fct_finance"
       id="chart-bookings_trend"
       data-vega-chart="chart-bookings_trend-spec"
     ></div>
-    <script type="application/json" id="chart-bookings_trend-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-a7dd2cd872cf60b34d6dbe8b2342cd39"}, "datasets": {"data-a7dd2cd872cf60b34d6dbe8b2342cd39": [{"bookings": 60000.0, "month": "2026-01"}, {"bookings": 79000.0, "month": "2026-03"}, {"bookings": 69000.0, "month": "2026-02"}]}, "encoding": {"tooltip": [{"field": "month", "type": "nominal"}, {"field": "bookings", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "month", "title": "Month", "type": "nominal"}, "y": {"field": "bookings", "title": "Bookings", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "title": "Bookings Trend", "width": 800}</script>
+    <script type="application/json" id="chart-bookings_trend-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-bcbb06ff28f84701d236690b16409254"}, "datasets": {"data-bcbb06ff28f84701d236690b16409254": [{"bookings": 79000.0, "month": "2026-03"}, {"bookings": 69000.0, "month": "2026-02"}, {"bookings": 60000.0, "month": "2026-01"}]}, "encoding": {"tooltip": [{"field": "month", "type": "nominal"}, {"field": "bookings", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "month", "title": "Month", "type": "nominal"}, "y": {"field": "bookings", "title": "Bookings", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "title": "Bookings Trend", "width": 800}</script>
     <noscript>
       <img src="../charts/bookings_trend.png" alt="Bookings Trend">
     </noscript>
@@ -410,7 +410,7 @@ FROM "finance_metrics"."main"."fct_finance"
       id="chart-expenses_by_department"
       data-vega-chart="chart-expenses_by_department-spec"
     ></div>
-    <script type="application/json" id="chart-expenses_by_department-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-a27141125ca4157220d954d2d75d1e64"}, "datasets": {"data-a27141125ca4157220d954d2d75d1e64": [{"department": "Product", "expenses": 23000.0, "month": "2026-02"}, {"department": "Sales", "expenses": 17200.0, "month": "2026-03"}, {"department": "Product", "expenses": 22000.0, "month": "2026-01"}, {"department": "Sales", "expenses": 15000.0, "month": "2026-01"}, {"department": "Sales", "expenses": 16500.0, "month": "2026-02"}, {"department": "Product", "expenses": 24200.0, "month": "2026-03"}]}, "encoding": {"color": {"field": "department", "type": "nominal"}, "opacity": {"condition": {"param": "param_da46cb0ab065acf5", "value": 1}, "value": 0.2}, "tooltip": [{"field": "month", "type": "nominal"}, {"field": "expenses", "type": "quantitative"}, {"field": "department", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "month", "title": "Month", "type": "nominal"}, "y": {"field": "expenses", "title": "Expenses", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "params": [{"bind": "legend", "name": "param_da46cb0ab065acf5", "select": {"fields": ["department"], "type": "point"}}], "title": "Expenses by Department", "width": 800}</script>
+    <script type="application/json" id="chart-expenses_by_department-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-3679c01fcbe476939d2468a4f3d61989"}, "datasets": {"data-3679c01fcbe476939d2468a4f3d61989": [{"department": "Product", "expenses": 22000.0, "month": "2026-01"}, {"department": "Product", "expenses": 23000.0, "month": "2026-02"}, {"department": "Sales", "expenses": 17200.0, "month": "2026-03"}, {"department": "Sales", "expenses": 16500.0, "month": "2026-02"}, {"department": "Product", "expenses": 24200.0, "month": "2026-03"}, {"department": "Sales", "expenses": 15000.0, "month": "2026-01"}]}, "encoding": {"color": {"field": "department", "type": "nominal"}, "opacity": {"condition": {"param": "param_da46cb0ab065acf5", "value": 1}, "value": 0.2}, "tooltip": [{"field": "month", "type": "nominal"}, {"field": "expenses", "type": "quantitative"}, {"field": "department", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "month", "title": "Month", "type": "nominal"}, "y": {"field": "expenses", "title": "Expenses", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "params": [{"bind": "legend", "name": "param_da46cb0ab065acf5", "select": {"fields": ["department"], "type": "point"}}], "title": "Expenses by Department", "width": 800}</script>
     <noscript>
       <img src="../charts/expenses_by_department.png" alt="Expenses by Department">
     </noscript>
@@ -435,7 +435,7 @@ FROM "finance_metrics"."main"."fct_finance"
       id="chart-gross_margin_trend"
       data-vega-chart="chart-gross_margin_trend-spec"
     ></div>
-    <script type="application/json" id="chart-gross_margin_trend-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-a5580a457c02d3159a1615d25b441f69"}, "datasets": {"data-a5580a457c02d3159a1615d25b441f69": [{"gross_margin": 23000.0, "month": "2026-01"}, {"gross_margin": 37600.0, "month": "2026-03"}, {"gross_margin": 29500.0, "month": "2026-02"}]}, "encoding": {"tooltip": [{"field": "month", "type": "nominal"}, {"field": "gross_margin", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "month", "title": "Month", "type": "nominal"}, "y": {"field": "gross_margin", "title": "Gross Margin", "type": "quantitative"}}, "height": 400, "mark": {"opacity": 0.7, "type": "area"}, "title": "Gross Margin Trend", "width": 800}</script>
+    <script type="application/json" id="chart-gross_margin_trend-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-74b4d78427b48d79496ccef67e068452"}, "datasets": {"data-74b4d78427b48d79496ccef67e068452": [{"gross_margin": 37600.0, "month": "2026-03"}, {"gross_margin": 23000.0, "month": "2026-01"}, {"gross_margin": 29500.0, "month": "2026-02"}]}, "encoding": {"tooltip": [{"field": "month", "type": "nominal"}, {"field": "gross_margin", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "month", "title": "Month", "type": "nominal"}, "y": {"field": "gross_margin", "title": "Gross Margin", "type": "quantitative"}}, "height": 400, "mark": {"opacity": 0.7, "type": "area"}, "title": "Gross Margin Trend", "width": 800}</script>
     <noscript>
       <img src="../charts/gross_margin_trend.png" alt="Gross Margin Trend">
     </noscript>
@@ -495,7 +495,7 @@ FROM "finance_metrics"."main"."fct_finance"
       id="chart-margin_vs_expenses"
       data-vega-chart="chart-margin_vs_expenses-spec"
     ></div>
-    <script type="application/json" id="chart-margin_vs_expenses-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-cc1b94618ca3943f9e46c8d18886d451"}, "datasets": {"data-cc1b94618ca3943f9e46c8d18886d451": [{"department": "Product", "expenses": 23000.0, "gross_margin": -1000.0}, {"department": "Sales", "expenses": 17200.0, "gross_margin": 35800.0}, {"department": "Product", "expenses": 22000.0, "gross_margin": -4000.0}, {"department": "Sales", "expenses": 16500.0, "gross_margin": 30500.0}, {"department": "Product", "expenses": 24200.0, "gross_margin": 1800.0}, {"department": "Sales", "expenses": 15000.0, "gross_margin": 27000.0}]}, "encoding": {"color": {"field": "department", "type": "nominal"}, "opacity": {"condition": {"param": "param_da46cb0ab065acf5", "value": 1}, "value": 0.2}, "tooltip": [{"field": "expenses", "type": "quantitative"}, {"field": "gross_margin", "type": "quantitative"}, {"field": "department", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "expenses", "title": "Expenses", "type": "quantitative"}, "y": {"field": "gross_margin", "title": "Gross Margin", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "legend", "name": "param_da46cb0ab065acf5", "select": {"fields": ["department"], "type": "point"}}], "title": "Margin vs Expenses", "width": 800}</script>
+    <script type="application/json" id="chart-margin_vs_expenses-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-79215f539c7539cc655acac936d29e8c"}, "datasets": {"data-79215f539c7539cc655acac936d29e8c": [{"department": "Product", "expenses": 23000.0, "gross_margin": -1000.0}, {"department": "Sales", "expenses": 17200.0, "gross_margin": 35800.0}, {"department": "Product", "expenses": 22000.0, "gross_margin": -4000.0}, {"department": "Sales", "expenses": 15000.0, "gross_margin": 27000.0}, {"department": "Sales", "expenses": 16500.0, "gross_margin": 30500.0}, {"department": "Product", "expenses": 24200.0, "gross_margin": 1800.0}]}, "encoding": {"color": {"field": "department", "type": "nominal"}, "opacity": {"condition": {"param": "param_da46cb0ab065acf5", "value": 1}, "value": 0.2}, "tooltip": [{"field": "expenses", "type": "quantitative"}, {"field": "gross_margin", "type": "quantitative"}, {"field": "department", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "expenses", "title": "Expenses", "type": "quantitative"}, "y": {"field": "gross_margin", "title": "Gross Margin", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "legend", "name": "param_da46cb0ab065acf5", "select": {"fields": ["department"], "type": "point"}}], "title": "Margin vs Expenses", "width": 800}</script>
     <noscript>
       <img src="../charts/margin_vs_expenses.png" alt="Margin vs Expenses">
     </noscript>
@@ -559,7 +559,7 @@ FROM "finance_metrics"."main"."fct_finance"
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">generated locally</div>
+              <div class="glyf-version-date">02 Jun 2026, 23:16 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>

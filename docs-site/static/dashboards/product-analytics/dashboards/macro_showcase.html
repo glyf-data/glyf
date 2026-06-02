@@ -32,15 +32,17 @@
 
           <p class="glyf-subtitle">Demo dashboard that exercises built-in dashboard macros, aliases, and project macros.</p>
 
+
           <div class="glyf-tags" aria-label="Dashboard tags">
-            <span class="glyf-badge">glyf</span>
-            <span class="glyf-badge glyf-badge-blue">dbt</span>
 
-            <span class="glyf-badge">area</span>
+            <span class="glyf-badge">macros</span>
 
-            <span class="glyf-badge">line</span>
+            <span class="glyf-badge">components</span>
+
+            <span class="glyf-badge">demo</span>
 
           </div>
+
         </div>
         <div class="glyf-actions" aria-label="Dashboard actions">
 
@@ -118,7 +120,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong>on build</strong>
+          Refreshed <strong title="2026-06-02T23:16:35Z">02 Jun 2026, 23:16 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -171,7 +173,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">generated locally</span>
+              <span class="glyf-version-option-note">built 02 Jun 2026, 23:16 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -577,7 +579,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">Local time</div>
-  <div class="glyf-component-value">2026-06-03 00:05</div>
+  <div class="glyf-component-value">2026-06-03 00:16</div>
 
   <div class="glyf-component-note">time.now local timezone</div>
 
@@ -591,7 +593,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">London time</div>
-  <div class="glyf-component-value">2026-06-03 00:05</div>
+  <div class="glyf-component-value">2026-06-03 00:16</div>
 
   <div class="glyf-component-note">time.now explicit timezone</div>
 
@@ -604,7 +606,7 @@ GROUP BY 1, 2
                   <article class="glyf-card glyf-component-card">
   <div class="glyf-card-body">
 
-  <span class="glyf-badge">Refreshed 00:05</span>
+  <span class="glyf-badge">Refreshed 00:16</span>
 
   </div>
 </article>
@@ -710,7 +712,7 @@ GROUP BY 1, 2
       id="chart-activation_by_plan"
       data-vega-chart="chart-activation_by_plan-spec"
     ></div>
-    <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-7cadd8e81fb25b05d69f29399f371eb8"}, "datasets": {"data-7cadd8e81fb25b05d69f29399f371eb8": [{"activated_users": 170.0, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 245.0, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 140.0, "plan": "Free", "week": "2026-W02"}, {"activated_users": 120.0, "plan": "Free", "week": "2026-W01"}, {"activated_users": 155.0, "plan": "Free", "week": "2026-W03"}, {"activated_users": 210.0, "plan": "Pro", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
+    <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-dc9678f69dc0d126c5e22668bcd72b0e"}, "datasets": {"data-dc9678f69dc0d126c5e22668bcd72b0e": [{"activated_users": 170.0, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 245.0, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 210.0, "plan": "Pro", "week": "2026-W02"}, {"activated_users": 120.0, "plan": "Free", "week": "2026-W01"}, {"activated_users": 155.0, "plan": "Free", "week": "2026-W03"}, {"activated_users": 140.0, "plan": "Free", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
     <noscript>
       <img src="../charts/activation_by_plan.png" alt="Activation by Plan">
     </noscript>
@@ -758,7 +760,7 @@ GROUP BY 1, 2
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-06-03 00:05
+      2026-06-03 00:16
 
     </div>
   </div>
@@ -810,7 +812,7 @@ GROUP BY 1, 2
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">generated locally</div>
+              <div class="glyf-version-date">02 Jun 2026, 23:16 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>

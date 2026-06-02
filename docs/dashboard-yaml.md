@@ -6,6 +6,9 @@ Dashboard configs live in `dashboards/`.
 name: executive
 title: Executive Dashboard
 description: Key business metrics generated from dbt models.
+tags:
+  - finance
+  - monthly
 
 charts:
   - revenue
@@ -30,6 +33,9 @@ toolbar:
 Generated dashboards also render static controls for star, lookback, feedback,
 and AI Summary. Those controls are part of the generated dashboard shell today;
 they do not require YAML fields yet.
+
+The dashboard header metadata shows the actual UTC build timestamp, so
+`Refreshed` reflects when the HTML artifact was generated.
 
 Use `summary` for macro-backed AI Summary content. Summary entries are Jinja
 expressions that return typed dashboard components:
@@ -166,6 +172,7 @@ sections:
 - `name`: output filename stem.
 - `title`: dashboard page title.
 - `description`: optional intro text.
+- `tags`: optional list of short labels shown in the dashboard header.
 - `toolbar`: optional dashboard action bar configuration. Use `false` to hide it.
 - `toolbar.visibility`: `public` or `private`.
 - `toolbar.actions`: list of YAML-configured toolbar actions. Currently
@@ -201,3 +208,17 @@ The dashboard index is written to:
 ```text
 target/glyf/index.html
 ```
+
+## Tags
+
+Use `tags` to control the badges shown under the dashboard description:
+
+```yaml
+tags:
+  - finance
+  - monthly
+  - board
+```
+
+Tags must be a list of non-empty strings. Glyf preserves their order and
+removes duplicates.

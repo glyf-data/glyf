@@ -42,13 +42,13 @@
           {% else %}
           <p class="glyf-subtitle">Static dashboard generated from glyf artifacts.</p>
           {% endif %}
+          {% if dashboard.tags %}
           <div class="glyf-tags" aria-label="Dashboard tags">
-            <span class="glyf-badge">glyf</span>
-            <span class="glyf-badge glyf-badge-blue">dbt</span>
-            {% for chart in charts[:3] %}
-            <span class="glyf-badge">{{ chart.metadata.chart_type }}</span>
+            {% for tag in dashboard.tags %}
+            <span class="glyf-badge">{{ tag }}</span>
             {% endfor %}
           </div>
+          {% endif %}
         </div>
         {{ toolbar.render_toolbar(dashboard) }}
       </div>
@@ -58,7 +58,7 @@
       <div class="glyf-meta-left">
         <div class="glyf-meta-item">
           {{ icons.icon("clock") }}
-          Refreshed <strong>on build</strong>
+          Refreshed <strong title="{{ build_meta.generated_at_iso }}">{{ build_meta.generated_at_display }}</strong>
         </div>
         <div class="glyf-meta-item">
           {{ icons.icon("user") }}
@@ -90,7 +90,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">generated locally</span>
+              <span class="glyf-version-option-note">built {{ build_meta.generated_at_display }}</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -185,7 +185,7 @@
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">generated locally</div>
+              <div class="glyf-version-date">{{ build_meta.generated_at_display }}</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>

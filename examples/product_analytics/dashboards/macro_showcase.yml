@@ -1,6 +1,10 @@
 name: macro_showcase
 title: Macro Showcase
 description: Demo dashboard that exercises built-in dashboard macros, aliases, and project macros.
+tags:
+  - macros
+  - components
+  - demo
 
 toolbar:
   visibility: private

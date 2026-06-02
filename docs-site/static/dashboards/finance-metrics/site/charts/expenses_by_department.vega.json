@@ -30,7 +30,7 @@
     }
   },
   "data": {
-    "name": "data-a27141125ca4157220d954d2d75d1e64"
+    "name": "data-3679c01fcbe476939d2468a4f3d61989"
   },
   "mark": {
     "type": "bar"
@@ -92,7 +92,12 @@
   "width": 800,
   "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json",
   "datasets": {
-    "data-a27141125ca4157220d954d2d75d1e64": [
+    "data-3679c01fcbe476939d2468a4f3d61989": [
+      {
+        "month": "2026-01",
+        "department": "Product",
+        "expenses": 22000.0
+      },
       {
         "month": "2026-02",
         "department": "Product",
@@ -104,16 +109,6 @@
         "expenses": 17200.0
       },
       {
-        "month": "2026-01",
-        "department": "Product",
-        "expenses": 22000.0
-      },
-      {
-        "month": "2026-01",
-        "department": "Sales",
-        "expenses": 15000.0
-      },
-      {
         "month": "2026-02",
         "department": "Sales",
         "expenses": 16500.0
@@ -122,6 +117,11 @@
         "month": "2026-03",
         "department": "Product",
         "expenses": 24200.0
+      },
+      {
+        "month": "2026-01",
+        "department": "Sales",
+        "expenses": 15000.0
       }
     ]
   }

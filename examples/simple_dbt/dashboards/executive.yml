@@ -1,6 +1,10 @@
 name: executive
 title: Executive Dashboard
 description: Revenue from a minimal dbt-style project.
+tags:
+  - glyf
+  - dbt
+  - revenue
 
 toolbar:
   visibility: private

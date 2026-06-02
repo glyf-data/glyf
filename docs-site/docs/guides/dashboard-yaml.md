@@ -14,6 +14,9 @@ The smallest dashboard only needs a name, title, and a list of chart names:
 name: executive
 title: Executive Dashboard
 description: Key business metrics generated from dbt models.
+tags:
+  - finance
+  - monthly
 
 charts:
   - revenue
@@ -65,6 +68,10 @@ toolbar:
 Generated dashboards also render static controls for star, lookback, feedback,
 and AI Summary. Those controls are part of the generated dashboard shell today;
 they do not require YAML fields yet.
+
+The dashboard header metadata shows the actual UTC build timestamp. `Refreshed`
+is no longer a generic label; it reflects when `glyf dashboard` or `glyf build`
+generated that HTML artifact.
 
 ### Summary
 
@@ -167,6 +174,7 @@ Inside each section, glyf currently supports four item kinds:
 | `name` | Output filename stem. |
 | `title` | Dashboard page title. |
 | `description` | Optional intro text. |
+| `tags` | Optional list of short labels shown in the dashboard header. |
 | `charts` | List of `.ggsql` chart names without the extension. |
 | `toolbar` | Optional toolbar configuration, or `false` to hide it. |
 | `summary` | Optional list of macro expressions rendered in the AI Summary panel. |
@@ -258,6 +266,22 @@ sections:
       - component: "{{ listofvalues(['a', 'b', 'c'], title='Values') }}"
       - component: "{{ alert.warning('Threshold exceeded', 'Freshness') }}"
 ```
+
+## Tags
+
+Use `tags` to control the badges shown under the dashboard description.
+
+```yaml
+name: executive
+title: Executive Dashboard
+tags:
+  - finance
+  - monthly
+  - board
+```
+
+Tags must be a list of non-empty strings. Glyf preserves their order and
+removes duplicates.
 
 ### Custom macros
 

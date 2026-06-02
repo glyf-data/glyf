@@ -1,6 +1,10 @@
 name: sales
 title: Sales Dashboard
 description: Monthly sales performance by channel and region.
+tags:
+  - sales
+  - revenue
+  - regional
 
 layout:
   columns: 2

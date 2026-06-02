@@ -1,6 +1,10 @@
 name: finance
 title: Finance Metrics
 description: Bookings, expenses, and margin by month and department.
+tags:
+  - finance
+  - margin
+  - bookings
 
 layout:
   columns: "65% 35%"

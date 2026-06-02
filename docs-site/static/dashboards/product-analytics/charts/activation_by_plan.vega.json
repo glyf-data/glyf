@@ -30,7 +30,7 @@
     }
   },
   "data": {
-    "name": "data-7cadd8e81fb25b05d69f29399f371eb8"
+    "name": "data-dc9678f69dc0d126c5e22668bcd72b0e"
   },
   "mark": {
     "type": "line",
@@ -93,7 +93,7 @@
   "width": 800,
   "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json",
   "datasets": {
-    "data-7cadd8e81fb25b05d69f29399f371eb8": [
+    "data-dc9678f69dc0d126c5e22668bcd72b0e": [
       {
         "week": "2026-W01",
         "plan": "Pro",
@@ -106,8 +106,8 @@
       },
       {
         "week": "2026-W02",
-        "plan": "Free",
-        "activated_users": 140.0
+        "plan": "Pro",
+        "activated_users": 210.0
       },
       {
         "week": "2026-W01",
@@ -121,8 +121,8 @@
       },
       {
         "week": "2026-W02",
-        "plan": "Pro",
-        "activated_users": 210.0
+        "plan": "Free",
+        "activated_users": 140.0
       }
     ]
   }

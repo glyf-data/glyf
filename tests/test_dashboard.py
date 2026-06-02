@@ -1,5 +1,6 @@
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+import re
 
 import pytest
 
@@ -17,6 +18,9 @@ def test_dashboard_yaml_parses_optional_fields(tmp_path: Path) -> None:
         "name: executive\n"
         "title: Executive Dashboard\n"
         "description: Key business metrics.\n"
+        "tags:\n"
+        "  - finance\n"
+        "  - monthly\n"
         "layout: grid\n"
         "charts:\n"
         "  - revenue\n",
@@ -28,6 +32,7 @@ def test_dashboard_yaml_parses_optional_fields(tmp_path: Path) -> None:
     assert dashboard.name == "executive"
     assert dashboard.title == "Executive Dashboard"
     assert dashboard.description == "Key business metrics."
+    assert dashboard.tags == ("finance", "monthly")
     assert dashboard.layout == "grid"
     assert dashboard.charts == ("revenue",)
 
@@ -147,6 +152,21 @@ def test_dashboard_yaml_rejects_boolean_columns(tmp_path: Path) -> None:
         load_dashboard(dashboard_path)
 
 
+def test_dashboard_yaml_rejects_empty_tags(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "tags:\n"
+        "  - finance\n"
+        "  - ''\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="tags\\[2\\]"):
+        load_dashboard(dashboard_path)
+
+
 def test_dashboard_yaml_rejects_invalid_dashboard_name(tmp_path: Path) -> None:
     dashboard_path = tmp_path / "executive.yml"
     dashboard_path.write_text(
@@ -225,6 +245,9 @@ def test_dashboard_generation_writes_dashboard_and_index(tmp_path: Path) -> None
     assert "vegaEmbed" not in html
     assert "Chart sources" in html
     assert "Source" in html
+    assert "Refreshed <strong title=" in html
+    assert re.search(r"\d{2} [A-Z][a-z]{2} \d{4}, \d{2}:\d{2} UTC", html)
+    assert "on build" not in html
     assert "Compiled SQL" not in html
     assert (project / "target" / "glyf" / "assets" / "dashboard.css").exists()
     assert (
@@ -349,6 +372,30 @@ def test_dashboard_generation_renders_builtin_macro_components(tmp_path: Path) -
     assert "Margin" in html
     assert "glyf-alert" in html
     assert "data-glyf-source-button" in html
+
+
+def test_dashboard_generation_renders_dashboard_tags(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "tags:\n"
+        "  - finance\n"
+        "  - executive\n"
+        "charts:\n"
+        "  - revenue\n",
+        encoding="utf-8",
+    )
+
+    generate_dashboards(project)
+
+    html = (
+        project / "target" / "glyf" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "finance" in html
+    assert "executive" in html
+    assert 'aria-label="Dashboard tags"' in html
 
 
 def test_dashboard_generation_renders_ai_macro_summary_panel(tmp_path: Path) -> None:

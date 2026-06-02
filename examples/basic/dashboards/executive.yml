@@ -1,6 +1,10 @@
 name: executive
 title: Executive Dashboard
 description: Key business metrics generated from dbt models.
+tags:
+  - finance
+  - executive
+  - demo
 
 charts:
   - revenue

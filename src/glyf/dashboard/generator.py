@@ -13,7 +13,7 @@ from glyf.dashboard.macros import (
     DashboardMacroRegistry,
     resolve_dashboard_components,
 )
-from glyf.dashboard.renderer import DashboardRenderer
+from glyf.dashboard.renderer import DashboardBuildMeta, DashboardRenderer
 from glyf.output.paths import artifact_paths
 from glyf.project.scanner import ProjectScan, scan_project
 
@@ -50,6 +50,7 @@ def generate_dashboards(
         macro_registry = DashboardMacroRegistry.from_project(scan.dashboards_dir)
     except DashboardMacroError as exc:
         raise DashboardGenerationError(str(exc)) from exc
+    build_meta = DashboardBuildMeta.now()
 
     dashboards: list[GeneratedDashboard] = []
     for dashboard_path in scan.dashboard_files:
@@ -88,6 +89,7 @@ def generate_dashboards(
                 ordered_chart_artifacts,
                 config,
                 assets,
+                build_meta,
             ).html,
             encoding="utf-8",
         )
