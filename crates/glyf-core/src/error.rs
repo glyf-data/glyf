@@ -4,4 +4,6 @@ pub enum CoreError {
     Parse(String),
     #[error("{0}")]
     Manifest(String),
+    #[error("{0}")]
+    Dashboard(String),
 }

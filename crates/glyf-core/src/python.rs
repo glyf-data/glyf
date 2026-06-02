@@ -3,6 +3,7 @@ use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
 use std::collections::BTreeMap;
 
+use crate::dashboard::validate_dashboard_json_text;
 use crate::error::CoreError;
 use crate::ggsql::parse_ggsql_text;
 use crate::manifest::load_manifest_json_text;
@@ -13,6 +14,7 @@ pub(crate) fn register(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_function(wrap_pyfunction!(parse_ggsql, module)?)?;
     module.add_function(wrap_pyfunction!(load_manifest_json, module)?)?;
     module.add_function(wrap_pyfunction!(resolve_refs, module)?)?;
+    module.add_function(wrap_pyfunction!(validate_dashboard_json, module)?)?;
     Ok(())
 }
 
@@ -132,4 +134,9 @@ fn load_manifest_json(py: Python<'_>, text: &str, path: &str) -> PyResult<PyObje
 fn resolve_refs(py: Python<'_>, sql: &str, manifest: &Bound<'_, PyDict>) -> PyResult<PyObject> {
     let manifest = manifest_from_python(manifest)?;
     resolution_to_python(py, resolve_refs_text(sql, &manifest))
+}
+
+#[pyfunction]
+fn validate_dashboard_json(text: &str, path: &str) -> PyResult<()> {
+    validate_dashboard_json_text(text, path).map_err(py_err)
 }
