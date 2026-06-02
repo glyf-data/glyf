@@ -146,6 +146,51 @@ def test_dashboard_yaml_rejects_boolean_columns(tmp_path: Path) -> None:
         load_dashboard(dashboard_path)
 
 
+def test_dashboard_yaml_rejects_invalid_dashboard_name(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: ../executive\n"
+        "title: Executive Dashboard\n"
+        "charts:\n"
+        "  - revenue\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="valid filename stem"):
+        load_dashboard(dashboard_path)
+
+
+def test_dashboard_yaml_rejects_partial_summary_macro_template(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "summary:\n"
+        "  - \"Owner: {{ owner() }}\"\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="expected a Jinja expression"):
+        load_dashboard(dashboard_path)
+
+
+def test_dashboard_yaml_rejects_item_with_multiple_kinds(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "sections:\n"
+        "  - title: Mixed\n"
+        "    items:\n"
+        "      - chart: revenue\n"
+        "        markdown: Invalid second kind\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="exactly one"):
+        load_dashboard(dashboard_path)
+
+
 def test_chart_metadata_loading(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     render_project(project)

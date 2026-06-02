@@ -1,3 +1,4 @@
+mod dashboard;
 mod error;
 mod ggsql;
 mod manifest;
@@ -6,6 +7,7 @@ mod python;
 mod resolver;
 
 pub use error::CoreError;
+pub use dashboard::validate_dashboard_json_text;
 pub use ggsql::parse_ggsql_text;
 pub use manifest::load_manifest_json_text;
 pub use models::{

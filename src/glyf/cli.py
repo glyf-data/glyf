@@ -139,9 +139,17 @@ def build_command(
         bool,
         typer.Option("--zip", help="Create target/glyf/glyf-site.zip."),
     ] = False,
+    verbose: Annotated[
+        bool,
+        typer.Option(
+            "--verbose",
+            "-v",
+            help="Show detailed output from validate, render, dashboard, and export.",
+        ),
+    ] = False,
 ) -> None:
     """Run the full glyf artifact pipeline and export a static site."""
-    run_build(project, clean=clean, zip_site=zip_site, config_path=config)
+    run_build(project, clean=clean, zip_site=zip_site, config_path=config, verbose=verbose)
 
 
 @app.command("dashboard")

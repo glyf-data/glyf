@@ -104,6 +104,8 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
         raise typer.Exit(1)
 
     typer.echo("Validation passed")
-    typer.echo(f"  GGSQL files: {len(scan.ggsql_files)}")
-    typer.echo(f"  Dashboard YAML files: {len(scan.dashboard_files)}")
-    typer.echo(f"  Manifest: {'present' if scan.manifest_path else 'missing'}")
+    typer.echo("✓ validated project structure")
+    typer.echo("✓ loaded manifest")
+    typer.echo(f"✓ validated GGSQL files ({len(scan.ggsql_files)})")
+    typer.echo(f"✓ validated dashboard specs ({len(scan.dashboard_files)})")
+    typer.echo("✓ validated dashboard chart refs")
