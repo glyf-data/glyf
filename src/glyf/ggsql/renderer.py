@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import altair as alt
@@ -46,11 +47,13 @@ def _render_altair_chart(
     try:
         if "svg" in config.formats:
             chart_spec.save(svg_path)
+            _patch_svg_fonts(svg_path)
         if "png" in config.formats:
             chart_spec.save(png_path)
         if chart.is_interactive and vega_json_path is not None:
             vega_json_path.parent.mkdir(parents=True, exist_ok=True)
             chart_spec.save(vega_json_path)
+            _patch_vega_json_fonts(vega_json_path)
     except Exception as exc:
         raise ChartRenderError(str(exc)) from exc
 
@@ -117,6 +120,23 @@ def build_chart(
         .encode(**encoding)
         .properties(**properties)
         .configure_view(stroke="#d9e2ec")
+        .configure_axis(
+            labelAngle=0,
+            labelFontSize=11,
+            titleFontSize=12,
+            titleFontWeight=600,
+        )
+        .configure_legend(
+            labelFontSize=11,
+            titleFontSize=12,
+            titleFontWeight=600,
+        )
+        .configure_title(
+            fontSize=15,
+            fontWeight=600,
+            subtitleFontSize=12,
+            subtitleFontWeight=400,
+        )
     )
     if chart.draw_type == "line":
         rendered = base.mark_line(point=True)
@@ -139,3 +159,48 @@ def build_chart(
     if "zoom" in chart.interactions:
         rendered = rendered.interactive()
     return rendered
+
+
+def _patch_svg_fonts(svg_path: Path) -> None:
+    svg = svg_path.read_text(encoding="utf-8")
+    if 'font-family="Hanken Grotesk"' in svg:
+        return
+
+    style_block = (
+        "<style>"
+        "@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Regular.ttf') format('truetype');font-weight:400;font-style:normal;}"
+        "@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Medium.ttf') format('truetype');font-weight:500;font-style:normal;}"
+        "@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;}"
+        "@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Bold.ttf') format('truetype');font-weight:700;font-style:normal;}"
+        "</style>"
+    )
+    svg = svg.replace("><rect ", f">{style_block}<rect ", 1)
+    svg = svg.replace('font-family="sans-serif"', 'font-family="Hanken Grotesk"')
+    svg_path.write_text(svg, encoding="utf-8")
+
+
+def _patch_vega_json_fonts(vega_json_path: Path) -> None:
+    spec = json.loads(vega_json_path.read_text(encoding="utf-8"))
+    config = spec.setdefault("config", {})
+    axis = config.setdefault("axis", {})
+    axis.update(
+        {
+            "labelFont": "Hanken Grotesk",
+            "titleFont": "Hanken Grotesk",
+        }
+    )
+    legend = config.setdefault("legend", {})
+    legend.update(
+        {
+            "labelFont": "Hanken Grotesk",
+            "titleFont": "Hanken Grotesk",
+        }
+    )
+    title = config.setdefault("title", {})
+    title.update(
+        {
+            "font": "Hanken Grotesk",
+            "subtitleFont": "Hanken Grotesk",
+        }
+    )
+    vega_json_path.write_text(json.dumps(spec, indent=2), encoding="utf-8")

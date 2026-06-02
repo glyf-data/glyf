@@ -1,0 +1,15 @@
+{
+  "chart_type": "bar",
+  "compiled_sql_path": "target/glyf/compiled/expenses_by_department.sql",
+  "interactions": [
+    "tooltip",
+    "legend_filter"
+  ],
+  "name": "expenses_by_department",
+  "png_path": "target/glyf/charts/expenses_by_department.png",
+  "svg_path": "target/glyf/charts/expenses_by_department.svg",
+  "title": "Expenses by Department",
+  "vega_json_path": "target/glyf/charts/expenses_by_department.vega.json",
+  "x": "month",
+  "y": "expenses"
+}

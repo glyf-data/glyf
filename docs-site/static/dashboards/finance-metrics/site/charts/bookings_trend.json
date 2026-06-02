@@ -1,0 +1,14 @@
+{
+  "chart_type": "line",
+  "compiled_sql_path": "target/glyf/compiled/bookings_trend.sql",
+  "interactions": [
+    "tooltip"
+  ],
+  "name": "bookings_trend",
+  "png_path": "target/glyf/charts/bookings_trend.png",
+  "svg_path": "target/glyf/charts/bookings_trend.svg",
+  "title": "Bookings Trend",
+  "vega_json_path": "target/glyf/charts/bookings_trend.vega.json",
+  "x": "month",
+  "y": "bookings"
+}

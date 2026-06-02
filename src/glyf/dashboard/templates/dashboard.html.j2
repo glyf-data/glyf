@@ -76,10 +76,28 @@
           Source
         </button>
         {% endif %}
-        <select class="glyf-version-select" aria-label="Dashboard version">
-          <option>v current</option>
-          <option disabled>v previous</option>
-        </select>
+        <div class="glyf-version-menu" data-glyf-version-menu>
+          <button
+            class="glyf-version-button"
+            type="button"
+            aria-label="Dashboard version"
+            aria-expanded="false"
+            data-glyf-version-button
+          >
+            <span class="glyf-version-button-label glyf-mono">v current</span>
+            {{ icons.icon("chevron-down", "glyf-version-button-icon") }}
+          </button>
+          <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
+            <button class="glyf-version-option is-active" type="button" role="menuitem">
+              <span class="glyf-version-option-title glyf-mono">v current</span>
+              <span class="glyf-version-option-note">generated locally</span>
+            </button>
+            <button class="glyf-version-option" type="button" role="menuitem" disabled>
+              <span class="glyf-version-option-title glyf-mono">v previous</span>
+              <span class="glyf-version-option-note">not available in static output</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -239,6 +257,30 @@
       lookbackModal.addEventListener("click", (event) => {
         if (event.target === lookbackModal) {
           lookbackModal.classList.remove("is-open");
+        }
+      });
+    }
+
+    const versionMenu = document.querySelector("[data-glyf-version-menu]");
+    const versionButton = document.querySelector("[data-glyf-version-button]");
+    if (versionMenu && versionButton) {
+      const closeVersionMenu = () => {
+        versionMenu.classList.remove("is-open");
+        versionButton.setAttribute("aria-expanded", "false");
+      };
+      versionButton.addEventListener("click", () => {
+        const next = !versionMenu.classList.contains("is-open");
+        versionMenu.classList.toggle("is-open", next);
+        versionButton.setAttribute("aria-expanded", next ? "true" : "false");
+      });
+      document.addEventListener("click", (event) => {
+        if (!versionMenu.contains(event.target)) {
+          closeVersionMenu();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeVersionMenu();
         }
       });
     }

@@ -3,6 +3,7 @@ from datetime import datetime
 
 import pytest
 
+from glyf.dashboard.assets import AssetManager
 from glyf.dashboard.artifacts import load_chart_artifact
 from glyf.dashboard.generator import DashboardGenerationError, generate_dashboards
 from glyf.dashboard.loader import load_dashboard
@@ -226,7 +227,23 @@ def test_dashboard_generation_writes_dashboard_and_index(tmp_path: Path) -> None
     assert "Source" in html
     assert "Compiled SQL" not in html
     assert (project / "target" / "glyf" / "assets" / "dashboard.css").exists()
+    assert (
+        project
+        / "target"
+        / "glyf"
+        / "assets"
+        / "fonts"
+        / "HankenGrotesk-Regular.ttf"
+    ).exists()
     assert "dashboards/executive.html" in index_html.read_text(encoding="utf-8")
+
+
+def test_dashboard_single_file_assets_inline_local_fonts(tmp_path: Path) -> None:
+    assets = AssetManager().prepare(tmp_path, single_file=True)
+
+    assert assets.inline_css is not None
+    assert 'data:font/ttf;base64,' in assets.inline_css
+    assert 'fonts/HankenGrotesk-Regular.ttf' not in assets.inline_css
 
 
 def test_dashboard_generation_embeds_interactive_vega_spec(tmp_path: Path) -> None:

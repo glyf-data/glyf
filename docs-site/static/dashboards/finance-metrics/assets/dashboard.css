@@ -2,6 +2,38 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("fonts/HankenGrotesk-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("fonts/HankenGrotesk-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("fonts/HankenGrotesk-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("fonts/HankenGrotesk-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --glyf-color-bg: #ffffff;
@@ -29,11 +61,11 @@
   --glyf-space-3: 12px;
   --glyf-space-4: 16px;
   --glyf-space-5: 20px;
-  --glyf-font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --glyf-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  --glyf-font-size-body: 12px;
-  --glyf-font-size-label: 14px;
-  --glyf-font-size-title: 17px;
+  --glyf-font-family: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --glyf-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --glyf-font-size-body: 13px;
+  --glyf-font-size-label: 15px;
+  --glyf-font-size-title: 18px;
 }
 
 html {
@@ -93,7 +125,7 @@ textarea {
   gap: var(--glyf-space-1);
   margin-bottom: var(--glyf-space-1);
   color: var(--glyf-color-text-subtle);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .glyf-breadcrumb a {
@@ -125,7 +157,7 @@ textarea {
 .glyf-subtitle {
   margin: 0 0 var(--glyf-space-2);
   color: var(--glyf-color-text-subtle);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.5;
 }
 
@@ -169,7 +201,7 @@ textarea {
   border: 0.5px solid transparent;
   border-radius: var(--glyf-radius-sm);
   background: transparent;
-  color: var(--glyf-color-text-subtle);
+  color: var(--glyf-color-text-muted);
 }
 
 .glyf-icon-btn:hover,
@@ -187,11 +219,11 @@ textarea {
 .glyf-filter-add svg,
 .glyf-static-note svg,
 .glyf-ai-panel-title svg {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   stroke: currentColor;
   fill: none;
-  stroke-width: 1.8;
+  stroke-width: 1.95;
 }
 
 .glyf-star-btn svg {
@@ -211,7 +243,7 @@ textarea {
   background: var(--glyf-color-text);
   color: #ffffff;
   font-family: var(--glyf-font-family);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.2;
   white-space: nowrap;
   pointer-events: none;
@@ -227,7 +259,7 @@ textarea {
   border-radius: var(--glyf-radius-sm);
   background: var(--glyf-color-bg);
   color: var(--glyf-color-text-muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
 }
 
@@ -237,7 +269,7 @@ textarea {
 
 .glyf-star-count {
   color: var(--glyf-color-text-subtle);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .glyf-badge {
@@ -277,11 +309,12 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: var(--glyf-space-4);
-  padding: 5px var(--glyf-space-5);
-  border-bottom: 0.5px solid var(--glyf-color-border);
-  background: var(--glyf-color-bg-subtle);
-  color: var(--glyf-color-text-subtle);
-  font-size: 11px;
+  padding: 7px var(--glyf-space-5);
+  border-bottom: 0.5px solid var(--glyf-color-border-strong);
+  background: var(--glyf-color-bg);
+  color: var(--glyf-color-text-muted);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .glyf-meta-left,
@@ -303,25 +336,27 @@ textarea {
 }
 
 .glyf-meta-item strong {
-  color: var(--glyf-color-text-muted);
-  font-weight: 500;
+  color: var(--glyf-color-text);
+  font-weight: 600;
 }
 
 .glyf-source-toggle {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 8px;
-  border: 0.5px solid var(--glyf-color-border);
+  height: 32px;
+  padding: 0 10px;
+  border: 0.5px solid var(--glyf-color-border-strong);
   border-radius: var(--glyf-radius-sm);
   background: var(--glyf-color-bg);
-  color: var(--glyf-color-text-muted);
+  color: var(--glyf-color-text);
   font-family: var(--glyf-font-mono);
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .glyf-source-toggle:hover {
+  border-color: var(--glyf-color-text);
   background: var(--glyf-color-bg-muted);
 }
 
@@ -331,15 +366,92 @@ textarea {
   color: #ffffff;
 }
 
-.glyf-version-select {
-  padding: 3px 6px;
-  border: 0.5px solid var(--glyf-color-border);
+.glyf-version-menu {
+  position: relative;
+}
+
+.glyf-version-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 0.5px solid var(--glyf-color-border-strong);
   border-radius: var(--glyf-radius-sm);
   background: var(--glyf-color-bg);
-  color: var(--glyf-color-text-muted);
+  color: var(--glyf-color-text);
   font-family: var(--glyf-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.glyf-version-button:hover,
+.glyf-version-menu.is-open .glyf-version-button {
+  border-color: var(--glyf-color-text);
+  background: var(--glyf-color-bg-muted);
+}
+
+.glyf-version-button-icon {
+  width: 13px;
+  height: 13px;
+  transition: transform 0.16s ease;
+}
+
+.glyf-version-menu.is-open .glyf-version-button-icon {
+  transform: rotate(180deg);
+}
+
+.glyf-version-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 80;
+  display: none;
+  min-width: 210px;
+  padding: 4px;
+  border: 0.5px solid var(--glyf-color-border-strong);
+  border-radius: var(--glyf-radius-sm);
+  background: var(--glyf-color-bg);
+  box-shadow: 0 10px 30px rgba(9, 9, 11, 0.08);
+}
+
+.glyf-version-menu.is-open .glyf-version-popover {
+  display: block;
+}
+
+.glyf-version-option {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 9px;
+  border: 0;
+  border-radius: var(--glyf-radius-sm);
+  background: transparent;
+  color: var(--glyf-color-text);
+  text-align: left;
+}
+
+.glyf-version-option:hover:not(:disabled),
+.glyf-version-option.is-active {
+  background: var(--glyf-color-bg-muted);
+}
+
+.glyf-version-option:disabled {
+  color: var(--glyf-color-text-subtle);
+  cursor: not-allowed;
+}
+
+.glyf-version-option-title {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.glyf-version-option-note {
+  color: var(--glyf-color-text-subtle);
   font-size: 11px;
-  appearance: none;
 }
 
 .glyf-control-bar {
@@ -347,15 +459,16 @@ textarea {
   align-items: center;
   flex-wrap: wrap;
   gap: var(--glyf-space-2);
-  padding: 7px var(--glyf-space-5);
-  border-bottom: 0.5px solid var(--glyf-color-border);
-  background: var(--glyf-color-bg);
+  padding: 8px var(--glyf-space-5);
+  border-bottom: 0.5px solid var(--glyf-color-border-strong);
+  background: var(--glyf-color-bg-subtle);
 }
 
 .glyf-control-label {
   margin-right: 2px;
-  color: var(--glyf-color-text-subtle);
-  font-size: 11px;
+  color: var(--glyf-color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .glyf-filter-chip,
@@ -363,25 +476,27 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 9px;
-  border: 0.5px solid var(--glyf-color-border);
+  min-height: 34px;
+  padding: 0 11px;
+  border: 0.5px solid var(--glyf-color-border-strong);
   border-radius: var(--glyf-radius-sm);
-  background: var(--glyf-color-bg-subtle);
-  color: var(--glyf-color-text-muted);
-  font-size: 11px;
+  background: var(--glyf-color-bg);
+  color: var(--glyf-color-text);
+  font-size: 12px;
+  font-weight: 500;
   cursor: default;
 }
 
 .glyf-filter-value {
-  color: var(--glyf-color-text-faint);
-  font-size: 10px;
+  color: var(--glyf-color-text-subtle);
+  font-size: 11px;
   font-style: italic;
 }
 
 .glyf-filter-add {
-  border-style: dashed;
   color: var(--glyf-color-text-subtle);
-  opacity: 0.55;
+  background: var(--glyf-color-bg-subtle);
+  opacity: 0.8;
 }
 
 .glyf-static-note {
@@ -389,9 +504,10 @@ textarea {
   align-items: center;
   gap: var(--glyf-space-1);
   margin-left: auto;
-  color: var(--glyf-color-text-faint);
+  color: var(--glyf-color-text-subtle);
   font-family: var(--glyf-font-mono);
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .glyf-main {
@@ -753,7 +869,9 @@ textarea {
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgb(0 0 0 / 30%);
+  padding: 20px;
+  background: rgb(0 0 0 / 48%);
+  backdrop-filter: blur(3px);
 }
 
 .glyf-modal-backdrop.is-open {
@@ -761,11 +879,12 @@ textarea {
 }
 
 .glyf-modal {
-  width: min(340px, calc(100vw - 32px));
+  width: min(400px, calc(100vw - 32px));
   overflow: hidden;
-  border: 0.5px solid var(--glyf-color-border);
+  border: 0.5px solid var(--glyf-color-border-strong);
   border-radius: 8px;
   background: var(--glyf-color-bg);
+  box-shadow: 0 24px 80px rgb(0 0 0 / 18%);
 }
 
 .glyf-modal-head {
@@ -773,13 +892,14 @@ textarea {
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 0.5px solid var(--glyf-color-border);
+  border-bottom: 0.5px solid var(--glyf-color-border-strong);
+  background: var(--glyf-color-bg-subtle);
 }
 
 .glyf-modal-title {
   color: var(--glyf-color-text);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .glyf-version-row {
@@ -787,7 +907,7 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: var(--glyf-space-3);
-  padding: 8px 16px;
+  padding: 10px 16px;
   border-bottom: 0.5px solid var(--glyf-color-border);
 }
 
@@ -797,14 +917,14 @@ textarea {
 
 .glyf-version-title {
   color: var(--glyf-color-text);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .glyf-version-date {
   color: var(--glyf-color-text-subtle);
   font-family: var(--glyf-font-mono);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 @media (max-width: 900px) {
