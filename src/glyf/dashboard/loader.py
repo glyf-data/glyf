@@ -1,9 +1,11 @@
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
 
+from glyf import _core
 from glyf.dashboard.components import ComponentSpec
 
 
@@ -93,6 +95,7 @@ def load_dashboard(path: Path) -> Dashboard:
 
     if not isinstance(raw, dict):
         raise ValueError("expected a YAML mapping")
+    _validate_dashboard_schema(raw, path)
 
     name = raw.get("name")
     title = raw.get("title", name)
@@ -439,3 +442,15 @@ def _normalise_number_text(value: str) -> str:
 
 def _is_positive_int(value: object) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value > 0
+
+
+def _validate_dashboard_schema(raw: dict[object, object], path: Path) -> None:
+    try:
+        json_text = json.dumps(raw)
+    except TypeError as exc:
+        raise ValueError("dashboard YAML contains unsupported values") from exc
+
+    try:
+        _core.validate_dashboard_json(json_text, path.as_posix())
+    except ValueError as exc:
+        raise ValueError(str(exc)) from exc
