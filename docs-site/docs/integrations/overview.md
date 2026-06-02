@@ -5,16 +5,18 @@
 ## Current integration paths
 
 - GitHub Actions for repeatable dashboard builds.
-- Cloudflare Pages for the private hosted docs site.
-- Cloudflare Access for private documentation access.
+- S3-compatible object storage for static dashboard publishing.
 - GitHub Pages or any static host for published output.
 - CI artifact uploads for review before publishing.
+- Internal documentation portals or static servers for private team sharing.
 
 ## Planned integration areas
 
 - dbt docs metadata links.
 - Lineage-aware dashboard summaries from the manifest.
 - Optional publish helpers for common static hosting targets.
+- SQLMesh and other transformation-tool integrations.
+- Alerting and collaboration hooks such as Slack or webhooks.
 - Agent workflows that propose charts from dbt model metadata.
 
 ## Output contract

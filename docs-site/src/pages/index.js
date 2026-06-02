@@ -607,8 +607,8 @@ function HomepageHeader() {
               Open Gallery
             </Link>
           </div>
+          <HeroCodeWindow />
         </div>
-        <HeroCodeWindow />
       </div>
     </header>
   );
@@ -687,13 +687,35 @@ function FeaturesSection() {
           <p className="eyebrow">features</p>
           <h2>What makes Glyf different.</h2>
           <p>
-            Core build-step features are available today. Roadmap items show where Glyf is heading.
-            Each section below shows exactly what the feature looks like in practice.
+            Glyf turns visualization into a build step engineers can validate, review, and ship
+            with the rest of the data pipeline.
+            Charts and dashboards stay inside the engineering workflow instead of drifting into
+            disconnected BI tools.
           </p>
-          <Link className="featureIntroButton" to="/docs/resources/roadmap">
-            View roadmap &rarr;
-          </Link>
         </div>
+        <div className="featureIntroSignals" aria-label="Glyf platform highlights">
+          <div className="featureIntroSignal">
+            <span className="featureIntroSignalMark" aria-hidden="true">
+              ✓
+            </span>
+            <span>Rust core for fast validation and compilation.</span>
+          </div>
+          <div className="featureIntroSignal">
+            <span className="featureIntroSignalMark" aria-hidden="true">
+              ✓
+            </span>
+            <span>Python interface for flexible macros and project workflows.</span>
+          </div>
+          <div className="featureIntroSignal">
+            <span className="featureIntroSignalMark" aria-hidden="true">
+              ✓
+            </span>
+            <span>Integrated with dbt and GGSQL today. SQLMesh and more on the roadmap.</span>
+          </div>
+        </div>
+        <Link className="featureIntroButton" to="/docs/resources/roadmap">
+          View roadmap &rarr;
+        </Link>
         <div className="featureStoryNav" role="navigation" aria-label="Feature section anchors">
           <a className="featureStoryLogo" href="#features-top">
             Glyf
@@ -826,11 +848,19 @@ function GgsqlSection() {
     <section className="band">
       <div className="container ggsqlLayout">
         <div className="sectionHeader ggsqlSectionHeader">
-          <p className="eyebrow">glyf + ggsql</p>
+          <p className="eyebrow">ggsql + glyf</p>
         </div>
         <div className="ggsqlCopyBlocks">
           <div className="ggsqlCopyColumn ggsqlCopyColumn--primary">
-            <h2>GGSQL provides the SQL visualization grammar.</h2>
+            <div className="ggsqlCopyHeader">
+              <img
+                className="ggsqlCopyTitleMark ggsqlCopyTitleMark--ggsql"
+                src="https://ggsql.org/assets/icon.svg"
+                alt="GGSQL logo"
+                loading="lazy"
+              />
+              <h2 className="ggsqlCopyTitle">GGSQL provides the SQL visualization grammar.</h2>
+            </div>
             <p>
               GGSQL is a separate open source project focused on SQL-native visualization:
               chart grammar, visualization primitives, and query-oriented authoring. Learn
@@ -838,7 +868,15 @@ function GgsqlSection() {
             </p>
           </div>
           <div className="ggsqlCopyColumn ggsqlCopyColumn--secondary">
-            <h2>Glyf brings it into an analytics-engineering workflow.</h2>
+            <div className="ggsqlCopyHeader">
+              <img
+                className="ggsqlCopyTitleMark ggsqlCopyTitleMark--glyf"
+                src="/img/glyf-logo-v4.svg"
+                alt="Glyf logo"
+                loading="lazy"
+              />
+              <h2 className="ggsqlCopyTitle">Glyf brings it into an analytics-engineering workflow.</h2>
+            </div>
             <p>
               Glyf built on top of GGSQL today and adds the surrounding project layer: dbt artifact
               resolution, dashboard YAML, validation commands, and rendered outputs your team

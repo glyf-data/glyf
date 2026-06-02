@@ -8270,7 +8270,7 @@ div[class*='codeBlockContent'] pre code,
 
 .featuresSection .sectionHeader p:last-child,
 [data-theme='dark'] .featuresSection .sectionHeader p:last-child {
-  max-width: 32rem;
+  max-width: none;
 }
 
 .featureTabsShell,
@@ -8666,7 +8666,7 @@ div[class*='codeBlockContent'] pre code,
 
 .featuresSection .sectionHeader,
 [data-theme='dark'] .featuresSection .sectionHeader {
-  max-width: 44rem;
+  max-width: 760px;
   margin-bottom: 2.5rem !important;
 }
 
@@ -8677,6 +8677,7 @@ div[class*='codeBlockContent'] pre code,
   justify-content: center;
   min-height: 2.5rem;
   margin-top: 0.85rem;
+  margin-bottom: 1rem;
   padding: 0 1rem;
   border: 1px solid #000000;
   border-radius: 6px;
@@ -8697,6 +8698,46 @@ div[class*='codeBlockContent'] pre code,
   border-color: #111111;
   color: #ffffff !important;
   text-decoration: none !important;
+}
+
+.featureIntroSignals,
+[data-theme='dark'] .featureIntroSignals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  align-items: start;
+  margin: 0 0 1.15rem;
+}
+
+.featureIntroSignal,
+[data-theme='dark'] .featureIntroSignal {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+  color: rgba(0, 0, 0, 0.7);
+  font-family: var(--ifm-font-family-base) !important;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.featureIntroSignalMark,
+[data-theme='dark'] .featureIntroSignalMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  flex: 0 0 1.4rem;
+  border-radius: 999px;
+  background: #1f8f43;
+  border: 1px solid #1f8f43;
+  color: #ffffff;
+  font-family: var(--ifm-font-family-monospace) !important;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .featureStoryNav,
@@ -9172,6 +9213,12 @@ div[class*='codeBlockContent'] pre code,
 }
 
 @media (max-width: 996px) {
+  .featureIntroSignals,
+  [data-theme='dark'] .featureIntroSignals {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
   .featureStoryNav,
   [data-theme='dark'] .featureStoryNav {
     top: calc(var(--ifm-navbar-height) - 1px);
@@ -9540,6 +9587,36 @@ div[class*='codeBlockContent'] pre code,
   margin: 0 0 0.7rem;
 }
 
+.ggsqlCopyHeader,
+[data-theme='dark'] .ggsqlCopyHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.ggsqlCopyTitle,
+[data-theme='dark'] .ggsqlCopyTitle {
+  margin: 0 !important;
+}
+
+.ggsqlCopyTitleMark,
+[data-theme='dark'] .ggsqlCopyTitleMark {
+  display: block;
+  width: 74px;
+  height: 74px;
+  flex: 0 0 74px;
+  object-fit: contain;
+}
+
+.ggsqlCopyTitleMark--ggsql,
+[data-theme='dark'] .ggsqlCopyTitleMark--ggsql {
+  width: 68px;
+  height: 68px;
+  flex-basis: 68px;
+}
+
 .ggsqlCopyColumn p,
 [data-theme='dark'] .ggsqlCopyColumn p {
   margin: 0;
@@ -9563,6 +9640,20 @@ div[class*='codeBlockContent'] pre code,
     border-left: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
     padding-top: 1.5rem;
+  }
+
+  .ggsqlCopyTitleMark,
+  [data-theme='dark'] .ggsqlCopyTitleMark {
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+  }
+
+  .ggsqlCopyTitleMark--ggsql,
+  [data-theme='dark'] .ggsqlCopyTitleMark--ggsql {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
   }
 }
 
@@ -10502,4 +10593,72 @@ div[class*='announcementBarContent'],
 .footer.footer--dark .footer__link-item:hover,
 [data-theme='dark'] .footer.footer--dark .footer__link-item:hover {
   color: #93c5fd !important;
+}
+
+/* Final hero stack: centered copy first, workflow SVG below. */
+.landingHero .landingHero__layout,
+.landingHero .landingHero__layout.container,
+[data-theme='dark'] .landingHero .landingHero__layout,
+[data-theme='dark'] .landingHero .landingHero__layout.container {
+  display: block !important;
+  max-width: 1180px !important;
+  padding-top: clamp(4.5rem, 7vh, 6.5rem) !important;
+  padding-bottom: clamp(4.5rem, 7vh, 6.5rem) !important;
+}
+
+.landingHero .landingHero__content,
+[data-theme='dark'] .landingHero .landingHero__content {
+  display: flex !important;
+  width: 100% !important;
+  max-width: 1040px !important;
+  margin: 0 auto !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.landingHero h1,
+[data-theme='dark'] .landingHero h1 {
+  max-width: 24ch !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+.landingHero .landingHero__lead,
+[data-theme='dark'] .landingHero .landingHero__lead {
+  max-width: 46rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+.landingHero .buttonRow,
+[data-theme='dark'] .landingHero .buttonRow {
+  justify-content: center !important;
+}
+
+.landingHero .heroCodeVisual,
+[data-theme='dark'] .landingHero .heroCodeVisual {
+  width: 100% !important;
+  margin: clamp(2rem, 4vw, 3rem) auto 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  justify-self: center !important;
+  padding: 0 !important;
+}
+
+.landingHero .heroCodeWindow,
+[data-theme='dark'] .landingHero .heroCodeWindow {
+  width: min(100%, 940px) !important;
+  max-width: 940px !important;
+  margin: 0 auto !important;
+}
+
+.landingHero .heroDiagramImage,
+[data-theme='dark'] .landingHero .heroDiagramImage {
+  width: 100% !important;
+  max-width: 940px !important;
+  height: auto !important;
+  margin: 0 auto !important;
 }

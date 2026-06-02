@@ -49,8 +49,6 @@ const sidebars = {
       collapsed: false,
       items: [
         'integrations/overview',
-        'integrations/cloudflare-pages',
-        'integrations/private-access',
         'integrations/github-actions',
         'integrations/static-hosting',
       ],
@@ -71,7 +69,7 @@ const sidebars = {
       type: 'category',
       label: 'Resources',
       collapsed: false,
-      items: ['resources/community', 'resources/roadmap', 'resources/seo-preview', 'resources/troubleshooting'],
+      items: ['resources/community', 'resources/roadmap', 'resources/troubleshooting'],
     },
   ],
 };
