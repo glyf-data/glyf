@@ -1,0 +1,15 @@
+{
+  "chart_type": "line",
+  "compiled_sql_path": "target/glyf/compiled/activation_rate_by_plan.sql",
+  "interactions": [
+    "tooltip",
+    "legend_filter"
+  ],
+  "name": "activation_rate_by_plan",
+  "png_path": "target/glyf/charts/activation_rate_by_plan.png",
+  "svg_path": "target/glyf/charts/activation_rate_by_plan.svg",
+  "title": "Activation Rate by Plan",
+  "vega_json_path": "target/glyf/charts/activation_rate_by_plan.vega.json",
+  "x": "week",
+  "y": "activation_rate"
+}

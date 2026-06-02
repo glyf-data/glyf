@@ -19,6 +19,7 @@ pub fn validate_dashboard_json_text(text: &str, path: &str) -> Result<(), CoreEr
 
     required_string(dashboard.get("title"), "title")?;
     optional_string(dashboard.get("description"), "description")?;
+    validate_tags(dashboard.get("tags"))?;
     validate_charts(dashboard.get("charts"), "charts")?;
     validate_toolbar(dashboard.get("toolbar"))?;
     validate_summary(dashboard.get("summary"))?;
@@ -50,6 +51,26 @@ fn validate_charts(value: Option<&Value>, label: &str) -> Result<(), CoreError> 
             Some(chart),
             &format!("{label}[{}]", index + 1),
             "chart name",
+        )?;
+    }
+    Ok(())
+}
+
+fn validate_tags(value: Option<&Value>) -> Result<(), CoreError> {
+    let Some(value) = value else {
+        return Ok(());
+    };
+    if value.is_null() {
+        return Ok(());
+    }
+    let tags = value
+        .as_array()
+        .ok_or_else(|| dashboard_error("expected 'tags' to be a list of non-empty strings"))?;
+    for (index, tag) in tags.iter().enumerate() {
+        non_empty_string(
+            Some(tag),
+            &format!("tags[{}]", index + 1),
+            "string",
         )?;
     }
     Ok(())
@@ -497,6 +518,7 @@ mod tests {
             r#"{
               "name": "executive",
               "title": "Executive Dashboard",
+              "tags": ["finance", "monthly"],
               "charts": ["revenue"],
               "layout": {"columns": "30% 70%"},
               "summary": ["{{ ui.label_value('Owner', 'Analytics') }}"]
@@ -519,5 +541,20 @@ mod tests {
         .unwrap_err();
 
         assert!(error.to_string().contains("expected a Jinja expression"));
+    }
+
+    #[test]
+    fn rejects_empty_tags() {
+        let error = validate_dashboard_json_text(
+            r#"{
+              "name": "executive",
+              "title": "Executive Dashboard",
+              "tags": ["finance", ""]
+            }"#,
+            "dashboards/executive.yml",
+        )
+        .unwrap_err();
+
+        assert!(error.to_string().contains("tags[2]"));
     }
 }

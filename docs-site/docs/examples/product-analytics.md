@@ -47,6 +47,10 @@ uv run glyf serve
 name: product
 title: Product Analytics
 description: Product usage and activation metrics by plan.
+tags:
+  - product
+  - activation
+  - usage
 
 toolbar:
   visibility: private

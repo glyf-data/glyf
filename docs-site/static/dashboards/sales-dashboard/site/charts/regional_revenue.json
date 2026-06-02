@@ -1,0 +1,10 @@
+{
+  "chart_type": "pie",
+  "compiled_sql_path": "target/glyf/compiled/regional_revenue.sql",
+  "name": "regional_revenue",
+  "png_path": "target/glyf/charts/regional_revenue.png",
+  "svg_path": "target/glyf/charts/regional_revenue.svg",
+  "title": "Regional Revenue Share",
+  "x": "region",
+  "y": "revenue"
+}

@@ -71,6 +71,7 @@ class Dashboard:
     name: str
     title: str
     charts: tuple[str, ...]
+    tags: tuple[str, ...] = ()
     description: str | None = None
     layout: str | None = None
     layout_config: DashboardLayout = DashboardLayout()
@@ -103,6 +104,7 @@ def load_dashboard(path: Path) -> Dashboard:
     layout_raw = raw.get("layout")
     toolbar_raw = raw.get("toolbar")
     summary_raw = raw.get("summary", [])
+    tags_raw = raw.get("tags", [])
     charts = raw.get("charts", [])
     sections_raw = raw.get("sections", raw.get("groups", []))
 
@@ -118,12 +120,14 @@ def load_dashboard(path: Path) -> Dashboard:
     layout_config = _parse_layout(layout_raw)
     toolbar = _parse_toolbar(toolbar_raw)
     summary = _parse_summary(summary_raw)
+    tags = _parse_tags(tags_raw)
     sections = _parse_sections(sections_raw)
 
     return Dashboard(
         path=path,
         name=name,
         title=title,
+        tags=tags,
         description=description,
         layout=layout_config.kind if layout_raw is not None else None,
         layout_config=layout_config,
@@ -238,6 +242,20 @@ def _parse_summary(raw: object) -> tuple[str, ...]:
             )
         items.append(item)
     return tuple(items)
+
+
+def _parse_tags(raw: object) -> tuple[str, ...]:
+    if raw is None:
+        return ()
+    if not isinstance(raw, list):
+        raise ValueError("expected 'tags' to be a list of non-empty strings")
+
+    tags: list[str] = []
+    for index, item in enumerate(raw, start=1):
+        if not isinstance(item, str) or not item.strip():
+            raise ValueError(f"expected 'tags[{index}]' to be a non-empty string")
+        tags.append(item.strip())
+    return tuple(dict.fromkeys(tags))
 
 
 def _parse_section_items(raw: dict[object, object], section_index: int) -> tuple[DashboardItem, ...]:

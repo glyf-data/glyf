@@ -1,0 +1,14 @@
+{
+  "chart_type": "area",
+  "compiled_sql_path": "target/glyf/compiled/gross_margin_trend.sql",
+  "interactions": [
+    "tooltip"
+  ],
+  "name": "gross_margin_trend",
+  "png_path": "target/glyf/charts/gross_margin_trend.png",
+  "svg_path": "target/glyf/charts/gross_margin_trend.svg",
+  "title": "Gross Margin Trend",
+  "vega_json_path": "target/glyf/charts/gross_margin_trend.vega.json",
+  "x": "month",
+  "y": "gross_margin"
+}

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -13,6 +14,27 @@ from glyf.dashboard.theme import DEFAULT_THEME, Theme
 @dataclass(frozen=True)
 class RenderedDashboard:
     html: str
+
+
+@dataclass(frozen=True)
+class DashboardBuildMeta:
+    generated_at: datetime
+    generated_at_display: str
+    generated_at_iso: str
+
+    @classmethod
+    def now(cls) -> "DashboardBuildMeta":
+        generated_at = datetime.now(timezone.utc).replace(microsecond=0)
+        return cls.from_datetime(generated_at)
+
+    @classmethod
+    def from_datetime(cls, generated_at: datetime) -> "DashboardBuildMeta":
+        normalized = generated_at.astimezone(timezone.utc).replace(microsecond=0)
+        return cls(
+            generated_at=normalized,
+            generated_at_display=normalized.strftime("%d %b %Y, %H:%M UTC"),
+            generated_at_iso=normalized.isoformat().replace("+00:00", "Z"),
+        )
 
 
 class DashboardRenderer:
@@ -45,7 +67,9 @@ class DashboardRenderer:
         charts: tuple[ChartArtifact, ...],
         config: GlyfConfig,
         assets: DashboardAssets,
+        build_meta: DashboardBuildMeta | None = None,
     ) -> RenderedDashboard:
+        build_meta = build_meta or DashboardBuildMeta.now()
         template = self._environment().get_template("dashboard.html.j2")
         html = template.render(
             dashboard=dashboard,
@@ -54,6 +78,7 @@ class DashboardRenderer:
             has_interactive_charts=any(chart.vega_spec is not None for chart in charts),
             dashboard_config=config.dashboard,
             assets=assets,
+            build_meta=build_meta,
         )
         return RenderedDashboard(html=_strip_trailing_whitespace(html))
 

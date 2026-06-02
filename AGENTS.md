@@ -14,6 +14,7 @@ Use these topic files for this project:
 - `capabilities/agent-forge/skills/python/packaging_standards.md`
 - `capabilities/agent-forge/skills/architecture/cli_first_tool_design.md`
 - `capabilities/agent-forge/skills/architecture/artifact_driven_integration.md`
+- `capabilities/agent-forge/skills/architecture/dashboard_render_ui_direction.md`
 - `capabilities/agent-forge/skills/testing/test_strategy.md`
 
 Apply the shared guidance from those files unless a project-specific rule below overrides it.

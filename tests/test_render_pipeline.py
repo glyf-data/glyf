@@ -38,6 +38,8 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
     assert png.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
     assert "<svg" in svg.read_text(encoding="utf-8")
     assert "Monthly Revenue" in svg.read_text(encoding="utf-8")
+    assert 'font-family="Hanken Grotesk"' in svg.read_text(encoding="utf-8")
+    assert 'font-size="15px"' in svg.read_text(encoding="utf-8")
 
 
 def test_duckdb_execution_loads_seed_tables(tmp_path: Path) -> None:
@@ -75,6 +77,9 @@ def test_render_project_writes_interactive_metadata_and_vega_json(
     assert metadata["interactions"] == ["tooltip", "zoom"]
     assert metadata["vega_json_path"] == "target/glyf/charts/revenue.vega.json"
     assert (project / metadata["vega_json_path"]).exists()
+    vega_json = json.loads((project / metadata["vega_json_path"]).read_text(encoding="utf-8"))
+    assert vega_json["config"]["axis"]["labelFont"] == "Hanken Grotesk"
+    assert vega_json["config"]["title"]["font"] == "Hanken Grotesk"
 
 
 def test_duckdb_execution_uses_project_target_database(tmp_path: Path) -> None:

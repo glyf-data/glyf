@@ -1,0 +1,10 @@
+{
+  "chart_type": "line",
+  "compiled_sql_path": "target/glyf/compiled/revenue.sql",
+  "name": "revenue",
+  "png_path": "target/glyf/charts/revenue.png",
+  "svg_path": "target/glyf/charts/revenue.svg",
+  "title": "Monthly Revenue",
+  "x": "month",
+  "y": "revenue"
+}
