@@ -10,12 +10,12 @@
       "week": "2026-W03"
     },
     {
-      "sessions_per_user": 3.33,
-      "week": "2026-W01"
-    },
-    {
       "sessions_per_user": 3.43,
       "week": "2026-W02"
+    },
+    {
+      "sessions_per_user": 3.33,
+      "week": "2026-W01"
     }
   ]
 }

@@ -6,12 +6,12 @@
   "name": "monthly_revenue",
   "rows": [
     {
-      "month": "2026-03",
-      "revenue": 30400.0
-    },
-    {
       "month": "2026-01",
       "revenue": 20000.0
+    },
+    {
+      "month": "2026-03",
+      "revenue": 30400.0
     },
     {
       "month": "2026-02",

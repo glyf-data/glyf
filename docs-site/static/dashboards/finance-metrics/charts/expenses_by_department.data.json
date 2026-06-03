@@ -23,6 +23,11 @@
     },
     {
       "department": "Sales",
+      "expenses": 15000.0,
+      "month": "2026-01"
+    },
+    {
+      "department": "Sales",
       "expenses": 16500.0,
       "month": "2026-02"
     },
@@ -30,11 +35,6 @@
       "department": "Product",
       "expenses": 24200.0,
       "month": "2026-03"
-    },
-    {
-      "department": "Sales",
-      "expenses": 15000.0,
-      "month": "2026-01"
     }
   ]
 }

@@ -18,6 +18,7 @@ class ChartMetadata:
     x: str
     y: str
     compiled_sql_path: Path
+    data_json_path: Path
     png_path: Path
     svg_path: Path
     interactions: tuple[str, ...] = ()
@@ -25,10 +26,17 @@ class ChartMetadata:
 
 
 @dataclass(frozen=True)
+class ChartDataArtifact:
+    fields: tuple[str, ...]
+    rows: tuple[dict[str, object], ...]
+
+
+@dataclass(frozen=True)
 class ChartArtifact:
     metadata: ChartMetadata
     svg: str | None
     compiled_sql: str | None
+    data: ChartDataArtifact
     vega_spec: object | None = None
 
 
@@ -54,6 +62,7 @@ def load_chart_artifact(
         if metadata.compiled_sql_path.exists()
         else None
     )
+    data_artifact = _load_data_artifact(metadata, chart_name)
     vega_spec = None
     if metadata.vega_json_path is not None and metadata.vega_json_path.exists():
         try:
@@ -68,6 +77,7 @@ def load_chart_artifact(
         metadata=metadata,
         svg=svg,
         compiled_sql=compiled_sql,
+        data=data_artifact,
         vega_spec=vega_spec,
     )
 
@@ -82,6 +92,7 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         "x",
         "y",
         "compiled_sql_path",
+        "data_json_path",
         "png_path",
         "svg_path",
     }
@@ -115,10 +126,33 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         x=raw["x"],
         y=raw["y"],
         compiled_sql_path=project_root / raw["compiled_sql_path"],
+        data_json_path=project_root / raw["data_json_path"],
         png_path=project_root / raw["png_path"],
         svg_path=project_root / raw["svg_path"],
         interactions=tuple(interactions),
         vega_json_path=project_root / vega_json_path
         if vega_json_path is not None
         else None,
+    )
+
+
+def _load_data_artifact(metadata: ChartMetadata, chart_name: str) -> ChartDataArtifact:
+    if not metadata.data_json_path.exists():
+        raise ChartArtifactError(f"missing chart data for '{chart_name}'")
+    try:
+        raw = json.loads(metadata.data_json_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ChartArtifactError(f"invalid chart data for '{chart_name}'") from exc
+
+    if not isinstance(raw, dict):
+        raise ChartArtifactError(f"invalid chart data for '{chart_name}'")
+    fields = raw.get("fields")
+    rows = raw.get("rows")
+    if not isinstance(fields, list) or not all(isinstance(item, str) for item in fields):
+        raise ChartArtifactError(f"chart data for '{chart_name}' has invalid fields")
+    if not isinstance(rows, list) or not all(isinstance(item, dict) for item in rows):
+        raise ChartArtifactError(f"chart data for '{chart_name}' has invalid rows")
+    return ChartDataArtifact(
+        fields=tuple(fields),
+        rows=tuple(dict(item) for item in rows),
     )

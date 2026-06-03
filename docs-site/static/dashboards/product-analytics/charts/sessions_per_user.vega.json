@@ -30,7 +30,7 @@
     }
   },
   "data": {
-    "name": "data-92459fd6192961d72d6e9cea1d038a20"
+    "name": "data-820f3d91d8e13c9f3f695ffcf2510230"
   },
   "mark": {
     "type": "bar"
@@ -65,18 +65,18 @@
   "width": 800,
   "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json",
   "datasets": {
-    "data-92459fd6192961d72d6e9cea1d038a20": [
+    "data-820f3d91d8e13c9f3f695ffcf2510230": [
       {
         "week": "2026-W03",
         "sessions_per_user": 3.54
       },
       {
-        "week": "2026-W01",
-        "sessions_per_user": 3.33
-      },
-      {
         "week": "2026-W02",
         "sessions_per_user": 3.43
+      },
+      {
+        "week": "2026-W01",
+        "sessions_per_user": 3.33
       }
     ]
   }

@@ -501,7 +501,7 @@ html[data-theme="dark"] .glyf-icon-btn[data-tip]:hover::after {
 }
 
 .glyf-filter-chip,
-.glyf-filter-add {
+.glyf-filter-button {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -513,7 +513,99 @@ html[data-theme="dark"] .glyf-icon-btn[data-tip]:hover::after {
   color: var(--glyf-color-text);
   font-size: 12px;
   font-weight: 500;
+}
+
+.glyf-filter-chip {
   cursor: default;
+}
+
+.glyf-filter-menu {
+  position: relative;
+}
+
+.glyf-filter-button {
+  cursor: pointer;
+}
+
+.glyf-filter-button:hover,
+.glyf-filter-menu.is-open .glyf-filter-button {
+  background: var(--glyf-color-bg-muted);
+}
+
+.glyf-filter-button-icon {
+  color: var(--glyf-color-text-subtle);
+}
+
+.glyf-filter-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 80;
+  display: none;
+  min-width: 220px;
+  max-width: 280px;
+  border: 0.5px solid var(--glyf-color-border-strong);
+  border-radius: var(--glyf-radius-sm);
+  background: var(--glyf-color-bg);
+  box-shadow: 0 10px 30px rgba(9, 9, 11, 0.12);
+  overflow: hidden;
+}
+
+.glyf-filter-menu.is-open .glyf-filter-popover {
+  display: block;
+}
+
+.glyf-filter-popover-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px 8px;
+  border-bottom: 0.5px solid var(--glyf-color-border);
+  background: var(--glyf-color-bg-subtle);
+}
+
+.glyf-filter-popover-title {
+  color: var(--glyf-color-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.glyf-filter-popover-note {
+  color: var(--glyf-color-text-subtle);
+  font-family: var(--glyf-font-mono);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.glyf-filter-options {
+  display: flex;
+  flex-direction: column;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.glyf-filter-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 0.5px solid var(--glyf-color-border);
+  background: var(--glyf-color-bg);
+  color: var(--glyf-color-text);
+  font-family: var(--glyf-font-family);
+  font-size: 12px;
+  text-align: left;
+  cursor: default;
+}
+
+.glyf-filter-option:last-child {
+  border-bottom: 0;
+}
+
+.glyf-filter-option-title {
+  color: var(--glyf-color-text-muted);
 }
 
 .glyf-filter-field {
@@ -533,12 +625,6 @@ html[data-theme="dark"] .glyf-icon-btn[data-tip]:hover::after {
   color: var(--glyf-color-text-subtle);
   font-size: 11px;
   font-style: italic;
-}
-
-.glyf-filter-add {
-  color: var(--glyf-color-text-subtle);
-  background: var(--glyf-color-bg-subtle);
-  opacity: 0.8;
 }
 
 .glyf-static-note {
@@ -1171,6 +1257,12 @@ html[data-theme="dark"] .glyf-index-card:hover {
   .glyf-content {
     padding-left: var(--glyf-space-3);
     padding-right: var(--glyf-space-3);
+  }
+
+  .glyf-filter-popover {
+    left: 0;
+    right: auto;
+    max-width: min(280px, calc(100vw - 32px));
   }
 
   .glyf-chart-grid {

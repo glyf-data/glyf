@@ -12,11 +12,6 @@
       "revenue": 500.0
     },
     {
-      "month": "2026-02",
-      "region": "North",
-      "revenue": 1100.0
-    },
-    {
       "month": "2026-01",
       "region": "North",
       "revenue": 700.0
@@ -28,13 +23,18 @@
     },
     {
       "month": "2026-03",
-      "region": "South",
-      "revenue": 900.0
+      "region": "North",
+      "revenue": 1200.0
+    },
+    {
+      "month": "2026-02",
+      "region": "North",
+      "revenue": 1100.0
     },
     {
       "month": "2026-03",
-      "region": "North",
-      "revenue": 1200.0
+      "region": "South",
+      "revenue": 900.0
     }
   ]
 }

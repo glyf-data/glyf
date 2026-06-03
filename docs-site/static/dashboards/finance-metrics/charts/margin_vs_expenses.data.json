@@ -17,14 +17,14 @@
       "gross_margin": 35800.0
     },
     {
-      "department": "Sales",
-      "expenses": 15000.0,
-      "gross_margin": 27000.0
-    },
-    {
       "department": "Product",
       "expenses": 22000.0,
       "gross_margin": -4000.0
+    },
+    {
+      "department": "Sales",
+      "expenses": 15000.0,
+      "gross_margin": 27000.0
     },
     {
       "department": "Sales",

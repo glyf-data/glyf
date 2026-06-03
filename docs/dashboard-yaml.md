@@ -47,6 +47,12 @@ summary:
   - "{{ ai.summary('Revenue moved up this month.') }}"
   - "{{ ai.insight('Starter churn needs review.', tone='warning') }}"
   - "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
+
+filters:
+  - field: plan
+    values: source(revenue_by_region_bar, region)
+  - field: focus
+    values: [revenue, margin, bookings]
 ```
 
 ## Rich Layout
@@ -177,6 +183,7 @@ sections:
 - `theme`: optional dashboard UI theme. Supported values: `light` and `dark`.
 - `chart_theme`: optional chart appearance theme. Supported values: `auto`, `light`, and `dark`.
 - `tags`: optional list of short labels shown in the dashboard header.
+- `filters`: optional preset filter definitions shown in the dashboard control row.
 - `toolbar`: optional dashboard action bar configuration. Use `false` to hide it.
 - `toolbar.visibility`: `public` or `private`.
 - `toolbar.actions`: list of YAML-configured toolbar actions. Currently
@@ -186,6 +193,9 @@ sections:
 - `layout`: optional layout string or mapping.
 - `layout.columns`: optional default grid columns for rich sections. Use an
   integer, a string like `"30% 70%"`, or a list like `[1fr, 2fr]`.
+- `filters[].field`: label shown for the filter in the control bar.
+- `filters[].values`: either a hardcoded list or `source(chart, field)` to read
+  distinct values from rendered chart artifacts.
 - `sections`: optional grouped dashboard content.
 - `groups`: optional alias for `sections`.
 - `sections[].title`: optional section heading.
@@ -212,6 +222,32 @@ The dashboard index is written to:
 ```text
 target/glyf/index.html
 ```
+
+## Filters
+
+Dashboard filters are currently static UI controls. They do not execute runtime
+cross-filtering yet, but they let you publish the intended filter vocabulary
+directly from the dashboard spec.
+
+Hardcoded values:
+
+```yaml
+filters:
+  - field: plan
+    values: [starter, growth, enterprise]
+```
+
+Artifact-backed values:
+
+```yaml
+filters:
+  - field: plan
+    values: source(activation_by_plan, plan)
+```
+
+`source(chart, field)` reads distinct values from the normalized chart data
+artifact written by `glyf render`, so dashboard filters stay aligned with the
+chart output instead of duplicating values in YAML.
 
 ## Tags
 
