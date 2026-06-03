@@ -6,6 +6,8 @@ use crate::error::CoreError;
 
 const TOOLBAR_ACTIONS: &[&str] = &["share", "visibility"];
 const TOOLBAR_VISIBILITIES: &[&str] = &["private", "public"];
+const DASHBOARD_THEMES: &[&str] = &["light", "dark"];
+const CHART_THEMES: &[&str] = &["auto", "light", "dark"];
 
 pub fn validate_dashboard_json_text(text: &str, path: &str) -> Result<(), CoreError> {
     let raw: Value = serde_json::from_str(text)
@@ -19,6 +21,8 @@ pub fn validate_dashboard_json_text(text: &str, path: &str) -> Result<(), CoreEr
 
     required_string(dashboard.get("title"), "title")?;
     optional_string(dashboard.get("description"), "description")?;
+    validate_theme(dashboard.get("theme"))?;
+    validate_chart_theme(dashboard.get("chart_theme"))?;
     validate_tags(dashboard.get("tags"))?;
     validate_charts(dashboard.get("charts"), "charts")?;
     validate_toolbar(dashboard.get("toolbar"))?;
@@ -74,6 +78,40 @@ fn validate_tags(value: Option<&Value>) -> Result<(), CoreError> {
         )?;
     }
     Ok(())
+}
+
+fn validate_theme(value: Option<&Value>) -> Result<(), CoreError> {
+    let Some(value) = value else {
+        return Ok(());
+    };
+    if value.is_null() {
+        return Ok(());
+    }
+    let theme = value
+        .as_str()
+        .ok_or_else(|| dashboard_error("expected 'theme' to be one of: dark, light"))?;
+    if DASHBOARD_THEMES.contains(&theme) {
+        return Ok(());
+    }
+    Err(dashboard_error("expected 'theme' to be one of: dark, light"))
+}
+
+fn validate_chart_theme(value: Option<&Value>) -> Result<(), CoreError> {
+    let Some(value) = value else {
+        return Ok(());
+    };
+    if value.is_null() {
+        return Ok(());
+    }
+    let chart_theme = value.as_str().ok_or_else(|| {
+        dashboard_error("expected 'chart_theme' to be one of: auto, dark, light")
+    })?;
+    if CHART_THEMES.contains(&chart_theme) {
+        return Ok(());
+    }
+    Err(dashboard_error(
+        "expected 'chart_theme' to be one of: auto, dark, light",
+    ))
 }
 
 fn validate_toolbar(value: Option<&Value>) -> Result<(), CoreError> {
@@ -518,6 +556,8 @@ mod tests {
             r#"{
               "name": "executive",
               "title": "Executive Dashboard",
+              "theme": "dark",
+              "chart_theme": "auto",
               "tags": ["finance", "monthly"],
               "charts": ["revenue"],
               "layout": {"columns": "30% 70%"},
@@ -556,5 +596,35 @@ mod tests {
         .unwrap_err();
 
         assert!(error.to_string().contains("tags[2]"));
+    }
+
+    #[test]
+    fn rejects_unknown_theme() {
+        let error = validate_dashboard_json_text(
+            r#"{
+              "name": "executive",
+              "title": "Executive Dashboard",
+              "theme": "midnight"
+            }"#,
+            "dashboards/executive.yml",
+        )
+        .unwrap_err();
+
+        assert!(error.to_string().contains("expected 'theme'"));
+    }
+
+    #[test]
+    fn rejects_unknown_chart_theme() {
+        let error = validate_dashboard_json_text(
+            r#"{
+              "name": "executive",
+              "title": "Executive Dashboard",
+              "chart_theme": "midnight"
+            }"#,
+            "dashboards/executive.yml",
+        )
+        .unwrap_err();
+
+        assert!(error.to_string().contains("expected 'chart_theme'"));
     }
 }

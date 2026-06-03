@@ -30,7 +30,7 @@
     }
   },
   "data": {
-    "name": "data-c778f1a08242d1d9e712a55627e49e97"
+    "name": "data-4838a85ea8d0b320195c90c32dba4758"
   },
   "mark": {
     "type": "line",
@@ -93,11 +93,16 @@
   "width": 800,
   "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json",
   "datasets": {
-    "data-c778f1a08242d1d9e712a55627e49e97": [
+    "data-4838a85ea8d0b320195c90c32dba4758": [
       {
-        "week": "2026-W02",
+        "week": "2026-W01",
         "plan": "Pro",
-        "activation_rate": 44.7
+        "activation_rate": 40.5
+      },
+      {
+        "week": "2026-W03",
+        "plan": "Pro",
+        "activation_rate": 47.1
       },
       {
         "week": "2026-W01",
@@ -110,19 +115,14 @@
         "activation_rate": 14.9
       },
       {
-        "week": "2026-W01",
-        "plan": "Pro",
-        "activation_rate": 40.5
-      },
-      {
-        "week": "2026-W03",
-        "plan": "Pro",
-        "activation_rate": 47.1
-      },
-      {
         "week": "2026-W02",
         "plan": "Free",
         "activation_rate": 14.3
+      },
+      {
+        "week": "2026-W02",
+        "plan": "Pro",
+        "activation_rate": 44.7
       }
     ]
   }

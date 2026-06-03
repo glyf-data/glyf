@@ -30,7 +30,7 @@
     }
   },
   "data": {
-    "name": "data-f24c75afd54daa13cd729fdbcea8ce78"
+    "name": "data-e6c486ed4fbc2be12602b9e058d2eeaa"
   },
   "mark": {
     "type": "circle",
@@ -104,15 +104,15 @@
   "width": 800,
   "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json",
   "datasets": {
-    "data-f24c75afd54daa13cd729fdbcea8ce78": [
+    "data-e6c486ed4fbc2be12602b9e058d2eeaa": [
+      {
+        "month": "2026-01",
+        "revenue": 500.0,
+        "region": "South"
+      },
       {
         "month": "2026-02",
         "revenue": 1100.0,
-        "region": "North"
-      },
-      {
-        "month": "2026-01",
-        "revenue": 700.0,
         "region": "North"
       },
       {
@@ -126,14 +126,14 @@
         "region": "North"
       },
       {
-        "month": "2026-01",
-        "revenue": 500.0,
-        "region": "South"
-      },
-      {
         "month": "2026-02",
         "revenue": 700.0,
         "region": "South"
+      },
+      {
+        "month": "2026-01",
+        "revenue": 700.0,
+        "region": "North"
       }
     ]
   }

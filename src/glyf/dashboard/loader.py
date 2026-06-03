@@ -14,6 +14,8 @@ _COLUMN_TRACK_RE = re.compile(
 )
 _TOOLBAR_ACTIONS = {"share", "visibility"}
 _TOOLBAR_VISIBILITIES = {"public", "private"}
+_DASHBOARD_THEMES = {"light", "dark"}
+_CHART_THEMES = {"auto", "light", "dark"}
 
 
 @dataclass(frozen=True)
@@ -72,6 +74,8 @@ class Dashboard:
     title: str
     charts: tuple[str, ...]
     tags: tuple[str, ...] = ()
+    theme: str | None = None
+    chart_theme: str | None = None
     description: str | None = None
     layout: str | None = None
     layout_config: DashboardLayout = DashboardLayout()
@@ -101,6 +105,8 @@ def load_dashboard(path: Path) -> Dashboard:
     name = raw.get("name")
     title = raw.get("title", name)
     description = raw.get("description")
+    theme = raw.get("theme")
+    chart_theme = raw.get("chart_theme")
     layout_raw = raw.get("layout")
     toolbar_raw = raw.get("toolbar")
     summary_raw = raw.get("summary", [])
@@ -114,6 +120,14 @@ def load_dashboard(path: Path) -> Dashboard:
         raise ValueError("expected non-empty 'title'")
     if description is not None and not isinstance(description, str):
         raise ValueError("expected 'description' to be a string")
+    if theme is not None:
+        if not isinstance(theme, str) or theme not in _DASHBOARD_THEMES:
+            joined = ", ".join(sorted(_DASHBOARD_THEMES))
+            raise ValueError(f"expected 'theme' to be one of: {joined}")
+    if chart_theme is not None:
+        if not isinstance(chart_theme, str) or chart_theme not in _CHART_THEMES:
+            joined = ", ".join(sorted(_CHART_THEMES))
+            raise ValueError(f"expected 'chart_theme' to be one of: {joined}")
     if not isinstance(charts, list) or not all(isinstance(item, str) for item in charts):
         raise ValueError("expected 'charts' to be a list of chart names")
 
@@ -128,6 +142,8 @@ def load_dashboard(path: Path) -> Dashboard:
         name=name,
         title=title,
         tags=tags,
+        theme=theme,
+        chart_theme=chart_theme,
         description=description,
         layout=layout_config.kind if layout_raw is not None else None,
         layout_config=layout_config,

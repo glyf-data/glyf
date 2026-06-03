@@ -1,0 +1,41 @@
+name: executive_dark
+title: Executive Dashboard Dark
+description: Dark mode example for the same minimal dbt-style project.
+theme: dark
+chart_theme: dark
+tags:
+  - dark
+  - dbt
+  - revenue
+
+toolbar:
+  visibility: private
+  actions: [share, visibility]
+
+summary:
+  - "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
+  - "{{ ai.summary('Dark chrome with the same generated chart artifacts.') }}"
+
+layout:
+  columns: 2
+
+sections:
+  - title: Revenue overview
+    description: Dark shell example using the same sample orders model.
+    columns: 2
+    items:
+      - metric:
+          label: Sample revenue
+          value: "$7.6k"
+          note: Generated from six seed rows.
+      - component: "{{ alert.info('Theme is driven from dashboard YAML.', 'Dark mode') }}"
+      - chart: revenue
+      - chart: revenue_by_region_bar
+
+  - title: Breakdowns
+    description: Chart cards keep a light plot surface for readability.
+    columns: 2
+    charts:
+      - revenue_scatter
+      - revenue_area
+      - revenue_share_pie

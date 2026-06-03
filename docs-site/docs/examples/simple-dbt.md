@@ -6,7 +6,9 @@ import Link from '@docusaurus/Link';
 
 ## Rendered output
 
-Rendered dashboard: <Link to="pathname:///dashboards/simple-dbt/dashboards/executive.html">Open the full simple dbt dashboard</Link>
+Rendered dashboards:
+- <Link to="pathname:///dashboards/simple-dbt/dashboards/executive.html">Open the full simple dbt dashboard</Link>
+- <Link to="pathname:///dashboards/simple-dbt/dashboards/executive_dark.html">Open the dark mode simple dbt dashboard</Link>
 
 Deployed docs path: `https://glyf.pages.dev/dashboards/simple-dbt/dashboards/executive.html`
 
@@ -27,6 +29,7 @@ Deployed docs path: `https://glyf.pages.dev/dashboards/simple-dbt/dashboards/exe
 - A compact dbt project with seeds and models.
 - Multiple chart types against one fact model.
 - A simple dashboard generated from chart names.
+- A second dashboard that uses `theme: dark` and `chart_theme: dark` in dashboard YAML.
 
 ## Run it
 

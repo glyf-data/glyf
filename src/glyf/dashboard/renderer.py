@@ -7,6 +7,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from glyf.config import GlyfConfig
 from glyf.dashboard.artifacts import ChartArtifact
 from glyf.dashboard.assets import AssetManager, DashboardAssets
+from glyf.dashboard.chart_theme import apply_chart_theme, resolve_chart_theme
 from glyf.dashboard.loader import Dashboard
 from glyf.dashboard.theme import DEFAULT_THEME, Theme
 
@@ -70,13 +71,27 @@ class DashboardRenderer:
         build_meta: DashboardBuildMeta | None = None,
     ) -> RenderedDashboard:
         build_meta = build_meta or DashboardBuildMeta.now()
+        resolved_theme = dashboard.theme or config.dashboard.theme or DEFAULT_THEME.name
+        resolved_chart_theme = resolve_chart_theme(
+            resolved_theme,
+            dashboard.chart_theme,
+        )
+        themed_chart_artifacts = {
+            name: apply_chart_theme(chart_artifact, resolved_chart_theme)
+            for name, chart_artifact in chart_artifacts.items()
+        }
+        themed_charts = tuple(
+            themed_chart_artifacts[chart.metadata.name] for chart in charts
+        )
         template = self._environment().get_template("dashboard.html.j2")
         html = template.render(
             dashboard=dashboard,
-            chart_artifacts=chart_artifacts,
-            charts=charts,
-            has_interactive_charts=any(chart.vega_spec is not None for chart in charts),
+            chart_artifacts=themed_chart_artifacts,
+            charts=themed_charts,
+            has_interactive_charts=any(chart.vega_spec is not None for chart in themed_charts),
             dashboard_config=config.dashboard,
+            dashboard_theme=resolved_theme,
+            chart_theme=resolved_chart_theme,
             assets=assets,
             build_meta=build_meta,
         )

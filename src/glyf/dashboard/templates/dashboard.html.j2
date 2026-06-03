@@ -5,7 +5,7 @@
 {%- import "components/source_drawer.j2" as source_drawer -%}
 {%- import "components/ai_panel.j2" as ai_panel -%}
 <!doctype html>
-<html lang="en" data-theme="{{ dashboard_config.theme }}">
+<html lang="en" data-theme="{{ dashboard_theme }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -149,7 +149,7 @@
             >
               {% for item in section.items %}
                 {% if item.kind == "chart" and item.chart %}
-                  {{ chart_cards.render_chart_card(chart_artifacts[item.chart], dashboard_config, item.title, item.width) }}
+                  {{ chart_cards.render_chart_card(chart_artifacts[item.chart], dashboard_config, chart_theme, item.title, item.width) }}
                 {% elif item.kind == "component" and item.component_spec %}
                   {{ component_cards.render_component_card(item.component_spec, item.width) }}
                 {% elif item.kind == "markdown" %}
@@ -165,7 +165,7 @@
         <section class="glyf-section" aria-label="Charts">
           <div class="glyf-chart-grid" data-auto-columns="true">
             {% for chart in charts %}
-            {{ chart_cards.render_chart_card(chart, dashboard_config) }}
+            {{ chart_cards.render_chart_card(chart, dashboard_config, chart_theme) }}
             {% endfor %}
           </div>
         </section>

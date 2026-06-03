@@ -18,6 +18,8 @@ def test_dashboard_yaml_parses_optional_fields(tmp_path: Path) -> None:
         "name: executive\n"
         "title: Executive Dashboard\n"
         "description: Key business metrics.\n"
+        "theme: dark\n"
+        "chart_theme: auto\n"
         "tags:\n"
         "  - finance\n"
         "  - monthly\n"
@@ -32,6 +34,8 @@ def test_dashboard_yaml_parses_optional_fields(tmp_path: Path) -> None:
     assert dashboard.name == "executive"
     assert dashboard.title == "Executive Dashboard"
     assert dashboard.description == "Key business metrics."
+    assert dashboard.theme == "dark"
+    assert dashboard.chart_theme == "auto"
     assert dashboard.tags == ("finance", "monthly")
     assert dashboard.layout == "grid"
     assert dashboard.charts == ("revenue",)
@@ -164,6 +168,32 @@ def test_dashboard_yaml_rejects_empty_tags(tmp_path: Path) -> None:
     )
 
     with pytest.raises(ValueError, match="tags\\[2\\]"):
+        load_dashboard(dashboard_path)
+
+
+def test_dashboard_yaml_rejects_unknown_theme(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "theme: midnight\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="expected 'theme' to be one of"):
+        load_dashboard(dashboard_path)
+
+
+def test_dashboard_yaml_rejects_unknown_chart_theme(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "chart_theme: midnight\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="expected 'chart_theme' to be one of"):
         load_dashboard(dashboard_path)
 
 
@@ -396,6 +426,43 @@ def test_dashboard_generation_renders_dashboard_tags(tmp_path: Path) -> None:
     assert "finance" in html
     assert "executive" in html
     assert 'aria-label="Dashboard tags"' in html
+
+
+def test_dashboard_generation_uses_dashboard_theme_override(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "theme: dark\n"
+        "charts:\n"
+        "  - revenue\n",
+        encoding="utf-8",
+    )
+
+    html = generate_dashboards(project).dashboards[0].path.read_text(encoding="utf-8")
+
+    assert '<html lang="en" data-theme="dark">' in html
+
+
+def test_dashboard_generation_applies_dark_chart_theme(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "theme: dark\n"
+        "chart_theme: dark\n"
+        "charts:\n"
+        "  - revenue\n",
+        encoding="utf-8",
+    )
+
+    html = generate_dashboards(project).dashboards[0].path.read_text(encoding="utf-8")
+
+    assert 'data-chart-theme="dark"' in html
+    assert 'fill="#09090b"' in html
+    assert 'fill="#f4f4f5"' in html
 
 
 def test_dashboard_generation_renders_ai_macro_summary_panel(tmp_path: Path) -> None:
