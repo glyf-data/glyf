@@ -1,6 +1,7 @@
 {
   "chart_type": "scatter",
   "compiled_sql_path": "target/glyf/compiled/margin_vs_expenses.sql",
+  "data_json_path": "target/glyf/charts/margin_vs_expenses.data.json",
   "interactions": [
     "tooltip",
     "legend_filter"

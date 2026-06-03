@@ -1,6 +1,7 @@
 {
   "chart_type": "line",
   "compiled_sql_path": "target/glyf/compiled/monthly_revenue.sql",
+  "data_json_path": "target/glyf/charts/monthly_revenue.data.json",
   "name": "monthly_revenue",
   "png_path": "target/glyf/charts/monthly_revenue.png",
   "svg_path": "target/glyf/charts/monthly_revenue.svg",

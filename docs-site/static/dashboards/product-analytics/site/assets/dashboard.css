@@ -516,6 +516,19 @@ html[data-theme="dark"] .glyf-icon-btn[data-tip]:hover::after {
   cursor: default;
 }
 
+.glyf-filter-field {
+  font-weight: 600;
+}
+
+.glyf-filter-inline-sep {
+  color: var(--glyf-color-text-subtle);
+}
+
+.glyf-filter-inline-values {
+  color: var(--glyf-color-text-muted);
+  font-size: 11px;
+}
+
 .glyf-filter-value {
   color: var(--glyf-color-text-subtle);
   font-size: 11px;

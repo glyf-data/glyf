@@ -1,6 +1,7 @@
 {
   "chart_type": "bar",
   "compiled_sql_path": "target/glyf/compiled/sessions_per_user.sql",
+  "data_json_path": "target/glyf/charts/sessions_per_user.data.json",
   "interactions": [
     "tooltip"
   ],

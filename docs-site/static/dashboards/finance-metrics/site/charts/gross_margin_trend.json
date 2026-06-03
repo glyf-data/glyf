@@ -1,6 +1,7 @@
 {
   "chart_type": "area",
   "compiled_sql_path": "target/glyf/compiled/gross_margin_trend.sql",
+  "data_json_path": "target/glyf/charts/gross_margin_trend.data.json",
   "interactions": [
     "tooltip"
   ],

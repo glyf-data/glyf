@@ -1,0 +1,21 @@
+{
+  "fields": [
+    "week",
+    "sessions_per_user"
+  ],
+  "name": "sessions_per_user",
+  "rows": [
+    {
+      "sessions_per_user": 3.54,
+      "week": "2026-W03"
+    },
+    {
+      "sessions_per_user": 3.33,
+      "week": "2026-W01"
+    },
+    {
+      "sessions_per_user": 3.43,
+      "week": "2026-W02"
+    }
+  ]
+}

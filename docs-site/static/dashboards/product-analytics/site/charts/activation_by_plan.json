@@ -1,6 +1,7 @@
 {
   "chart_type": "line",
   "compiled_sql_path": "target/glyf/compiled/activation_by_plan.sql",
+  "data_json_path": "target/glyf/charts/activation_by_plan.data.json",
   "interactions": [
     "tooltip",
     "legend_filter"

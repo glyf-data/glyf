@@ -1,0 +1,40 @@
+{
+  "fields": [
+    "month",
+    "channel",
+    "revenue"
+  ],
+  "name": "channel_revenue",
+  "rows": [
+    {
+      "channel": "Partner",
+      "month": "2026-01",
+      "revenue": 8000.0
+    },
+    {
+      "channel": "Online",
+      "month": "2026-02",
+      "revenue": 14500.0
+    },
+    {
+      "channel": "Enterprise",
+      "month": "2026-03",
+      "revenue": 18000.0
+    },
+    {
+      "channel": "Online",
+      "month": "2026-01",
+      "revenue": 12000.0
+    },
+    {
+      "channel": "Partner",
+      "month": "2026-02",
+      "revenue": 9100.0
+    },
+    {
+      "channel": "Online",
+      "month": "2026-03",
+      "revenue": 12400.0
+    }
+  ]
+}

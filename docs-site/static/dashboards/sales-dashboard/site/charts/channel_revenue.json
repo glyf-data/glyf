@@ -1,6 +1,7 @@
 {
   "chart_type": "bar",
   "compiled_sql_path": "target/glyf/compiled/channel_revenue.sql",
+  "data_json_path": "target/glyf/charts/channel_revenue.data.json",
   "name": "channel_revenue",
   "png_path": "target/glyf/charts/channel_revenue.png",
   "svg_path": "target/glyf/charts/channel_revenue.svg",

@@ -1,6 +1,7 @@
 {
   "chart_type": "pie",
   "compiled_sql_path": "target/glyf/compiled/margin_share.sql",
+  "data_json_path": "target/glyf/charts/margin_share.data.json",
   "interactions": [
     "tooltip"
   ],

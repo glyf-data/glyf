@@ -120,7 +120,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-06-02T23:55:33Z">02 Jun 2026, 23:55 UTC</strong>
+          Refreshed <strong title="2026-06-03T22:21:34Z">03 Jun 2026, 22:21 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -173,7 +173,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 02 Jun 2026, 23:55 UTC</span>
+              <span class="glyf-version-option-note">built 03 Jun 2026, 22:21 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -186,26 +186,43 @@
 
     <div class="glyf-control-bar">
       <span class="glyf-control-label">Filters</span>
-      <div class="glyf-filter-chip">
+
+
+        <div
+          class="glyf-filter-chip"
+          title="source(activation_by_plan, plan)"
+        >
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="10"></circle>
-    <path d="M12 16v-4"></path>
-    <path d="M12 8h.01"></path>
+    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
 
-        None
-        <span class="glyf-filter-value">static</span>
-      </div>
-      <button class="glyf-filter-add" type="button" disabled>
+          <span class="glyf-filter-field">plan</span>
+
+          <span class="glyf-filter-inline-sep">/</span>
+          <span class="glyf-filter-inline-values">Pro, Free</span>
+
+          <span class="glyf-filter-value">source</span>
+        </div>
+
+        <div
+          class="glyf-filter-chip"
+          title="product, lifecycle"
+        >
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M5 12h14"></path>
-    <path d="M12 5v14"></path>
+    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
 
-        Add filter
-      </button>
+          <span class="glyf-filter-field">team</span>
+
+          <span class="glyf-filter-inline-sep">/</span>
+          <span class="glyf-filter-inline-values">product, lifecycle</span>
+
+          <span class="glyf-filter-value">static</span>
+        </div>
+
+
       <span class="glyf-static-note">
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -401,7 +418,7 @@ GROUP BY 1
       id="chart-sessions_scatter"
       data-vega-chart="chart-sessions_scatter-spec"
     ></div>
-    <script type="application/json" id="chart-sessions_scatter-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-22c148effb40ecc9ba562f4cab6aa056"}, "datasets": {"data-22c148effb40ecc9ba562f4cab6aa056": [{"active_users": 420.0, "plan": "Pro", "sessions": 1900.0}, {"active_users": 520.0, "plan": "Pro", "sessions": 2510.0}, {"active_users": 980.0, "plan": "Free", "sessions": 2780.0}, {"active_users": 470.0, "plan": "Pro", "sessions": 2200.0}, {"active_users": 900.0, "plan": "Free", "sessions": 2500.0}, {"active_users": 1040.0, "plan": "Free", "sessions": 3010.0}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "tooltip": [{"field": "active_users", "type": "quantitative"}, {"field": "sessions", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "active_users", "title": "Active Users", "type": "quantitative"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "scales", "name": "param_1e9efca18e7a2868", "select": {"encodings": ["x", "y"], "type": "interval"}}], "title": "Sessions vs Active Users", "width": 800}</script>
+    <script type="application/json" id="chart-sessions_scatter-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-c143469075a877742b2944390d04d1a0"}, "datasets": {"data-c143469075a877742b2944390d04d1a0": [{"active_users": 420.0, "plan": "Pro", "sessions": 1900.0}, {"active_users": 520.0, "plan": "Pro", "sessions": 2510.0}, {"active_users": 900.0, "plan": "Free", "sessions": 2500.0}, {"active_users": 1040.0, "plan": "Free", "sessions": 3010.0}, {"active_users": 470.0, "plan": "Pro", "sessions": 2200.0}, {"active_users": 980.0, "plan": "Free", "sessions": 2780.0}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "tooltip": [{"field": "active_users", "type": "quantitative"}, {"field": "sessions", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "active_users", "title": "Active Users", "type": "quantitative"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "scales", "name": "param_1e9efca18e7a2868", "select": {"encodings": ["x", "y"], "type": "interval"}}], "title": "Sessions vs Active Users", "width": 800}</script>
     <noscript>
       <img src="../charts/sessions_scatter.png" alt="Sessions vs Active Users">
     </noscript>
@@ -437,13 +454,14 @@ GROUP BY 1
                   <article class="glyf-card glyf-component-card">
   <div class="glyf-card-body">
 
-  <div class="glyf-alert glyf-tone-success">
+  <div class="glyf-alert glyf-tone-warning">
     <span class="glyf-alert-mark">
 
 
   <svg class="glyf-alert-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21.801 10A10 10 0 1 1 17 3.335"></path>
-    <path d="m9 11 3 3L22 4"></path>
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
+    <path d="M12 9v4"></path>
+    <path d="M12 17h.01"></path>
   </svg>
 
 
@@ -452,7 +470,7 @@ GROUP BY 1
 
       <span class="glyf-alert-title">Health</span>
 
-      <span>Activation is tracking above target.</span>
+      <span>Activation needs attention at 31.0%.</span>
     </div>
   </div>
 
@@ -469,11 +487,9 @@ GROUP BY 1
 
   <ul class="glyf-list">
 
+    <li>Pro</li>
+
     <li>Free</li>
-
-    <li>Team</li>
-
-    <li>Enterprise</li>
 
   </ul>
 
@@ -497,7 +513,7 @@ GROUP BY 1
       id="chart-activation_by_plan"
       data-vega-chart="chart-activation_by_plan-spec"
     ></div>
-    <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-44c0a8ddfbb205c358ed54bd3f1d3058"}, "datasets": {"data-44c0a8ddfbb205c358ed54bd3f1d3058": [{"activated_users": 170.0, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 245.0, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 120.0, "plan": "Free", "week": "2026-W01"}, {"activated_users": 155.0, "plan": "Free", "week": "2026-W03"}, {"activated_users": 140.0, "plan": "Free", "week": "2026-W02"}, {"activated_users": 210.0, "plan": "Pro", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
+    <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-01155f344c557ca5a53a12e48fb895a1"}, "datasets": {"data-01155f344c557ca5a53a12e48fb895a1": [{"activated_users": 170.0, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 245.0, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 120.0, "plan": "Free", "week": "2026-W01"}, {"activated_users": 155.0, "plan": "Free", "week": "2026-W03"}, {"activated_users": 210.0, "plan": "Pro", "week": "2026-W02"}, {"activated_users": 140.0, "plan": "Free", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
     <noscript>
       <img src="../charts/activation_by_plan.png" alt="Activation by Plan">
     </noscript>
@@ -522,7 +538,7 @@ GROUP BY 1
       id="chart-activation_rate_by_plan"
       data-vega-chart="chart-activation_rate_by_plan-spec"
     ></div>
-    <script type="application/json" id="chart-activation_rate_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-4838a85ea8d0b320195c90c32dba4758"}, "datasets": {"data-4838a85ea8d0b320195c90c32dba4758": [{"activation_rate": 40.5, "plan": "Pro", "week": "2026-W01"}, {"activation_rate": 47.1, "plan": "Pro", "week": "2026-W03"}, {"activation_rate": 13.3, "plan": "Free", "week": "2026-W01"}, {"activation_rate": 14.9, "plan": "Free", "week": "2026-W03"}, {"activation_rate": 14.3, "plan": "Free", "week": "2026-W02"}, {"activation_rate": 44.7, "plan": "Pro", "week": "2026-W02"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activation_rate", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activation_rate", "title": "Activation Rate (%)", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation Rate by Plan", "width": 800}</script>
+    <script type="application/json" id="chart-activation_rate_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-126740a285e29a448f6ff7f9b61c5c6f"}, "datasets": {"data-126740a285e29a448f6ff7f9b61c5c6f": [{"activation_rate": 44.7, "plan": "Pro", "week": "2026-W02"}, {"activation_rate": 40.5, "plan": "Pro", "week": "2026-W01"}, {"activation_rate": 47.1, "plan": "Pro", "week": "2026-W03"}, {"activation_rate": 14.3, "plan": "Free", "week": "2026-W02"}, {"activation_rate": 13.3, "plan": "Free", "week": "2026-W01"}, {"activation_rate": 14.9, "plan": "Free", "week": "2026-W03"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activation_rate", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activation_rate", "title": "Activation Rate (%)", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation Rate by Plan", "width": 800}</script>
     <noscript>
       <img src="../charts/activation_rate_by_plan.png" alt="Activation Rate by Plan">
     </noscript>
@@ -643,7 +659,7 @@ GROUP BY 1
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-06-03 00:55
+      2026-06-03 23:21
 
     </div>
   </div>
@@ -683,7 +699,7 @@ GROUP BY 1
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">02 Jun 2026, 23:55 UTC</div>
+              <div class="glyf-version-date">03 Jun 2026, 22:21 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>

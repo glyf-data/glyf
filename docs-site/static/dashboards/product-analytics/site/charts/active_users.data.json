@@ -1,0 +1,21 @@
+{
+  "fields": [
+    "week",
+    "active_users"
+  ],
+  "name": "active_users",
+  "rows": [
+    {
+      "active_users": 1560.0,
+      "week": "2026-W03"
+    },
+    {
+      "active_users": 1320.0,
+      "week": "2026-W01"
+    },
+    {
+      "active_users": 1450.0,
+      "week": "2026-W02"
+    }
+  ]
+}

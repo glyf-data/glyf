@@ -1,6 +1,7 @@
 {
   "chart_type": "area",
   "compiled_sql_path": "target/glyf/compiled/active_users.sql",
+  "data_json_path": "target/glyf/charts/active_users.data.json",
   "interactions": [
     "tooltip"
   ],

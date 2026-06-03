@@ -1,6 +1,7 @@
 {
   "chart_type": "scatter",
   "compiled_sql_path": "target/glyf/compiled/revenue_scatter.sql",
+  "data_json_path": "target/glyf/charts/revenue_scatter.data.json",
   "interactions": [
     "tooltip",
     "zoom",

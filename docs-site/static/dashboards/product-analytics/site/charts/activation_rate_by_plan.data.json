@@ -1,0 +1,40 @@
+{
+  "fields": [
+    "week",
+    "plan",
+    "activation_rate"
+  ],
+  "name": "activation_rate_by_plan",
+  "rows": [
+    {
+      "activation_rate": 44.7,
+      "plan": "Pro",
+      "week": "2026-W02"
+    },
+    {
+      "activation_rate": 40.5,
+      "plan": "Pro",
+      "week": "2026-W01"
+    },
+    {
+      "activation_rate": 47.1,
+      "plan": "Pro",
+      "week": "2026-W03"
+    },
+    {
+      "activation_rate": 14.3,
+      "plan": "Free",
+      "week": "2026-W02"
+    },
+    {
+      "activation_rate": 13.3,
+      "plan": "Free",
+      "week": "2026-W01"
+    },
+    {
+      "activation_rate": 14.9,
+      "plan": "Free",
+      "week": "2026-W03"
+    }
+  ]
+}

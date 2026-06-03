@@ -1,0 +1,40 @@
+{
+  "fields": [
+    "active_users",
+    "sessions",
+    "plan"
+  ],
+  "name": "sessions_scatter",
+  "rows": [
+    {
+      "active_users": 420.0,
+      "plan": "Pro",
+      "sessions": 1900.0
+    },
+    {
+      "active_users": 520.0,
+      "plan": "Pro",
+      "sessions": 2510.0
+    },
+    {
+      "active_users": 900.0,
+      "plan": "Free",
+      "sessions": 2500.0
+    },
+    {
+      "active_users": 1040.0,
+      "plan": "Free",
+      "sessions": 3010.0
+    },
+    {
+      "active_users": 470.0,
+      "plan": "Pro",
+      "sessions": 2200.0
+    },
+    {
+      "active_users": 980.0,
+      "plan": "Free",
+      "sessions": 2780.0
+    }
+  ]
+}
