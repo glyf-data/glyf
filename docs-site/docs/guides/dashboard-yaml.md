@@ -225,51 +225,8 @@ component: "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
 They are evaluated into typed component specs before the dashboard template
 renders HTML.
 
-### Built-in macros
-
-Built-in namespaces:
-
-| Macro | Description |
-| --- | --- |
-| `ui.label_value(label, value, note=None, width=None)` | Compact label/value component. |
-| `ui.text(value, title=None, width=None)` | Text component. |
-| `ui.list(values, title=None, width=None)` | List component. |
-| `ui.listofvalues(values, title=None, width=None)` | Alias-style list component. |
-| `ui.badge(label, tone='neutral', width=None)` | Badge component. |
-| `ui.link(label, href, title=None, width=None)` | Link component. |
-| `alert.message(value, title=None, tone='info', width=None)` | Generic alert component. |
-| `alert.info(value, title=None, width=None)` | Informational alert. |
-| `alert.success(value, title=None, width=None)` | Success alert. |
-| `alert.warning(value, title=None, width=None)` | Warning alert. |
-| `alert.error(value, title=None, width=None)` | Error alert. |
-| `ai.summary(value, title='Overview', width=None)` | Text block for the AI Summary panel. |
-| `ai.insight(value, title=None, tone='info', width=None)` | Signal-style item for the AI Summary panel. |
-| `ai.signal(value, title=None, tone='info', width=None)` | Alias for `ai.insight`. |
-| `time.now(format='%Y-%m-%d %H:%M', timezone=None)` | Formatted timestamp string. |
-
-Convenience aliases:
-
-- `label_value(...)`
-- `text(...)`
-- `listofvalues(...)`
-- `link(...)`
-- `badge(...)`
-- `now(...)`
-- `echo(...)` which maps to `alert.info(...)`
-
-Example:
-
-```yaml
-summary:
-  - "{{ label_value('Generated', now('%Y-%m-%d %H:%M')) }}"
-
-sections:
-  - title: Status
-    items:
-      - component: "{{ echo('Welcome', 'Notification') }}"
-      - component: "{{ listofvalues(['a', 'b', 'c'], title='Values') }}"
-      - component: "{{ alert.warning('Threshold exceeded', 'Freshness') }}"
-```
+For the grouped macro catalog, usage patterns, aliases, and custom macro rules,
+see [Dashboard Macros](/docs/guides/dashboard-macros).
 
 ## Tags
 

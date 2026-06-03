@@ -20,6 +20,15 @@ layout:
   columns: "36% 64%"
 
 sections:
+  - title: Summary Panel Macros
+    description: These same components are also rendered through summary[] in the AI Summary drawer.
+    columns: 2
+    items:
+      - component: "{{ product_owner() }}"
+      - component: "{{ label_value('Generated', now('%Y-%m-%d %H:%M')) }}"
+      - component: "{{ ui.badge('Macro Showcase', tone='info') }}"
+      - component: "{{ ui.link('Open glyfdata.com', 'https://glyfdata.com', title='Project') }}"
+
   - title: UI Macros
     description: Core built-ins for labels, text, lists, badges, and links.
     columns: 2
