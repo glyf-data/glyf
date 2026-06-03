@@ -1,7 +1,7 @@
 {
   "chart_type": "pie",
   "compiled_sql_path": "target/glyf/compiled/margin_share.sql",
-  "data_json_path": "target/glyf/charts/margin_share.data.json",
+  "data_json_path": "target/glyf/data/normalized/margin_share.data.json",
   "interactions": [
     "tooltip"
   ],
@@ -9,7 +9,7 @@
   "png_path": "target/glyf/charts/margin_share.png",
   "svg_path": "target/glyf/charts/margin_share.svg",
   "title": "Gross Margin Share",
-  "vega_json_path": "target/glyf/charts/margin_share.vega.json",
+  "vega_json_path": "target/glyf/data/vega/margin_share.vega.json",
   "x": "department",
   "y": "gross_margin"
 }

@@ -277,7 +277,7 @@ def test_chart_metadata_loading(tmp_path: Path) -> None:
     assert artifact.metadata.title == "Monthly Revenue"
     assert artifact.metadata.chart_type == "line"
     assert artifact.metadata.data_json_path == (
-        project / "target" / "glyf" / "charts" / "revenue.data.json"
+        project / "target" / "glyf" / "data" / "normalized" / "revenue.data.json"
     )
     assert artifact.data.fields == ("month", "revenue")
     assert artifact.data.rows[-1]["revenue"] == 2400
@@ -350,7 +350,9 @@ def test_dashboard_generation_embeds_interactive_vega_spec(tmp_path: Path) -> No
     assert "vegaEmbed" in dashboard_html
     assert 'data-vega-chart="chart-revenue-spec"' in dashboard_html
     assert '"tooltip"' in dashboard_html
-    assert (project / "target" / "glyf" / "charts" / "revenue.vega.json").exists()
+    assert (
+        project / "target" / "glyf" / "data" / "vega" / "revenue.vega.json"
+    ).exists()
 
 
 def test_dashboard_generation_renders_sections_and_layout_items(tmp_path: Path) -> None:

@@ -1,7 +1,7 @@
 {
   "chart_type": "line",
   "compiled_sql_path": "target/glyf/compiled/revenue.sql",
-  "data_json_path": "target/glyf/charts/revenue.data.json",
+  "data_json_path": "target/glyf/data/normalized/revenue.data.json",
   "name": "revenue",
   "png_path": "target/glyf/charts/revenue.png",
   "svg_path": "target/glyf/charts/revenue.svg",

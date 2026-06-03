@@ -13,6 +13,7 @@ from glyf.manifest.resolver import resolve_refs
 from glyf.output.writer import (
     ChartArtifacts,
     chart_artifact_paths,
+    cleanup_legacy_chart_artifacts,
     write_chart_data,
     write_chart_metadata,
     write_compiled_sql,
@@ -74,6 +75,7 @@ def render_project(
             raise RenderError(f"{rel_path} has unresolved dbt references: {missing}")
 
         artifacts = chart_artifact_paths(scan.root, chart, config)
+        cleanup_legacy_chart_artifacts(scan.root, chart, config)
         write_compiled_sql(artifacts.compiled_sql, resolution.sql)
 
         try:

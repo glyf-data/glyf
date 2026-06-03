@@ -19,7 +19,7 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
 
     compiled_sql = project / "target" / "glyf" / "compiled" / "revenue.sql"
     metadata_json = project / "target" / "glyf" / "charts" / "revenue.json"
-    data_json = project / "target" / "glyf" / "charts" / "revenue.data.json"
+    data_json = project / "target" / "glyf" / "data" / "normalized" / "revenue.data.json"
     png = project / "target" / "glyf" / "charts" / "revenue.png"
     svg = project / "target" / "glyf" / "charts" / "revenue.svg"
 
@@ -30,7 +30,7 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
         "name": "revenue",
         "chart_type": "line",
         "compiled_sql_path": "target/glyf/compiled/revenue.sql",
-        "data_json_path": "target/glyf/charts/revenue.data.json",
+        "data_json_path": "target/glyf/data/normalized/revenue.data.json",
         "png_path": "target/glyf/charts/revenue.png",
         "svg_path": "target/glyf/charts/revenue.svg",
         "title": "Monthly Revenue",
@@ -87,7 +87,7 @@ def test_render_project_writes_interactive_metadata_and_vega_json(
     metadata_json = project / "target" / "glyf" / "charts" / "revenue.json"
     metadata = json.loads(metadata_json.read_text(encoding="utf-8"))
     assert metadata["interactions"] == ["tooltip", "zoom"]
-    assert metadata["vega_json_path"] == "target/glyf/charts/revenue.vega.json"
+    assert metadata["vega_json_path"] == "target/glyf/data/vega/revenue.vega.json"
     assert (project / metadata["vega_json_path"]).exists()
     vega_json = json.loads((project / metadata["vega_json_path"]).read_text(encoding="utf-8"))
     assert vega_json["config"]["axis"]["labelFont"] == "Hanken Grotesk"

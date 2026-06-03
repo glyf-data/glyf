@@ -27,14 +27,16 @@ def chart_artifact_paths(
     paths = artifact_paths(project_root, config)
     paths.compiled_dir.mkdir(parents=True, exist_ok=True)
     paths.charts_dir.mkdir(parents=True, exist_ok=True)
+    paths.normalized_data_dir.mkdir(parents=True, exist_ok=True)
+    paths.vega_data_dir.mkdir(parents=True, exist_ok=True)
 
     return ChartArtifacts(
         compiled_sql=paths.compiled_dir / f"{chart.name}.sql",
         metadata_json=paths.charts_dir / f"{chart.name}.json",
-        data_json=paths.charts_dir / f"{chart.name}.data.json",
+        data_json=paths.normalized_data_dir / f"{chart.name}.data.json",
         png=paths.charts_dir / f"{chart.name}.png",
         svg=paths.charts_dir / f"{chart.name}.svg",
-        vega_json=paths.charts_dir / f"{chart.name}.vega.json",
+        vega_json=paths.vega_data_dir / f"{chart.name}.vega.json",
     )
 
 
@@ -78,3 +80,14 @@ def write_chart_data(project_root: Path, chart: GgsqlChart, artifacts: ChartArti
         json.dumps(payload, indent=2, default=str, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+
+
+def cleanup_legacy_chart_artifacts(project_root: Path, chart: GgsqlChart, config: GlyfConfig | None = None) -> None:
+    paths = artifact_paths(project_root, config)
+    legacy_paths = (
+        paths.charts_dir / f"{chart.name}.data.json",
+        paths.charts_dir / f"{chart.name}.vega.json",
+    )
+    for legacy_path in legacy_paths:
+        if legacy_path.exists():
+            legacy_path.unlink()

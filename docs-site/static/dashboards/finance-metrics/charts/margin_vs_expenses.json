@@ -1,7 +1,7 @@
 {
   "chart_type": "scatter",
   "compiled_sql_path": "target/glyf/compiled/margin_vs_expenses.sql",
-  "data_json_path": "target/glyf/charts/margin_vs_expenses.data.json",
+  "data_json_path": "target/glyf/data/normalized/margin_vs_expenses.data.json",
   "interactions": [
     "tooltip",
     "legend_filter"
@@ -10,7 +10,7 @@
   "png_path": "target/glyf/charts/margin_vs_expenses.png",
   "svg_path": "target/glyf/charts/margin_vs_expenses.svg",
   "title": "Margin vs Expenses",
-  "vega_json_path": "target/glyf/charts/margin_vs_expenses.vega.json",
+  "vega_json_path": "target/glyf/data/vega/margin_vs_expenses.vega.json",
   "x": "expenses",
   "y": "gross_margin"
 }

@@ -1,7 +1,7 @@
 {
   "chart_type": "bar",
   "compiled_sql_path": "target/glyf/compiled/expenses_by_department.sql",
-  "data_json_path": "target/glyf/charts/expenses_by_department.data.json",
+  "data_json_path": "target/glyf/data/normalized/expenses_by_department.data.json",
   "interactions": [
     "tooltip",
     "legend_filter"
@@ -10,7 +10,7 @@
   "png_path": "target/glyf/charts/expenses_by_department.png",
   "svg_path": "target/glyf/charts/expenses_by_department.svg",
   "title": "Expenses by Department",
-  "vega_json_path": "target/glyf/charts/expenses_by_department.vega.json",
+  "vega_json_path": "target/glyf/data/vega/expenses_by_department.vega.json",
   "x": "month",
   "y": "expenses"
 }

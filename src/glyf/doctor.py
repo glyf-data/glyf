@@ -134,6 +134,9 @@ def _output_checks(root: Path, config: GlyfConfig) -> list[DoctorCheck]:
         "output directory": paths.root,
         "compiled directory": paths.compiled_dir,
         "charts directory": paths.charts_dir,
+        "data directory": paths.data_dir,
+        "normalized data directory": paths.normalized_data_dir,
+        "vega data directory": paths.vega_data_dir,
         "dashboards output directory": paths.dashboards_dir,
         "site directory": paths.site_dir,
     }

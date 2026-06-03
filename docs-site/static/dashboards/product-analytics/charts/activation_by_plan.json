@@ -1,7 +1,7 @@
 {
   "chart_type": "line",
   "compiled_sql_path": "target/glyf/compiled/activation_by_plan.sql",
-  "data_json_path": "target/glyf/charts/activation_by_plan.data.json",
+  "data_json_path": "target/glyf/data/normalized/activation_by_plan.data.json",
   "interactions": [
     "tooltip",
     "legend_filter"
@@ -10,7 +10,7 @@
   "png_path": "target/glyf/charts/activation_by_plan.png",
   "svg_path": "target/glyf/charts/activation_by_plan.svg",
   "title": "Activation by Plan",
-  "vega_json_path": "target/glyf/charts/activation_by_plan.vega.json",
+  "vega_json_path": "target/glyf/data/vega/activation_by_plan.vega.json",
   "x": "week",
   "y": "activated_users"
 }
