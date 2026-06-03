@@ -1,5 +1,5 @@
-{% macro render_chart_card(chart, dashboard_config, title=None, width=None) -%}
-<article class="glyf-card glyf-chart-card"{% if width %} style="--glyf-item-width: {{ width }}"{% endif %}>
+{% macro render_chart_card(chart, dashboard_config, chart_theme, title=None, width=None) -%}
+<article class="glyf-card glyf-chart-card" data-chart-theme="{{ chart_theme }}"{% if width %} style="--glyf-item-width: {{ width }}"{% endif %}>
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">{{ title or chart.metadata.title or chart.metadata.name }}</div>

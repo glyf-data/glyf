@@ -30,7 +30,7 @@
     }
   },
   "data": {
-    "name": "data-bcbb06ff28f84701d236690b16409254"
+    "name": "data-be5f85494856218bb63de92aedcdc712"
   },
   "mark": {
     "type": "line",
@@ -66,18 +66,18 @@
   "width": 800,
   "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json",
   "datasets": {
-    "data-bcbb06ff28f84701d236690b16409254": [
+    "data-be5f85494856218bb63de92aedcdc712": [
       {
         "month": "2026-03",
         "bookings": 79000.0
       },
       {
-        "month": "2026-02",
-        "bookings": 69000.0
-      },
-      {
         "month": "2026-01",
         "bookings": 60000.0
+      },
+      {
+        "month": "2026-02",
+        "bookings": 69000.0
       }
     ]
   }

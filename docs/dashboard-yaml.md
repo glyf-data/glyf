@@ -6,6 +6,8 @@ Dashboard configs live in `dashboards/`.
 name: executive
 title: Executive Dashboard
 description: Key business metrics generated from dbt models.
+theme: dark
+chart_theme: auto
 tags:
   - finance
   - monthly
@@ -172,6 +174,8 @@ sections:
 - `name`: output filename stem.
 - `title`: dashboard page title.
 - `description`: optional intro text.
+- `theme`: optional dashboard UI theme. Supported values: `light` and `dark`.
+- `chart_theme`: optional chart appearance theme. Supported values: `auto`, `light`, and `dark`.
 - `tags`: optional list of short labels shown in the dashboard header.
 - `toolbar`: optional dashboard action bar configuration. Use `false` to hide it.
 - `toolbar.visibility`: `public` or `private`.
@@ -222,3 +226,27 @@ tags:
 
 Tags must be a list of non-empty strings. Glyf preserves their order and
 removes duplicates.
+
+## Theme
+
+Use `theme` to switch the generated dashboard shell between `light` and `dark`.
+When omitted, the dashboard falls back to the configured default in `glyf.yml`.
+
+```yaml
+theme: dark
+chart_theme: dark
+```
+
+Current behavior:
+
+- the dashboard shell, controls, source drawer, and AI panel use dark tokens
+- `chart_theme: auto` follows the dashboard theme
+- `chart_theme: dark` applies a dark chart surface, light labels, and dark-aware interactive Vega config
+- `chart_theme: light` keeps charts in the default light style even inside a dark dashboard
+
+Implementation note:
+
+- `glyf render` still produces one shared set of base chart artifacts under `target/glyf/charts/`
+- `glyf dashboard` applies `chart_theme` when each dashboard HTML page is generated
+- this means a light dashboard and a dark dashboard can reuse the same chart names in one project without overwriting each other's chart output
+- the theme change is applied per dashboard page, not by rewriting the shared chart files on disk

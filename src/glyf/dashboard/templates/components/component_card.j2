@@ -26,7 +26,9 @@
   <p class="glyf-markdown-text">{{ component.text }}</p>
   {% elif component.kind == "alert" %}
   <div class="glyf-alert glyf-tone-{{ component.tone }}">
-    {{ tone_icon(component.tone) }}
+    <span class="glyf-alert-mark">
+      {{ tone_icon(component.tone) }}
+    </span>
     <div>
       {% if component.title %}
       <span class="glyf-alert-title">{{ component.title }}</span>

@@ -30,19 +30,30 @@
     </header>
     <main class="glyf-content">
       <section class="glyf-section" aria-label="Dashboards">
-        <div class="glyf-chart-grid" data-auto-columns="true">
+        <div class="glyf-chart-grid glyf-index-grid" data-auto-columns="true">
           {% for item in dashboards %}
-          <article class="glyf-card">
-            <div class="glyf-card-head">
-              <div>
-                <a class="glyf-card-title" href="dashboards/{{ item.path.name }}">{{ item.dashboard.title }}</a>
+          <article class="glyf-card glyf-index-card">
+            <div class="glyf-card-head glyf-index-card-head">
+              <div class="glyf-index-card-heading">
+                <div class="glyf-index-card-meta glyf-mono">{{ item.dashboard.name }}</div>
+                <a class="glyf-card-title glyf-index-card-title" href="dashboards/{{ item.path.name }}">{{ item.dashboard.title }}</a>
                 {% if item.dashboard.description %}
-                <div class="glyf-card-subtitle">{{ item.dashboard.description }}</div>
+                <div class="glyf-card-subtitle glyf-index-card-subtitle">{{ item.dashboard.description }}</div>
                 {% else %}
-                <div class="glyf-card-subtitle">{{ item.dashboard.name }}</div>
+                <div class="glyf-card-subtitle glyf-index-card-subtitle">Static dashboard generated from glyf artifacts.</div>
+                {% endif %}
+                {% if item.dashboard.tags %}
+                <div class="glyf-tags glyf-index-tags" aria-label="Dashboard tags">
+                  {% for tag in item.dashboard.tags[:4] %}
+                  <span class="glyf-badge">{{ tag }}</span>
+                  {% endfor %}
+                </div>
                 {% endif %}
               </div>
-              <span class="glyf-badge">{{ item.charts | length }} chart{% if item.charts | length != 1 %}s{% endif %}</span>
+              <div class="glyf-index-card-side">
+                <span class="glyf-badge">{{ item.charts | length }} chart{% if item.charts | length != 1 %}s{% endif %}</span>
+                <span class="glyf-index-card-link">Open</span>
+              </div>
             </div>
           </article>
           {% endfor %}
