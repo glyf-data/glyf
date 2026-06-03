@@ -13,6 +13,7 @@ from glyf.manifest.resolver import resolve_refs
 from glyf.output.writer import (
     ChartArtifacts,
     chart_artifact_paths,
+    write_chart_data,
     write_chart_metadata,
     write_compiled_sql,
 )
@@ -80,6 +81,8 @@ def render_project(
         except SqlExecutionError as exc:
             rel_path = path.relative_to(scan.root).as_posix()
             raise RenderError(f"{rel_path} SQL execution failed: {exc}") from exc
+
+        write_chart_data(scan.root, chart, artifacts, data)
 
         try:
             render_chart(

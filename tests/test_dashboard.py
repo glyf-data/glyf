@@ -114,6 +114,31 @@ def test_dashboard_yaml_parses_toolbar_summary_and_components(tmp_path: Path) ->
     assert dashboard.sections[0].items[0].width == 2
 
 
+def test_dashboard_yaml_parses_filters_with_source_expression(tmp_path: Path) -> None:
+    dashboard_path = tmp_path / "executive.yml"
+    dashboard_path.write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "filters:\n"
+        "  - field: plan\n"
+        "    values: source(revenue, month)\n"
+        "  - field: region\n"
+        "    values: [emea, us]\n"
+        "charts:\n"
+        "  - revenue\n",
+        encoding="utf-8",
+    )
+
+    dashboard = load_dashboard(dashboard_path)
+
+    assert dashboard.filters[0].field == "plan"
+    assert dashboard.filters[0].source_chart == "revenue"
+    assert dashboard.filters[0].source_field == "month"
+    assert dashboard.filters[0].is_sourced is True
+    assert dashboard.filters[1].values == ("emea", "us")
+    assert dashboard.artifact_chart_names == ("revenue",)
+
+
 def test_dashboard_yaml_parses_custom_column_widths(tmp_path: Path) -> None:
     dashboard_path = tmp_path / "executive.yml"
     dashboard_path.write_text(
@@ -251,6 +276,11 @@ def test_chart_metadata_loading(tmp_path: Path) -> None:
     assert artifact.metadata.name == "revenue"
     assert artifact.metadata.title == "Monthly Revenue"
     assert artifact.metadata.chart_type == "line"
+    assert artifact.metadata.data_json_path == (
+        project / "target" / "glyf" / "charts" / "revenue.data.json"
+    )
+    assert artifact.data.fields == ("month", "revenue")
+    assert artifact.data.rows[-1]["revenue"] == 2400
     assert artifact.svg is not None
     assert artifact.compiled_sql == "SELECT month, revenue\nFROM main.fct_orders\n"
 
@@ -526,6 +556,54 @@ def test_dashboard_generation_loads_project_python_macros(tmp_path: Path) -> Non
     assert "Freshness" in html
     assert "Data is stale" in html
     assert "tone-warning" in html
+
+
+def test_dashboard_generation_supports_artifact_aware_macros_and_filters(
+    tmp_path: Path,
+) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "macros.py").write_text(
+        "from glyf.dashboard import components as c\n\n"
+        "def latest_revenue_summary(ctx):\n"
+        "    latest_revenue = ctx.latest_value('revenue', 'revenue')\n"
+        "    return c.label_value('Latest revenue', latest_revenue)\n\n"
+        "def health_emoji(ctx):\n"
+        "    latest_revenue = float(ctx.latest_value('revenue', 'revenue'))\n"
+        "    return '🟢 Healthy' if latest_revenue >= 2000 else '🟠 Watch'\n",
+        encoding="utf-8",
+    )
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        "filters:\n"
+        "  - field: month\n"
+        "    values: source(revenue, month)\n"
+        "summary:\n"
+        "  - \"{{ latest_revenue_summary() }}\"\n"
+        "sections:\n"
+        "  - title: Status\n"
+        "    items:\n"
+        "      - component: \"{{ alert.threshold('revenue', 'revenue', 2000, op='gte', title='Revenue threshold') }}\"\n"
+        "      - component: \"{{ ui.badge(health_emoji(), tone='info') }}\"\n"
+        "      - component: \"{{ ui.list(source('revenue', 'month'), title='Months from chart data') }}\"\n"
+        "      - chart: revenue\n",
+        encoding="utf-8",
+    )
+
+    generate_dashboards(project)
+
+    html = (
+        project / "target" / "glyf" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "Latest revenue" in html
+    assert "2400" in html
+    assert "Revenue threshold" in html
+    assert "Threshold satisfied" in html
+    assert "🟢 Healthy" in html
+    assert "Months from chart data" in html
+    assert "2026-01, 2026-02, 2026-03, 2026-04" in html
+    assert 'title="source(revenue, month)"' in html
 
 
 def test_dashboard_generation_reports_invalid_macro(tmp_path: Path) -> None:

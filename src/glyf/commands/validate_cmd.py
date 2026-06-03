@@ -6,6 +6,7 @@ from glyf.config import ConfigError, load_config
 from glyf.dashboard.loader import load_dashboard
 from glyf.dashboard.macros import (
     DashboardMacroError,
+    MacroContext,
     DashboardMacroRegistry,
     resolve_dashboard_components,
 )
@@ -29,8 +30,12 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
 
     scan = scan_project(project, config)
     errors: list[str] = []
+    macro_context = MacroContext(scan.root, config, strict=False)
     try:
-        macro_registry = DashboardMacroRegistry.from_project(scan.dashboards_dir)
+        macro_registry = DashboardMacroRegistry.from_project(
+            scan.dashboards_dir,
+            macro_context,
+        )
     except DashboardMacroError as exc:
         errors.append(str(exc))
         macro_registry = None
@@ -91,7 +96,7 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
             except DashboardMacroError as exc:
                 errors.append(f"{_rel(path, scan.root)}: {exc}")
 
-        for chart in dashboard.chart_names:
+        for chart in dashboard.artifact_chart_names:
             if chart not in ggsql_names:
                 errors.append(
                     f"{_rel(path, scan.root)} references unknown chart '{chart}'"
