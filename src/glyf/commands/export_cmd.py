@@ -29,6 +29,7 @@ def run_export(
     typer.echo("✓ copied chart artifacts")
     typer.echo("✓ copied compiled SQL")
     typer.echo("✓ wrote site assets")
+    typer.echo("✓ wrote public bundle manifest")
     typer.echo(f"✓ exported site to {result.site_dir.relative_to(result.scan.root)}")
     if result.zip_path is not None:
         typer.echo(f"✓ wrote zip archive {result.zip_path.relative_to(result.scan.root)}")

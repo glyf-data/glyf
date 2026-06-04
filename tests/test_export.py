@@ -1,3 +1,4 @@
+import json
 import zipfile
 from pathlib import Path
 
@@ -22,6 +23,20 @@ def test_export_site_creates_publish_ready_folder(tmp_path: Path) -> None:
     assert not (site / "charts" / "revenue.data.json").exists()
     assert (site / "compiled" / "revenue.sql").exists()
     assert (site / "assets" / "dashboard.css").exists()
+    chart_metadata = json.loads(
+        (site / "charts" / "revenue.json").read_text(encoding="utf-8")
+    )
+    assert "data_json_path" not in chart_metadata
+    assert "vega_json_path" not in chart_metadata
+    assert chart_metadata["metadata_path"] == "charts/revenue.json"
+    assert chart_metadata["png_path"] == "charts/revenue.png"
+    assert chart_metadata["svg_path"] == "charts/revenue.svg"
+    assert chart_metadata["compiled_sql_path"] == "compiled/revenue.sql"
+    bundle = json.loads((site / "bundle.json").read_text(encoding="utf-8"))
+    assert bundle["mode"] == "public_site"
+    assert bundle["security"]["internal_artifacts_included"] is False
+    assert bundle["charts"]["revenue"]["artifacts"]["data"] is None
+    assert bundle["charts"]["revenue"]["artifacts"]["vega"] is None
 
 
 def test_export_site_preserves_relative_links(tmp_path: Path) -> None:
@@ -71,6 +86,7 @@ def test_export_site_zip_writes_archive(tmp_path: Path) -> None:
     assert "charts/revenue.data.json" not in names
     assert "compiled/revenue.sql" in names
     assert "assets/dashboard.css" in names
+    assert "bundle.json" in names
 
 
 def test_export_site_skips_internal_vega_specs(tmp_path: Path) -> None:

@@ -253,11 +253,13 @@ Running dashboard
 ✓ loaded chart artifacts
 ✓ generated dashboard HTML
 ✓ generated index page
+✓ wrote bundle manifest
 Running export
 ✓ copied dashboard HTML
 ✓ copied chart artifacts
 ✓ copied compiled SQL
 ✓ wrote site assets
+✓ wrote public bundle manifest
 ✓ exported site to target/glyf/site
 ✓ wrote zip archive target/glyf/glyf-site.zip
 ```
@@ -277,7 +279,13 @@ Example output:
 ✓ loaded chart artifacts
 ✓ generated dashboard HTML
 ✓ generated index page
+✓ wrote bundle manifest
 ```
+
+`dashboard` also writes `target/glyf/bundle.json`, a local artifact manifest
+that describes dashboards, chart metadata, generated paths, and internal
+artifact locations for tools such as Glyf Studio, embedded viewers, or cloud
+services.
 
 ### `export`
 
@@ -294,9 +302,14 @@ Example output:
 ✓ copied chart artifacts
 ✓ copied compiled SQL
 ✓ wrote site assets
+✓ wrote public bundle manifest
 ✓ exported site to target/glyf/site
 ✓ wrote zip archive target/glyf/glyf-site.zip
 ```
+
+`export` writes `target/glyf/site/bundle.json`, a public-safe bundle manifest
+for the exported static site. It omits internal normalized data and Vega spec
+paths so the exported site does not advertise non-public artifacts.
 
 </div>
 

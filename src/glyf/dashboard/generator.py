@@ -1,6 +1,7 @@
 from dataclasses import dataclass, replace
 from pathlib import Path
 
+from glyf.bundle import write_bundle_manifest
 from glyf.config import GlyfConfig
 from glyf.dashboard.artifacts import (
     ChartArtifact,
@@ -110,6 +111,12 @@ def generate_dashboards(
     index_path.write_text(
         renderer.render_index(tuple(dashboards), assets),
         encoding="utf-8",
+    )
+    write_bundle_manifest(
+        scan.root,
+        config=config,
+        generated_at=build_meta.generated_at_iso,
+        dashboards=tuple(dashboards),
     )
 
     return DashboardGenerationResult(

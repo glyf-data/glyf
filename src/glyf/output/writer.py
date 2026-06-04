@@ -54,6 +54,7 @@ def write_chart_metadata(project_root: Path, chart: GgsqlChart, artifacts: Chart
         "y": chart.field_for_role("y"),
         "compiled_sql_path": artifacts.compiled_sql.relative_to(project_root).as_posix(),
         "data_json_path": artifacts.data_json.relative_to(project_root).as_posix(),
+        "metadata_path": artifacts.metadata_json.relative_to(project_root).as_posix(),
         "png_path": artifacts.png.relative_to(project_root).as_posix(),
         "svg_path": artifacts.svg.relative_to(project_root).as_posix(),
     }
