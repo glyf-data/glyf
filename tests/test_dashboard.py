@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from pathlib import Path
 import re
@@ -319,6 +320,15 @@ def test_dashboard_generation_writes_dashboard_and_index(tmp_path: Path) -> None
         / "HankenGrotesk-Regular.ttf"
     ).exists()
     assert "dashboards/executive.html" in index_html.read_text(encoding="utf-8")
+    bundle = json.loads(
+        (project / "target" / "glyf" / "bundle.json").read_text(encoding="utf-8")
+    )
+    assert bundle["bundle_version"] == "1"
+    assert bundle["mode"] == "local_artifact"
+    assert bundle["charts"]["revenue"]["artifacts"]["data"] == (
+        "data/normalized/revenue.data.json"
+    )
+    assert bundle["dashboards"]["executive"]["path"] == "dashboards/executive.html"
 
 
 def test_dashboard_single_file_assets_inline_local_fonts(tmp_path: Path) -> None:

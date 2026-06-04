@@ -249,7 +249,9 @@ def test_build_verbose_outputs_low_level_pipeline_steps(tmp_path: Path) -> None:
     assert "✓ compiled SQL" in result.output
     assert "Running dashboard" in result.output
     assert "✓ generated dashboard HTML" in result.output
+    assert "✓ wrote bundle manifest" in result.output
     assert "Running export" in result.output
+    assert "✓ wrote public bundle manifest" in result.output
     assert "✓ exported site to target/glyf/site" in result.output
 
 
@@ -265,8 +267,10 @@ def test_dashboard_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert "✓ loaded chart artifacts" in result.output
     assert "✓ generated dashboard HTML" in result.output
     assert "✓ generated index page" in result.output
+    assert "✓ wrote bundle manifest" in result.output
     assert (project / "target" / "glyf" / "dashboards" / "executive.html").exists()
     assert (project / "target" / "glyf" / "index.html").exists()
+    assert (project / "target" / "glyf" / "bundle.json").exists()
 
 
 def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
@@ -282,7 +286,9 @@ def test_export_command_outputs_pipeline_steps(tmp_path: Path) -> None:
     assert "✓ copied dashboard HTML" in result.output
     assert "✓ copied chart artifacts" in result.output
     assert "✓ wrote site assets" in result.output
+    assert "✓ wrote public bundle manifest" in result.output
     assert (project / "target" / "glyf" / "site" / "index.html").exists()
+    assert (project / "target" / "glyf" / "site" / "bundle.json").exists()
     assert (project / "target" / "glyf" / "glyf-site.zip").exists()
 
 

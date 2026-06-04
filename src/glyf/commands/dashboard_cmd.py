@@ -23,3 +23,4 @@ def run_dashboard(project: Path, config_path: Path | None = None) -> None:
     typer.echo("✓ loaded chart artifacts")
     typer.echo("✓ generated dashboard HTML")
     typer.echo("✓ generated index page")
+    typer.echo("✓ wrote bundle manifest")

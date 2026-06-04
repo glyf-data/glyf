@@ -1,8 +1,10 @@
+import json
 import shutil
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
+from glyf.bundle import write_bundle_manifest
 from glyf.config import GlyfConfig
 from glyf.dashboard.assets import copy_dashboard_assets
 from glyf.output.paths import artifact_paths
@@ -42,6 +44,12 @@ def export_site(
     _copy_chart_artifacts(paths.charts_dir, paths.site_dir / "charts")
     _copy_tree(paths.compiled_dir, paths.site_dir / "compiled")
     copy_dashboard_assets(paths.root, paths.site_dir)
+    write_bundle_manifest(
+        scan.root,
+        config=config,
+        public=True,
+        output_path=paths.site_bundle_manifest,
+    )
 
     zip_path = None
     if zip_site:
@@ -92,12 +100,47 @@ def _copy_chart_artifacts(source: Path, destination: Path) -> None:
         ):
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(path, target)
+        if path.suffix == ".json":
+            _copy_public_chart_metadata(path, target)
+        else:
+            shutil.copy2(path, target)
 
     for stale in destination.rglob("*.data.json"):
         stale.unlink()
     for stale in destination.rglob("*.vega.json"):
         stale.unlink()
+
+
+def _copy_public_chart_metadata(source: Path, destination: Path) -> None:
+    try:
+        payload = json.loads(source.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        shutil.copy2(source, destination)
+        return
+    if not isinstance(payload, dict):
+        shutil.copy2(source, destination)
+        return
+
+    payload.pop("data_json_path", None)
+    payload.pop("vega_json_path", None)
+    _rewrite_public_chart_path(payload, "metadata_path", "charts")
+    _rewrite_public_chart_path(payload, "png_path", "charts")
+    _rewrite_public_chart_path(payload, "svg_path", "charts")
+    _rewrite_public_chart_path(payload, "compiled_sql_path", "compiled")
+    destination.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _rewrite_public_chart_path(
+    payload: dict[str, object],
+    key: str,
+    public_dir: str,
+) -> None:
+    value = payload.get(key)
+    if isinstance(value, str):
+        payload[key] = f"{public_dir}/{Path(value).name}"
 
 
 def _write_zip(site_dir: Path, zip_path: Path) -> None:
