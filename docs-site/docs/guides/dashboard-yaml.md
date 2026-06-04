@@ -85,6 +85,12 @@ summary:
   - "{{ ai.summary('Revenue moved up this month.') }}"
   - "{{ ai.insight('Starter churn needs review.', tone='warning') }}"
   - "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
+
+filters:
+  - field: plan
+    values: source(revenue_by_region_bar, region)
+  - field: focus
+    values: [revenue, margin, bookings]
 ```
 
 Important boundary:
@@ -180,6 +186,7 @@ Inside each section, glyf currently supports four item kinds:
 | `chart_theme` | Optional chart appearance theme. Supported values: `auto`, `light`, `dark`. |
 | `tags` | Optional list of short labels shown in the dashboard header. |
 | `charts` | List of `.ggsql` chart names without the extension. |
+| `filters` | Optional preset filter definitions shown in the dashboard control row. |
 | `toolbar` | Optional toolbar configuration, or `false` to hide it. |
 | `summary` | Optional list of macro expressions rendered in the AI Summary panel. |
 | `layout` | Optional layout string or mapping. |
@@ -191,6 +198,8 @@ Inside each section, glyf currently supports four item kinds:
 | Field | Description |
 | --- | --- |
 | `layout.columns` | Default grid columns for the dashboard body. Accepts an integer, a track string like `"30% 70%"`, or a list like `["1fr", "2fr"]`. |
+| `filters[].field` | Label shown for the filter in the dashboard controls row. |
+| `filters[].values` | Either a hardcoded list or `source(chart, field)` to read distinct values from rendered chart artifacts. |
 | `sections[].title` | Optional section heading. |
 | `sections[].description` | Optional section intro text. |
 | `sections[].columns` | Optional section-level grid columns, using the same formats as `layout.columns`. |
@@ -225,51 +234,34 @@ component: "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
 They are evaluated into typed component specs before the dashboard template
 renders HTML.
 
-### Built-in macros
+For the grouped macro catalog, usage patterns, aliases, and custom macro rules,
+see [Dashboard Macros](/docs/guides/dashboard-macros).
 
-Built-in namespaces:
+## Filters
 
-| Macro | Description |
-| --- | --- |
-| `ui.label_value(label, value, note=None, width=None)` | Compact label/value component. |
-| `ui.text(value, title=None, width=None)` | Text component. |
-| `ui.list(values, title=None, width=None)` | List component. |
-| `ui.listofvalues(values, title=None, width=None)` | Alias-style list component. |
-| `ui.badge(label, tone='neutral', width=None)` | Badge component. |
-| `ui.link(label, href, title=None, width=None)` | Link component. |
-| `alert.message(value, title=None, tone='info', width=None)` | Generic alert component. |
-| `alert.info(value, title=None, width=None)` | Informational alert. |
-| `alert.success(value, title=None, width=None)` | Success alert. |
-| `alert.warning(value, title=None, width=None)` | Warning alert. |
-| `alert.error(value, title=None, width=None)` | Error alert. |
-| `ai.summary(value, title='Overview', width=None)` | Text block for the AI Summary panel. |
-| `ai.insight(value, title=None, tone='info', width=None)` | Signal-style item for the AI Summary panel. |
-| `ai.signal(value, title=None, tone='info', width=None)` | Alias for `ai.insight`. |
-| `time.now(format='%Y-%m-%d %H:%M', timezone=None)` | Formatted timestamp string. |
+Dashboard filters are currently static UI controls. They do not execute runtime
+cross-filtering in the generated HTML yet, but they let you expose the intended
+filter vocabulary directly from the dashboard spec.
 
-Convenience aliases:
-
-- `label_value(...)`
-- `text(...)`
-- `listofvalues(...)`
-- `link(...)`
-- `badge(...)`
-- `now(...)`
-- `echo(...)` which maps to `alert.info(...)`
-
-Example:
+Hardcoded values:
 
 ```yaml
-summary:
-  - "{{ label_value('Generated', now('%Y-%m-%d %H:%M')) }}"
-
-sections:
-  - title: Status
-    items:
-      - component: "{{ echo('Welcome', 'Notification') }}"
-      - component: "{{ listofvalues(['a', 'b', 'c'], title='Values') }}"
-      - component: "{{ alert.warning('Threshold exceeded', 'Freshness') }}"
+filters:
+  - field: plan
+    values: [starter, growth, enterprise]
 ```
+
+Artifact-backed values:
+
+```yaml
+filters:
+  - field: plan
+    values: source(activation_by_plan, plan)
+```
+
+`source(chart, field)` reads the distinct values from the normalized chart data
+artifact written by `glyf render`. That keeps the filter list aligned with the
+chart output instead of duplicating values in YAML.
 
 ## Tags
 

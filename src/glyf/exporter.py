@@ -39,7 +39,7 @@ def export_site(
 
     _copy_file(paths.root / "index.html", paths.site_dir / "index.html")
     _copy_tree(paths.dashboards_dir, paths.site_dir / "dashboards")
-    _copy_tree(paths.charts_dir, paths.site_dir / "charts")
+    _copy_chart_artifacts(paths.charts_dir, paths.site_dir / "charts")
     _copy_tree(paths.compiled_dir, paths.site_dir / "compiled")
     copy_dashboard_assets(paths.root, paths.site_dir)
 
@@ -75,6 +75,29 @@ def _copy_file(source: Path, destination: Path) -> None:
 
 def _copy_tree(source: Path, destination: Path) -> None:
     shutil.copytree(source, destination, dirs_exist_ok=True)
+
+
+def _copy_chart_artifacts(source: Path, destination: Path) -> None:
+    destination.mkdir(parents=True, exist_ok=True)
+    for path in sorted(source.rglob("*")):
+        relative = path.relative_to(source)
+        target = destination / relative
+        if path.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        if (
+            path.suffixes[-2:] == [".data", ".json"]
+            or path.name.endswith(".data.json")
+            or path.name.endswith(".vega.json")
+        ):
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, target)
+
+    for stale in destination.rglob("*.data.json"):
+        stale.unlink()
+    for stale in destination.rglob("*.vega.json"):
+        stale.unlink()
 
 
 def _write_zip(site_dir: Path, zip_path: Path) -> None:

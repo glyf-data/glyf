@@ -1,6 +1,7 @@
 {
   "chart_type": "area",
   "compiled_sql_path": "target/glyf/compiled/gross_margin_trend.sql",
+  "data_json_path": "target/glyf/data/normalized/gross_margin_trend.data.json",
   "interactions": [
     "tooltip"
   ],
@@ -8,7 +9,7 @@
   "png_path": "target/glyf/charts/gross_margin_trend.png",
   "svg_path": "target/glyf/charts/gross_margin_trend.svg",
   "title": "Gross Margin Trend",
-  "vega_json_path": "target/glyf/charts/gross_margin_trend.vega.json",
+  "vega_json_path": "target/glyf/data/vega/gross_margin_trend.vega.json",
   "x": "month",
   "y": "gross_margin"
 }

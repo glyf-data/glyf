@@ -19,6 +19,7 @@ const sidebars = {
       items: [
         'guides/visualisation-syntax',
         'guides/dashboard-yaml',
+        'guides/dashboard-macros',
         'guides/dbt-integration',
         'guides/configuration',
         'guides/ci-cd',

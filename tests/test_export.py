@@ -19,6 +19,7 @@ def test_export_site_creates_publish_ready_folder(tmp_path: Path) -> None:
     assert (site / "charts" / "revenue.json").exists()
     assert (site / "charts" / "revenue.svg").exists()
     assert (site / "charts" / "revenue.png").exists()
+    assert not (site / "charts" / "revenue.data.json").exists()
     assert (site / "compiled" / "revenue.sql").exists()
     assert (site / "assets" / "dashboard.css").exists()
 
@@ -67,8 +68,29 @@ def test_export_site_zip_writes_archive(tmp_path: Path) -> None:
     assert "charts/revenue.svg" in names
     assert "charts/revenue.png" in names
     assert "charts/revenue.json" in names
+    assert "charts/revenue.data.json" not in names
     assert "compiled/revenue.sql" in names
     assert "assets/dashboard.css" in names
+
+
+def test_export_site_skips_internal_vega_specs(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "visualisations" / "revenue.ggsql").write_text(
+        "select month, revenue from {{ ref('fct_orders') }}\n\n"
+        "VISUALISE month AS x, revenue AS y\n"
+        "DRAW line\n"
+        "LABEL title => 'Monthly Revenue'\n"
+        "INTERACT tooltip, zoom\n",
+        encoding="utf-8",
+    )
+    render_project(project)
+    generate_dashboards(project)
+
+    export_site(project)
+
+    site = project / "target" / "glyf" / "site"
+    assert not (site / "charts" / "revenue.vega.json").exists()
+    assert (project / "target" / "glyf" / "data" / "vega" / "revenue.vega.json").exists()
 
 
 def _rendered_project(tmp_path: Path) -> Path:

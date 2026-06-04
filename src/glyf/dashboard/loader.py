@@ -12,6 +12,9 @@ from glyf.dashboard.components import ComponentSpec
 _COLUMN_TRACK_RE = re.compile(
     r"^(?P<number>\d+(?:\.\d+)?)(?P<unit>%|fr|px|rem|em|ch|vw|vh)$"
 )
+_FILTER_SOURCE_RE = re.compile(
+    r"""^source\(\s*['"]?(?P<chart>[A-Za-z0-9_.-]+)['"]?\s*,\s*['"]?(?P<field>[A-Za-z0-9_.-]+)['"]?\s*\)$"""
+)
 _TOOLBAR_ACTIONS = {"share", "visibility"}
 _TOOLBAR_VISIBILITIES = {"public", "private"}
 _DASHBOARD_THEMES = {"light", "dark"}
@@ -53,6 +56,18 @@ class DashboardItem:
 
 
 @dataclass(frozen=True)
+class DashboardFilter:
+    field: str
+    values: tuple[str, ...] = ()
+    source_chart: str | None = None
+    source_field: str | None = None
+
+    @property
+    def is_sourced(self) -> bool:
+        return self.source_chart is not None and self.source_field is not None
+
+
+@dataclass(frozen=True)
 class DashboardSection:
     title: str | None
     description: str | None
@@ -82,6 +97,7 @@ class Dashboard:
     toolbar: DashboardToolbar = DashboardToolbar()
     summary: tuple[str, ...] = ()
     summary_components: tuple[ComponentSpec, ...] = ()
+    filters: tuple[DashboardFilter, ...] = ()
     sections: tuple[DashboardSection, ...] = ()
 
     @property
@@ -90,6 +106,16 @@ class Dashboard:
         for section in self.sections:
             names.extend(item.chart for item in section.items if item.chart is not None)
         return tuple(dict.fromkeys(names))
+
+    @property
+    def artifact_chart_names(self) -> tuple[str, ...]:
+        names = list(self.chart_names)
+        names.extend(
+            filter_spec.source_chart
+            for filter_spec in self.filters
+            if filter_spec.source_chart is not None
+        )
+        return tuple(dict.fromkeys(name for name in names if name is not None))
 
 
 def load_dashboard(path: Path) -> Dashboard:
@@ -110,6 +136,7 @@ def load_dashboard(path: Path) -> Dashboard:
     layout_raw = raw.get("layout")
     toolbar_raw = raw.get("toolbar")
     summary_raw = raw.get("summary", [])
+    filters_raw = raw.get("filters", [])
     tags_raw = raw.get("tags", [])
     charts = raw.get("charts", [])
     sections_raw = raw.get("sections", raw.get("groups", []))
@@ -134,6 +161,7 @@ def load_dashboard(path: Path) -> Dashboard:
     layout_config = _parse_layout(layout_raw)
     toolbar = _parse_toolbar(toolbar_raw)
     summary = _parse_summary(summary_raw)
+    filters = _parse_filters(filters_raw)
     tags = _parse_tags(tags_raw)
     sections = _parse_sections(sections_raw)
 
@@ -149,6 +177,7 @@ def load_dashboard(path: Path) -> Dashboard:
         layout_config=layout_config,
         toolbar=toolbar,
         summary=summary,
+        filters=filters,
         charts=tuple(charts),
         sections=sections,
     )
@@ -272,6 +301,55 @@ def _parse_tags(raw: object) -> tuple[str, ...]:
             raise ValueError(f"expected 'tags[{index}]' to be a non-empty string")
         tags.append(item.strip())
     return tuple(dict.fromkeys(tags))
+
+
+def _parse_filters(raw: object) -> tuple[DashboardFilter, ...]:
+    if raw is None:
+        return ()
+    if not isinstance(raw, list):
+        raise ValueError("expected 'filters' to be a list")
+
+    filters: list[DashboardFilter] = []
+    for index, item in enumerate(raw, start=1):
+        if not isinstance(item, dict):
+            raise ValueError(f"expected filters[{index}] to be a mapping")
+        field = item.get("field")
+        if not isinstance(field, str) or not field.strip():
+            raise ValueError(f"expected 'filters[{index}].field' to be a non-empty string")
+        values = item.get("values")
+        if isinstance(values, list):
+            parsed_values = tuple(
+                str(value).strip() for value in values if str(value).strip()
+            )
+            if len(parsed_values) != len(values):
+                raise ValueError(
+                    f"expected 'filters[{index}].values' to contain only non-empty values"
+                )
+            filters.append(
+                DashboardFilter(
+                    field=field.strip(),
+                    values=tuple(dict.fromkeys(parsed_values)),
+                )
+            )
+            continue
+        if isinstance(values, str):
+            source_match = _FILTER_SOURCE_RE.match(values.strip())
+            if source_match is None:
+                raise ValueError(
+                    f"expected 'filters[{index}].values' to be a list or source(chart, field)"
+                )
+            filters.append(
+                DashboardFilter(
+                    field=field.strip(),
+                    source_chart=source_match.group("chart"),
+                    source_field=source_match.group("field"),
+                )
+            )
+            continue
+        raise ValueError(
+            f"expected 'filters[{index}].values' to be a list or source(chart, field)"
+        )
+    return tuple(filters)
 
 
 def _parse_section_items(raw: dict[object, object], section_index: int) -> tuple[DashboardItem, ...]:

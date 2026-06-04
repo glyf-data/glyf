@@ -19,6 +19,7 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
 
     compiled_sql = project / "target" / "glyf" / "compiled" / "revenue.sql"
     metadata_json = project / "target" / "glyf" / "charts" / "revenue.json"
+    data_json = project / "target" / "glyf" / "data" / "normalized" / "revenue.data.json"
     png = project / "target" / "glyf" / "charts" / "revenue.png"
     svg = project / "target" / "glyf" / "charts" / "revenue.svg"
 
@@ -29,11 +30,22 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
         "name": "revenue",
         "chart_type": "line",
         "compiled_sql_path": "target/glyf/compiled/revenue.sql",
+        "data_json_path": "target/glyf/data/normalized/revenue.data.json",
         "png_path": "target/glyf/charts/revenue.png",
         "svg_path": "target/glyf/charts/revenue.svg",
         "title": "Monthly Revenue",
         "x": "month",
         "y": "revenue",
+    }
+    assert json.loads(data_json.read_text(encoding="utf-8")) == {
+        "name": "revenue",
+        "fields": ["month", "revenue"],
+        "rows": [
+            {"month": "2026-01", "revenue": 1200},
+            {"month": "2026-02", "revenue": 1800},
+            {"month": "2026-03", "revenue": 2100},
+            {"month": "2026-04", "revenue": 2400},
+        ],
     }
     assert png.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
     assert "<svg" in svg.read_text(encoding="utf-8")
@@ -75,7 +87,7 @@ def test_render_project_writes_interactive_metadata_and_vega_json(
     metadata_json = project / "target" / "glyf" / "charts" / "revenue.json"
     metadata = json.loads(metadata_json.read_text(encoding="utf-8"))
     assert metadata["interactions"] == ["tooltip", "zoom"]
-    assert metadata["vega_json_path"] == "target/glyf/charts/revenue.vega.json"
+    assert metadata["vega_json_path"] == "target/glyf/data/vega/revenue.vega.json"
     assert (project / metadata["vega_json_path"]).exists()
     vega_json = json.loads((project / metadata["vega_json_path"]).read_text(encoding="utf-8"))
     assert vega_json["config"]["axis"]["labelFont"] == "Hanken Grotesk"

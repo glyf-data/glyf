@@ -1,6 +1,7 @@
 {
   "chart_type": "scatter",
   "compiled_sql_path": "target/glyf/compiled/revenue_scatter.sql",
+  "data_json_path": "target/glyf/data/normalized/revenue_scatter.data.json",
   "interactions": [
     "tooltip",
     "zoom",
@@ -10,7 +11,7 @@
   "png_path": "target/glyf/charts/revenue_scatter.png",
   "svg_path": "target/glyf/charts/revenue_scatter.svg",
   "title": "Revenue Scatter",
-  "vega_json_path": "target/glyf/charts/revenue_scatter.vega.json",
+  "vega_json_path": "target/glyf/data/vega/revenue_scatter.vega.json",
   "x": "month",
   "y": "revenue"
 }

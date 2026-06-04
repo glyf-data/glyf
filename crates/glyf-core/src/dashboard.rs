@@ -25,6 +25,7 @@ pub fn validate_dashboard_json_text(text: &str, path: &str) -> Result<(), CoreEr
     validate_chart_theme(dashboard.get("chart_theme"))?;
     validate_tags(dashboard.get("tags"))?;
     validate_charts(dashboard.get("charts"), "charts")?;
+    validate_filters(dashboard.get("filters"))?;
     validate_toolbar(dashboard.get("toolbar"))?;
     validate_summary(dashboard.get("summary"))?;
     validate_layout(dashboard.get("layout"))?;
@@ -164,6 +165,58 @@ fn validate_toolbar(value: Option<&Value>) -> Result<(), CoreError> {
         }
     }
     Ok(())
+}
+
+fn validate_filters(value: Option<&Value>) -> Result<(), CoreError> {
+    let Some(value) = value else {
+        return Ok(());
+    };
+    if value.is_null() {
+        return Ok(());
+    }
+    let filters = value
+        .as_array()
+        .ok_or_else(|| dashboard_error("expected 'filters' to be a list"))?;
+    for (index, filter) in filters.iter().enumerate() {
+        validate_filter(filter, index + 1)?;
+    }
+    Ok(())
+}
+
+fn validate_filter(filter: &Value, index: usize) -> Result<(), CoreError> {
+    let label = format!("filters[{index}]");
+    let filter = filter
+        .as_object()
+        .ok_or_else(|| dashboard_error(format!("expected {label} to be a mapping")))?;
+    non_empty_string(filter.get("field"), &format!("{label}.field"), "string")?;
+
+    let Some(values) = filter.get("values") else {
+        return Err(dashboard_error(format!(
+            "expected '{label}.values' to be provided"
+        )));
+    };
+    if let Some(values) = values.as_array() {
+        for (value_index, value) in values.iter().enumerate() {
+            non_empty_string(
+                Some(value),
+                &format!("{label}.values[{}]", value_index + 1),
+                "string",
+            )?;
+        }
+        return Ok(());
+    }
+
+    let Some(source) = values.as_str() else {
+        return Err(dashboard_error(format!(
+            "expected '{label}.values' to be a list or source(chart, field)"
+        )));
+    };
+    if filter_source_regex().is_match(source.trim()) {
+        return Ok(());
+    }
+    Err(dashboard_error(format!(
+        "expected '{label}.values' to be a list or source(chart, field)"
+    )))
 }
 
 fn validate_summary(value: Option<&Value>) -> Result<(), CoreError> {
@@ -546,6 +599,14 @@ fn macro_expression_regex() -> &'static Regex {
     REGEX.get_or_init(|| Regex::new(r"(?s)^\s*\{\{\s*.+?\s*\}\}\s*$").unwrap())
 }
 
+fn filter_source_regex() -> &'static Regex {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    REGEX.get_or_init(|| {
+        Regex::new(r#"^source\(\s*['"]?[A-Za-z0-9_.-]+['"]?\s*,\s*['"]?[A-Za-z0-9_.-]+['"]?\s*\)$"#)
+            .unwrap()
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use crate::dashboard::validate_dashboard_json_text;
@@ -596,6 +657,19 @@ mod tests {
         .unwrap_err();
 
         assert!(error.to_string().contains("tags[2]"));
+    }
+
+    #[test]
+    fn validates_filters_with_source_expression() {
+        validate_dashboard_json_text(
+            r#"{
+              "name": "executive",
+              "title": "Executive Dashboard",
+              "filters": [{"field": "plan", "values": "source(activation_by_plan, plan)"}]
+            }"#,
+            "dashboards/executive.yml",
+        )
+        .unwrap();
     }
 
     #[test]

@@ -103,15 +103,55 @@
 
     <div class="glyf-control-bar">
       <span class="glyf-control-label">Filters</span>
-      <div class="glyf-filter-chip">
-        {{ icons.icon("info") }}
-        None
-        <span class="glyf-filter-value">static</span>
-      </div>
-      <button class="glyf-filter-add" type="button" disabled>
-        {{ icons.icon("plus") }}
-        Add filter
-      </button>
+      {% if dashboard.filters %}
+        {% for filter in dashboard.filters %}
+        <div class="glyf-filter-menu" data-glyf-filter-menu>
+          <button
+            class="glyf-filter-button"
+            type="button"
+            aria-expanded="false"
+            data-glyf-filter-button
+            {% if filter.is_sourced %}title="source({{ filter.source_chart }}, {{ filter.source_field }})"{% elif filter.values %}title="{{ filter.values | join(', ') }}"{% endif %}
+          >
+            {{ icons.icon("filter") }}
+            <span class="glyf-filter-field">{{ filter.field }}</span>
+            {% if filter.values %}
+            <span class="glyf-filter-inline-sep">/</span>
+            <span class="glyf-filter-inline-values">{{ filter.values | length }} value{% if filter.values | length != 1 %}s{% endif %}</span>
+            {% else %}
+            <span class="glyf-filter-value">no values</span>
+            {% endif %}
+            <span class="glyf-filter-value">{% if filter.is_sourced %}source{% else %}static{% endif %}</span>
+            {{ icons.icon("chevron-down", "glyf-filter-button-icon") }}
+          </button>
+          <div class="glyf-filter-popover" role="menu" aria-label="{{ filter.field }} values" data-glyf-filter-popover>
+            <div class="glyf-filter-popover-head">
+              <div class="glyf-filter-popover-title">{{ filter.field }}</div>
+              <div class="glyf-filter-popover-note">{% if filter.is_sourced %}source({{ filter.source_chart }}, {{ filter.source_field }}){% else %}static values{% endif %}</div>
+            </div>
+            <div class="glyf-filter-options">
+              {% if filter.values %}
+                {% for value in filter.values %}
+                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
+                  <span class="glyf-filter-option-title">{{ value }}</span>
+                </button>
+                {% endfor %}
+              {% else %}
+              <button class="glyf-filter-option" type="button" role="menuitem" disabled>
+                <span class="glyf-filter-option-title">No values</span>
+              </button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="glyf-filter-chip">
+          {{ icons.icon("info") }}
+          None
+          <span class="glyf-filter-value">static</span>
+        </div>
+      {% endif %}
       <span class="glyf-static-note">
         {{ icons.icon("lock") }}
         static render
@@ -284,6 +324,41 @@
         }
       });
     }
+
+    document.querySelectorAll("[data-glyf-filter-menu]").forEach((menu) => {
+      const button = menu.querySelector("[data-glyf-filter-button]");
+      if (!button) {
+        return;
+      }
+      const closeMenu = () => {
+        menu.classList.remove("is-open");
+        button.setAttribute("aria-expanded", "false");
+      };
+      button.addEventListener("click", () => {
+        const next = !menu.classList.contains("is-open");
+        document.querySelectorAll("[data-glyf-filter-menu]").forEach((candidate) => {
+          if (candidate !== menu) {
+            candidate.classList.remove("is-open");
+            const candidateButton = candidate.querySelector("[data-glyf-filter-button]");
+            if (candidateButton) {
+              candidateButton.setAttribute("aria-expanded", "false");
+            }
+          }
+        });
+        menu.classList.toggle("is-open", next);
+        button.setAttribute("aria-expanded", next ? "true" : "false");
+      });
+      document.addEventListener("click", (event) => {
+        if (!menu.contains(event.target)) {
+          closeMenu();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeMenu();
+        }
+      });
+    });
   </script>
 </body>
 </html>

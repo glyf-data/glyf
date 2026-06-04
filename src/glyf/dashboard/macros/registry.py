@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import inspect
 import importlib.util
+from functools import wraps
 import re
 from dataclasses import replace
 from pathlib import Path
@@ -15,11 +16,21 @@ from jinja2.sandbox import SandboxedEnvironment
 from glyf.dashboard import components
 from glyf.dashboard.components import ComponentError, ComponentSpec
 from glyf.dashboard.loader import Dashboard, DashboardItem, DashboardSection
+from glyf.dashboard.macros.context import MacroContext
 from glyf.dashboard.macros import ai, alert, time, ui
 
 
 _EXPRESSION_RE = re.compile(r"^\s*\{\{\s*(?P<expression>.*?)\s*\}\}\s*$", re.S)
-_RESERVED_NAMES = {"ui", "alert", "time", "ai"}
+_RESERVED_NAMES = {
+    "ai",
+    "alert",
+    "alert_threshold",
+    "distinct_values",
+    "latest_value",
+    "source",
+    "time",
+    "ui",
+}
 
 
 class DashboardMacroError(ValueError):
@@ -32,12 +43,16 @@ class DashboardMacroRegistry:
         self._environment = SandboxedEnvironment(undefined=StrictUndefined)
 
     @classmethod
-    def from_project(cls, dashboards_dir: Path | None) -> "DashboardMacroRegistry":
-        context = _builtin_context()
+    def from_project(
+        cls,
+        dashboards_dir: Path | None,
+        macro_context: MacroContext | None = None,
+    ) -> "DashboardMacroRegistry":
+        context = _builtin_context(macro_context)
         if dashboards_dir is not None:
             macros_path = dashboards_dir / "macros.py"
             if macros_path.exists():
-                context.update(_load_project_macros(macros_path))
+                context.update(_load_project_macros(macros_path, macro_context))
         return cls(context)
 
     def evaluate_component(self, raw_expression: str, label: str) -> ComponentSpec:
@@ -114,7 +129,12 @@ def _resolve_item(
     return replace(item, component_spec=component)
 
 
-def _builtin_context() -> dict[str, object]:
+def _builtin_context(macro_context: MacroContext | None) -> dict[str, object]:
+    source = _bind_context_method(macro_context, "source")
+    distinct_values = _bind_context_method(macro_context, "distinct_values")
+    latest_value = _bind_context_method(macro_context, "latest_value")
+    alert_threshold = _alert_threshold_factory(macro_context)
+
     ui_namespace = {
         "badge": ui.badge,
         "label_value": ui.label_value,
@@ -128,6 +148,7 @@ def _builtin_context() -> dict[str, object]:
         "info": alert.info,
         "message": alert.message,
         "success": alert.success,
+        "threshold": alert_threshold,
         "warning": alert.warning,
     }
     time_namespace = {"now": time.now}
@@ -146,16 +167,23 @@ def _builtin_context() -> dict[str, object]:
         "echo": alert.info,
         "label_value": ui.label_value,
         "link": ui.link,
+        "alert_threshold": alert_threshold,
+        "distinct_values": distinct_values,
+        "latest_value": latest_value,
         "listofvalues": ui.listofvalues,
         "now": time.now,
+        "source": source,
         "text": ui.text,
     }
 
 
-def _load_project_macros(macros_path: Path) -> dict[str, Callable[..., object]]:
+def _load_project_macros(
+    macros_path: Path,
+    macro_context: MacroContext | None,
+) -> dict[str, Callable[..., object]]:
     module = _load_module(macros_path)
     macros = {
-        name: value
+        name: _bind_project_macro_context(value, macro_context)
         for name, value in vars(module).items()
         if not name.startswith("_")
         and inspect.isfunction(value)
@@ -185,3 +213,113 @@ def _load_module(macros_path: Path) -> ModuleType:
     except Exception as exc:
         raise DashboardMacroError(f"{macros_path}: {exc}") from exc
     return module
+
+
+def _bind_project_macro_context(
+    function: Callable[..., object],
+    macro_context: MacroContext | None,
+) -> Callable[..., object]:
+    if macro_context is None:
+        return function
+    parameters = tuple(inspect.signature(function).parameters.values())
+    if not parameters or parameters[0].name != "ctx":
+        return function
+
+    @wraps(function)
+    def wrapped(*args: object, **kwargs: object) -> object:
+        return function(macro_context, *args, **kwargs)
+
+    return wrapped
+
+
+def _bind_context_method(
+    macro_context: MacroContext | None,
+    method_name: str,
+) -> Callable[..., object]:
+    if macro_context is None:
+        def unavailable(*_: object, **__: object) -> object:
+            raise DashboardMacroError(
+                f"'{method_name}' is only available while rendering dashboards"
+            )
+
+        return unavailable
+    return getattr(macro_context, method_name)
+
+
+def _alert_threshold_factory(
+    macro_context: MacroContext | None,
+) -> Callable[..., ComponentSpec]:
+    def alert_threshold(
+        chart: str,
+        field: str,
+        value: object,
+        *,
+        op: str = "lt",
+        title: str | None = None,
+        success_text: str | None = None,
+        alert_text: str | None = None,
+        width: int | None = None,
+    ) -> ComponentSpec:
+        if macro_context is None:
+            raise DashboardMacroError(
+                "'alert.threshold' is only available while rendering dashboards"
+            )
+        operator = _normalise_operator(op)
+        actual_value = macro_context.latest_value(chart, field)
+        actual_number = _coerce_number(actual_value, f"{chart}.{field}")
+        threshold_number = _coerce_number(value, "threshold")
+        passed = _compare(actual_number, threshold_number, operator)
+        title_value = title or f"{field.replace('_', ' ').title()} threshold"
+        rendered_value = _format_number(actual_number)
+        rendered_threshold = _format_number(threshold_number)
+        if passed:
+            message = success_text or (
+                f"{field.replace('_', ' ').title()} is {rendered_value}. "
+                f"Threshold satisfied ({operator} {rendered_threshold})."
+            )
+            return alert.success(message, title_value, width=width)
+        message = alert_text or (
+            f"{field.replace('_', ' ').title()} is {rendered_value}. "
+            f"Threshold breached ({operator} {rendered_threshold})."
+        )
+        return alert.warning(message, title_value, width=width)
+
+    return alert_threshold
+
+
+def _normalise_operator(value: str) -> str:
+    operators = {"lt", "lte", "gt", "gte", "eq", "neq"}
+    operator = str(value).strip().lower()
+    if operator not in operators:
+        joined = ", ".join(sorted(operators))
+        raise DashboardMacroError(f"expected 'op' to be one of: {joined}")
+    return operator
+
+
+def _coerce_number(value: object, label: str) -> float:
+    if isinstance(value, bool):
+        raise DashboardMacroError(f"expected {label} to be numeric")
+    try:
+        return float(value)
+    except (TypeError, ValueError) as exc:
+        raise DashboardMacroError(f"expected {label} to be numeric") from exc
+
+
+def _compare(actual: float, threshold: float, operator: str) -> bool:
+    if operator == "lt":
+        return actual < threshold
+    if operator == "lte":
+        return actual <= threshold
+    if operator == "gt":
+        return actual > threshold
+    if operator == "gte":
+        return actual >= threshold
+    if operator == "eq":
+        return actual == threshold
+    return actual != threshold
+
+
+def _format_number(value: float) -> str:
+    if value.is_integer():
+        return str(int(value))
+    return f"{value:.2f}".rstrip("0").rstrip(".")
