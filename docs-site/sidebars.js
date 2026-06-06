@@ -52,6 +52,7 @@ const sidebars = {
         'integrations/overview',
         'integrations/github-actions',
         'integrations/static-hosting',
+        'integrations/embedded-analytics',
       ],
     },
     {
