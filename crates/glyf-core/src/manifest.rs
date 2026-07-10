@@ -21,7 +21,10 @@ pub fn load_manifest_json_text(text: &str, path: &str) -> Result<DbtManifest, Co
     let mut nodes = Vec::new();
     for (unique_id, node) in nodes_obj {
         if let Some(relation) = manifest_relation(unique_id, node) {
-            if matches!(relation.resource_type.as_str(), "model" | "seed" | "snapshot") {
+            if matches!(
+                relation.resource_type.as_str(),
+                "model" | "seed" | "snapshot"
+            ) {
                 nodes.push(relation);
             }
         }

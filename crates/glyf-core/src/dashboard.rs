@@ -30,7 +30,9 @@ pub fn validate_dashboard_json_text(text: &str, path: &str) -> Result<(), CoreEr
     validate_summary(dashboard.get("summary"))?;
     validate_layout(dashboard.get("layout"))?;
 
-    let sections = dashboard.get("sections").or_else(|| dashboard.get("groups"));
+    let sections = dashboard
+        .get("sections")
+        .or_else(|| dashboard.get("groups"));
     validate_sections(sections)?;
     Ok(())
 }
@@ -48,9 +50,9 @@ fn validate_charts(value: Option<&Value>, label: &str) -> Result<(), CoreError> 
     let Some(value) = value else {
         return Ok(());
     };
-    let charts = value
-        .as_array()
-        .ok_or_else(|| dashboard_error(format!("expected '{label}' to be a list of chart names")))?;
+    let charts = value.as_array().ok_or_else(|| {
+        dashboard_error(format!("expected '{label}' to be a list of chart names"))
+    })?;
     for (index, chart) in charts.iter().enumerate() {
         non_empty_string(
             Some(chart),
@@ -72,11 +74,7 @@ fn validate_tags(value: Option<&Value>) -> Result<(), CoreError> {
         .as_array()
         .ok_or_else(|| dashboard_error("expected 'tags' to be a list of non-empty strings"))?;
     for (index, tag) in tags.iter().enumerate() {
-        non_empty_string(
-            Some(tag),
-            &format!("tags[{}]", index + 1),
-            "string",
-        )?;
+        non_empty_string(Some(tag), &format!("tags[{}]", index + 1), "string")?;
     }
     Ok(())
 }
@@ -94,7 +92,9 @@ fn validate_theme(value: Option<&Value>) -> Result<(), CoreError> {
     if DASHBOARD_THEMES.contains(&theme) {
         return Ok(());
     }
-    Err(dashboard_error("expected 'theme' to be one of: dark, light"))
+    Err(dashboard_error(
+        "expected 'theme' to be one of: dark, light",
+    ))
 }
 
 fn validate_chart_theme(value: Option<&Value>) -> Result<(), CoreError> {
@@ -104,9 +104,9 @@ fn validate_chart_theme(value: Option<&Value>) -> Result<(), CoreError> {
     if value.is_null() {
         return Ok(());
     }
-    let chart_theme = value.as_str().ok_or_else(|| {
-        dashboard_error("expected 'chart_theme' to be one of: auto, dark, light")
-    })?;
+    let chart_theme = value
+        .as_str()
+        .ok_or_else(|| dashboard_error("expected 'chart_theme' to be one of: auto, dark, light"))?;
     if CHART_THEMES.contains(&chart_theme) {
         return Ok(());
     }
@@ -241,7 +241,9 @@ fn validate_layout(value: Option<&Value>) -> Result<(), CoreError> {
     };
     if let Some(kind) = value.as_str() {
         if kind.is_empty() {
-            return Err(dashboard_error("expected 'layout' to be a non-empty string"));
+            return Err(dashboard_error(
+                "expected 'layout' to be a non-empty string",
+            ));
         }
         return Ok(());
     }
@@ -308,9 +310,9 @@ fn validate_item(item: &Value, label: &str) -> Result<(), CoreError> {
         return non_empty_string(Some(item), label, "chart name");
     }
 
-    let item = item
-        .as_object()
-        .ok_or_else(|| dashboard_error(format!("expected {label} to be a chart name or mapping")))?;
+    let item = item.as_object().ok_or_else(|| {
+        dashboard_error(format!("expected {label} to be a chart name or mapping"))
+    })?;
     let kinds = ["chart", "component", "markdown", "metric"]
         .into_iter()
         .filter(|kind| item.contains_key(*kind))
@@ -346,10 +348,16 @@ fn validate_chart_item(
         return Ok(());
     }
 
-    let chart = chart
-        .as_object()
-        .ok_or_else(|| dashboard_error(format!("expected {label}.chart to be a chart name or mapping")))?;
-    non_empty_string(chart.get("name"), &format!("{label}.chart.name"), "chart name")?;
+    let chart = chart.as_object().ok_or_else(|| {
+        dashboard_error(format!(
+            "expected {label}.chart to be a chart name or mapping"
+        ))
+    })?;
+    non_empty_string(
+        chart.get("name"),
+        &format!("{label}.chart.name"),
+        "chart name",
+    )?;
     optional_string(chart.get("title"), &format!("{label}.chart.title"))?;
     optional_positive_int(chart.get("width"), &format!("{label}.chart.width"))
 }
@@ -358,7 +366,10 @@ fn validate_component_item(
     item: &serde_json::Map<String, Value>,
     label: &str,
 ) -> Result<(), CoreError> {
-    validate_macro_expression(item.get("component").unwrap(), &format!("{label}.component"))?;
+    validate_macro_expression(
+        item.get("component").unwrap(),
+        &format!("{label}.component"),
+    )?;
     optional_positive_int(item.get("width"), &format!("{label}.width"))
 }
 
@@ -372,9 +383,11 @@ fn validate_markdown_item(
         return non_empty_string(Some(markdown), &format!("{label}.markdown"), "string");
     }
 
-    let markdown = markdown
-        .as_object()
-        .ok_or_else(|| dashboard_error(format!("expected {label}.markdown to be a string or mapping")))?;
+    let markdown = markdown.as_object().ok_or_else(|| {
+        dashboard_error(format!(
+            "expected {label}.markdown to be a string or mapping"
+        ))
+    })?;
     optional_string(markdown.get("title"), &format!("{label}.markdown.title"))?;
     non_empty_string(
         markdown.get("text"),
@@ -532,11 +545,7 @@ fn required_string(value: Option<&Value>, label: &str) -> Result<(), CoreError> 
     non_empty_string(value, label, "string")
 }
 
-fn non_empty_string(
-    value: Option<&Value>,
-    label: &str,
-    expected: &str,
-) -> Result<(), CoreError> {
+fn non_empty_string(value: Option<&Value>, label: &str, expected: &str) -> Result<(), CoreError> {
     let Some(value) = value else {
         return Err(dashboard_error(format!("expected non-empty '{label}'")));
     };
@@ -560,7 +569,9 @@ fn optional_string(value: Option<&Value>, label: &str) -> Result<(), CoreError> 
     if value.is_string() {
         return Ok(());
     }
-    Err(dashboard_error(format!("expected '{label}' to be a string")))
+    Err(dashboard_error(format!(
+        "expected '{label}' to be a string"
+    )))
 }
 
 fn optional_positive_int(value: Option<&Value>, label: &str) -> Result<(), CoreError> {

@@ -13,8 +13,8 @@ pub fn parse_ggsql_text(
 ) -> Result<GgsqlChart, CoreError> {
     reject_unsupported_draws(text)?;
     let normalized = normalize_for_ggsql(text);
-    let validated = ggsql::validate::validate(&normalized)
-        .map_err(|err| CoreError::Parse(err.to_string()))?;
+    let validated =
+        ggsql::validate::validate(&normalized).map_err(|err| CoreError::Parse(err.to_string()))?;
     if !validated.valid() {
         let errors = validated
             .errors()
@@ -338,9 +338,7 @@ fn unquote(value: String) -> String {
 
 fn mapping_regex() -> &'static Regex {
     static REGEX: OnceLock<Regex> = OnceLock::new();
-    REGEX.get_or_init(|| {
-        Regex::new(r"^\s*([A-Za-z_][\w.]*)\s+AS\s+([A-Za-z_][\w]*)\s*$").unwrap()
-    })
+    REGEX.get_or_init(|| Regex::new(r"^\s*([A-Za-z_][\w.]*)\s+AS\s+([A-Za-z_][\w]*)\s*$").unwrap())
 }
 
 #[cfg(test)]

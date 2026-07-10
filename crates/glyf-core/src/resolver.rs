@@ -50,8 +50,7 @@ pub fn resolve_refs_text(sql: &str, manifest: &DbtManifest) -> RefResolution {
 
 pub(crate) fn ref_regex() -> &'static Regex {
     static REGEX: OnceLock<Regex> = OnceLock::new();
-    REGEX
-        .get_or_init(|| Regex::new(r#"\{\{\s*ref\(\s*['"]([^'"]+)['"]\s*\)\s*\}\}"#).unwrap())
+    REGEX.get_or_init(|| Regex::new(r#"\{\{\s*ref\(\s*['"]([^'"]+)['"]\s*\)\s*\}\}"#).unwrap())
 }
 
 pub(crate) fn source_regex() -> &'static Regex {
