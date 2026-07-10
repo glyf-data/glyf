@@ -18,7 +18,7 @@ pub(crate) fn register(module: &Bound<'_, PyModule>) -> PyResult<()> {
     Ok(())
 }
 
-fn chart_to_python(py: Python<'_>, chart: GgsqlChart) -> PyResult<PyObject> {
+fn chart_to_python(py: Python<'_>, chart: GgsqlChart) -> PyResult<Py<PyAny>> {
     let dict = PyDict::new(py);
     dict.set_item("path", chart.path)?;
     dict.set_item("name", chart.name)?;
@@ -35,18 +35,18 @@ fn chart_to_python(py: Python<'_>, chart: GgsqlChart) -> PyResult<PyObject> {
     dict.set_item("labels", chart.labels)?;
     dict.set_item("config", chart.config)?;
     dict.set_item("interactions", chart.interactions)?;
-    Ok(dict.into())
+    Ok(dict.into_any().unbind())
 }
 
-fn manifest_to_python(py: Python<'_>, manifest: DbtManifest) -> PyResult<PyObject> {
+fn manifest_to_python(py: Python<'_>, manifest: DbtManifest) -> PyResult<Py<PyAny>> {
     let dict = PyDict::new(py);
     dict.set_item("path", manifest.path)?;
     dict.set_item("nodes", relations_to_python(py, manifest.nodes)?)?;
     dict.set_item("sources", relations_to_python(py, manifest.sources)?)?;
-    Ok(dict.into())
+    Ok(dict.into_any().unbind())
 }
 
-fn relations_to_python(py: Python<'_>, relations: Vec<ManifestRelation>) -> PyResult<PyObject> {
+fn relations_to_python(py: Python<'_>, relations: Vec<ManifestRelation>) -> PyResult<Py<PyAny>> {
     let list = PyList::empty(py);
     for relation in relations {
         let item = PyDict::new(py);
@@ -58,7 +58,7 @@ fn relations_to_python(py: Python<'_>, relations: Vec<ManifestRelation>) -> PyRe
         item.set_item("source_name", relation.source_name)?;
         list.append(item)?;
     }
-    Ok(list.into())
+    Ok(list.into_any().unbind())
 }
 
 fn manifest_from_python(raw: &Bound<'_, PyDict>) -> PyResult<DbtManifest> {
@@ -105,14 +105,14 @@ fn relation_from_python_map(
     })
 }
 
-fn resolution_to_python(py: Python<'_>, resolution: RefResolution) -> PyResult<PyObject> {
+fn resolution_to_python(py: Python<'_>, resolution: RefResolution) -> PyResult<Py<PyAny>> {
     let dict = PyDict::new(py);
     dict.set_item("sql", resolution.sql)?;
     dict.set_item("refs", resolution.refs)?;
     dict.set_item("missing_refs", resolution.missing_refs)?;
     dict.set_item("sources", resolution.sources)?;
     dict.set_item("missing_sources", resolution.missing_sources)?;
-    Ok(dict.into())
+    Ok(dict.into_any().unbind())
 }
 
 fn py_err(err: CoreError) -> PyErr {
@@ -121,17 +121,17 @@ fn py_err(err: CoreError) -> PyErr {
 
 #[pyfunction]
 #[pyo3(signature = (text, name, path=None))]
-fn parse_ggsql(py: Python<'_>, text: &str, name: &str, path: Option<&str>) -> PyResult<PyObject> {
+fn parse_ggsql(py: Python<'_>, text: &str, name: &str, path: Option<&str>) -> PyResult<Py<PyAny>> {
     chart_to_python(py, parse_ggsql_text(text, name, path).map_err(py_err)?)
 }
 
 #[pyfunction]
-fn load_manifest_json(py: Python<'_>, text: &str, path: &str) -> PyResult<PyObject> {
+fn load_manifest_json(py: Python<'_>, text: &str, path: &str) -> PyResult<Py<PyAny>> {
     manifest_to_python(py, load_manifest_json_text(text, path).map_err(py_err)?)
 }
 
 #[pyfunction]
-fn resolve_refs(py: Python<'_>, sql: &str, manifest: &Bound<'_, PyDict>) -> PyResult<PyObject> {
+fn resolve_refs(py: Python<'_>, sql: &str, manifest: &Bound<'_, PyDict>) -> PyResult<Py<PyAny>> {
     let manifest = manifest_from_python(manifest)?;
     resolution_to_python(py, resolve_refs_text(sql, &manifest))
 }
