@@ -30,7 +30,7 @@ The owner has final authority over:
 - Licensing, now and in the future
 - This governance document itself
 
-The owner holds copyright over the project. The repository lives at <https://github.com/kannandreams/glyf> and may move to a GitHub organisation owned by the same person in future - ownership and governance remain unchanged if that happens.
+The owner holds copyright over the project. The repository lives at <https://github.com/glyf-data/glyf>, in the `glyf-data` GitHub organisation owned by the same person - ownership and governance are unchanged by that move.
 
 ---
 
