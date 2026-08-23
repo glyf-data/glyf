@@ -116,3 +116,15 @@ def test_aggregated_hugeint_results_are_json_serializable(tmp_path: Path) -> Non
     assert result.table.schema.field("revenue").type == pa.int64()
     json.dumps(list(result.rows))
 
+
+def test_backends_agree_on_result_types(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    sql = "select month, sum(revenue) as revenue from main.fct_orders group by 1"
+
+    adbc_result = execute_sql(project, sql, executor="duckdb_adbc")
+    dbapi_result = execute_sql(project, sql, executor="duckdb_dbapi")
+
+    assert adbc_result.table.schema == dbapi_result.table.schema
+    assert sorted(adbc_result.rows, key=lambda row: row["month"]) == sorted(
+        dbapi_result.rows, key=lambda row: row["month"]
+    )

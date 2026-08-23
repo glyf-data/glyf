@@ -1,3 +1,5 @@
+"""DuckDB executor using ADBC, fetching results as Arrow without a copy."""
+
 from __future__ import annotations
 
 import importlib.util
@@ -6,13 +8,13 @@ from pathlib import Path
 import adbc_driver_manager.dbapi
 
 from glyf.execution.base import SqlExecutionError, sql_executor
-from glyf.execution.duckdb import _duckdb_database, _load_seed_tables
+from glyf.execution.duckdb_support import duckdb_database, load_seed_tables
 from glyf.execution.result import QueryResult
 
 
 class AdbcDuckDbExecutor:
     def execute(self, project_root: Path, sql: str) -> QueryResult:
-        database = _duckdb_database(project_root)
+        database = duckdb_database(project_root)
         try:
             with adbc_driver_manager.dbapi.connect(
                 driver=_duckdb_driver_path(),
@@ -20,7 +22,7 @@ class AdbcDuckDbExecutor:
                 db_kwargs=_duckdb_connection_kwargs(database),
             ) as connection:
                 if database == ":memory:":
-                    _load_seed_tables(connection, project_root / "seeds")
+                    load_seed_tables(connection, project_root / "seeds")
                 with connection.cursor() as cursor:
                     cursor.execute(sql)
                     return QueryResult.from_arrow(cursor.fetch_arrow_table())
@@ -29,8 +31,8 @@ class AdbcDuckDbExecutor:
 
 
 @sql_executor("duckdb")
-@sql_executor("adbc_duckdb")
-def _adbc_duckdb_executor() -> AdbcDuckDbExecutor:
+@sql_executor("duckdb_adbc")
+def _duckdb_adbc_executor() -> AdbcDuckDbExecutor:
     return AdbcDuckDbExecutor()
 
 
