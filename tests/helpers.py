@@ -2,17 +2,30 @@ import json
 import shutil
 from pathlib import Path
 
+# Output directories glyf writes under a project's target/. They are absent in a
+# fresh clone but present as soon as anyone runs `glyf build` on an example, so
+# copying them into a fixture makes tests depend on whatever was built last.
+_GENERATED_OUTPUT_DIRS = frozenset({"glyf", "ggsql"})
+
+
+def _ignore_generated_output(directory: str, names: list[str]) -> set[str]:
+    if Path(directory).name != "target":
+        return set()
+    return {name for name in names if name in _GENERATED_OUTPUT_DIRS}
+
 
 def copy_basic_project(tmp_path: Path, name: str = "basic") -> Path:
     project = tmp_path / name
-    shutil.copytree(Path("examples/basic"), project)
+    shutil.copytree(Path("examples/basic"), project, ignore=_ignore_generated_output)
     write_basic_manifest(project)
     return project
 
 
 def copy_simple_dbt_project(tmp_path: Path, name: str = "simple_dbt") -> Path:
     project = tmp_path / name
-    shutil.copytree(Path("examples/simple_dbt"), project)
+    shutil.copytree(
+        Path("examples/simple_dbt"), project, ignore=_ignore_generated_output
+    )
     write_simple_dbt_manifest(project)
     return project
 
