@@ -209,6 +209,40 @@ not practical, explain that in the pull request.
 Keep generated dbt `target/` outputs and exported dashboard artifacts out of
 version control unless a fixture is intentionally part of a test.
 
+## Commit Messages
+
+Commit subjects follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>)!: <subject>
+```
+
+Allowed types are `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`,
+`build`, `ci`, `chore`, and `revert`. The scope is optional and lowercase, `!`
+before the colon marks a breaking change, and the subject line stays within 72
+characters.
+
+```
+feat(execution): add an ADBC-backed DuckDB executor
+fix: exit non-zero when a model is missing
+docs(readme): add quick start
+chore!: drop support for schema version 0
+```
+
+CI checks every commit in a pull request and the pull request title, because the
+title becomes the subject of the squash-merge commit. Install the local hook to
+catch problems before you push:
+
+```bash
+scripts/install-git-hooks.sh
+```
+
+To check a range by hand:
+
+```bash
+scripts/check-commit-message.sh --range origin/main..HEAD
+```
+
 ## Pull Request Guidelines
 
 If you still want to open a PR:

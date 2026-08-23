@@ -10,9 +10,9 @@ For now, the Slack invite will be shared from the project community channels as 
 
 ## Project links
 
-- GitHub repository: [kannandreams/glyf](https://github.com/kannandreams/glyf)
-- Issues: [GitHub issues](https://github.com/kannandreams/glyf/issues)
-- Discussions: [GitHub discussions](https://github.com/kannandreams/glyf/discussions)
+- GitHub repository: [glyf-data/glyf](https://github.com/glyf-data/glyf)
+- Issues: [GitHub issues](https://github.com/glyf-data/glyf/issues)
+- Discussions: [GitHub discussions](https://github.com/glyf-data/glyf/discussions)
 - Roadmap: [Roadmap](roadmap.md)
 
 

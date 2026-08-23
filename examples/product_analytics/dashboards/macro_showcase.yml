@@ -44,7 +44,7 @@ sections:
       - component: "{{ ui.text('Text created through ui.text.', title='ui.text') }}"
       - component: "{{ ui.list(source('activation_by_plan', 'plan'), title='ui.list from source(chart, field)') }}"
       - component: "{{ listofvalues(['Built-ins', 'Aliases', 'Project macros'], title='listofvalues alias') }}"
-      - component: "{{ ui.link('View repository', 'https://github.com/kannandreams/glyf', title='ui.link') }}"
+      - component: "{{ ui.link('View repository', 'https://github.com/glyf-data/glyf', title='ui.link') }}"
 
   - title: Alert Macros
     description: Generic and tone-specific alert helpers, built-in thresholds, and artifact-aware project macros.
