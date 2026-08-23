@@ -1,5 +1,8 @@
+import json
+from decimal import Decimal
 from pathlib import Path
 
+import pyarrow as pa
 import pytest
 
 from glyf.config import load_config
@@ -79,3 +82,37 @@ def test_config_loads_execution_backend(tmp_path: Path) -> None:
     config = load_config(tmp_path, config_path)
 
     assert config.execution.backend == "duckdb"
+
+
+def test_decimal_columns_are_normalized_to_native_numbers() -> None:
+    table = pa.table(
+        {
+            "revenue": pa.array(
+                [Decimal("1200"), Decimal("1800")], pa.decimal128(38, 0)
+            ),
+            "margin": pa.array([Decimal("1.25"), Decimal("2.50")], pa.decimal128(10, 2)),
+        }
+    )
+
+    result = QueryResult.from_arrow(table)
+
+    assert result.table.schema.field("revenue").type == pa.int64()
+    assert result.table.schema.field("margin").type == pa.float64()
+    assert list(result.rows) == [
+        {"revenue": 1200, "margin": 1.25},
+        {"revenue": 1800, "margin": 2.5},
+    ]
+    assert json.loads(json.dumps(list(result.rows)))[0]["revenue"] == 1200
+
+
+def test_aggregated_hugeint_results_are_json_serializable(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = execute_sql(
+        project,
+        "select month, sum(revenue) as revenue from main.fct_orders group by 1",
+    )
+
+    assert result.table.schema.field("revenue").type == pa.int64()
+    json.dumps(list(result.rows))
+
