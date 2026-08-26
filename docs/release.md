@@ -2,11 +2,25 @@
 
 ## Versioning
 
-Use semantic versioning once the public API stabilizes:
+`glyf` follows semantic versioning:
 
 - patch: bug fixes and docs-only changes
 - minor: backwards-compatible features
 - major: breaking CLI, config, or artifact contract changes
+
+The version is declared in three places and must match:
+
+- `pyproject.toml` → `[project].version`
+- `Cargo.toml` → `[workspace.package].version` (and the `glyf-core` entry in
+  `Cargo.lock`)
+- `src/glyf/__init__.py` → `__version__`
+
+## Distribution name
+
+The PyPI distribution is **`glyf-core`**. The CLI command is `glyf` and the
+Python package is `import glyf`; only the distribution name differs (the bare
+`glyf` name on PyPI is held by an unrelated project). Wheels are therefore
+named `glyf_core-<version>-cp311-abi3-<platform>.whl`.
 
 ## Build Process
 
@@ -18,19 +32,16 @@ uv run pytest
 uv build
 ```
 
-Build outputs are written to:
-
-```text
-dist/
-```
+Build outputs are written to `dist/`. The extension module is built against
+the abi3 stable ABI, so one wheel per platform covers Python 3.11+.
 
 ## Local Install Test
 
 After building:
 
 ```bash
-uv tool uninstall glyf
-uv tool install dist/glyf-*.whl
+uv tool uninstall glyf-core
+uv tool install dist/glyf_core-*.whl
 glyf --help
 ```
 
@@ -39,54 +50,44 @@ environment and install the wheel there.
 
 ## Publish Process
 
-The recommended release channel is GitHub Releases with attached wheel files.
-
 1. Confirm tests pass:
 
    ```bash
-   uv run pytest
+   task ci
    ```
 
-2. Build distributions:
+2. Update `CHANGELOG.md`: rename the `Unreleased` heading to the version and
+   date, and confirm the version in `pyproject.toml`, `Cargo.toml`, and
+   `src/glyf/__init__.py`.
+
+3. Merge to `main`, then create and push a release tag:
 
    ```bash
-   uv build
+   git tag v0.3.0
+   git push origin v0.3.0
    ```
 
-3. Inspect `dist/`.
+4. `.github/workflows/release.yml` builds wheels for x86_64/aarch64 Linux,
+   Intel/Apple Silicon macOS, and x86_64 Windows, plus a source distribution,
+   smoke-tests each wheel with `glyf --help`, and publishes a GitHub Release
+   with the artifacts and a `checksums.txt`.
 
-4. Update `CHANGELOG.md` and confirm the package version in `pyproject.toml`.
+5. The PyPI publish workflow (`.github/workflows/pypi.yml`, trusted
+   publishing) uploads the same artifacts to `glyf-core` on PyPI.
 
-5. Create and push a release tag:
-
-   ```bash
-   git tag v0.2.0
-   git push origin v0.2.0
-   ```
-
-6. Wait for the GitHub Actions release workflow to build wheels and publish a
-   GitHub Release with the generated artifacts.
-
-Users can then install `glyf` directly from a GitHub Release wheel:
+Users then install with:
 
 ```bash
-uv tool install \
-  https://github.com/glyf-data/glyf/releases/download/v0.2.0/glyf-0.2.0-<platform>.whl
+uv tool install glyf-core
+# or
+pip install glyf-core
 ```
-
-The release workflow lives in:
-
-```text
-.github/workflows/release.yml
-```
-
-PyPI publishing is intentionally deferred.
 
 ## Release Checklist
 
 - Update `CHANGELOG.md`.
-- Confirm `pyproject.toml` metadata.
-- Run `uv run pytest`.
-- Run `uv build`.
+- Bump the version in `pyproject.toml`, `Cargo.toml`, `Cargo.lock`, and
+  `src/glyf/__init__.py`.
+- Run `task ci`.
 - Install the wheel locally and run `glyf --help`.
-- Push a `v*` tag and verify the GitHub Release artifacts.
+- Push a `v*` tag and verify the GitHub Release artifacts and the PyPI upload.
