@@ -194,7 +194,7 @@ Existing Markdown docs are still available while the site is being introduced:
 - [Dashboard YAML](docs/dashboard-yaml.md)
 - [dbt integration](docs/dbt-integration.md)
 - [CI/CD](docs/ci-cd.md)
-- [Release process](docs/release.mdxplain)
+- [Release process](docs/release.md)
 - [Troubleshooting](docs/troubleshooting.md)
 
 ## Roadmap

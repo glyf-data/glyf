@@ -546,8 +546,8 @@ wheels = [
 ]
 
 [[package]]
-name = "glyf"
-version = "0.2.0"
+name = "glyf-core"
+version = "0.3.0"
 source = { editable = "." }
 dependencies = [
     { name = "adbc-driver-manager" },

@@ -2,9 +2,36 @@
 
 All notable changes to `glyf` will be documented in this file.
 
-## 0.2.0 - Unreleased
+## 0.3.0 - Unreleased
 
-Dashboard rendering system redesign.
+First release published to PyPI.
+
+- Renamed the PyPI distribution to `glyf-core`; the `glyf` command and
+  `import glyf` are unchanged. `pip install glyf-core` / `uv tool install
+  glyf-core` are the supported install paths going forward.
+- Fixed the release workflow: replaced the retired `macos-13` runner, build
+  wheels for x86_64 and aarch64 Linux, Intel and Apple Silicon macOS, and
+  x86_64 Windows, and attach a `checksums.txt` to every GitHub Release.
+- Trimmed the source distribution to the package, Rust crate, tests, and
+  top-level metadata (docs site and examples are no longer bundled).
+- Fetch DuckDB results as Arrow via ADBC and split the executors into explicit
+  modules; cast Arrow decimal columns to native numbers.
+- Added dashboard spec validation to `glyf validate` and a `--verbose` mode for
+  `glyf build`.
+- Macro system enhancements: custom macros, macro-aware validation, and new
+  macro examples; fixed `ui.list` rendering.
+- Dashboard UI: dark mode, refresh time and tags from YAML, and assorted
+  layout fixes; data and JSON moved out of the exported site.
+- Added the `bundle.json` artifact with build metadata and an embedded
+  analytics documentation page.
+- Moved the repository to the `glyf-data` organisation and enforced
+  conventional commit messages in CI.
+
+## 0.2.0 - 2026-06-02
+
+Dashboard rendering system redesign. Tagged as `v0.2.0`; no artifacts were
+published because the release workflow failed on the retired `macos-13`
+runner.
 
 - Reworked generated dashboard HTML into a product-style static UI shell with a
   header, metadata bar, filter placeholder, toolbar actions, chart content,

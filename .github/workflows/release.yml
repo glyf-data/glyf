@@ -9,18 +9,27 @@ on:
 permissions:
   contents: write
 
+env:
+  PYTHON_VERSION: "3.11"
+
 jobs:
   build-wheels:
-    name: build wheel (${{ matrix.os }})
+    name: build wheel (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-13
-          - macos-14
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+          - os: macos-15
+            target: aarch64-apple-darwin
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
 
     steps:
       - name: Check out repository
@@ -29,29 +38,33 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
+      # The extension is built against the abi3 stable ABI (pyo3 `abi3-py311`),
+      # so one wheel per target covers every supported Python version.
       - name: Build wheel
         uses: PyO3/maturin-action@v1
         with:
           command: build
-          args: --release --out dist --interpreter python3.11
+          target: ${{ matrix.target }}
+          args: --release --locked --out dist
+          manylinux: auto
 
       - name: Smoke test wheel
         shell: bash
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install dist/*.whl
-          glyf --help
+          python -m venv smoke
+          if [ -d smoke/Scripts ]; then BIN=smoke/Scripts; else BIN=smoke/bin; fi
+          "$BIN/python" -m pip install --quiet --upgrade pip
+          "$BIN/python" -m pip install --quiet dist/*.whl
+          "$BIN/glyf" --help
 
       - name: Upload wheel artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.os }}
+          name: wheels-${{ matrix.target }}
           path: dist/*.whl
+          if-no-files-found: error
 
   build-sdist:
     name: build sdist
@@ -64,7 +77,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Build source distribution
         uses: PyO3/maturin-action@v1
@@ -77,9 +90,11 @@ jobs:
         with:
           name: sdist
           path: dist/*.tar.gz
+          if-no-files-found: error
 
   publish-release:
     name: publish GitHub release
+    if: startsWith(github.ref, 'refs/tags/v')
     needs:
       - build-wheels
       - build-sdist
@@ -99,6 +114,12 @@ jobs:
           name: sdist
           path: dist
 
+      - name: Generate checksums
+        working-directory: dist
+        run: |
+          sha256sum *.whl *.tar.gz > checksums.txt
+          cat checksums.txt
+
       - name: Create or update GitHub release
         uses: softprops/action-gh-release@v2
         with:
@@ -106,3 +127,4 @@ jobs:
           files: |
             dist/*.whl
             dist/*.tar.gz
+            dist/checksums.txt
