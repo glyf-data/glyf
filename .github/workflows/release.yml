@@ -5,16 +5,43 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      publish_to_testpypi:
+        description: "Publish the built artifacts to TestPyPI (dry run of the PyPI release)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 env:
   PYTHON_VERSION: "3.11"
+  # Pinned for reproducible builds; bump deliberately. Floor is rust-version in Cargo.toml.
+  RUST_TOOLCHAIN: "1.98.0"
 
 jobs:
+  check-version:
+    name: check tag matches package version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Compare versions
+        shell: bash
+        run: |
+          py=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml | head -1)
+          rs=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
+          init=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/glyf/__init__.py)
+          echo "pyproject=$py cargo=$rs __init__=$init ref=$GITHUB_REF_NAME"
+          [ "$py" = "$rs" ] && [ "$py" = "$init" ] || { echo "::error::version mismatch between pyproject.toml, Cargo.toml and src/glyf/__init__.py"; exit 1; }
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            [ "$GITHUB_REF_NAME" = "v$py" ] || { echo "::error::tag $GITHUB_REF_NAME does not match package version $py"; exit 1; }
+          fi
+
   build-wheels:
     name: build wheel (${{ matrix.target }})
+    needs: check-version
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -43,10 +70,11 @@ jobs:
       # The extension is built against the abi3 stable ABI (pyo3 `abi3-py311`),
       # so one wheel per target covers every supported Python version.
       - name: Build wheel
-        uses: PyO3/maturin-action@v1
+        uses: PyO3/maturin-action@v1.51.0
         with:
           command: build
           target: ${{ matrix.target }}
+          rust-toolchain: ${{ env.RUST_TOOLCHAIN }}
           args: --release --locked --out dist
           manylinux: auto
 
@@ -68,6 +96,7 @@ jobs:
 
   build-sdist:
     name: build sdist
+    needs: check-version
     runs-on: ubuntu-latest
 
     steps:
@@ -80,7 +109,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Build source distribution
-        uses: PyO3/maturin-action@v1
+        uses: PyO3/maturin-action@v1.51.0
         with:
           command: sdist
           args: --out dist
@@ -128,3 +157,70 @@ jobs:
             dist/*.whl
             dist/*.tar.gz
             dist/checksums.txt
+
+  # Dry run: `workflow_dispatch` with publish_to_testpypi=true. Uses trusted
+  # publishing (OIDC) — no API token secrets. Re-running with an already
+  # uploaded version is a no-op because of skip-existing.
+  publish-testpypi:
+    name: publish to TestPyPI
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_to_testpypi
+    needs:
+      - build-wheels
+      - build-sdist
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/glyf-core
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Check distributions
+        run: pipx run twine check --strict dist/*
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: dist/
+          skip-existing: true
+          print-hash: true
+
+  # Real release: runs only on `v*` tags, after the GitHub Release exists, and
+  # uploads exactly the same files. PyPI uploads are immutable, so this is the
+  # last job on purpose.
+  publish-pypi:
+    name: publish to PyPI
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs:
+      - publish-release
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/glyf-core
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Check distributions
+        run: pipx run twine check --strict dist/*
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+          print-hash: true
