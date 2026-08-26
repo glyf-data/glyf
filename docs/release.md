@@ -60,20 +60,39 @@ environment and install the wheel there.
    date, and confirm the version in `pyproject.toml`, `Cargo.toml`, and
    `src/glyf/__init__.py`.
 
-3. Merge to `main`, then create and push a release tag:
+3. Optional dry run: in GitHub → Actions → **release** → *Run workflow*,
+   tick **publish_to_testpypi**. This builds every wheel and the sdist and
+   uploads them to https://test.pypi.org/p/glyf-core. Verify with:
+
+   ```bash
+   uv tool install --index-url https://test.pypi.org/simple/ \
+     --index-strategy unsafe-best-match glyf-core==<version>
+   glyf --help
+   ```
+
+   TestPyPI uploads are immutable too; re-running with the same version is a
+   no-op (`skip-existing`), so bump to a `.devN`/`rcN` version for a second
+   dry run.
+
+4. Merge to `main`, then create and push a release tag that matches the
+   package version (the workflow refuses a mismatch):
 
    ```bash
    git tag v0.3.0
    git push origin v0.3.0
    ```
 
-4. `.github/workflows/release.yml` builds wheels for x86_64/aarch64 Linux,
-   Intel/Apple Silicon macOS, and x86_64 Windows, plus a source distribution,
-   smoke-tests each wheel with `glyf --help`, and publishes a GitHub Release
-   with the artifacts and a `checksums.txt`.
+5. `.github/workflows/release.yml` then, in order: checks the tag against the
+   version, builds wheels for x86_64/aarch64 Linux, Intel/Apple Silicon macOS,
+   and x86_64 Windows plus a source distribution, smoke-tests each wheel with
+   `glyf --help`, publishes a GitHub Release with the artifacts and a
+   `checksums.txt`, and finally uploads the same files to
+   https://pypi.org/p/glyf-core via trusted publishing (OIDC — there are no
+   PyPI tokens in the repository secrets).
 
-5. The PyPI publish workflow (`.github/workflows/pypi.yml`, trusted
-   publishing) uploads the same artifacts to `glyf-core` on PyPI.
+   Both PyPI jobs use GitHub environments (`pypi`, `testpypi`) that must exist
+   in the repository settings and be registered as trusted publishers on
+   PyPI / TestPyPI with workflow `release.yml`.
 
 Users then install with:
 
