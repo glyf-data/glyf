@@ -7,6 +7,7 @@ const sidebars = {
       label: 'Get Started',
       collapsed: false,
       items: [
+        'get-started/installation',
         'get-started/quickstart',
         'get-started/existing-dbt-project',
         'get-started/project-structure',

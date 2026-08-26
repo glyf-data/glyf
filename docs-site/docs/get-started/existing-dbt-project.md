@@ -4,14 +4,14 @@ Use this path when you already have a dbt project with models and a working prof
 
 ## Install glyf
 
-Install the CLI from a GitHub Release wheel:
-
 ```bash
-uv tool install \
-  https://github.com/glyf-data/glyf/releases/download/v0.2.0/glyf-0.2.0-<platform>.whl
+uv tool install glyf-core
+glyf --version
 ```
 
-Replace `<platform>` with the wheel asset that matches your OS and architecture.
+The PyPI package is `glyf-core`; the command is `glyf`. See the
+[installation guide](installation.md) for pipx/pip, upgrades, Windows, and
+offline installs.
 
 ## Initialize the project
 
