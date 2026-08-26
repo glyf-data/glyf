@@ -12,6 +12,9 @@ When working from this repository, use:
 uv run glyf
 ```
 
+Print the installed version with `glyf --version` (or `-V`). Installation
+options are covered in the [installation guide](../get-started/installation.md).
+
 ## High-level commands
 
 | Command | Purpose |

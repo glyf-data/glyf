@@ -1,5 +1,6 @@
 # glyf
 
+[![PyPI](https://img.shields.io/pypi/v/glyf-core.svg?logo=pypi&logoColor=white)](https://pypi.org/project/glyf-core/)
 [![Tests](https://github.com/glyf-data/glyf/actions/workflows/test.yml/badge.svg)](https://github.com/glyf-data/glyf/actions/workflows/test.yml)
 [![Coverage](https://codecov.io/gh/glyf-data/glyf/branch/main/graph/badge.svg)](https://codecov.io/gh/glyf-data/glyf)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB.svg?logo=python&logoColor=white)](pyproject.toml)
@@ -20,16 +21,27 @@ with Altair, and exports publishable dashboard sites.
 
 ## Installation
 
-Install from a GitHub Release wheel:
+`glyf` is published on PyPI as **`glyf-core`**. The package installs the `glyf`
+command; only the distribution name differs. Prebuilt wheels cover Linux
+(x86_64, aarch64), macOS (Intel, Apple Silicon), and Windows (x86_64) on
+Python 3.11+, so no Rust toolchain is required.
 
 ```bash
-uv tool install \
-  https://github.com/glyf-data/glyf/releases/download/v0.2.0/glyf-0.2.0-<platform>.whl
+uv tool install glyf-core
+glyf --version
 ```
 
-Replace `<platform>` with the wheel asset that matches your OS and architecture.
+`pipx install glyf-core` and `pip install glyf-core` work too. To upgrade:
 
-PyPI publishing is intentionally deferred for now.
+```bash
+uv tool upgrade glyf-core
+```
+
+Every [GitHub Release](https://github.com/glyf-data/glyf/releases) also ships
+the platform wheels, a source distribution, and a `checksums.txt` for offline
+or air-gapped installs (`uv tool install ./glyf_core-<version>-<platform>.whl`).
+Full details, including Windows notes, are in the
+[installation guide](https://glyf.pages.dev/docs/get-started/installation).
 
 When developing from this repository, install dependencies with `uv`:
 

@@ -5,9 +5,17 @@
 glyf helps analytics engineers generate static dashboards from analytical projects.
 It uses .ggsql chart files, dashboard YAML, analytical artifacts, DuckDB execution, and static HTML export. Its first integration reads dbt artifacts.
 
+Install (PyPI package glyf-core, command glyf):
+
+```bash
+uv tool install glyf-core
+glyf --version
+```
+
 Primary docs:
 
 - Overview: https://glyf.pages.dev/docs/intro
+- Installation: https://glyf.pages.dev/docs/get-started/installation
 - Quickstart: https://glyf.pages.dev/docs/get-started/quickstart
 - Existing dbt project: https://glyf.pages.dev/docs/get-started/existing-dbt-project
 - Project structure: https://glyf.pages.dev/docs/get-started/project-structure
