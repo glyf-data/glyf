@@ -1,6 +1,6 @@
 [project]
-name = "glyf"
-version = "0.2.0"
+name = "glyf-core"
+version = "0.3.0"
 description = "visualization build step to data pipeline"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -65,22 +65,22 @@ python-source = "src"
 features = ["extension-module"]
 include = [
     "src",
-    "tests",
+    "tests/**/*",
     "crates",
     ".cargo/config.toml",
     "Cargo.toml",
     "Cargo.lock",
-    "docs",
-    "docs-site",
-    "examples",
     "README.md",
     "LICENSE",
-    "CLA.md",
     "CHANGELOG.md",
-    "CONTRIBUTING.md",
-    "GOVERNANCE.md",
-    "CODE_OF_CONDUCT.md",
     "pyproject.toml",
+]
+exclude = [
+    "src/glyf/_core*.so",
+    "src/glyf/_core*.pyd",
+    "**/__pycache__/**",
+    "**/*.pyc",
+    "tests/**/target/**",
 ]
 
 [tool.pytest.ini_options]
