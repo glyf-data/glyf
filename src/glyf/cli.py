@@ -3,6 +3,7 @@ from typing import Annotated
 
 import typer
 
+from glyf import __version__
 from glyf.commands.build_cmd import run_build
 from glyf.commands.dashboard_cmd import run_dashboard
 from glyf.commands.doctor_cmd import run_doctor
@@ -16,6 +17,28 @@ from glyf.commands.validate_cmd import run_validate
 app = typer.Typer(
     help="Discover, validate, render, and publish ggsql assets in a dbt project."
 )
+
+
+def _version_callback(value: bool) -> None:
+    if value:
+        typer.echo(f"glyf {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    version: Annotated[
+        bool,
+        typer.Option(
+            "--version",
+            "-V",
+            callback=_version_callback,
+            is_eager=True,
+            help="Show the glyf version and exit.",
+        ),
+    ] = False,
+) -> None:
+    """Discover, validate, render, and publish ggsql assets in a dbt project."""
 
 ProjectOption = Annotated[
     Path,

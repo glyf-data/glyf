@@ -516,3 +516,12 @@ def test_validate_command_reports_missing_dbt_project(tmp_path: Path) -> None:
 
     assert result.exit_code == 1
     assert "Missing dbt_project.yml" in result.output
+
+
+def test_version_flag_prints_package_version() -> None:
+    from glyf import __version__
+
+    result = runner.invoke(app, ["--version"])
+
+    assert result.exit_code == 0
+    assert result.output.strip() == f"glyf {__version__}"
