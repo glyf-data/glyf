@@ -16,6 +16,8 @@ permissions:
 
 env:
   PYTHON_VERSION: "3.11"
+  # Pinned for reproducible builds; bump deliberately. Floor is rust-version in Cargo.toml.
+  RUST_TOOLCHAIN: "1.98.0"
 
 jobs:
   check-version:
@@ -68,10 +70,11 @@ jobs:
       # The extension is built against the abi3 stable ABI (pyo3 `abi3-py311`),
       # so one wheel per target covers every supported Python version.
       - name: Build wheel
-        uses: PyO3/maturin-action@v1
+        uses: PyO3/maturin-action@v1.51.0
         with:
           command: build
           target: ${{ matrix.target }}
+          rust-toolchain: ${{ env.RUST_TOOLCHAIN }}
           args: --release --locked --out dist
           manylinux: auto
 
@@ -106,7 +109,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Build source distribution
-        uses: PyO3/maturin-action@v1
+        uses: PyO3/maturin-action@v1.51.0
         with:
           command: sdist
           args: --out dist
