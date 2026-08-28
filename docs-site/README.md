@@ -45,34 +45,17 @@ Then open the URL printed by Docusaurus.
 
 Static files under `docs-site/static/` are copied to the site root. For example, dashboard exports committed under `docs-site/static/dashboards/simple-dbt/` are served locally as `/dashboards/simple-dbt/` and deployed as `https://glyf.pages.dev/dashboards/simple-dbt/`.
 
-## Cloudflare Pages
+## Publishing
 
-The docs site defaults to Cloudflare Pages:
+The published site is:
 
 ```text
 https://glyf.pages.dev
 ```
 
-Deployments are handled by:
-
-```text
-.github/workflows/docs-site.yml
-```
-
-Required GitHub secrets:
-
-```text
-CLOUDFLARE_ACCOUNT_ID
-CLOUDFLARE_API_TOKEN
-```
-
-The Cloudflare Pages project name is:
-
-```text
-glyf
-```
-
-If that Pages project name is unavailable, update both `CLOUDFLARE_PROJECT_NAME` and `DOCS_SITE_URL` in the workflow.
+`.github/workflows/docs-site.yml` builds the site on every pull request and
+push to `main` and uploads the result as a workflow artifact, so a broken page
+fails CI. Publishing the built site is handled by the maintainers.
 
 The planned custom domain is:
 
