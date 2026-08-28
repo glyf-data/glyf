@@ -27,6 +27,23 @@ glyf --version
 If `glyf` is not found afterwards, run `uv tool update-shell` once and open a
 new terminal.
 
+## Homebrew
+
+```bash
+brew tap glyf-data/glyf
+brew trust --tap glyf-data/glyf
+brew install glyf
+```
+
+Homebrew 6.0 refuses to load formulae from third-party taps until they are
+trusted, so `brew trust` is required, not optional. It is a one-time step per
+machine.
+
+Upgrade with `brew upgrade glyf`. The formula installs the published wheels
+into its own virtualenv, so expect roughly 550 MB on disk — mostly Arrow,
+Polars and DuckDB native libraries. `brew install uv && uv tool install
+glyf-core` gives the same command in less space.
+
 ## One-line install script
 
 On macOS and Linux, this installs `uv` if it is missing and then installs
