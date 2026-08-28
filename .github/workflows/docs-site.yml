@@ -15,15 +15,13 @@ on:
 
 permissions:
   contents: read
-  deployments: write
 
 env:
   DOCS_SITE_URL: https://glyf.pages.dev
   DOCS_SITE_BASE_URL: /
-  CLOUDFLARE_PROJECT_NAME: glyf
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -43,11 +41,9 @@ jobs:
         working-directory: docs-site
         run: npm run build
 
-      - name: Deploy docs to Cloudflare Pages
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        uses: cloudflare/wrangler-action@v3
+      - name: Upload built site
+        uses: actions/upload-artifact@v4
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy docs-site/build --project-name=${{ env.CLOUDFLARE_PROJECT_NAME }} --branch=main
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          name: docs-site-build
+          path: docs-site/build
+          retention-days: 7
