@@ -1,0 +1,87 @@
+name: installer
+
+on:
+  pull_request:
+    paths:
+      - "install.sh"
+      - ".github/workflows/installer.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "install.sh"
+      - ".github/workflows/installer.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run shellcheck
+        run: shellcheck --shell=sh install.sh
+
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux-x86_64
+          - os: ubuntu-24.04-arm
+            label: linux-aarch64
+          - os: macos-15
+            label: macos-arm64
+
+    name: install (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # The runners have no uv, so this exercises the bootstrap path that a
+      # first-time user hits, not just the happy path on a primed machine.
+      - name: Confirm uv is absent
+        run: |
+          if command -v uv >/dev/null 2>&1; then
+            echo "::warning::uv is preinstalled on this runner; the bootstrap path is not covered here"
+          fi
+
+      - name: Install glyf
+        run: sh install.sh
+
+      - name: Verify the installed CLI
+        run: |
+          set -eu
+          export PATH="$HOME/.local/bin:$PATH"
+          command -v glyf
+          glyf --version
+          glyf --help >/dev/null
+
+      - name: Re-run to confirm it is idempotent
+        run: sh install.sh
+
+      - name: Upgrade an existing installation
+        run: sh install.sh --update
+
+      - name: Install an exact version
+        run: |
+          set -eu
+          sh install.sh --version 0.3.0
+          export PATH="$HOME/.local/bin:$PATH"
+          test "$(glyf --version)" = "glyf 0.3.0"
+
+      - name: Reject an unknown option
+        run: |
+          set -eu
+          if sh install.sh --nonsense >/dev/null 2>&1; then
+            echo "::error::install.sh accepted an unknown option"
+            exit 1
+          fi

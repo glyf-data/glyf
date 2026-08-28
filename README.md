@@ -37,6 +37,13 @@ glyf --version
 uv tool upgrade glyf-core
 ```
 
+On macOS and Linux, [`install.sh`](install.sh) does the same thing in one line,
+installing `uv` first if it is missing (no `sudo`, `--help` lists the options):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh
+```
+
 Every [GitHub Release](https://github.com/glyf-data/glyf/releases) also ships
 the platform wheels, a source distribution, and a `checksums.txt` for offline
 or air-gapped installs (`uv tool install ./glyf_core-<version>-<platform>.whl`).
