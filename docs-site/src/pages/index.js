@@ -45,8 +45,8 @@ const featureSections = [
       },
       {
         name: 'Generated React components',
-        desc: 'Glyf compiles dashboards to typed .tsx components with inferred prop interfaces. Drop them into your product codebase with no BI SDK dependency.',
-        status: 'coming soon',
+        desc: 'Glyf will compile dashboards to typed .tsx components with inferred prop interfaces, to drop into your product codebase with no BI SDK dependency.',
+        status: 'roadmap',
         reverse: true,
         visual: 'tsxOutput',
         filename: 'dist/RevenueWeekly.tsx — auto-generated',
@@ -83,20 +83,20 @@ const featureSections = [
     tag: 'observability',
     title: 'Know when something breaks or shifts.',
     description:
-      'Every build can produce visual diffs and alert hooks. Catch regressions in CI before a dashboard change reaches stakeholders.',
+      'On the roadmap: visual diffs and alert hooks as build outputs, so regressions surface in CI before a dashboard change reaches stakeholders.',
     items: [
       {
         name: 'Visual diff as a build artifact',
-        desc: 'Every glyf build can generate a side-by-side visual diff against the previous build, highlighting metric shifts, new categories, and trend reversals.',
-        status: 'live',
+        desc: 'Each build will generate a side-by-side visual diff against the previous build, highlighting metric shifts, new categories, and trend reversals.',
+        status: 'roadmap',
         reverse: false,
         visual: 'visualDiff',
         filename: 'artifacts/visual-diff — build #84 vs #83',
       },
       {
         name: 'Pipeline hooks and alerts',
-        desc: 'Declare Slack or webhook alerts directly in dashboard YAML. Conditions are evaluated against query results at build time with severity-based routing.',
-        status: 'live',
+        desc: 'Alerts will be declared directly in dashboard YAML, with conditions evaluated against query results at build time and severity-based routing.',
+        status: 'roadmap',
         reverse: true,
         visual: 'alertsYaml',
         filename: 'dashboards/revenue.yaml — alerts block',
@@ -108,20 +108,20 @@ const featureSections = [
     tag: 'ai',
     title: 'Agents that understand your chart graph.',
     description:
-      'Glyf exposes a spec graph over MCP so agents can reason about model-to-chart dependencies, assess downstream impact, and open informed pull requests.',
+      'Glyf will expose a spec graph over MCP so agents can reason about model-to-chart dependencies, assess downstream impact, and open informed pull requests.',
     items: [
       {
         name: 'Agent-ready MCP server',
-        desc: 'Agents can list charts, fetch specs, and query upstream model dependencies. impact_of_model() returns every downstream chart affected by a schema change.',
-        status: 'soon',
+        desc: 'Agents will list charts, fetch specs, and query upstream model dependencies. impact_of_model() will return every downstream chart affected by a schema change.',
+        status: 'roadmap',
         reverse: false,
         visual: 'mcpImpact',
         filename: 'MCP session — Claude Agent ↔ Glyf',
       },
       {
         name: 'Natural language chart edits',
-        desc: 'Describe a chart change in plain language. Glyf translates it to a SQL diff, validates the build, attaches the visual diff, and opens a pull request.',
-        status: 'soon',
+        desc: 'Describe a chart change in plain language. Glyf will translate it to a SQL diff, validate the build, attach the visual diff, and open a pull request.',
+        status: 'roadmap',
         reverse: true,
         visual: 'mcpEdit',
         filename: 'MCP session — natural language edit',
@@ -461,7 +461,6 @@ function FeatureVisual({item}) {
 <span className="featureDiffLine featureDiffLine--add">+   sql: ./new_mrr_cohort.sql</span>
 <span className="codeMuted">2 files changed, 3 insertions(+), 1 deletion(-)</span>{'\n\n'}
 <span className="codeOk">✓</span> glyf build passed — 14 charts{'\n'}
-<span className="codeOk">✓</span> visual diff → artifacts/diff.html{'\n'}
 <span className="codeMuted">Ready to merge.</span></code></pre>
         </FeatureMacWindow>
       );
@@ -748,7 +747,12 @@ function FeaturesSection() {
                       <FeatureVisual item={item} />
                     </div>
                     <div className="featureStoryNote">
-                      <div className="featureStoryName">{item.name}</div>
+                      <div className="featureStoryName">
+                        <span>{item.name}</span>
+                        {item.status === 'roadmap' ? (
+                          <span className="featureStatus featureStatus--roadmap">Roadmap</span>
+                        ) : null}
+                      </div>
                       <p className="featureStoryDesc">{item.desc}</p>
                     </div>
                   </div>
