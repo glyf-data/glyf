@@ -27,6 +27,39 @@ glyf --version
 If `glyf` is not found afterwards, run `uv tool update-shell` once and open a
 new terminal.
 
+## One-line install script
+
+On macOS and Linux, this installs `uv` if it is missing and then installs
+`glyf` with it:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh
+```
+
+```bash
+# upgrade an existing installation
+curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh -s -- --update
+
+# install an exact version
+curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh -s -- --version 0.3.0
+```
+
+The script never uses `sudo`. It installs into uv's tool directory
+(`~/.local/bin` by default; override with `GLYF_INSTALL_DIR`) and tells you
+what to add to your `PATH` if that directory is not already on it. Pass
+`--no-uv-install` to make it fail rather than install `uv` for you, and
+`--help` to see every option.
+
+Piping a script into a shell means trusting its source. To read it first:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh -o install.sh
+less install.sh
+sh install.sh
+```
+
+Windows is not covered by the script; use `uv tool install glyf-core`.
+
 ## pipx or pip
 
 ```bash

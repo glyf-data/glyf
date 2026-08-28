@@ -12,6 +12,12 @@ uv tool install glyf-core
 glyf --version
 ```
 
+Or, on macOS and Linux:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh
+```
+
 Primary docs:
 
 - Overview: https://glyf.pages.dev/docs/intro
