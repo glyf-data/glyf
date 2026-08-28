@@ -60,7 +60,7 @@ fails CI. Publishing the built site is handled by the maintainers.
 The planned custom domain is:
 
 ```text
-docs.glyf.com
+docs.glyfdata.com
 ```
 
 If another host is needed later, override the build URL and base path:
