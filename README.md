@@ -44,6 +44,14 @@ installing `uv` first if it is missing (no `sudo`, `--help` lists the options):
 curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh
 ```
 
+There is also a [Homebrew tap](https://github.com/glyf-data/homebrew-glyf):
+
+```bash
+brew tap glyf-data/glyf
+brew trust --tap glyf-data/glyf
+brew install glyf
+```
+
 Every [GitHub Release](https://github.com/glyf-data/glyf/releases) also ships
 the platform wheels, a source distribution, and a `checksums.txt` for offline
 or air-gapped installs (`uv tool install ./glyf_core-<version>-<platform>.whl`).
