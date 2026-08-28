@@ -17,9 +17,22 @@ Define charts in SQL, compose dashboards in YAML, publish anywhere.
 
 [Install](#install) · [Quickstart](#quickstart) · [How it works](#how-it-works) · [CLI](#cli) · [Examples](#examples) · [Docs](#documentation)
 
-<img src="https://raw.githubusercontent.com/glyf-data/glyf/main/.github/assets/readme-hero.svg" alt="Glyf workflow: data models flow through dbt and chart composition into a glyf build, which publishes hosted dashboards, images, embedded components, and alerts." width="760" />
-
 </div>
+
+```text
+  ┌──────────────────────┐   ┌──────────────────────┐   ┌──────────────────────┐
+  │     dbt project      │   │     glyf sources     │   │      glyf build      │
+  ├──────────────────────┤   ├──────────────────────┤   ├──────────────────────┤
+  │ models/*.sql         │   │ charts     *.ggsql   │   │ resolve  ref()       │
+  │ target/manifest.json │──▶│ dashboards *.yml     │──▶│ execute  DuckDB      │
+  │ warehouse relations  │   │ macros     *.py      │   │ render   Altair      │
+  └──────────────────────┘   └──────────────────────┘   └───────────┬──────────┘
+                                                                    │
+      ┌─────────────────────────┬───────────────────────┬───────────┘
+      ▼                         ▼                       ▼
+      site/index.html           charts/*.png *.svg      export --zip
+      static dashboard          chart artifacts         zip for CI
+```
 
 ---
 
