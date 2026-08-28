@@ -45,31 +45,17 @@ Then open the URL printed by Docusaurus.
 
 Static files under `docs-site/static/` are copied to the site root. For example, dashboard exports committed under `docs-site/static/dashboards/simple-dbt/` are served locally as `/dashboards/simple-dbt/` and deployed as `https://glyf.pages.dev/dashboards/simple-dbt/`.
 
-## Cloudflare Pages
+## Publishing
 
-The docs site is hosted on Cloudflare Pages:
+The published site is:
 
 ```text
 https://glyf.pages.dev
 ```
 
-The Pages project name is `glyf`. During the beta the site sits behind
-Cloudflare Access, so it is reachable only by signed-in maintainers.
-
-Deploys are manual. `.github/workflows/docs-site.yml` only builds the site and
-uploads the result as a workflow artifact, so a broken page fails CI without
-needing any Cloudflare credentials in the repository.
-
-To publish, build locally and deploy with your own wrangler login:
-
-```bash
-cd docs-site
-npm run build
-npx wrangler@4 pages deploy build --project-name=glyf --branch=main
-```
-
-`wrangler login` handles authentication once per machine; no
-`CLOUDFLARE_API_TOKEN` secret is stored in the repository.
+`.github/workflows/docs-site.yml` builds the site on every pull request and
+push to `main` and uploads the result as a workflow artifact, so a broken page
+fails CI. Publishing the built site is handled by the maintainers.
 
 The planned custom domain is:
 
