@@ -1,50 +1,72 @@
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/glyf-data/glyf/main/docs-site/static/img/glyf-logo-v4.svg" alt="" width="84" />
+
 # glyf
 
-[![PyPI](https://img.shields.io/pypi/v/glyf-core.svg?logo=pypi&logoColor=white)](https://pypi.org/project/glyf-core/)
-[![Tests](https://github.com/glyf-data/glyf/actions/workflows/test.yml/badge.svg)](https://github.com/glyf-data/glyf/actions/workflows/test.yml)
-[![Coverage](https://codecov.io/gh/glyf-data/glyf/branch/main/graph/badge.svg)](https://codecov.io/gh/glyf-data/glyf)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB.svg?logo=python&logoColor=white)](pyproject.toml)
-[![Rust 1.83+](https://img.shields.io/badge/rust-1.83%2B-DEA584.svg?logo=rust&logoColor=white)](crates/glyf-core/Cargo.toml)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+**Open source visualization build tool for your data pipeline.**
 
-Open Source Visualization build tool to data pipeline.
+Ship charts from the same pipeline as your data.<br />
+Define charts in SQL, compose dashboards in YAML, publish anywhere.
 
-`glyf` turns analytical metadata and SQL-first visualisation files into
-versioned chart artifacts and static dashboards. Its first integration reads dbt
-project artifacts, resolves dbt `ref()` and `source()` calls from
-`target/manifest.json`, executes chart SQL with DuckDB, renders PNG/SVG charts
-with Altair, and exports publishable dashboard sites.
+[![PyPI](https://img.shields.io/pypi/v/glyf-core?style=flat-square&label=pypi&color=008f5f&labelColor=0f172a)](https://pypi.org/project/glyf-core/)
+[![Tests](https://img.shields.io/github/actions/workflow/status/glyf-data/glyf/test.yml?branch=main&style=flat-square&label=tests&color=008f5f&labelColor=0f172a)](https://github.com/glyf-data/glyf/actions/workflows/test.yml)
+[![Python](https://img.shields.io/badge/python-3.11%2B-0047FF?style=flat-square&labelColor=0f172a)](https://github.com/glyf-data/glyf/blob/main/pyproject.toml)
+[![Rust](https://img.shields.io/badge/rust-1.83%2B-0047FF?style=flat-square&labelColor=0f172a)](https://github.com/glyf-data/glyf/blob/main/crates/glyf-core/Cargo.toml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-475569?style=flat-square&labelColor=0f172a)](https://github.com/glyf-data/glyf/blob/main/LICENSE)
 
-`glyf` is artifact-driven, not dbt-runtime-driven. Run dbt first, then run
-`glyf` against the resulting artifacts and relations.
+[Install](#install) · [Quickstart](#quickstart) · [How it works](#how-it-works) · [CLI](#cli) · [Examples](#examples) · [Docs](#documentation)
 
+<img src="https://raw.githubusercontent.com/glyf-data/glyf/main/.github/assets/readme-hero.svg" alt="Glyf workflow: data models flow through dbt and chart composition into a glyf build, which publishes hosted dashboards, images, embedded components, and alerts." width="760" />
 
-## Installation
+</div>
 
-`glyf` is published on PyPI as **`glyf-core`**. The package installs the `glyf`
-command; only the distribution name differs. Prebuilt wheels cover Linux
-(x86_64, aarch64), macOS (Intel, Apple Silicon), and Windows (x86_64) on
-Python 3.11+, so no Rust toolchain is required.
+---
+
+## The last mile
+
+Every stage of the modern data stack has declarative, version-controlled,
+testable artifacts. Every stage except visualization.
+
+> Your models are versioned. Your jobs are automated. Your data quality is
+> tested. **Visualization is still the last artifact outside the pipeline.**
+
+- **Dashboards live outside the workflow.** Your dbt models are in Git. Your
+  charts are usually configured in a browser, stored elsewhere, and maintained
+  by whoever last touched the UI.
+- **Columns rename, charts break silently.** When dbt models change, dashboard
+  failures show up late. glyf moves chart definitions into a build step that
+  validates earlier.
+- **Publishing should not require a vendor.** For internal portals and product
+  dashboards, rendered HTML and chart assets are usually enough.
+
+glyf is artifact-driven, not dbt-runtime-driven: run dbt first, then run glyf
+against the resulting artifacts and relations.
+
+## Install
+
+glyf is published on PyPI as **`glyf-core`**. The package installs the `glyf`
+command and the `glyf` Python module; only the distribution name differs.
 
 ```bash
 uv tool install glyf-core
 glyf --version
 ```
 
-`pipx install glyf-core` and `pip install glyf-core` work too. To upgrade:
+<details>
+<summary><b>Other ways to install</b> — one-line script, Homebrew, pipx, pip, offline</summary>
 
-```bash
-uv tool upgrade glyf-core
-```
+<br />
 
-On macOS and Linux, [`install.sh`](install.sh) does the same thing in one line,
-installing `uv` first if it is missing (no `sudo`, `--help` lists the options):
+**One-line script** (macOS and Linux). Installs `uv` first if it is missing,
+never uses `sudo`, and accepts `--update`, `--version X`, and `--help`:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh
 ```
 
-There is also a [Homebrew tap](https://github.com/glyf-data/homebrew-glyf):
+**Homebrew.** `brew trust` is required, not optional — Homebrew 6.0 refuses to
+load formulae from untrusted third-party taps:
 
 ```bash
 brew tap glyf-data/glyf
@@ -52,69 +74,134 @@ brew trust --tap glyf-data/glyf
 brew install glyf
 ```
 
-Every [GitHub Release](https://github.com/glyf-data/glyf/releases) also ships
-the platform wheels, a source distribution, and a `checksums.txt` for offline
-or air-gapped installs (`uv tool install ./glyf_core-<version>-<platform>.whl`).
-Full details, including Windows notes, are in the
-[installation guide](https://glyf.pages.dev/docs/get-started/installation).
-
-When developing from this repository, install dependencies with `uv`:
+**pipx or pip.** Prefer `uv` or `pipx` for a CLI tool; use `pip` when you want
+`glyf` inside an existing project virtualenv, next to `dbt-core`:
 
 ```bash
-uv sync
+pipx install glyf-core
+python -m pip install glyf-core
 ```
 
-For the included dbt examples, dev dependencies include `dbt-core` and
-`dbt-duckdb`.
-
-## CI Run
-
-This project uses Taskfile to run the same checks locally and in GitHub Actions.
-Install Task before running these commands:
+**Offline or air-gapped.** Every [release](https://github.com/glyf-data/glyf/releases)
+ships platform wheels, an sdist, and a `checksums.txt`:
 
 ```bash
-brew install go-task
-task --version
+sha256sum --check --ignore-missing checksums.txt
+uv tool install ./glyf_core-<version>-cp311-abi3-<platform>.whl
 ```
 
-Run the full CI pipeline:
+</details>
+
+Prebuilt wheels cover Linux (x86_64, aarch64), macOS (Intel, Apple Silicon),
+and Windows (x86_64). They target Python 3.11+ through the stable ABI, so one
+wheel per platform covers every supported Python version and no Rust toolchain
+is needed. Upgrade with `uv tool upgrade glyf-core`.
+
+## Quickstart
+
+In an existing dbt project:
 
 ```bash
-task ci
+glyf init      # scaffold glyf.yml, visualisations/, dashboards/
+dbt build      # produce the dbt artifacts glyf reads
+glyf doctor    # check artifacts, charts, and DuckDB execution
+glyf build     # compile, render, and export the site
+glyf serve     # preview it locally
 ```
 
-Run CI with a specific Python version:
+`doctor` reports whether the dbt artifacts, chart files, and DuckDB execution
+are ready before your first build, so the first failure is a readable message
+rather than a stack trace.
+
+## How it works
+
+### 01 — Write charts in GGSQL
+
+SQL you already know, extended with a visualization grammar. Use `ref()` to
+reference dbt models directly, exactly as a dbt model would:
+
+```sql
+SELECT month, revenue
+FROM {{ ref('fct_orders') }}
+
+VISUALISE month AS x, revenue AS y
+DRAW line
+LABEL title => 'Monthly Revenue'
+LABEL subtitle => 'Revenue trend from dbt model'
+CONFIG width => 900
+```
+
+glyf resolves each reference to its schema path from `target/manifest.json` and
+validates the query before it renders anything.
+
+### 02 — Compose dashboards in YAML
+
+Lay charts out into sections. Use Python macros for labels, thresholds, and
+reusable components, so a dashboard change is a one-line diff in review:
+
+```yaml
+name: executive
+title: Executive Dashboard
+
+summary:
+  - "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
+  - "{{ ui.label_value('Generated', time.now('%Y-%m-%d %H:%M')) }}"
+
+layout:
+  columns: 3
+
+sections:
+  - title: Revenue overview
+    columns: 3
+    items:
+      - metric:
+          label: Sample revenue
+          value: "$7.6k"
+      - chart: revenue
+        title: Monthly revenue
+        width: 2
+```
+
+### 03 — Build once, publish anywhere
+
+One command resolves dbt artifacts, validates chart specs, executes chart SQL
+with DuckDB, renders charts with Altair, and emits files you can publish:
+
+```text
+target/glyf/
+├── compiled/     resolved SQL
+├── charts/       rendered PNG / SVG
+├── dashboards/   dashboard specs
+└── site/         self-contained static site  ← publish this
+```
+
+No BI server to maintain. Drop `site/` into S3, GitHub Pages, a docs site, or a
+CI artifact.
+
+## CLI
+
+| Command | What it does |
+| --- | --- |
+| `glyf init` | Scaffold glyf config, chart, and dashboard directories |
+| `glyf doctor` | Check dbt artifacts, chart files, and DuckDB execution |
+| `glyf build` | Full pipeline: compile, render, and export |
+| `glyf serve` | Serve the generated site locally |
+| `glyf list` | List discovered charts and dashboards |
+| `glyf validate` | Validate chart and dashboard specs without rendering |
+| `glyf render` | Render charts only |
+| `glyf dashboard` | Build dashboards only |
+| `glyf export` | Export the publishable site (`--clean`, `--zip`) |
+
+Point any command at another project with `--project-dir`:
 
 ```bash
-task ci PYTHON_VERSION=3.12
+glyf build --project-dir examples/sales_dashboard
 ```
 
-Run individual CI steps:
+## Examples
 
-```bash
-task install
-task test
-task coverage
-task build
-task dashboard-ci
-```
-
-`task test` runs pytest with coverage and writes `coverage.xml`; CI uploads that
-report to Codecov for the README coverage badge.
-
-## Copy-Paste Quickstart
-
-In a dbt project:
-
-```bash
-glyf init
-dbt build
-glyf doctor
-glyf build
-glyf serve
-```
-
-For the included example project:
+Four runnable projects live in [`examples/`](https://github.com/glyf-data/glyf/blob/main/examples/README.md):
+`simple_dbt`, `sales_dashboard`, `product_analytics`, and `finance_metrics`.
 
 ```bash
 uv sync
@@ -126,86 +213,76 @@ uv run glyf build
 uv run glyf serve
 ```
 
-This creates the example DuckDB database at
-`examples/simple_dbt/target/simple_dbt.duckdb`.
+Then open `examples/simple_dbt/target/glyf/site/index.html`.
 
-Open:
+## Who it's for
 
-```text
-examples/simple_dbt/target/glyf/site/index.html
-```
+| | |
+| --- | --- |
+| **Analytics Engineer** | You work in dbt and version-control everything. You should not need LookML or a BI platform UI to publish a declared dashboard artifact. |
+| **Data Scientist** | Write SQL-style chart definitions that run in the pipeline and stay current, instead of one-off notebooks that drift. |
+| **Data Leader** | Open source, runs locally, and produces outputs your team already knows how to deploy and review. |
+| **Application Engineer** | The data team owns the spec; you consume rendered output without negotiating with an embedded analytics vendor. |
 
-## CLI
+## Status
 
-High-level workflow commands:
+| Capability | |
+| --- | --- |
+| dbt `ref()` and `source()` resolution from `manifest.json` | shipped |
+| GGSQL chart definitions, DuckDB execution, Altair rendering | shipped |
+| Dashboard YAML, Python macros, self-contained static site | shipped |
+| PNG / SVG chart artifacts and `--zip` export | shipped |
+| Generated typed React components | planned |
+| MCP server so agents can reason about the chart graph | planned |
+| Visual diff between builds as a CI artifact | planned |
 
-```bash
-uv run glyf init
-uv run glyf doctor
-uv run glyf build
-uv run glyf serve
-```
-
-Low-level control commands:
-
-```bash
-uv run glyf list
-uv run glyf validate
-uv run glyf render
-uv run glyf dashboard
-uv run glyf export --clean --zip
-```
-
-Point at another project:
-
-```bash
-uv run glyf build --project-dir examples/sales_dashboard
-```
-
-Preview a generated dashboard locally:
-
-```bash
-uv run glyf build --project-dir examples/simple_dbt
-uv run glyf serve --project-dir examples/simple_dbt
-uv run glyf serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
-```
-
-## Example Output
-
-Generated files are written under `target/glyf/`:
-
-```text
-target/glyf/
-  compiled/
-  charts/
-  dashboards/
-  site/
-  index.html
-```
-
-The publish-ready site lives in:
-
-```text
-target/glyf/site/
-```
-
-## Examples
-
-See [examples/README.md](examples/README.md).
-
-- `examples/simple_dbt`
-- `examples/sales_dashboard`
-- `examples/product_analytics`
-- `examples/finance_metrics`
+See [ROADMAP.md](https://github.com/glyf-data/glyf/blob/main/ROADMAP.md) for the
+longer view.
 
 ## Documentation
 
-The Docusaurus docs site source lives in [docs-site](docs-site/). It is intended
-to be the primary documentation experience with a landing page, quickstart,
-examples gallery, command reference, integrations, AI context, and community
-resources.
+The full docs site is built from [`docs-site/`](https://github.com/glyf-data/glyf/blob/main/docs-site)
+and published at [glyf.pages.dev](https://glyf.pages.dev). These guides are also
+readable directly in the repository:
 
-Run it locally after installing Node.js:
+| | |
+| --- | --- |
+| [Getting started](https://github.com/glyf-data/glyf/blob/main/docs/getting-started.md) | First build, end to end |
+| [Configuration](https://github.com/glyf-data/glyf/blob/main/docs/configuration.md) | `glyf.yml` reference |
+| [Visualisation syntax](https://github.com/glyf-data/glyf/blob/main/docs/visualisation-syntax.md) | The GGSQL grammar |
+| [Dashboard YAML](https://github.com/glyf-data/glyf/blob/main/docs/dashboard-yaml.md) | Layout, sections, macros |
+| [dbt integration](https://github.com/glyf-data/glyf/blob/main/docs/dbt-integration.md) | Artifacts, `ref()`, adapters |
+| [CI/CD](https://github.com/glyf-data/glyf/blob/main/docs/ci-cd.md) | Building glyf in a pipeline |
+| [Troubleshooting](https://github.com/glyf-data/glyf/blob/main/docs/troubleshooting.md) | Common failures |
+| [Release process](https://github.com/glyf-data/glyf/blob/main/docs/release.md) | How versions ship |
+
+## Contributing
+
+<details>
+<summary><b>Developing from this repository</b></summary>
+
+<br />
+
+```bash
+uv sync
+```
+
+Dev dependencies include `dbt-core` and `dbt-duckdb` for the bundled examples.
+
+This project uses [Task](https://taskfile.dev) to run the same checks locally
+and in GitHub Actions:
+
+```bash
+brew install go-task
+task ci                      # the full pipeline
+task ci PYTHON_VERSION=3.12  # against a specific Python
+```
+
+Individual steps: `task install`, `task test`, `task coverage`, `task build`,
+`task dashboard-ci`. `task test` runs pytest with coverage and writes
+`coverage.xml`, which CI uploads to Codecov.
+
+Run the docs site locally with Node.js installed:
 
 ```bash
 cd docs-site
@@ -213,26 +290,11 @@ npm install
 npm start
 ```
 
-Existing Markdown docs are still available while the site is being introduced:
+</details>
 
-- [Getting started](docs/getting-started.md)
-- [Configuration](docs/configuration.md)
-- [Visualisation syntax](docs/visualisation-syntax.md)
-- [Dashboard YAML](docs/dashboard-yaml.md)
-- [dbt integration](docs/dbt-integration.md)
-- [CI/CD](docs/ci-cd.md)
-- [Release process](docs/release.md)
-- [Troubleshooting](docs/troubleshooting.md)
+Issues and pull requests are welcome. Paths in `glyf.yml` and dashboard YAML use
+forward slashes on every platform.
 
-## Roadmap
+## License
 
-See [ROADMAP.md](ROADMAP.md) for the detailed future roadmap.
-
-Near-term themes:
-
-- richer chart syntax while keeping the parser small
-- more dashboard layouts
-- better error messages for dbt adapter-specific execution failures
-- snapshot tests for generated HTML
-- optional publish helpers for common static hosts
-- local `serve` and `watch` workflows after the release baseline is stable
+[Apache 2.0](https://github.com/glyf-data/glyf/blob/main/LICENSE)
