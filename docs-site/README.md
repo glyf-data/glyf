@@ -47,32 +47,29 @@ Static files under `docs-site/static/` are copied to the site root. For example,
 
 ## Cloudflare Pages
 
-The docs site defaults to Cloudflare Pages:
+The docs site is hosted on Cloudflare Pages:
 
 ```text
 https://glyf.pages.dev
 ```
 
-Deployments are handled by:
+The Pages project name is `glyf`. During the beta the site sits behind
+Cloudflare Access, so it is reachable only by signed-in maintainers.
 
-```text
-.github/workflows/docs-site.yml
+Deploys are manual. `.github/workflows/docs-site.yml` only builds the site and
+uploads the result as a workflow artifact, so a broken page fails CI without
+needing any Cloudflare credentials in the repository.
+
+To publish, build locally and deploy with your own wrangler login:
+
+```bash
+cd docs-site
+npm run build
+npx wrangler@4 pages deploy build --project-name=glyf --branch=main
 ```
 
-Required GitHub secrets:
-
-```text
-CLOUDFLARE_ACCOUNT_ID
-CLOUDFLARE_API_TOKEN
-```
-
-The Cloudflare Pages project name is:
-
-```text
-glyf
-```
-
-If that Pages project name is unavailable, update both `CLOUDFLARE_PROJECT_NAME` and `DOCS_SITE_URL` in the workflow.
+`wrangler login` handles authentication once per machine; no
+`CLOUDFLARE_API_TOKEN` secret is stored in the repository.
 
 The planned custom domain is:
 
