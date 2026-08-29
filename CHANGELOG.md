@@ -2,6 +2,16 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+- Dropped `polars` and `pandas` as dependencies. Query results are Arrow
+  tables end to end and charts are built from them directly, which halves the
+  installed size (about 260 MB instead of 530 MB). `build_chart` and
+  `QueryResult.from_dataframe` accept any dataframe that implements the Arrow
+  PyCapsule interface — polars, pandas 2.2+, pyarrow, or a DuckDB relation —
+  so passing your own frame still works; `to_polars()` and `to_pandas()`
+  remain and import the library on demand.
+
 ## 0.3.0 - 2026-08-26
 
 First release published to PyPI.

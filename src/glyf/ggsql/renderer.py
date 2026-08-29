@@ -2,11 +2,9 @@ import json
 from pathlib import Path
 
 import altair as alt
-import pandas as pd
-import polars as pl
 
 from glyf.config import RenderConfig
-from glyf.execution.result import QueryResult
+from glyf.execution.result import ArrowStreamExportable, QueryResult
 from glyf.ggsql.models import GgsqlChart
 from glyf.ggsql.parser import SUPPORTED_CHART_TYPES
 from glyf.renderers import chart_renderer, get_chart_renderer
@@ -18,7 +16,7 @@ class ChartRenderError(ValueError):
 
 def render_chart(
     chart: GgsqlChart,
-    data: QueryResult | pl.DataFrame | pd.DataFrame,
+    data: QueryResult | ArrowStreamExportable,
     png_path: Path,
     svg_path: Path,
     config: RenderConfig | None = None,
@@ -63,11 +61,11 @@ def _render_altair_chart(
 
 def build_chart(
     chart: GgsqlChart,
-    data: QueryResult | pl.DataFrame | pd.DataFrame,
+    data: QueryResult | ArrowStreamExportable,
     config: RenderConfig | None = None,
 ) -> alt.Chart:
     config = config or RenderConfig()
-    frame = _coerce_query_result(data).to_polars()
+    frame = _coerce_query_result(data).to_arrow()
     x_field = chart.field_for_role("x")
     y_field = chart.field_for_role("y")
     if x_field is None or y_field is None:
@@ -81,7 +79,7 @@ def build_chart(
     if color_field is not None:
         required_fields.append(color_field)
 
-    missing_columns = [field for field in required_fields if field not in frame.columns]
+    missing_columns = [field for field in required_fields if field not in frame.column_names]
     if missing_columns:
         joined = ", ".join(f"'{field}'" for field in missing_columns)
         raise ChartRenderError(f"query result missing chart column {joined}")
@@ -165,15 +163,14 @@ def build_chart(
     return rendered
 
 
-def _coerce_query_result(data: QueryResult | pl.DataFrame | pd.DataFrame) -> QueryResult:
+def _coerce_query_result(data: QueryResult | ArrowStreamExportable) -> QueryResult:
     if isinstance(data, QueryResult):
         return data
-    if isinstance(data, pl.DataFrame):
-        return QueryResult.from_polars(data)
-    if isinstance(data, pd.DataFrame):
-        return QueryResult.from_pandas(data)
+    if hasattr(data, "__arrow_c_stream__"):
+        return QueryResult.from_dataframe(data)
     raise ChartRenderError(
-        "chart renderer expected QueryResult, polars DataFrame, or pandas DataFrame"
+        "chart renderer expected a QueryResult or an Arrow-exportable dataframe "
+        "(pyarrow, polars, pandas >= 2.2, or a DuckDB relation)"
     )
 
 

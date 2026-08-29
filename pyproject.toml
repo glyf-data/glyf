@@ -31,11 +31,9 @@ dependencies = [
     "duckdb>=1.5.2",
     "altair>=6.1.0",
     "vl-convert-python>=1.9.0.post1",
-    "pandas>=3.0.3",
     "jinja2>=3.1.6",
     "adbc-driver-manager>=1.11.0",
     "pyarrow>=25.0.0",
-    "polars>=1.42.1",
 ]
 
 [project.scripts]
@@ -50,6 +48,8 @@ Documentation = "https://glyf.pages.dev"
 dev = [
     "dbt-core>=1.11.9",
     "dbt-duckdb>=1.10.1",
+    "pandas>=3.0.3",
+    "polars>=1.42.1",
     "pytest>=8.0",
     "pytest-cov>=7.1.0",
 ]
