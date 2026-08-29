@@ -554,8 +554,6 @@ dependencies = [
     { name = "altair" },
     { name = "duckdb" },
     { name = "jinja2" },
-    { name = "pandas" },
-    { name = "polars" },
     { name = "pyarrow" },
     { name = "pyyaml" },
     { name = "typer" },
@@ -566,6 +564,8 @@ dependencies = [
 dev = [
     { name = "dbt-core" },
     { name = "dbt-duckdb" },
+    { name = "pandas" },
+    { name = "polars" },
     { name = "pytest" },
     { name = "pytest-cov" },
 ]
@@ -576,8 +576,6 @@ requires-dist = [
     { name = "altair", specifier = ">=6.1.0" },
     { name = "duckdb", specifier = ">=1.5.2" },
     { name = "jinja2", specifier = ">=3.1.6" },
-    { name = "pandas", specifier = ">=3.0.3" },
-    { name = "polars", specifier = ">=1.42.1" },
     { name = "pyarrow", specifier = ">=25.0.0" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "typer", specifier = ">=0.12" },
@@ -588,6 +586,8 @@ requires-dist = [
 dev = [
     { name = "dbt-core", specifier = ">=1.11.9" },
     { name = "dbt-duckdb", specifier = ">=1.10.1" },
+    { name = "pandas", specifier = ">=3.0.3" },
+    { name = "polars", specifier = ">=1.42.1" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-cov", specifier = ">=7.1.0" },
 ]

@@ -1,10 +1,25 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
-import pandas as pd
-import polars as pl
 import pyarrow as pa
+
+if TYPE_CHECKING:  # pragma: no cover - typing only; neither library is a dependency
+    import pandas as pd
+    import polars as pl
+
+
+@runtime_checkable
+class ArrowStreamExportable(Protocol):
+    """Any object implementing the Arrow PyCapsule interface.
+
+    polars and pandas (>= 2.2) DataFrames, pyarrow tables and record batch
+    readers, and DuckDB relations all qualify, so they can be handed to
+    ``glyf`` without ``glyf`` depending on any of those libraries.
+    """
+
+    def __arrow_c_stream__(self, requested_schema: Any = None) -> Any: ...
 
 
 @dataclass(frozen=True)
@@ -39,20 +54,29 @@ class QueryResult:
         return cls(table=pa.Table.from_pylist(ordered_rows))
 
     @classmethod
+    def from_dataframe(cls, frame: ArrowStreamExportable) -> "QueryResult":
+        """Build a result from any Arrow-exportable dataframe, zero-copy where possible."""
+        return cls(table=pa.table(frame))
+
+    @classmethod
     def from_pandas(cls, frame: pd.DataFrame) -> "QueryResult":
         return cls(table=pa.Table.from_pandas(frame, preserve_index=False))
 
     @classmethod
     def from_polars(cls, frame: pl.DataFrame) -> "QueryResult":
-        return cls(table=frame.to_arrow())
+        return cls.from_dataframe(frame)
 
     def to_arrow(self) -> pa.Table:
         return self.table
 
     def to_polars(self) -> pl.DataFrame:
+        """Convert to polars; requires polars to be installed in the caller's environment."""
+        import polars as pl
+
         return pl.from_arrow(self.table)
 
     def to_pandas(self) -> pd.DataFrame:
+        """Convert to pandas; requires pandas to be installed in the caller's environment."""
         return self.table.to_pandas()
 
 
