@@ -47,7 +47,7 @@ uv run maturin develop          # rebuild the Rust extension
 uv run pytest                   # Python tests
 cargo test -p glyf-core         # Rust tests
 cargo fmt --all
-task ci                         # the full local CI flow (needs go-task)
+make ci                         # the full local CI flow; `make` lists targets
 uv run glyf doctor --project-dir examples/simple_dbt
 uv run glyf build  --project-dir examples/simple_dbt
 ```
