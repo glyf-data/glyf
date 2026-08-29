@@ -8,8 +8,6 @@ import Link from '@docusaurus/Link';
 
 Rendered dashboard: <Link to="pathname:///dashboards/sales-dashboard/dashboards/sales.html">Open the full sales dashboard</Link>
 
-Deployed docs path: `https://glyf.pages.dev/dashboards/sales-dashboard/dashboards/sales.html`
-
 <iframe
   src="/dashboards/sales-dashboard/dashboards/sales.html"
   title="Sales dashboard preview"
@@ -24,9 +22,8 @@ Deployed docs path: `https://glyf.pages.dev/dashboards/sales-dashboard/dashboard
 
 ## What it demonstrates
 
-- Multiple visualisations in one dashboard.
-- Chart SQL grouped around a sales fact model.
-- Output suitable for static publishing or CI artifacts.
+- Three charts — monthly revenue, channel mix, regional sales — all querying one `fct_sales` model.
+- The simplest dashboard shape: a `charts` list with no sections or macros.
 
 ## Run it
 

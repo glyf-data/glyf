@@ -2,9 +2,8 @@
 
 Dashboard configs live in `dashboards/`.
 
-This guide is the dashboard specification for glyf today: what fields exist,
-which values are currently supported, how layout works, and where macros are
-allowed to run.
+This guide is the dashboard specification: what fields exist, which values
+they accept, how layout works, and where macros run.
 
 ## Minimal dashboard
 
@@ -33,23 +32,19 @@ Dashboards that only use `charts` render as a responsive chart grid.
 
 ### Toolbar
 
-The toolbar is predefined. It is not a free-form plugin surface today.
-
-Current YAML-supported values:
+The toolbar is a fixed set of controls: star, share, visibility, lookback,
+feedback, and AI Summary. YAML decides whether it appears and what the
+visibility badge says.
 
 | Field | Supported values | Default |
 | --- | --- | --- |
 | `toolbar` | `false` or a mapping | enabled |
 | `toolbar.enabled` | `true`, `false` | `true` |
 | `toolbar.visibility` | `public`, `private` | `private` |
-| `toolbar.actions` | `share`, `visibility` | both |
-
-Default behavior:
 
 ```yaml
 toolbar:
-  visibility: private
-  actions: [share, visibility]
+  visibility: public
 ```
 
 Hide the toolbar completely:
@@ -58,22 +53,8 @@ Hide the toolbar completely:
 toolbar: false
 ```
 
-Or keep it enabled but show only one action:
-
-```yaml
-toolbar:
-  visibility: public
-  actions:
-    - share
-```
-
-Generated dashboards also render static controls for star, lookback, feedback,
-and AI Summary. Those controls are part of the generated dashboard shell today;
-they do not require YAML fields yet.
-
-The dashboard header metadata shows the actual UTC build timestamp. `Refreshed`
-is no longer a generic label; it reflects when `glyf dashboard` or `glyf build`
-generated that HTML artifact.
+The header's `Refreshed` value is the UTC time at which `glyf dashboard` or
+`glyf build` generated the page.
 
 ### Summary
 
@@ -111,7 +92,6 @@ description: Key business metrics generated from dbt models.
 
 toolbar:
   visibility: private
-  actions: [share, visibility]
 
 summary:
   - "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
@@ -151,6 +131,9 @@ sections:
 - a track string like `"30% 70%"`
 - a list of track widths like `["1fr", "2fr"]`
 
+Percentage tracks are treated as proportional weights, so `"30% 70%"` renders
+as a two-column grid without overflowing around the grid gap.
+
 `groups` is accepted as an alias for `sections`:
 
 ```yaml
@@ -164,7 +147,7 @@ groups:
 
 ### Item types
 
-Inside each section, glyf currently supports four item kinds:
+Each section item is one of four kinds:
 
 | Kind | Example | Notes |
 | --- | --- | --- |
@@ -220,28 +203,16 @@ Inside each section, glyf currently supports four item kinds:
 
 ## Dashboard macros
 
-Macros are allowed in two places today:
-
-- `summary[]`
-- `sections[].items[].component`
-
-They must be full Jinja expressions such as:
-
-```yaml
-component: "{{ ui.label_value('Owner', 'Analytics Engineering') }}"
-```
-
-They are evaluated into typed component specs before the dashboard template
-renders HTML.
-
-For the grouped macro catalog, usage patterns, aliases, and custom macro rules,
-see [Dashboard Macros](/docs/guides/dashboard-macros).
+`summary[]` entries and `sections[].items[].component` values are Jinja
+expressions that call macros, such as
+`"{{ ui.label_value('Owner', 'Analytics Engineering') }}"`. The built-in
+catalog, the artifact helpers, and project-local custom macros are documented
+in [Dashboard Macros](/docs/guides/dashboard-macros).
 
 ## Filters
 
-Dashboard filters are currently static UI controls. They do not execute runtime
-cross-filtering in the generated HTML yet, but they let you expose the intended
-filter vocabulary directly from the dashboard spec.
+Filters are static controls in the generated page: they show the filter
+vocabulary for the dashboard but do not filter the charts at runtime.
 
 Hardcoded values:
 
@@ -318,39 +289,6 @@ Implementation note:
 - `glyf dashboard` applies `chart_theme` when each dashboard HTML page is generated
 - this means a light dashboard and a dark dashboard can reuse the same chart names in one project without overwriting each other's chart output
 - the theme change is applied per dashboard page, not by rewriting the shared chart files on disk
-
-### Custom macros
-
-Project-specific Python macros can live in `dashboards/macros.py`:
-
-```python
-from glyf.dashboard import components as c
-
-
-def finance_owner():
-    return c.label_value("Owner", "Finance Analytics")
-
-
-def stale_data_warning(hours_old):
-    if hours_old > 24:
-        return c.alert("Data is stale", title="Freshness", tone="warning")
-    return c.badge("Fresh", tone="success")
-```
-
-Use them from dashboard YAML:
-
-```yaml
-summary:
-  - "{{ finance_owner() }}"
-
-sections:
-  - title: Status
-    items:
-      - component: "{{ stale_data_warning(25) }}"
-```
-
-Built-in namespaces are reserved. Custom macros cannot replace `ui`, `alert`,
-`ai`, or `time`.
 
 ## Output paths
 

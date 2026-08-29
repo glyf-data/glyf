@@ -8,8 +8,6 @@ import Link from '@docusaurus/Link';
 
 Rendered dashboard: <Link to="pathname:///dashboards/finance-metrics/dashboards/finance.html">Open the full finance metrics dashboard</Link>
 
-Deployed docs path: `https://glyf.pages.dev/dashboards/finance-metrics/dashboards/finance.html`
-
 <iframe
   src="/dashboards/finance-metrics/dashboards/finance.html"
   title="Finance metrics dashboard preview"
@@ -24,10 +22,7 @@ Deployed docs path: `https://glyf.pages.dev/dashboards/finance-metrics/dashboard
 
 ## What it demonstrates
 
-- Finance dashboard structure.
-- Multiple KPI views in one static site.
-- A clean pattern for adding new metric dashboards.
-- Mixed line, bar, area, scatter, and pie ggsql charts.
+- All five chart types — line, bar, area, scatter, and pie — from one set of finance models.
 - Section-level dashboard columns such as `65% 35%` and `35% 65%`.
 
 ## Run it
@@ -56,23 +51,27 @@ layout:
 
 sections:
   - title: Financial Performance
+    description: Bookings and contribution mix for the sample finance period.
     columns: "65% 35%"
     charts:
       - bookings_trend
       - margin_share
 
   - title: Expense Control
+    description: Department-level spend and margin trend.
     columns: 2
     charts:
       - expenses_by_department
       - gross_margin_trend
 
   - title: Margin Efficiency
+    description: Relationship between department spend and gross margin.
     columns: "35% 65%"
     items:
       - metric:
           label: March gross margin
           value: "$37.6k"
+          note: Sales and Product combined
       - chart: margin_vs_expenses
 ```
 

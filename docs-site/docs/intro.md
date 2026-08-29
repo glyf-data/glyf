@@ -1,6 +1,6 @@
 # glyf
 
-`glyf` is an Open Source Visualization build tool to data pipeline.
+`glyf` is an open-source visualisation build tool for data pipelines.
 
 It lets analytics engineers define chart queries in `.ggsql`, connect them to analytical metadata, render the results into static chart artifacts, and publish dashboards without running a BI server. The first integration reads dbt artifacts and resolves dbt `ref()` and `source()` calls from `target/manifest.json`.
 
@@ -24,11 +24,8 @@ glyf build
 glyf serve
 ```
 
-That workflow keeps data transformation in the analytical system, chart definitions in SQL-first files, and dashboard publishing in static artifacts.
-
 ## Documentation map
 
 - Start with [Quickstart](get-started/quickstart.md) to install the CLI, scaffold starter files, and generate your first dashboard.
-- Use [Existing dbt project](get-started/existing-dbt-project.md) when adding glyf to your own repo.
 - Browse [Examples gallery](examples/gallery.md) for project patterns.
 - Keep [CLI reference](reference/cli.md) open when wiring scripts or CI.

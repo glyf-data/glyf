@@ -10,8 +10,6 @@ Rendered dashboards:
 - <Link to="pathname:///dashboards/simple-dbt/dashboards/executive.html">Open the full simple dbt dashboard</Link>
 - <Link to="pathname:///dashboards/simple-dbt/dashboards/executive_dark.html">Open the dark mode simple dbt dashboard</Link>
 
-Deployed docs path: `https://glyf.pages.dev/dashboards/simple-dbt/dashboards/executive.html`
-
 <iframe
   src="/dashboards/simple-dbt/dashboards/executive.html"
   title="Simple dbt dashboard preview"

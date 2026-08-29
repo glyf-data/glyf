@@ -53,9 +53,11 @@ glyf doctor
 Usually this means the relation exists in the manifest but not in DuckDB yet.
 
 ```bash
-dbt seed
-dbt run
+dbt build
 ```
+
+For the bundled examples, run dbt from inside the example directory so the
+database file is created under that example's `target/` folder.
 
 For changed seed schemas, use:
 

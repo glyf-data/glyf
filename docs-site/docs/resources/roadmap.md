@@ -1,30 +1,26 @@
 # Roadmap
 
-The current priority is to keep the core CLI deterministic and static-first.
-
-## Current baseline
+`glyf` stays a deterministic, static-first CLI. The current workflow is:
 
 ```bash
 dbt build
-glyf render
-glyf dashboard
-glyf export
+glyf build
+glyf serve
 ```
 
-## Planned themes
+## Planned
 
-- Serve and watch workflows for local development.
-- Richer dashboard layouts.
-- Cloud publish helpers.
-- Private Cloudflare-hosted documentation.
-- Real screenshot-backed examples gallery.
-- Social preview and public SEO assets.
-- Interactive chart support.
-- dbt docs integration.
-- Lineage-aware dashboards.
-- Agent-assisted chart authoring.
-- Migration guides for existing BI dashboards.
+- **Watch mode** — regenerate charts and dashboards when `.ggsql` files,
+  dashboard YAML, or `glyf.yml` change.
+- **Richer dashboard layout** — grid sizing and chart sizing hints beyond the
+  current column tracks.
+- **Publish helpers** for common static hosting targets.
+- **dbt docs integration** — model, column, and source descriptions from the
+  manifest shown on dashboards.
+- **Lineage-aware dashboards** — which models and sources feed each chart.
+- **Visual diffs and alert hooks** — dashboard output diffs in CI, and Slack or
+  webhook notifications.
+- **JavaScript packages** for consuming `bundle.json` in web applications.
 
-## Documentation priorities
-
-The docs should help a new analytics engineer install the package, generate a first dashboard, understand the file layout, and copy realistic examples into their own dbt project.
+None of these have dates. Discussion and proposals are welcome in
+[GitHub Discussions](https://github.com/glyf-data/glyf/discussions).

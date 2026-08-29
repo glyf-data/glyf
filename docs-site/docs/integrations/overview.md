@@ -10,24 +10,17 @@
 - CI artifact uploads for review before publishing.
 - Internal documentation portals or static servers for private team sharing.
 
-## Planned integration areas
-
-- dbt docs metadata links.
-- Lineage-aware dashboard summaries from the manifest.
-- Optional publish helpers for common static hosting targets.
-- SQLMesh and other transformation-tool integrations.
-- Alerting and collaboration hooks such as Slack or webhooks.
-- Agent workflows that propose charts from dbt model metadata.
+Planned integrations are listed on the [roadmap](../resources/roadmap.md).
 
 ## Output contract
 
-Integrations should treat this directory as the deployable artifact:
+Treat this directory as the deployable artifact:
 
 ```text
 target/glyf/site/
 ```
 
-Use this archive when a platform expects a single file:
+Use this archive, produced by `glyf build --zip` or `glyf export --zip`, when a platform expects a single file:
 
 ```text
 target/glyf/glyf-site.zip
