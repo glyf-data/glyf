@@ -8,9 +8,12 @@
     <span class="glyf-star-count">0</span>
   </button>
   <div class="glyf-action-divider" aria-hidden="true"></div>
+  {% if "share" in dashboard.toolbar.actions %}
   <button class="glyf-icon-btn" type="button" data-tip="Share" aria-label="Share dashboard">
     {{ icons.icon("share") }}
   </button>
+  {% endif %}
+  {% if "visibility" in dashboard.toolbar.actions %}
   <button
     class="glyf-icon-btn{% if dashboard.toolbar.visibility == 'public' %} is-active{% endif %}"
     type="button"
@@ -19,6 +22,7 @@
   >
     {{ icons.icon("eye" if dashboard.toolbar.visibility == "public" else "lock") }}
   </button>
+  {% endif %}
   <button class="glyf-icon-btn" type="button" data-tip="Lookback" aria-label="Open lookback" data-glyf-lookback>
     {{ icons.icon("history") }}
   </button>

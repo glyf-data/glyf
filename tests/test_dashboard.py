@@ -407,6 +407,42 @@ def test_dashboard_generation_renders_sections_and_layout_items(tmp_path: Path) 
     assert all(line == line.rstrip() for line in html.splitlines())
 
 
+@pytest.mark.parametrize(
+    ("toolbar_yaml", "expect_share", "expect_visibility"),
+    [
+        ("toolbar:\n  visibility: public\n", True, True),
+        ("toolbar:\n  visibility: public\n  actions: [share]\n", True, False),
+        ("toolbar:\n  actions: [visibility]\n", False, True),
+        ("toolbar:\n  actions: []\n", False, False),
+    ],
+)
+def test_dashboard_toolbar_actions_control_rendered_buttons(
+    tmp_path: Path, toolbar_yaml: str, expect_share: bool, expect_visibility: bool
+) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\n"
+        "title: Executive Dashboard\n"
+        + toolbar_yaml
+        + "charts:\n"
+        "  - revenue\n",
+        encoding="utf-8",
+    )
+
+    generate_dashboards(project)
+
+    html = (
+        project / "target" / "glyf" / "dashboards" / "executive.html"
+    ).read_text(encoding="utf-8")
+    assert "Dashboard actions" in html
+    assert ('aria-label="Share dashboard"' in html) is expect_share
+    assert ('aria-label="Visibility:' in html) is expect_visibility
+    # The fixed controls are unaffected by actions.
+    assert 'aria-label="Open lookback"' in html
+    assert 'aria-label="Send feedback"' in html
+
+
 def test_dashboard_generation_renders_builtin_macro_components(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     render_project(project)
