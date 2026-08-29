@@ -32,20 +32,31 @@ Dashboards that only use `charts` render as a responsive chart grid.
 
 ### Toolbar
 
-The toolbar is a fixed set of controls: star, share, visibility, lookback,
-feedback, and AI Summary. YAML decides whether it appears and what the
-visibility badge says.
+The toolbar holds star, share, visibility, lookback, feedback, and AI Summary
+controls. YAML decides whether it appears, what the visibility badge says, and
+which of the share and visibility buttons render.
 
 | Field | Supported values | Default |
 | --- | --- | --- |
 | `toolbar` | `false` or a mapping | enabled |
 | `toolbar.enabled` | `true`, `false` | `true` |
 | `toolbar.visibility` | `public`, `private` | `private` |
+| `toolbar.actions` | list drawn from `share`, `visibility` | both |
 
 ```yaml
 toolbar:
   visibility: public
 ```
+
+Show only the share button:
+
+```yaml
+toolbar:
+  actions: [share]
+```
+
+An empty `actions: []` removes both. Star, lookback, feedback, and AI Summary
+are always present while the toolbar is enabled.
 
 Hide the toolbar completely:
 

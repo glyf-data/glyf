@@ -4,6 +4,9 @@ All notable changes to `glyf` will be documented in this file.
 
 ## Unreleased
 
+- `toolbar.actions` in dashboard YAML now controls which of the share and
+  visibility buttons render. It was validated but ignored before, so every
+  dashboard showed both.
 - Dropped `polars` and `pandas` as dependencies. Query results are Arrow
   tables end to end and charts are built from them directly, which halves the
   installed size (about 260 MB instead of 530 MB). `build_chart` and
