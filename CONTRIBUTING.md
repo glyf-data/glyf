@@ -30,21 +30,10 @@ large, opinionated, or speculative ones.
 
 ## Discussions
 
-This repository also uses GitHub Discussions.
-
-There will be an active discussion thread every month to gather:
-
-- feedback
-- concerns
-- workflow pain points
-- ideas you want to share
-- questions about direction or adoption
-
-Valuable points raised there will be reviewed and considered as part of how the
-project improves over time.
-
-If you are not sure whether something should be an issue, feature request, or
-pull request, start in Discussions first.
+The repository has GitHub Discussions enabled for feedback, questions about
+direction or adoption, workflow pain points, and ideas that are not yet
+concrete enough for an issue. If you are not sure whether something should be
+an issue, feature request, or pull request, start there.
 
 ## Before You Start
 

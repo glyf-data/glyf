@@ -37,6 +37,8 @@ The workflow checks out the repository, installs `uv`, installs dependencies, bu
 
 For your own project, change the `examples/simple_dbt` paths to your dbt project directory. If your dbt profile needs credentials, provide them through GitHub Actions secrets and environment variables.
 
+Run the dbt commands from the dbt project directory, or pass `--project-dir` to both dbt and glyf, so profile-relative paths such as a DuckDB database file resolve inside that project.
+
 ## GitHub Pages
 
 The workflow includes a commented `publish-pages` job. To use it:

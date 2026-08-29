@@ -40,13 +40,7 @@ const config = {
           editUrl: 'https://github.com/glyf-data/glyf/edit/main/docs-site/',
           routeBasePath: 'docs',
         },
-        blog: {
-          routeBasePath: 'blog',
-          blogTitle: 'Glyf Blog',
-          blogDescription: 'Notes on dbt-aware visualization, static dashboard builds, and analytics engineering workflows.',
-          showReadingTime: true,
-          postsPerPage: 9,
-        },
+        blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -94,7 +88,6 @@ const config = {
               },
             ],
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/glyf-data/glyf/blob/main/CHANGELOG.md',
             label: 'Changelog',

@@ -5,7 +5,7 @@ components before HTML is rendered.
 
 ## Where macros work
 
-Macros are allowed in two places today:
+Macros are allowed in two places:
 
 - `summary[]`
 - `sections[].items[].component`
@@ -35,9 +35,9 @@ sections:
       - component: "{{ ui.link('Open glyfdata.com', 'https://glyfdata.com') }}"
 ```
 
-The `examples/product_analytics/dashboards/macro_showcase.yml` dashboard exists
-as a demo project for these patterns. Its summary macros also appear in a
-visible section so you can compare drawer output with in-page component output.
+`examples/product_analytics/dashboards/macro_showcase.yml` demonstrates every
+macro on this page; its summary macros are repeated in a visible section so
+drawer output and in-page output can be compared side by side.
 
 ## UI Macros
 
@@ -51,14 +51,6 @@ UI macros return general-purpose dashboard components.
 | `ui.listofvalues(values, title=None, width=None)` | Alias of `ui.list(...)` |
 | `ui.badge(label, tone='neutral', width=None)` | Badge |
 | `ui.link(label, href, title=None, width=None)` | Link block |
-
-Recommended usage:
-
-- prefer `ui.list(...)` as the canonical list helper
-- use `ui.listofvalues(...)` only when keeping older examples or matching existing copy
-
-There is no runtime difference between `ui.list` and `listofvalues` today.
-Both resolve to the same underlying list component.
 
 Example:
 

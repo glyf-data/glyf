@@ -68,7 +68,7 @@ Supported interactions:
 - `zoom`: enables pan and zoom for local interactive dashboard previews.
 - `legend_filter`: lets users filter by legend values. This requires a `color` mapping.
 
-Interactive charts still write PNG and SVG artifacts. They also write a Vega-Lite JSON artifact, and dashboard pages embed that JSON with Vega runtime scripts.
+Interactive charts still write PNG and SVG artifacts. They also write a Vega-Lite JSON artifact, which dashboard pages embed with the Vega runtime scripts. The exported dashboard is still static HTML, but interactive rendering needs a browser with JavaScript enabled and access to those scripts.
 
 Unsupported interaction names fail validation with a parser error.
 

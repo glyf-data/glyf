@@ -8,7 +8,6 @@ tags:
 
 toolbar:
   visibility: private
-  actions: [share, visibility]
 
 summary:
   - "{{ ui.label_value('Owner', 'Analytics Engineering') }}"

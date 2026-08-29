@@ -3,7 +3,7 @@
 *Glyf is pronounced like **"glyph"**. \
 In typography, a glyph is the visible form of a symbol; in visualization, Glyf is the visible form of your data pipeline, turning modeled data into charts and dashboards that can be built, reviewed, and published like any other project artifact.*
 
-Use this flow when you already have a dbt project and want to add glyf without hand-creating folders.
+This adds glyf to a dbt project you already have. `glyf init` creates the folders and starter files; you then point the starter chart at a real model and build.
 
 ## Install
 
@@ -89,12 +89,19 @@ dbt compile
 
 ## Check and generate
 
-Use `doctor` before the first build:
+`doctor` reports missing artifacts and unresolved refs before anything is
+rendered; `build` runs validate, render, dashboard, and export in one step.
 
 ```bash
 glyf doctor
 glyf build
 glyf serve
+```
+
+Every command accepts `--project-dir` when run from outside the dbt project:
+
+```bash
+glyf doctor --project-dir path/to/my_dbt_project
 ```
 
 Open the generated static site:
@@ -144,8 +151,7 @@ examples/simple_dbt/target/glyf/site/index.html
 ## Next steps
 
 - Learn the [project structure](project-structure.md).
-- Add glyf to an [existing dbt project](existing-dbt-project.md).
 - Explore the [examples gallery](../examples/gallery.md).
-
-For lower-level control during debugging or CI, use `glyf validate`, `glyf render`,
-`glyf dashboard`, and `glyf export` separately.
+- Run the pipeline step by step with `glyf validate`, `glyf render`,
+  `glyf dashboard`, and `glyf export` when debugging — see the
+  [CLI reference](../reference/cli.md).

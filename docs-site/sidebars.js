@@ -9,7 +9,6 @@ const sidebars = {
       items: [
         'get-started/installation',
         'get-started/quickstart',
-        'get-started/existing-dbt-project',
         'get-started/project-structure',
       ],
     },
@@ -22,7 +21,6 @@ const sidebars = {
         'guides/dashboard-yaml',
         'guides/dashboard-macros',
         'guides/dbt-integration',
-        'guides/configuration',
         'guides/ci-cd',
       ],
     },
@@ -32,7 +30,6 @@ const sidebars = {
       collapsed: false,
       items: [
         'examples/gallery',
-        'examples/screenshots',
         'examples/simple-dbt',
         'examples/sales-dashboard',
         'examples/product-analytics',
@@ -60,7 +57,7 @@ const sidebars = {
       type: 'category',
       label: 'AI Context',
       collapsed: false,
-      items: ['ai-context/overview', 'ai-context/agents', 'ai-context/assistant-setup'],
+      items: ['ai-context/overview'],
     },
     {
       type: 'category',

@@ -1,31 +1,12 @@
 # Embedded Analytics
 
-Use embedded analytics when you want a product application to display charts
-built by the same data pipeline that runs Glyf.
+Use this when a product application should show charts built by the same
+pipeline that runs `glyf`, without that application running `glyf` itself.
 
-The workflow is:
+## The contract: `bundle.json`
 
-```text
-glyf export
-  writes target/glyf/site/
-
-target/glyf/site/bundle.json
-  describes exported dashboards and chart artifacts
-
-@glyf/react
-  loads bundle.json and renders charts by name
-```
-
-## Build the Glyf Site
-
-Run dbt first, then build and export the Glyf artifacts:
-
-```bash
-dbt build
-glyf build
-```
-
-The exported site is written to:
+`glyf build` (or `glyf export`) writes a static site with a manifest at its
+root:
 
 ```text
 target/glyf/site/
@@ -36,65 +17,33 @@ target/glyf/site/
   assets/
 ```
 
-`bundle.json` is the artifact contract. It tells external tools where chart
-metadata, SVG/PNG files, dashboard pages, and compiled SQL live.
+`bundle.json` lists every exported dashboard and chart, with the paths of the
+SVG and PNG artifacts, dashboard pages, and compiled SQL. An application reads
+the manifest, looks up a chart by name, and shows the artifact it points at.
+Nothing in the site depends on a server.
 
-## Publish the Artifacts
+## Publish the site
 
-Publish `target/glyf/site` anywhere your application can read static files:
-
-- Cloudflare Pages
-- S3 and CloudFront
-- R2
-- an internal static server
-- your app's `public/analytics/glyf` folder
-
-For example:
+Copy `target/glyf/site/` anywhere the application can fetch static files —
+Cloudflare Pages, S3 and CloudFront, R2, an internal static server, or the
+application's own public folder:
 
 ```text
-https://analytics.company.com/glyf/product_analytics/bundle.json
-```
-
-or inside a React app public folder:
-
-```text
+https://analytics.example.com/glyf/product_analytics/bundle.json
 /analytics/glyf/product_analytics/bundle.json
 ```
 
-## Render in React
+## What the public bundle omits
 
-Install the JavaScript packages in the application repo:
+The exported `bundle.json` is meant to be published. It does not reference the
+normalised chart data or the Vega specs that `glyf dashboard` keeps under
+`target/glyf/`, and copied chart metadata has those paths removed. If an
+application needs interactive Vega rendering or row-level access control,
+serve a scoped bundle from your own backend rather than publishing the
+internal artifacts.
 
-```bash
-npm install @glyf/client @glyf/react
-```
+## JavaScript packages
 
-Then point `GlyfProvider` at the published bundle:
-
-```tsx
-import { GlyfProvider, GlyfChart } from "@glyf/react";
-
-export function AnalyticsPanel() {
-  return (
-    <GlyfProvider bundleUrl="/analytics/glyf/product_analytics/bundle.json">
-      <GlyfChart name="activation_by_plan" />
-    </GlyfProvider>
-  );
-}
-```
-
-The first version renders exported SVG/PNG chart artifacts through an image
-element. That keeps public embeds simple and avoids exposing internal normalized
-data or Vega specs.
-
-## Security Note
-
-Public Glyf exports are intentionally public-safe:
-
-- `target/glyf/site/bundle.json` does not reference internal normalized data.
-- `target/glyf/site/bundle.json` does not reference Vega specs.
-- copied chart metadata removes internal data and Vega paths.
-
-If a future app needs interactive Vega rendering or row-level access control,
-serve a scoped bundle from your backend or Glyf Cloud instead of publishing raw
-interactive artifacts directly.
+Client and React packages that consume `bundle.json` directly are on the
+[roadmap](../resources/roadmap.md); they are not published yet. Until then,
+read the manifest with `fetch` and render the SVG or PNG it points to.

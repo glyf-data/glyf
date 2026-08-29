@@ -14,7 +14,6 @@ filters:
 
 toolbar:
   visibility: private
-  actions: [share, visibility]
 
 summary:
   - "{{ product_owner() }}"

@@ -143,4 +143,3 @@ are ready before your first `glyf build`.
 ## Next steps
 
 - [Quickstart](quickstart.md) to scaffold a new glyf setup.
-- [Existing dbt project](existing-dbt-project.md) to add glyf to a repo you already have.

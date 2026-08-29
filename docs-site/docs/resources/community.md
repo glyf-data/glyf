@@ -1,18 +1,11 @@
 # Community
 
-`glyf` is open source software for analytics engineers who want dashboards to fit naturally into data projects. Use these links to ask questions, report issues, propose examples, and connect with other people using Glyf.
+Questions, bug reports, and proposals all go through GitHub:
 
-## Join Slack
+- Repository: [glyf-data/glyf](https://github.com/glyf-data/glyf)
+- Bugs and feature requests: [Issues](https://github.com/glyf-data/glyf/issues)
+- Questions and ideas: [Discussions](https://github.com/glyf-data/glyf/discussions)
+- What is planned: [Roadmap](roadmap.md)
 
-Join Slack to ask doubts, get support, and meet people to collaborate and learn.
-
-For now, the Slack invite will be shared from the project community channels as the space opens up.
-
-## Project links
-
-- GitHub repository: [glyf-data/glyf](https://github.com/glyf-data/glyf)
-- Issues: [GitHub issues](https://github.com/glyf-data/glyf/issues)
-- Discussions: [GitHub discussions](https://github.com/glyf-data/glyf/discussions)
-- Roadmap: [Roadmap](roadmap.md)
-
-
+If you are not sure whether something is a bug or a question, start in
+Discussions.

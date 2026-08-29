@@ -287,8 +287,7 @@ Example output:
 
 `dashboard` also writes `target/glyf/bundle.json`, a local artifact manifest
 that describes dashboards, chart metadata, generated paths, and internal
-artifact locations for tools such as Glyf Studio, embedded viewers, or cloud
-services.
+artifact locations for tools that consume build output, such as Glyf Studio.
 
 ### `export`
 

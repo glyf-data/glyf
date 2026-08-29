@@ -8,8 +8,6 @@ import Link from '@docusaurus/Link';
 
 Rendered dashboard: <Link to="pathname:///dashboards/product-analytics/dashboards/product.html">Open the full product analytics dashboard</Link>
 
-Deployed docs path: `https://glyf.pages.dev/dashboards/product-analytics/dashboards/product.html`
-
 <iframe
   src="/dashboards/product-analytics/dashboards/product.html"
   title="Product analytics dashboard preview"
@@ -24,12 +22,10 @@ Deployed docs path: `https://glyf.pages.dev/dashboards/product-analytics/dashboa
 
 ## What it demonstrates
 
-- Active user trend visualisation.
-- Activation by plan.
-- Scatter plot patterns for usage analysis.
-- Rich dashboard sections with asymmetric `30% 70%` and `65% 35%` columns.
-- Dashboard macro components, including built-ins and project-local Python macros.
-- Interactive ggsql charts with tooltip, legend filtering, and zoom.
+- Sections with asymmetric `30% 70%` and `65% 35%` column tracks, metric tiles, and titled charts.
+- Dashboard filters whose values come from a rendered chart artifact (`source(activation_by_plan, plan)`).
+- Built-in macros in `summary` and a project-local macro, `activation_health`, that reads the latest activation rate through `MacroContext`.
+- Interactive ggsql charts with `tooltip`, `legend_filter`, and `zoom`.
 
 ## Run it
 
@@ -43,6 +39,8 @@ uv run glyf serve
 
 ## Dashboard YAML
 
+This is `dashboards/product.yml` as shipped in the example. `product_owner()` and `activation_health()` are defined in `dashboards/macros.py` beside it.
+
 ```yaml
 name: product
 title: Product Analytics
@@ -52,9 +50,14 @@ tags:
   - activation
   - usage
 
+filters:
+  - field: plan
+    values: source(activation_by_plan, plan)
+  - field: team
+    values: [product, lifecycle]
+
 toolbar:
   visibility: private
-  actions: [share, visibility]
 
 summary:
   - "{{ product_owner() }}"
@@ -66,26 +69,33 @@ layout:
 
 sections:
   - title: Usage Overview
+    description: Active user growth and engagement for the sample period.
     columns: "30% 70%"
     items:
       - metric:
           label: Active users
           value: "4.3k"
+          note: Sum of weekly active users across plans
       - chart: active_users
+        title: Active Users Trend
       - metric:
           label: Sessions
           value: "14.9k"
+          note: Total product sessions
       - chart: sessions_scatter
+        title: Sessions vs Active Users
 
   - title: Activation
+    description: Compare activated users and activation rates by plan.
     columns: 2
     items:
-      - component: "{{ activation_health(0.82) }}"
-      - component: "{{ ui.list(['Free', 'Team', 'Enterprise'], title='Tracked plans') }}"
+      - component: "{{ activation_health(chart='activation_rate_by_plan', field='activation_rate', threshold=80) }}"
+      - component: "{{ ui.list(source('activation_by_plan', 'plan'), title='Tracked plans') }}"
       - chart: activation_by_plan
       - chart: activation_rate_by_plan
 
   - title: Engagement Mix
+    description: Sessions per active user and total session share by plan.
     columns: "65% 35%"
     charts:
       - sessions_per_user
