@@ -1,0 +1,17 @@
+# GitHub language statistics
+#
+# Without these, the repository reports as ~40% HTML and ~33% CSS, because the
+# documentation site dominates by bytes: the rendered demo dashboards under
+# docs-site/static/dashboards are glyf's own `glyf build` output, and
+# docs-site/src/css/custom.css is the Docusaurus theme. Neither describes what
+# this project is. Marked up, the report reads Python ~66% / Rust ~15%.
+#
+# These attributes only affect Linguist's accounting (and diff collapsing for
+# generated files). Nothing is excluded from the build or the package.
+
+# Rendered dashboards committed so the docs gallery can link to them. These are
+# build artifacts, not source.
+docs-site/static/dashboards/** linguist-generated=true
+
+# The documentation site is documentation.
+docs-site/** linguist-documentation=true
