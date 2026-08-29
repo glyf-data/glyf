@@ -21,11 +21,8 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: Install Task
-        uses: go-task/setup-task@v2
-
-      - name: Run CI task
-        run: task ci PYTHON_VERSION=${{ matrix.python-version }}
+      - name: Run CI
+        run: make ci PYTHON_VERSION=${{ matrix.python-version }}
 
       - name: Upload coverage report
         if: matrix.python-version == '3.11'

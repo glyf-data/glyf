@@ -11,6 +11,9 @@ npm install
 npm start
 ```
 
+From the repository root the same steps are `make docs-install` and
+`make docs-dev`; `make docs-build` builds the static site.
+
 Open:
 
 ```text
@@ -97,7 +100,8 @@ https://glyf.pages.dev
 
 `.github/workflows/docs-site.yml` builds the site on every pull request and
 push to `main` and uploads the result as a workflow artifact, so a broken page
-fails CI. Publishing the built site is handled by the maintainers.
+fails CI. Publishing the built site is handled by the maintainers with
+`make docs-deploy`, which needs a logged-in `wrangler`.
 
 The planned custom domain is:
 

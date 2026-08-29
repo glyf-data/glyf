@@ -125,8 +125,7 @@ You will need:
 
 - Python 3.11 or later
 - [`uv`](https://docs.astral.sh/uv/)
-- [`go-task`](https://taskfile.dev/) if you want to run the same command groups
-  used by CI
+- `make`, to run the same command groups used by CI (`make` lists them)
 
 Clone the repository, then install the project and development dependencies:
 
@@ -134,16 +133,16 @@ Clone the repository, then install the project and development dependencies:
 uv sync --all-groups
 ```
 
-You can also use the project task:
+Or use the Makefile target:
 
 ```bash
-task install
+make install
 ```
 
 To install a specific Python version through `uv` and use it for the project:
 
 ```bash
-task install PYTHON_VERSION=3.12
+make install PYTHON_VERSION=3.12
 ```
 
 ## Useful Commands
@@ -151,25 +150,25 @@ task install PYTHON_VERSION=3.12
 Run the test suite:
 
 ```bash
-task test
+make test
 ```
 
 Build the package:
 
 ```bash
-task build
+make build
 ```
 
 Run the example dashboard workflow used by GitHub Actions:
 
 ```bash
-task dashboard-ci
+make dashboard-ci
 ```
 
 Run the full local CI flow:
 
 ```bash
-task ci
+make ci
 ```
 
 Run the CLI directly during development:
@@ -252,7 +251,7 @@ Before opening a pull request:
 
 1. Keep the change focused on one problem.
 2. Rebase or update your branch from `main`.
-3. Run the relevant checks, preferably `task ci` for behavior changes.
+3. Run the relevant checks, preferably `make ci` for behavior changes.
 4. Update documentation or examples if user-facing behavior changed.
 5. Make sure generated files, caches, and local database files are not included.
 

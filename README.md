@@ -281,18 +281,17 @@ uv sync
 
 Dev dependencies include `dbt-core` and `dbt-duckdb` for the bundled examples.
 
-This project uses [Task](https://taskfile.dev) to run the same checks locally
-and in GitHub Actions:
+The `Makefile` runs the same checks locally and in GitHub Actions:
 
 ```bash
-brew install go-task
-task ci                      # the full pipeline
-task ci PYTHON_VERSION=3.12  # against a specific Python
+make ci                      # the full pipeline
+make ci PYTHON_VERSION=3.12  # against a specific Python
 ```
 
-Individual steps: `task install`, `task test`, `task coverage`, `task build`,
-`task dashboard-ci`. `task test` runs pytest with coverage and writes
-`coverage.xml`, which CI uploads to Codecov.
+`make` on its own lists every target. Individual steps: `make install`,
+`make test`, `make coverage`, `make build`, `make dashboard-ci`. `make test`
+runs pytest with coverage and writes `coverage.xml`, which CI uploads to
+Codecov.
 
 Run the docs site locally with Node.js installed:
 
