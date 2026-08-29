@@ -2,7 +2,7 @@
 
 All notable changes to `glyf` will be documented in this file.
 
-## Unreleased
+## 0.4.0 - 2026-08-29
 
 - `toolbar.actions` in dashboard YAML now controls which of the share and
   visibility buttons render. It was validated but ignored before, so every
