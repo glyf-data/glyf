@@ -46,7 +46,7 @@ Documentation = "https://glyf.pages.dev"
 
 [dependency-groups]
 dev = [
-    "dbt-core>=1.11.9",
+    "dbt-core>=1.12.3",
     "dbt-duckdb>=1.10.1",
     "pandas>=3.0.3",
     "polars>=1.42.1",
