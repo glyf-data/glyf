@@ -260,14 +260,13 @@ readable directly in the repository:
 
 | | |
 | --- | --- |
-| [Getting started](https://github.com/glyf-data/glyf/blob/main/docs/getting-started.md) | First build, end to end |
-| [Configuration](https://github.com/glyf-data/glyf/blob/main/docs/configuration.md) | `glyf.yml` reference |
-| [Visualisation syntax](https://github.com/glyf-data/glyf/blob/main/docs/visualisation-syntax.md) | The GGSQL grammar |
-| [Dashboard YAML](https://github.com/glyf-data/glyf/blob/main/docs/dashboard-yaml.md) | Layout, sections, macros |
-| [dbt integration](https://github.com/glyf-data/glyf/blob/main/docs/dbt-integration.md) | Artifacts, `ref()`, adapters |
-| [CI/CD](https://github.com/glyf-data/glyf/blob/main/docs/ci-cd.md) | Building glyf in a pipeline |
-| [Troubleshooting](https://github.com/glyf-data/glyf/blob/main/docs/troubleshooting.md) | Common failures |
-| [Release process](https://github.com/glyf-data/glyf/blob/main/docs/release.md) | How versions ship |
+| [Quickstart](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/get-started/quickstart.md) | First build, end to end |
+| [Configuration](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/reference/configuration.md) | `glyf.yml` reference |
+| [Visualisation syntax](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/visualisation-syntax.md) | The GGSQL grammar |
+| [Dashboard YAML](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/dashboard-yaml.md) | Layout, sections, macros |
+| [dbt integration](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/dbt-integration.md) | Artifacts, `ref()`, adapters |
+| [CI/CD](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/ci-cd.md) | Building glyf in a pipeline |
+| [Troubleshooting](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/resources/troubleshooting.md) | Common failures |
 
 ## Contributing
 

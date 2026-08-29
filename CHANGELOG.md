@@ -2,7 +2,7 @@
 
 All notable changes to `glyf` will be documented in this file.
 
-## 0.3.0 - Unreleased
+## 0.3.0 - 2026-08-26
 
 First release published to PyPI.
 
