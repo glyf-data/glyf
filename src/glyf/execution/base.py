@@ -4,6 +4,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Protocol
 
+from glyf.config import ExecutionConfig
 from glyf.execution.result import QueryResult
 
 
@@ -16,7 +17,10 @@ class SqlExecutor(Protocol):
         ...
 
 
-SqlExecutorFactory = Callable[[], SqlExecutor]
+# Factories take the execution config because a backend may need more than a
+# name to build itself: the `dbt` backend has a target and a profiles directory
+# to honour. Backends that need nothing ignore it.
+SqlExecutorFactory = Callable[[ExecutionConfig], SqlExecutor]
 
 _EXECUTORS: dict[str, SqlExecutorFactory] = {}
 
@@ -31,7 +35,10 @@ def sql_executor(name: str) -> Callable[[SqlExecutorFactory], SqlExecutorFactory
     return decorator
 
 
-def get_sql_executor(name: str = "duckdb") -> SqlExecutor:
+def get_sql_executor(
+    name: str = "duckdb",
+    config: ExecutionConfig | None = None,
+) -> SqlExecutor:
     normalized = _normalize_name(name)
     try:
         factory = _EXECUTORS[normalized]
@@ -40,11 +47,16 @@ def get_sql_executor(name: str = "duckdb") -> SqlExecutor:
         raise ValueError(
             f"Unknown SQL executor '{name}'. Available: {available}"
         ) from exc
-    return factory()
+    return factory(config or ExecutionConfig())
 
 
-def execute_sql(project_root: Path, sql: str, executor: str = "duckdb") -> QueryResult:
-    return get_sql_executor(executor).execute(project_root, sql)
+def execute_sql(
+    project_root: Path,
+    sql: str,
+    executor: str = "duckdb",
+    config: ExecutionConfig | None = None,
+) -> QueryResult:
+    return get_sql_executor(executor, config).execute(project_root, sql)
 
 
 def _normalize_name(name: str) -> str:

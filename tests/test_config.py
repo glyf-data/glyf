@@ -27,6 +27,39 @@ def test_missing_config_uses_defaults(tmp_path: Path) -> None:
     assert config.dashboard.embed_charts is True
 
 
+def test_execution_defaults_to_no_dbt_overrides(tmp_path: Path) -> None:
+    config = load_config(tmp_path)
+
+    assert config.execution.target is None
+    assert config.execution.profiles_dir is None
+
+
+def test_execution_accepts_a_dbt_target_and_profiles_dir(tmp_path: Path) -> None:
+    config_path = tmp_path / "glyf.yml"
+    config_path.write_text(
+        "execution:\n"
+        "  backend: dbt\n"
+        "  target: prod\n"
+        "  profiles_dir: ~/.dbt\n",
+        encoding="utf-8",
+    )
+
+    config = load_config(tmp_path, config_path)
+
+    assert config.execution.backend == "dbt"
+    assert config.execution.target == "prod"
+    assert config.execution.profiles_dir == Path.home() / ".dbt"
+
+
+@pytest.mark.parametrize("key", ["target", "profiles_dir"])
+def test_execution_rejects_an_empty_override(tmp_path: Path, key: str) -> None:
+    config_path = tmp_path / "glyf.yml"
+    config_path.write_text(f"execution:\n  {key}: '  '\n", encoding="utf-8")
+
+    with pytest.raises(ConfigError, match=key):
+        load_config(tmp_path, config_path)
+
+
 def test_valid_config_loads_correctly(tmp_path: Path) -> None:
     config_path = tmp_path / "glyf.yml"
     config_path.write_text(

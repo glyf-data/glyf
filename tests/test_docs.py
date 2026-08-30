@@ -8,6 +8,7 @@ the documented examples executable:
 1. every dashboard YAML block in the docs loads through `glyf.dashboard.loader`
 2. every macro expression in those blocks resolves against the real macros
 3. blocks a page presents as a shipped example file are identical to that file
+4. every documented `glyf.yml` loads through `glyf.config`
 
 Blocks are routed by shape, so nothing in the docs needs an annotation: a block
 whose top-level keys are dashboard keys is checked, and one whose keys are not
@@ -80,6 +81,23 @@ ITEM_KEYS = frozenset(
 )
 ITEM_MARKERS = frozenset({"chart", "component", "markdown", "metric"})
 
+# Top-level keys of a `glyf.yml`. These blocks are checked too, by loading them
+# through `glyf.config` rather than the dashboard loader.
+CONFIG_KEYS = frozenset(
+    {
+        "visualisations_path",
+        "dashboards_path",
+        "output_path",
+        "compiled_path",
+        "charts_path",
+        "dashboards_output_path",
+        "site_path",
+        "execution",
+        "render",
+        "dashboard",
+    }
+)
+
 # Pages whose YAML blocks are deliberately not dashboard specs. Kept explicit so
 # that a block which stops looking like a dashboard -- a misspelled top-level
 # key, say -- fails `test_every_yaml_block_is_accounted_for` instead of quietly
@@ -87,7 +105,6 @@ ITEM_MARKERS = frozenset({"chart", "component", "markdown", "metric"})
 NON_DASHBOARD_PAGES = frozenset(
     {
         "integrations/github-actions.md",  # a GitHub Actions workflow
-        "reference/configuration.md",  # a glyf.yml, checked by its own test
     }
 )
 
@@ -101,6 +118,7 @@ SHIPPED_BLOCKS = {
 # fail instead of quietly checking nothing.
 MINIMUM_DASHBOARD_BLOCKS = 20
 MINIMUM_MACRO_BLOCKS = 8
+MINIMUM_CONFIG_BLOCKS = 2
 
 
 @dataclass(frozen=True)
@@ -159,12 +177,19 @@ def _shape(block: Block) -> str | None:
         return "item"
     if keys <= DASHBOARD_KEYS:
         return "dashboard"
+    if keys <= CONFIG_KEYS:
+        return "config"
     return None
 
 
 def _dashboard_blocks() -> list[Block]:
     """YAML blocks documenting a dashboard spec, a fragment of one, or an item."""
-    return [block for block in _yaml_blocks() if _shape(block) is not None]
+    return [block for block in _yaml_blocks() if _shape(block) in {"dashboard", "item"}]
+
+
+def _config_blocks() -> list[Block]:
+    """YAML blocks documenting a `glyf.yml`, wherever they appear."""
+    return [block for block in _yaml_blocks() if _shape(block) == "config"]
 
 
 def _macro_blocks() -> list[Block]:
@@ -259,14 +284,9 @@ def test_example_pages_show_the_shipped_file(page: str, shipped: str) -> None:
     )
 
 
-def test_configuration_reference_block_loads(tmp_path: Path) -> None:
-    blocks = [
-        block
-        for block in _blocks(DOCS / "reference/configuration.md")
-        if block.lang in {"yaml", "yml"}
-    ]
-    assert blocks, "the configuration reference no longer shows a glyf.yml"
-    (tmp_path / "glyf.yml").write_text(blocks[0].text + "\n", encoding="utf-8")
+@pytest.mark.parametrize("block", _config_blocks(), ids=lambda block: block.id)
+def test_documented_glyf_yml_blocks_load(block: Block, tmp_path: Path) -> None:
+    (tmp_path / "glyf.yml").write_text(block.text + "\n", encoding="utf-8")
 
     load_config(tmp_path)
 
@@ -285,8 +305,8 @@ def test_every_yaml_block_is_accounted_for(block: Block) -> None:
     keys = _keys(block)
     assert keys, f"{block.id}: not a YAML mapping"
     assert _shape(block) is not None, (
-        f"{block.id}: keys {sorted(keys)} are neither a dashboard nor a section "
-        "item. Fix the block, add its page to NON_DASHBOARD_PAGES, or mark it "
+        f"{block.id}: keys {sorted(keys)} are not a dashboard, a section item "
+        "or a glyf.yml. Fix the block, add its page to NON_DASHBOARD_PAGES, or mark it "
         f"with an HTML comment containing '{SKIP_MARKER}'."
     )
 
@@ -296,5 +316,6 @@ def test_the_docs_are_actually_being_checked() -> None:
     assert DOCS.is_dir(), "docs-site/docs is missing"
     assert len(_dashboard_blocks()) >= MINIMUM_DASHBOARD_BLOCKS
     assert len(_macro_blocks()) >= MINIMUM_MACRO_BLOCKS
+    assert len(_config_blocks()) >= MINIMUM_CONFIG_BLOCKS
     for shipped in SHIPPED_BLOCKS.values():
         assert Path(shipped).exists(), f"{shipped} is gone"

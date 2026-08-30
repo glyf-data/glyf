@@ -7,14 +7,20 @@ from pathlib import Path
 
 import adbc_driver_manager.dbapi
 
+from glyf.config import ExecutionConfig
 from glyf.execution.base import SqlExecutionError, sql_executor
 from glyf.execution.duckdb_support import duckdb_database, load_seed_tables
 from glyf.execution.result import QueryResult
 
 
 class AdbcDuckDbExecutor:
+    def __init__(self, database: str | None = None) -> None:
+        # None means "find the project's database"; the dbt backend passes the
+        # path the profile names instead of guessing.
+        self._database = database
+
     def execute(self, project_root: Path, sql: str) -> QueryResult:
-        database = duckdb_database(project_root)
+        database = self._database or duckdb_database(project_root)
         try:
             with adbc_driver_manager.dbapi.connect(
                 driver=_duckdb_driver_path(),
@@ -32,7 +38,7 @@ class AdbcDuckDbExecutor:
 
 @sql_executor("duckdb")
 @sql_executor("duckdb_adbc")
-def _duckdb_adbc_executor() -> AdbcDuckDbExecutor:
+def _duckdb_adbc_executor(config: ExecutionConfig) -> AdbcDuckDbExecutor:
     return AdbcDuckDbExecutor()
 
 

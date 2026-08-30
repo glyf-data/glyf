@@ -81,6 +81,7 @@ def render_project(
                 scan.root,
                 resolution.sql,
                 executor=config.execution.backend,
+                config=config.execution,
             )
         except SqlExecutionError as exc:
             rel_path = path.relative_to(scan.root).as_posix()

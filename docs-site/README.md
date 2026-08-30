@@ -118,7 +118,7 @@ DOCS_SITE_URL=https://example.com DOCS_SITE_BASE_URL=/ npm run build
 ## Examples are tested
 
 `tests/test_docs.py` runs the documented examples, so a page cannot drift away
-from the code it describes. Four checks, all from the repository root as part
+from the code it describes. Five checks, all from the repository root as part
 of `make ci`:
 
 | Check | What fails it |
@@ -126,16 +126,18 @@ of `make ci`:
 | Dashboard YAML blocks load | A block using a field the loader does not accept. |
 | Macro expressions resolve | A macro called with arguments its signature rejects. |
 | Example pages match their file | `examples/product-analytics.md` or `examples/finance-metrics.md` drifting from the `dashboards/*.yml` it presents as shipped. |
+| Documented `glyf.yml` blocks load | A configuration example using a key `glyf.config` rejects. |
 | Every block is accounted for | A block that is none of the above and is not marked to skip — usually a misspelled top-level key. |
 
 Blocks are routed by shape, so nothing needs annotating. A YAML block whose
 top-level keys are dashboard keys is checked whole or partial — a bare
 `toolbar:` is spliced into a minimal spec first — and one shaped like a section
 item, such as a lone `component:`, is spliced in as an item so its macro really
-is evaluated. A block whose keys are neither, on a page not listed in
-`NON_DASHBOARD_PAGES`, fails the last check rather than quietly going
-unchecked, which is the point: the drift most worth catching is a block that
-stops looking like a dashboard.
+is evaluated. A block whose keys are `glyf.yml` keys is loaded through
+`glyf.config` instead, wherever on the site it appears. A block that is none of
+those, on a page not listed in `NON_DASHBOARD_PAGES`, fails the last check
+rather than quietly going unchecked, which is the point: the drift most worth
+catching is a block that stops looking like what it is.
 
 Macros resolve against the real thing: a page presenting a shipped example file
 is checked against that example project's `dashboards/macros.py`, and any other
