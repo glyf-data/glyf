@@ -59,6 +59,25 @@ def _render_altair_chart(
         raise ChartRenderError(str(exc)) from exc
 
 
+def required_columns(chart: GgsqlChart) -> tuple[str, ...]:
+    """The columns a chart's VISUALISE clause binds, in encoding order."""
+    roles = ("x", "y", "color")
+    fields = [chart.field_for_role(role) for role in roles]
+    return tuple(dict.fromkeys(field for field in fields if field is not None))
+
+
+def missing_columns(chart: GgsqlChart, columns: tuple[str, ...]) -> tuple[str, ...]:
+    """Which of the chart's bound columns a result does not provide.
+
+    Shared with validate mode, which checks the same binding against a
+    zero-row result rather than against data it never fetched.
+    """
+    available = set(columns)
+    return tuple(
+        field for field in required_columns(chart) if field not in available
+    )
+
+
 def build_chart(
     chart: GgsqlChart,
     data: QueryResult | ArrowStreamExportable,
@@ -75,13 +94,11 @@ def build_chart(
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
 
     color_field = chart.field_for_role("color")
-    required_fields = [x_field, y_field]
-    if color_field is not None:
-        required_fields.append(color_field)
+    required_fields = list(required_columns(chart))
 
-    missing_columns = [field for field in required_fields if field not in frame.column_names]
-    if missing_columns:
-        joined = ", ".join(f"'{field}'" for field in missing_columns)
+    missing = missing_columns(chart, tuple(frame.column_names))
+    if missing:
+        joined = ", ".join(f"'{field}'" for field in missing)
         raise ChartRenderError(f"query result missing chart column {joined}")
 
     width = chart.width or config.default_width

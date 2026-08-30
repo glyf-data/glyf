@@ -18,6 +18,7 @@ def run_build(
     zip_site: bool = False,
     config_path: Path | None = None,
     verbose: bool = False,
+    validate: bool = False,
 ) -> None:
     _run_step(
         "validate",
@@ -27,10 +28,14 @@ def run_build(
     )
     _run_step(
         "render",
-        "rendered chart artifacts",
-        lambda: run_render(project, config_path),
+        "checked chart SQL" if validate else "rendered chart artifacts",
+        lambda: run_render(project, config_path, validate=validate),
         verbose,
     )
+    if validate:
+        # Nothing was drawn, so there is nothing to assemble or publish.
+        typer.echo("- skipped dashboard and export (validate mode)")
+        return
     _run_step(
         "dashboard",
         "generated dashboard HTML",

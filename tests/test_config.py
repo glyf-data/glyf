@@ -60,6 +60,45 @@ def test_execution_rejects_an_empty_override(tmp_path: Path, key: str) -> None:
         load_config(tmp_path, config_path)
 
 
+def test_execution_mode_and_max_rows_load(tmp_path: Path) -> None:
+    config_path = tmp_path / "glyf.yml"
+    config_path.write_text(
+        "execution:\n  mode: validate\n  max_rows: 50000\n", encoding="utf-8"
+    )
+
+    config = load_config(tmp_path, config_path)
+
+    assert config.execution.mode == "validate"
+    assert config.execution.max_rows == 50000
+
+
+def test_execution_defaults_to_a_full_unbounded_run(tmp_path: Path) -> None:
+    config = load_config(tmp_path)
+
+    assert config.execution.mode == "full"
+    assert config.execution.max_rows is None
+
+
+@pytest.mark.parametrize(
+    "block,message",
+    [
+        ("execution:\n  mode: sample\n", "must be one of full, validate"),
+        ("execution:\n  max_rows: 0\n", "positive integer"),
+        ("execution:\n  max_rows: -5\n", "positive integer"),
+        ("execution:\n  max_rows: lots\n", "positive integer"),
+        ("execution:\n  max_rows: true\n", "positive integer"),
+    ],
+)
+def test_execution_rejects_a_bad_bound(
+    tmp_path: Path, block: str, message: str
+) -> None:
+    config_path = tmp_path / "glyf.yml"
+    config_path.write_text(block, encoding="utf-8")
+
+    with pytest.raises(ConfigError, match=message):
+        load_config(tmp_path, config_path)
+
+
 def test_valid_config_loads_correctly(tmp_path: Path) -> None:
     config_path = tmp_path / "glyf.yml"
     config_path.write_text(

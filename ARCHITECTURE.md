@@ -96,6 +96,23 @@ src/glyf/dashboard/
 - **dbt integration reads `target/manifest.json`** rather than reimplementing
   dbt compilation. `glyf` never runs dbt; it consumes the artifacts dbt
   already produced.
+- **glyf is a compile-time renderer, not a data engine.** A chart is a picture
+  of an aggregate, and the `SELECT` is where aggregation belongs. The ceiling is
+  real and measurable: one chart at 1k rows is a 0.26 MB SVG, at 10k 2.55 MB, at
+  100k 25.7 MB — SVG spends a DOM node per mark, and `embed_charts` inlines that
+  markup into the dashboard page, so the page *is* that size. The same chart as
+  PNG at 100k rows is 644 KB, because raster does not care how many marks it
+  drew. A line chart is around 2,000 pixels wide, so a million points is 500
+  marks per pixel column: nothing a reader can see, at a cost everyone pays.
+
+  Altair carries a 5,000-row cap, but `altair/utils/save.py` disables it while
+  saving because vl-convert needs the data inlined — which is exactly the path
+  glyf renders through, so nothing bounded the input at all. `execution.max_rows`
+  is that bound, and it fails rather than truncating: a chart drawn from part of
+  a result is indistinguishable from a correct one. Rendering large results
+  faster is a separate question from rendering them at all, and is being handled
+  as its own investigation.
+
 - **Chart SQL reaches the warehouse through the dbt profile, over ADBC.**
   *Decided, not yet built: DuckDB is the only backend that ships today.* SQL
   execution is already pluggable — backends register with `@sql_executor` in
