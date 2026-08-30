@@ -9,7 +9,7 @@ DOCS_BRANCH   ?= main
 
 .DEFAULT_GOAL := help
 .PHONY: help python install test coverage build example-build example-serve \
-        dashboard-ci ci docs-install docs-dev docs-build docs-deploy
+        dashboard-ci rust python-ci ci docs-install docs-dev docs-build docs-deploy
 
 help: ## List available targets
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "} {printf "  %-16s %s\n", $$1, $$2}'
@@ -41,7 +41,20 @@ example-serve: ## Serve the exported site for EXAMPLE_PROJECT
 
 dashboard-ci: example-build ## The example dashboard workflow used by GitHub Actions
 
-ci: python install test build dashboard-ci ## Run the same checks as GitHub Actions
+# ------------------------------------------------------------------ rust
+
+rust: ## Check the formatting, lints and unit tests of the Rust core
+	cargo fmt --all --check
+	cargo clippy --all-targets -- -D warnings
+	cargo test -p glyf-core
+
+# -------------------------------------------------------------------- ci
+
+python-ci: python install test build dashboard-ci ## The Python half of CI
+
+# GitHub Actions splits this across two jobs: `python-ci` over the Python
+# matrix, and `rust` once on the pinned toolchain.
+ci: python-ci rust ## Run the same checks as GitHub Actions
 
 # ------------------------------------------------------------- docs site
 

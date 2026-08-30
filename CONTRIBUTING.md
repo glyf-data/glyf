@@ -165,7 +165,13 @@ Run the example dashboard workflow used by GitHub Actions:
 make dashboard-ci
 ```
 
-Run the full local CI flow:
+Check the Rust core — formatting, clippy and its unit tests:
+
+```bash
+make rust
+```
+
+Run the full local CI flow over both languages:
 
 ```bash
 make ci

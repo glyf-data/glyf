@@ -7,6 +7,11 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  # Keep in step with release.yml. Floor is rust-version in Cargo.toml.
+  RUST_TOOLCHAIN: "1.98.0"
+  PYTHON_VERSION: "3.11"
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -22,7 +27,7 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: Run CI
-        run: make ci PYTHON_VERSION=${{ matrix.python-version }}
+        run: make python-ci PYTHON_VERSION=${{ matrix.python-version }}
 
       - name: Upload coverage report
         if: matrix.python-version == '3.11'
@@ -30,3 +35,29 @@ jobs:
         with:
           files: coverage.xml
           fail_ci_if_error: false
+
+  rust:
+    name: rust core
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # pyo3 links against libpython here: unlike the release wheels, these
+      # builds do not use the `extension-module` feature.
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Set up Rust
+        run: |
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal --component rustfmt,clippy
+          rustup default "$RUST_TOOLCHAIN"
+
+      - name: Cache cargo build
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run Rust checks
+        run: make rust
