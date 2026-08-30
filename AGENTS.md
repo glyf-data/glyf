@@ -46,7 +46,8 @@ uv sync --all-groups            # install
 uv run maturin develop          # rebuild the Rust extension
 uv run pytest                   # Python tests
 cargo test -p glyf-core         # Rust tests
-cargo fmt --all
+cargo fmt --all                 # apply Rust formatting
+make rust                       # Rust fmt check, clippy and tests, as in CI
 make ci                         # the full local CI flow; `make` lists targets
 uv run glyf doctor --project-dir examples/simple_dbt
 uv run glyf build  --project-dir examples/simple_dbt
