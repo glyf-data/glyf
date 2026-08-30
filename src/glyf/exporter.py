@@ -41,8 +41,15 @@ def export_site(
 
     _copy_file(paths.root / "index.html", paths.site_dir / "index.html")
     _copy_tree(paths.dashboards_dir, paths.site_dir / "dashboards")
-    _copy_chart_artifacts(paths.charts_dir, paths.site_dir / "charts")
-    _copy_tree(paths.compiled_dir, paths.site_dir / "compiled")
+    exclude_row_data = config.export.excludes_row_data
+    _copy_chart_artifacts(
+        paths.charts_dir,
+        paths.site_dir / "charts",
+        exclude_row_data=exclude_row_data,
+    )
+    if not exclude_row_data:
+        # Compiled SQL names the warehouse tables the dashboard was built from.
+        _copy_tree(paths.compiled_dir, paths.site_dir / "compiled")
     copy_dashboard_assets(paths.root, paths.site_dir)
     write_bundle_manifest(
         scan.root,
@@ -85,7 +92,22 @@ def _copy_tree(source: Path, destination: Path) -> None:
     shutil.copytree(source, destination, dirs_exist_ok=True)
 
 
-def _copy_chart_artifacts(source: Path, destination: Path) -> None:
+# What may be published from the charts directory. An allowlist, so an artifact
+# type added later is withheld until someone decides it is publishable --
+# the previous denylist named `*.data.json` and `*.vega.json` and copied
+# everything else, and those files no longer live here anyway.
+PUBLISHABLE_CHART_SUFFIXES = frozenset({".png", ".svg", ".json"})
+
+# Suffixes that carry the rows themselves rather than a picture of them.
+ROW_DATA_SUFFIXES = (".data.json", ".vega.json")
+
+
+def _copy_chart_artifacts(
+    source: Path,
+    destination: Path,
+    *,
+    exclude_row_data: bool = False,
+) -> None:
     destination.mkdir(parents=True, exist_ok=True)
     for path in sorted(source.rglob("*")):
         relative = path.relative_to(source)
@@ -93,25 +115,37 @@ def _copy_chart_artifacts(source: Path, destination: Path) -> None:
         if path.is_dir():
             target.mkdir(parents=True, exist_ok=True)
             continue
-        if (
-            path.suffixes[-2:] == [".data", ".json"]
-            or path.name.endswith(".data.json")
-            or path.name.endswith(".vega.json")
-        ):
+        if any(path.name.endswith(suffix) for suffix in ROW_DATA_SUFFIXES):
+            continue
+        if path.suffix not in PUBLISHABLE_CHART_SUFFIXES:
+            continue
+        if exclude_row_data and path.suffix == ".svg":
+            # Every mark in an SVG carries its row in an accessibility label.
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         if path.suffix == ".json":
-            _copy_public_chart_metadata(path, target)
+            _copy_public_chart_metadata(
+                path,
+                target,
+                exclude_row_data=exclude_row_data,
+            )
         else:
             shutil.copy2(path, target)
 
-    for stale in destination.rglob("*.data.json"):
-        stale.unlink()
-    for stale in destination.rglob("*.vega.json"):
-        stale.unlink()
+    for suffix in ROW_DATA_SUFFIXES:
+        for stale in destination.rglob(f"*{suffix}"):
+            stale.unlink()
+    if exclude_row_data:
+        for stale in destination.rglob("*.svg"):
+            stale.unlink()
 
 
-def _copy_public_chart_metadata(source: Path, destination: Path) -> None:
+def _copy_public_chart_metadata(
+    source: Path,
+    destination: Path,
+    *,
+    exclude_row_data: bool = False,
+) -> None:
     try:
         payload = json.loads(source.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
@@ -123,6 +157,11 @@ def _copy_public_chart_metadata(source: Path, destination: Path) -> None:
 
     payload.pop("data_json_path", None)
     payload.pop("vega_json_path", None)
+    if exclude_row_data:
+        # Neither is published, so the manifest must not point at them.
+        payload.pop("svg_path", None)
+        payload.pop("compiled_sql_path", None)
+        payload.pop("interactions", None)
     _rewrite_public_chart_path(payload, "metadata_path", "charts")
     _rewrite_public_chart_path(payload, "png_path", "charts")
     _rewrite_public_chart_path(payload, "svg_path", "charts")

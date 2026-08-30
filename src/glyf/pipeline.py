@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from glyf.config import ExecutionConfig, GlyfConfig
@@ -34,6 +34,8 @@ class RenderResult:
     charts: tuple[RenderedChart, ...]
     # True when the run only checked the queries; no chart artifacts exist.
     validated_only: bool = False
+    # Downgrades worth telling the user about, rather than doing silently.
+    warnings: tuple[str, ...] = ()
 
 
 class RenderError(ValueError):
@@ -47,6 +49,13 @@ def render_project(
     config = config or GlyfConfig()
     execution = config.execution
     validate_only = execution.mode == "validate"
+    exclude_row_data = config.export.excludes_row_data
+    render_config = (
+        replace(config.render, formats=("png",))
+        if exclude_row_data
+        else config.render
+    )
+    warnings: list[str] = []
     scan = scan_project(project, config)
     if scan.manifest_path is None:
         raise RenderError(
@@ -115,14 +124,26 @@ def render_project(
 
         write_chart_data(scan.root, chart, artifacts, data)
 
+        if exclude_row_data:
+            # An SVG carries every row in its per-mark accessibility labels and
+            # a Vega spec carries them outright, so neither may exist. Clear
+            # anything a previous build left behind, or export would ship it.
+            _discard(artifacts.svg, artifacts.vega_json)
+            if chart.is_interactive:
+                warnings.append(
+                    f"{rel_path} renders as a static PNG: its INTERACT clause "
+                    "needs a Vega spec, which carries the rows "
+                    "(export.row_data: exclude)"
+                )
+
         try:
             render_chart(
                 chart,
                 data,
                 artifacts.png,
                 artifacts.svg,
-                config.render,
-                vega_json_path=artifacts.vega_json,
+                render_config,
+                vega_json_path=None if exclude_row_data else artifacts.vega_json,
             )
         except ChartRenderError as exc:
             raise RenderError(f"{rel_path} chart rendering failed: {exc}") from exc
@@ -141,7 +162,13 @@ def render_project(
         scan=scan,
         charts=tuple(rendered),
         validated_only=validate_only,
+        warnings=tuple(warnings),
     )
+
+
+def _discard(*paths: Path) -> None:
+    for path in paths:
+        path.unlink(missing_ok=True)
 
 
 def _bounded_sql(sql: str, execution: ExecutionConfig) -> str:

@@ -28,6 +28,9 @@ render:
   default_width: 800
   default_height: 400
 
+export:
+  row_data: include
+
 dashboard:
   theme: light
   embed_charts: true
@@ -55,6 +58,7 @@ dashboard:
 | `execution.profiles_dir` | dbt's search order | `dbt` backend only. Where to find `profiles.yml`, instead of `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`. |
 | `execution.mode` | `full` | `full` runs the queries and draws the charts. `validate` runs each with `limit 0` and draws nothing — see [validate mode](#validate-mode). |
 | `execution.max_rows` | unset | Fail the build if a chart's query returns more than this many rows. Unset means no limit. |
+| `export.row_data` | `include` | `exclude` publishes rendered PNGs only — no chart rows, Vega specs or compiled SQL. See [publishing without the rows](#publishing-without-the-rows). |
 
 ## Render
 
@@ -119,3 +123,34 @@ result looks completely plausible and is wrong.
 Both bounds are applied in SQL, so the warehouse sends less over the wire. They
 bound transfer and render time, **not** what the warehouse scans: an aggregate
 is computed in full whatever limit follows it.
+
+## Publishing without the rows
+
+A normal export publishes the data along with the pictures, and not obviously:
+an interactive chart inlines its whole Vega specification — rows included — into
+the dashboard page, a static SVG carries each row in a per-mark accessibility
+label, and `site/compiled/*.sql` names the warehouse tables the charts were
+built from.
+
+```yaml title="glyf.yml"
+export:
+  row_data: exclude
+```
+
+That publishes rendered PNG images and nothing else:
+
+| | under `exclude` |
+| --- | --- |
+| chart artifacts | PNG only; no SVG is produced or published |
+| interactive charts | rendered as a static PNG, with a build warning naming the chart |
+| dashboard HTML | references the PNG; no inline SVG, no Vega spec, no SQL drawer |
+| compiled SQL | kept in `target/glyf/compiled/` for you, not copied into the site |
+| `source(chart, field)` filters | left empty — a resolved list is a `SELECT DISTINCT` of a column |
+| hand-written `values:` lists | published, being configuration you wrote rather than data |
+
+The published `bundle.json` reports `security.row_data: "excluded"` and leaves
+`artifacts.svg` and `artifacts.compiled_sql` null, so a consumer is not sent to
+a file that was deliberately withheld.
+
+This is about what the artifacts contain, not about who can read them. Access
+control is whatever your host provides.
