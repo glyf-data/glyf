@@ -34,7 +34,7 @@ static site export
   - dbt ref/source resolution
 - Python wrapper and orchestration:
   - CLI commands
-  - DuckDB execution
+  - SQL execution (DuckDB today; see Design Decisions)
   - chart rendering
   - dashboard YAML loading
   - dashboard macro loading and evaluation
@@ -96,6 +96,28 @@ src/glyf/dashboard/
 - **dbt integration reads `target/manifest.json`** rather than reimplementing
   dbt compilation. `glyf` never runs dbt; it consumes the artifacts dbt
   already produced.
+- **Chart SQL reaches the warehouse through the dbt profile, over ADBC.**
+  *Decided, not yet built: DuckDB is the only backend that ships today.* SQL
+  execution is already pluggable — backends register with `@sql_executor` in
+  `glyf.execution.base`, and `execution.backend` selects one — but every
+  registered backend is DuckDB and nothing reads `profiles.yml`, so a project
+  whose models live in Snowflake or BigQuery cannot render charts. The compiled
+  SQL is not the problem: `ref()` resolution already substitutes the manifest's
+  `relation_name`, so it is warehouse-qualified before it is executed.
+
+  A `dbt` backend will resolve `profiles.yml` and connect over ADBC, one driver
+  per warehouse type behind an optional extra. ADBC because
+  `adbc-driver-manager` is already a runtime dependency and returns Arrow, which
+  is what `QueryResult` holds — a warehouse executor is then the same shape as
+  the DuckDB one. The alternative, driving dbt's own adapters, was rejected:
+  it would make `dbt-core` a runtime dependency of every install, DuckDB-only
+  ones included, and would couple `glyf render` to `dbt.adapters.factory`, which
+  is not a public API. `profiles.yml` is. The cost of that choice is auth
+  coverage — ADBC handles password and key-pair, but not every SSO or cloud IAM
+  flow — and if a real project hits that wall, a dbt-adapter backend is the
+  answer, added beside this one rather than instead of it. `glyf` still never
+  runs dbt.
+
 - **Parsing and resolution are in Rust, orchestration in Python.** The Rust
   crate owns ggsql validation, manifest extraction, and `ref()`/`source()`
   resolution, exposed through `glyf._core`. Python keeps the CLI, execution,
