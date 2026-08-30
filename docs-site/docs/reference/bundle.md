@@ -167,11 +167,15 @@ ignore `source` entirely.
 | `charts[].artifacts.data` | path | `null` |
 | `charts[].artifacts.vega` | path, when the chart has interactions | `null` |
 
-Nothing else differs. The public manifest is the one meant to be published: it
-does not reference the normalised data or the Vega specs that stay under
-`target/glyf/`. If an application needs interactive Vega rendering or row-level
-access control, serve a scoped manifest from your own backend instead of
-publishing the internal artifacts.
+Nothing else differs. The public manifest does not *reference* the normalised
+data or the Vega specs that stay under `target/glyf/`.
+
+That is a statement about the manifest, not about the site. The dashboard pages
+published alongside it still carry the chart rows — inline in a Vega
+specification for an interactive chart, and in an SVG's per-mark labels
+otherwise. Withholding the paths does not withhold the data. See
+[what a published site exposes](../guides/data-exposure.md), and
+`export.row_data: exclude` if the site should carry no rows at all.
 
 ## A complete public manifest
 

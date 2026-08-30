@@ -15,12 +15,16 @@ my_dbt_project/
     revenue_by_region.ggsql
   dashboards/
     executive.yml
-  target/
+  target/            # dbt writes this; glyf adds one directory to it
     manifest.json
-    ggsql/
+    glyf/
       compiled/
       charts/
+      data/
       dashboards/
+      assets/
+      index.html
+      bundle.json
       site/
 ```
 
@@ -38,13 +42,46 @@ my_dbt_project/
 
 ## Outputs
 
-`target/glyf/compiled/` stores compiled SQL.
+Everything glyf generates lives under `target/glyf/`. Each directory is written
+by one stage of the build, so the table below doubles as a map of what runs
+when — `glyf build` runs all four stages in order.
 
-`target/glyf/charts/` stores rendered chart artifacts.
+| Path | Written by | Contains |
+| --- | --- | --- |
+| `compiled/` | `render` | One `.sql` per chart: the query with `ref()` and `source()` resolved. |
+| `charts/` | `render` | One `.png`, `.svg` and `.json` per chart. The JSON is metadata — title, type, the columns bound to x and y, and where the other files are. |
+| `data/normalized/` | `render` | Every row of each chart's result, as JSON. **Internal**: never exported. |
+| `data/vega/` | `render` | A Vega-Lite spec per *interactive* chart — one with an `INTERACT` clause. **Internal**: never exported. |
+| `dashboards/` | `dashboard` | One generated `.html` page per dashboard. |
+| `index.html` | `dashboard` | The landing page linking the dashboards. |
+| `assets/` | `dashboard` | `dashboard.css` and the web fonts the pages use. |
+| `bundle.json` | `dashboard` | A manifest of everything built — see the [bundle reference](../reference/bundle.md). |
+| `site/` | `export` | **The publish-ready copy. This is the directory you host.** |
+| `glyf-site.zip` | `export --zip` | An archive of `site/`. |
 
-`target/glyf/dashboards/` stores generated dashboard pages.
+`site/` is a copy, not the original: it holds the dashboards, chart images,
+compiled SQL and assets, plus its own `bundle.json`, and deliberately leaves out
+everything under `data/`. Publish `site/` and nothing else — copying
+`target/glyf/` wholesale would duplicate every file and ship the internal ones.
 
-`target/glyf/site/` stores the publish-ready static site.
+What `site/` contains depends on `export.row_data`; see
+[publishing without the rows](../reference/configuration.md#publishing-without-the-rows)
+and [what a published site exposes](../guides/data-exposure.md).
+
+## What belongs to dbt
+
+`target/` is dbt's directory, and most of it has nothing to do with glyf.
+`target/run/`, `target/compiled/`, `target/manifest.json`, `target/run_results.json`
+and `target/<project>.duckdb` are all written by dbt. glyf only ever *reads*
+two of them: `manifest.json`, to resolve `ref()` and `source()`, and the DuckDB
+database, when that is the execution backend.
+
+Note the collision: `target/compiled/` is dbt's compiled models, while
+`target/glyf/compiled/` is glyf's compiled chart SQL. They are different files
+from different tools.
+
+A `target/ggsql/` directory is a leftover from before the tool was renamed.
+Nothing writes it any more, and it is safe to delete.
 
 ## Naming convention
 

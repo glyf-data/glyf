@@ -310,10 +310,13 @@ Example output:
 ✓ wrote zip archive target/glyf/glyf-site.zip
 ```
 
-`export` writes `target/glyf/site/bundle.json`, a public-safe bundle manifest
-for the exported static site. It omits internal normalized data and Vega spec
-paths so the exported site does not advertise non-public artifacts. See the
-[bundle manifest reference](./bundle.md).
+`export` writes `target/glyf/site/bundle.json`, the manifest for the exported
+static site. It omits the paths of the internal normalized data and Vega specs,
+so the exported site does not advertise artifacts it does not publish — which is
+not the same as publishing no data: the dashboards themselves carry the chart
+rows unless the site is built with `export.row_data: exclude`. See the
+[bundle manifest reference](./bundle.md) and [what a published site
+exposes](../guides/data-exposure.md).
 
 </div>
 

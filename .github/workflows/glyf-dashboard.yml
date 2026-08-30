@@ -40,13 +40,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: glyf-site
-          path: examples/simple_dbt/target/ggsql/site
+          path: examples/simple_dbt/target/glyf/site
+          if-no-files-found: error
 
       - name: Upload zipped static site
         uses: actions/upload-artifact@v4
         with:
           name: glyf-site-zip
-          path: examples/simple_dbt/target/ggsql/glyf-site.zip
+          path: examples/simple_dbt/target/glyf/glyf-site.zip
+          if-no-files-found: error
 
   # Optional GitHub Pages publishing example.
   # Enable GitHub Pages for Actions in repository settings, then uncomment.

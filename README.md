@@ -182,14 +182,22 @@ with DuckDB, renders charts with Altair, and emits files you can publish:
 
 ```text
 target/glyf/
-├── compiled/     resolved SQL
-├── charts/       rendered PNG / SVG
-├── dashboards/   dashboard specs
+├── compiled/     resolved chart SQL
+├── charts/       rendered PNG / SVG, and chart metadata
+├── data/         chart rows and Vega specs — internal, never published
+├── dashboards/   generated dashboard pages
+├── assets/       CSS and fonts
+├── index.html    landing page
+├── bundle.json   manifest of everything built
 └── site/         self-contained static site  ← publish this
 ```
 
 No BI server to maintain. Drop `site/` into S3, GitHub Pages, a docs site, or a
-CI artifact.
+CI artifact. Publish `site/` rather than `target/glyf/`: the rest is working
+output, and `data/` holds the raw rows.
+
+A published site carries the data behind its charts unless you ask otherwise —
+see [what a published site exposes](https://glyf.pages.dev/docs/guides/data-exposure).
 
 ## CLI
 

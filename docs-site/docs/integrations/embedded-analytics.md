@@ -42,7 +42,12 @@ The exported `bundle.json` is meant to be published. It does not reference the
 normalised chart data or the Vega specs that `glyf dashboard` keeps under
 `target/glyf/`, and copied chart metadata has those paths removed. The
 [reference](../reference/bundle.md#what-the-public-manifest-changes) lists the
-differences field by field. If an
+differences field by field.
+
+The manifest omits those *paths*; the exported dashboards still carry the chart
+rows in their HTML. If the published site should contain no row data, build it
+with `export.row_data: exclude` — [what a published site
+exposes](../guides/data-exposure.md) covers what that changes. If an
 application needs interactive Vega rendering or row-level access control,
 serve a scoped bundle from your own backend rather than publishing the
 internal artifacts.
