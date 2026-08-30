@@ -63,6 +63,17 @@ ConfigOption = Annotated[
     ),
 ]
 
+ValidateOption = Annotated[
+    bool,
+    typer.Option(
+        "--validate",
+        help=(
+            "Check that each chart's SQL runs and binds its columns, without "
+            "fetching rows or drawing charts. Intended for CI."
+        ),
+    ),
+]
+
 
 @app.command("init")
 def init_command(
@@ -142,9 +153,13 @@ def validate_command(project: ProjectOption = Path("."), config: ConfigOption = 
 
 
 @app.command("render")
-def render_command(project: ProjectOption = Path("."), config: ConfigOption = None) -> None:
+def render_command(
+    project: ProjectOption = Path("."),
+    config: ConfigOption = None,
+    validate: ValidateOption = False,
+) -> None:
     """Generate compiled SQL and chart artifacts."""
-    run_render(project, config)
+    run_render(project, config, validate=validate)
 
 
 @app.command("build")
@@ -170,9 +185,17 @@ def build_command(
             help="Show detailed output from validate, render, dashboard, and export.",
         ),
     ] = False,
+    validate: ValidateOption = False,
 ) -> None:
     """Run the full glyf artifact pipeline and export a static site."""
-    run_build(project, clean=clean, zip_site=zip_site, config_path=config, verbose=verbose)
+    run_build(
+        project,
+        clean=clean,
+        zip_site=zip_site,
+        config_path=config,
+        verbose=verbose,
+        validate=validate,
+    )
 
 
 @app.command("dashboard")

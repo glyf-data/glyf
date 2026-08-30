@@ -17,6 +17,8 @@ execution:
   backend: duckdb
   target: dev
   profiles_dir: ~/.dbt
+  mode: full
+  max_rows: 50000
 
 render:
   renderer: altair
@@ -51,6 +53,8 @@ dashboard:
 | `execution.backend` | `duckdb` | Where chart SQL runs. `duckdb` finds a database beside the project; `dbt` uses the project's `profiles.yml`. |
 | `execution.target` | profile's own | `dbt` backend only. Render against a target other than the profile's default. Overrides `DBT_TARGET`. |
 | `execution.profiles_dir` | dbt's search order | `dbt` backend only. Where to find `profiles.yml`, instead of `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`. |
+| `execution.mode` | `full` | `full` runs the queries and draws the charts. `validate` runs each with `limit 0` and draws nothing — see [validate mode](#validate-mode). |
+| `execution.max_rows` | unset | Fail the build if a chart's query returns more than this many rows. Unset means no limit. |
 
 ## Render
 
@@ -77,3 +81,41 @@ Every command accepts `--config`:
 glyf build --config glyf.yml
 glyf build --project-dir examples/simple_dbt --config examples/simple_dbt/glyf.yml
 ```
+
+## Validate mode
+
+A normal `glyf build` executes every chart's query in full, because pulling the
+data is what produces the charts. In CI that is usually waste: the question a
+pull request asks is whether the SQL still runs and still binds the columns the
+chart draws, not what the numbers are this morning.
+
+```bash
+glyf build --validate
+```
+
+Each query runs wrapped in `limit 0`, which returns the result's columns and no
+rows. glyf checks that every column bound by `VISUALISE` is present, writes the
+compiled SQL, and stops — no images, no data files, no dashboards, no export.
+A renamed column fails the build; a slow or expensive query costs almost
+nothing. `execution.mode: validate` does the same thing from `glyf.yml`.
+
+Nothing is drawn, deliberately: a chart rendered from a sample looks exactly
+like a real one and would be reviewed, or published, as if it were.
+
+## Bounding a query with `max_rows`
+
+`execution.max_rows` fails a build when a chart's query returns more rows than
+the cap:
+
+```text
+visualisations/events.ggsql returned more than 50000 rows. Aggregate the query
+or raise execution.max_rows; glyf will not draw a chart from part of a result.
+```
+
+It is a guardrail against an unbounded chart query, not a data policy, so it
+errors rather than truncating — a chart drawn from an arbitrary slice of a
+result looks completely plausible and is wrong.
+
+Both bounds are applied in SQL, so the warehouse sends less over the wire. They
+bound transfer and render time, **not** what the warehouse scans: an aggregate
+is computed in full whatever limit follows it.

@@ -8,6 +8,9 @@ class ConfigError(ValueError):
     """Raised when glyf.yml cannot be loaded."""
 
 
+EXECUTION_MODES = frozenset({"full", "validate"})
+
+
 @dataclass(frozen=True)
 class RenderConfig:
     formats: tuple[str, ...] = ("svg", "png")
@@ -22,6 +25,11 @@ class ExecutionConfig:
     # Used by the `dbt` backend, which reads the project's profiles.yml.
     target: str | None = None
     profiles_dir: Path | None = None
+    # `validate` runs each query with `limit 0` and draws nothing: enough to
+    # prove the SQL still runs and binds its columns, which is what CI needs.
+    mode: str = "full"
+    # A guardrail against an unbounded chart query. Unset means no limit.
+    max_rows: int | None = None
 
 
 @dataclass(frozen=True)
@@ -138,11 +146,27 @@ def _execution_config(raw: object) -> ExecutionConfig:
     if not isinstance(raw, dict):
         raise ConfigError("Invalid config: 'execution' must be a mapping")
 
+    mode = _string_value(raw, "mode", "full")
+    if mode not in EXECUTION_MODES:
+        allowed = ", ".join(sorted(EXECUTION_MODES))
+        raise ConfigError(f"Invalid config: 'execution.mode' must be one of {allowed}")
+
     return ExecutionConfig(
         backend=_string_value(raw, "backend", "duckdb"),
         target=_optional_string(raw, "target"),
         profiles_dir=_optional_path(raw, "profiles_dir"),
+        mode=mode,
+        max_rows=_optional_positive_int(raw, "max_rows"),
     )
+
+
+def _optional_positive_int(raw: dict[object, object], key: str) -> int | None:
+    if key not in raw or raw[key] is None:
+        return None
+    value = raw[key]
+    if not isinstance(value, int) or isinstance(value, bool) or value <= 0:
+        raise ConfigError(f"Invalid config: '{key}' must be a positive integer")
+    return value
 
 
 def _optional_string(raw: dict[object, object], key: str) -> str | None:
