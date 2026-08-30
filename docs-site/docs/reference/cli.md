@@ -288,6 +288,7 @@ Example output:
 `dashboard` also writes `target/glyf/bundle.json`, a local artifact manifest
 that describes dashboards, chart metadata, generated paths, and internal
 artifact locations for tools that consume build output, such as Glyf Studio.
+Its fields are documented in the [bundle manifest reference](./bundle.md).
 
 ### `export`
 
@@ -311,7 +312,8 @@ Example output:
 
 `export` writes `target/glyf/site/bundle.json`, a public-safe bundle manifest
 for the exported static site. It omits internal normalized data and Vega spec
-paths so the exported site does not advertise non-public artifacts.
+paths so the exported site does not advertise non-public artifacts. See the
+[bundle manifest reference](./bundle.md).
 
 </div>
 

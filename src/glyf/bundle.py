@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from glyf import __version__
 from glyf.config import GlyfConfig
 from glyf.dashboard.loader import Dashboard, DashboardFilter, load_dashboard
+from glyf.dashboard.renderer import DashboardBuildMeta
 from glyf.output.paths import artifact_paths
 from glyf.project.scanner import scan_project
 
@@ -63,10 +65,18 @@ def _read_existing_bundle(path: Path) -> dict[str, Any]:
 
 
 def _infer_generated_at(root: Path) -> str | None:
+    """Fall back to the index page's mtime when no caller supplied a timestamp.
+
+    `glyf export` writes the public bundle without a timestamp of its own and
+    normally inherits the one `glyf dashboard` recorded in the local bundle.
+    When the local bundle is missing, the index page is the youngest artifact
+    the build wrote, so its mtime is the closest available build time.
+    """
     index_path = root / "index.html"
     if not index_path.exists():
         return None
-    return None
+    mtime = datetime.fromtimestamp(index_path.stat().st_mtime, tz=timezone.utc)
+    return DashboardBuildMeta.from_datetime(mtime).generated_at_iso
 
 
 def _paths_payload(public: bool) -> dict[str, object]:

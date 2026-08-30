@@ -40,7 +40,7 @@ const sidebars = {
       type: 'category',
       label: 'Reference',
       collapsed: false,
-      items: ['reference/cli', 'reference/configuration'],
+      items: ['reference/cli', 'reference/configuration', 'reference/bundle'],
     },
     {
       type: 'category',
