@@ -190,17 +190,19 @@ from glyf.dashboard import components as c
 from glyf.dashboard.macros import MacroContext
 
 
-def product_owner():
+def product_owner() -> c.ComponentSpec:
     return c.label_value("Owner", "Product Analytics")
 
 
 def activation_health(
     ctx: MacroContext,
+    *,
     chart: str = "activation_rate_by_plan",
     field: str = "activation_rate",
-):
+    threshold: float = 80.0,
+) -> c.ComponentSpec:
     latest_rate = float(ctx.latest_value(chart, field))
-    if latest_rate >= 80:
+    if latest_rate >= threshold:
         return c.alert("Activation is tracking above target.", title="Health", tone="success")
     return c.alert("Activation needs attention.", title="Health", tone="warning")
 ```
@@ -214,7 +216,7 @@ summary:
 sections:
   - title: Activation
     items:
-      - component: "{{ activation_health(chart='activation_rate_by_plan', field='activation_rate') }}"
+      - component: "{{ activation_health(chart='activation_rate_by_plan', field='activation_rate', threshold=80) }}"
 ```
 
 If the first argument is named `ctx`, Glyf injects a `MacroContext` during
