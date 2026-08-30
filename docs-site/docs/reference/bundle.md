@@ -92,6 +92,7 @@ is missing, it falls back to the modification time of the generated
 | `internal_artifacts_included` | boolean | Whether the artifacts it points at include internal ones. |
 | `internal_artifacts` | array of strings | Which directories those are. Empty in a public manifest. |
 | `browser_visible_data` | string | Prose note on what publishing the described site exposes to a browser. |
+| `row_data` | string | **Optional.** Present as `"excluded"` when the site was built with `export.row_data: exclude`; absent otherwise. |
 
 ## `charts`
 
@@ -121,6 +122,12 @@ Every value is a path or `null`; the keys are always present.
 
 Check for `null`, not for a missing key: `data` and `vega` stay in a public
 manifest and are set to `null` rather than being removed.
+
+Under `export.row_data: exclude` (see
+[the configuration reference](./configuration.md#publishing-without-the-rows)),
+`svg` and `compiled_sql` are `null` too, because those files are not published.
+`security.row_data` is then `"excluded"`, which is the field to branch on if a
+consumer needs to know whether row data exists at all.
 
 ## `dashboards`
 

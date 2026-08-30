@@ -10,6 +10,8 @@ class ConfigError(ValueError):
 
 EXECUTION_MODES = frozenset({"full", "validate"})
 
+ROW_DATA_MODES = frozenset({"include", "exclude"})
+
 
 @dataclass(frozen=True)
 class RenderConfig:
@@ -40,6 +42,17 @@ class DashboardConfig:
 
 
 @dataclass(frozen=True)
+class ExportConfig:
+    # `exclude` publishes pictures instead of data: PNG only, no Vega specs, no
+    # compiled SQL, no values resolved out of a chart's rows.
+    row_data: str = "include"
+
+    @property
+    def excludes_row_data(self) -> bool:
+        return self.row_data == "exclude"
+
+
+@dataclass(frozen=True)
 class GlyfConfig:
     visualisations_path: Path = Path("visualisations")
     dashboards_path: Path = Path("dashboards")
@@ -51,6 +64,7 @@ class GlyfConfig:
     execution: ExecutionConfig = ExecutionConfig()
     render: RenderConfig = RenderConfig()
     dashboard: DashboardConfig = DashboardConfig()
+    export: ExportConfig = ExportConfig()
 
 
 def load_config(project_root: Path, config_path: Path | None = None) -> GlyfConfig:
@@ -86,6 +100,7 @@ def load_config(project_root: Path, config_path: Path | None = None) -> GlyfConf
         execution=_execution_config(raw.get("execution", {})),
         render=_render_config(raw.get("render", {})),
         dashboard=_dashboard_config(raw.get("dashboard", {})),
+        export=_export_config(raw.get("export", {})),
     )
 
 
@@ -158,6 +173,19 @@ def _execution_config(raw: object) -> ExecutionConfig:
         mode=mode,
         max_rows=_optional_positive_int(raw, "max_rows"),
     )
+
+
+def _export_config(raw: object) -> ExportConfig:
+    if not isinstance(raw, dict):
+        raise ConfigError("Invalid config: 'export' must be a mapping")
+
+    row_data = _string_value(raw, "row_data", "include")
+    if row_data not in ROW_DATA_MODES:
+        allowed = ", ".join(sorted(ROW_DATA_MODES))
+        raise ConfigError(
+            f"Invalid config: 'export.row_data' must be one of {allowed}"
+        )
+    return ExportConfig(row_data=row_data)
 
 
 def _optional_positive_int(raw: dict[object, object], key: str) -> int | None:

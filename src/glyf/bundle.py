@@ -42,8 +42,16 @@ def write_bundle_manifest(
         or inherited.get("generated_at")
         or _infer_generated_at(paths.root),
         "paths": _paths_payload(public),
-        "security": _security_payload(public),
-        "charts": _charts_payload(scan.root, config, public=public),
+        "security": _security_payload(
+            public,
+            public and config.export.excludes_row_data,
+        ),
+        "charts": _charts_payload(
+            scan.root,
+            config,
+            public=public,
+            exclude_row_data=public and config.export.excludes_row_data,
+        ),
         "dashboards": _dashboards_payload(scan.root, config, dashboards),
     }
     target_path.parent.mkdir(parents=True, exist_ok=True)
@@ -101,7 +109,18 @@ def _paths_payload(public: bool) -> dict[str, object]:
     }
 
 
-def _security_payload(public: bool) -> dict[str, object]:
+def _security_payload(public: bool, exclude_row_data: bool = False) -> dict[str, object]:
+    if public and exclude_row_data:
+        return {
+            "public_export": True,
+            "browser_visible_data": (
+                "This export publishes rendered PNG images only. Chart rows, "
+                "Vega specifications and compiled SQL are not included."
+            ),
+            "internal_artifacts_included": False,
+            "internal_artifacts": [],
+            "row_data": "excluded",
+        }
     return {
         "public_export": public,
         "browser_visible_data": (
@@ -118,6 +137,7 @@ def _charts_payload(
     config: GlyfConfig,
     *,
     public: bool,
+    exclude_row_data: bool = False,
 ) -> dict[str, object]:
     paths = artifact_paths(project_root, config)
     charts: dict[str, object] = {}
@@ -137,6 +157,7 @@ def _charts_payload(
             config,
             raw,
             public=public,
+            exclude_row_data=exclude_row_data,
         )
     return charts
 
@@ -147,6 +168,7 @@ def _chart_payload(
     raw: dict[str, object],
     *,
     public: bool,
+    exclude_row_data: bool = False,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "title": raw.get("title"),
@@ -172,8 +194,14 @@ def _chart_payload(
             ),
         },
     }
+    if exclude_row_data:
+        # These are not published under `export.row_data: exclude`; a manifest
+        # pointing at them would send a consumer to a 404.
+        payload["artifacts"]["svg"] = None
+        payload["artifacts"]["compiled_sql"] = None
+
     interactions = raw.get("interactions")
-    if isinstance(interactions, list):
+    if isinstance(interactions, list) and not exclude_row_data:
         payload["interactions"] = interactions
     if not public:
         payload["artifacts"]["data"] = _artifact_path(

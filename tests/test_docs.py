@@ -95,6 +95,7 @@ CONFIG_KEYS = frozenset(
         "execution",
         "render",
         "dashboard",
+        "export",
     }
 )
 

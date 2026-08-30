@@ -27,6 +27,9 @@ def run_render(
         typer.echo(f"  - {exc}")
         raise typer.Exit(1) from exc
 
+    for warning in result.warnings:
+        typer.echo(f"! {warning}")
+
     chart_count = len(result.charts)
     typer.echo(f"\u2713 discovered charts ({chart_count})")
     typer.echo("\u2713 compiled SQL")

@@ -42,6 +42,11 @@ def generate_dashboards(
     config: GlyfConfig | None = None,
 ) -> DashboardGenerationResult:
     config = config or GlyfConfig()
+    exclude_row_data = config.export.excludes_row_data
+    if exclude_row_data:
+        # The drawer prints the compiled SQL, schema-qualified table names and
+        # all. A build that publishes no rows should not publish that either.
+        config = replace(config, dashboard=replace(config.dashboard, show_compiled_sql=False))
     scan = scan_project(project, config)
     paths = artifact_paths(scan.root, config)
     paths.dashboards_dir.mkdir(parents=True, exist_ok=True)
@@ -59,7 +64,11 @@ def generate_dashboards(
             raise DashboardGenerationError(f"{rel_path}: {exc}") from exc
         try:
             _preload_artifacts(dashboard, macro_context)
-            dashboard = _resolve_dashboard_filters(dashboard, macro_context)
+            dashboard = _resolve_dashboard_filters(
+                dashboard,
+                macro_context,
+                exclude_row_data=exclude_row_data,
+            )
             macro_registry = DashboardMacroRegistry.from_project(
                 scan.dashboards_dir,
                 macro_context,
@@ -138,11 +147,22 @@ def _preload_artifacts(dashboard: Dashboard, macro_context: MacroContext) -> Non
 def _resolve_dashboard_filters(
     dashboard: Dashboard,
     macro_context: MacroContext,
+    *,
+    exclude_row_data: bool = False,
 ) -> Dashboard:
+    """Fill in `source(chart, field)` filters from the rendered chart data.
+
+    A hand-written `values:` list is configuration the author typed. A sourced
+    one is a `SELECT DISTINCT` of a column, so it is data, and a build that
+    publishes no rows must not publish it either.
+    """
     resolved_filters = []
     for filter_spec in dashboard.filters:
         if not filter_spec.is_sourced:
             resolved_filters.append(filter_spec)
+            continue
+        if exclude_row_data:
+            resolved_filters.append(replace(filter_spec, values=()))
             continue
         assert filter_spec.source_chart is not None
         assert filter_spec.source_field is not None
