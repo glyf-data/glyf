@@ -14,6 +14,7 @@ from glyf.execution.base import (
 )
 from glyf.execution.result import QueryResult
 
+from . import dbt_executor as _dbt_executor  # noqa: F401
 from . import duckdb_adbc as _duckdb_adbc  # noqa: F401
 from . import duckdb_dbapi as _duckdb_dbapi  # noqa: F401
 

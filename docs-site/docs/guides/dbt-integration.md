@@ -43,11 +43,32 @@ Manifest node types used for `ref()`:
 
 Sources are resolved from the manifest `sources` section.
 
-## DuckDB execution
+## Execution
 
-The current execution backend is DuckDB. For the examples, `profiles.yml` points dbt at a local `.duckdb` database. If that database exists, `glyf` executes compiled SQL against it.
+Chart SQL runs against DuckDB. Which DuckDB depends on the backend.
 
-If no local DuckDB file exists, examples can still use seed CSV fallback for simple demo execution.
+The default, `backend: duckdb`, looks for a database beside the project —
+`target/<project>.duckdb`, then `<project>.duckdb` — and falls back to reading
+the seed CSVs, which is what lets the examples render before dbt has run.
+
+`backend: dbt` reads the project's `profiles.yml` instead and connects where the
+selected target points, the way dbt does:
+
+```yaml title="glyf.yml"
+execution:
+  backend: dbt
+  target: dev          # optional; defaults to the profile's own target
+```
+
+Nothing is guessed: if the target names a database that does not exist, glyf
+says so rather than connecting to an empty one. `env_var()` is expanded in the
+profile, so credentials stay out of the file. `profiles.yml` is looked for the
+way dbt looks for it — `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`
+— unless `execution.profiles_dir` says otherwise.
+
+Only `type: duckdb` targets execute today. A profile naming another warehouse
+is reported as unsupported rather than silently ignored; see `ARCHITECTURE.md`
+for where that is going.
 
 `glyf build`, `glyf render`, and the other CLI commands do not run `dbt seed`,
 `dbt run`, `dbt build`, or `dbt compile` for you. Run dbt first so both

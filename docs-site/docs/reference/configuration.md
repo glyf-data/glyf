@@ -15,6 +15,8 @@ site_path: target/glyf/site
 
 execution:
   backend: duckdb
+  target: dev
+  profiles_dir: ~/.dbt
 
 render:
   renderer: altair
@@ -46,7 +48,9 @@ dashboard:
 
 | Key | Default | Description |
 | --- | --- | --- |
-| `execution.backend` | `duckdb` | SQL execution backend. `duckdb` is the only supported value. |
+| `execution.backend` | `duckdb` | Where chart SQL runs. `duckdb` finds a database beside the project; `dbt` uses the project's `profiles.yml`. |
+| `execution.target` | profile's own | `dbt` backend only. Render against a target other than the profile's default. Overrides `DBT_TARGET`. |
+| `execution.profiles_dir` | dbt's search order | `dbt` backend only. Where to find `profiles.yml`, instead of `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`. |
 
 ## Render
 

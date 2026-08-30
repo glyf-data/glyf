@@ -19,6 +19,9 @@ class RenderConfig:
 @dataclass(frozen=True)
 class ExecutionConfig:
     backend: str = "duckdb"
+    # Used by the `dbt` backend, which reads the project's profiles.yml.
+    target: str | None = None
+    profiles_dir: Path | None = None
 
 
 @dataclass(frozen=True)
@@ -137,7 +140,23 @@ def _execution_config(raw: object) -> ExecutionConfig:
 
     return ExecutionConfig(
         backend=_string_value(raw, "backend", "duckdb"),
+        target=_optional_string(raw, "target"),
+        profiles_dir=_optional_path(raw, "profiles_dir"),
     )
+
+
+def _optional_string(raw: dict[object, object], key: str) -> str | None:
+    if key not in raw or raw[key] is None:
+        return None
+    value = raw[key]
+    if not isinstance(value, str) or not value.strip():
+        raise ConfigError(f"Invalid config: '{key}' must be a non-empty string")
+    return value
+
+
+def _optional_path(raw: dict[object, object], key: str) -> Path | None:
+    value = _optional_string(raw, key)
+    return Path(value).expanduser() if value is not None else None
 
 
 def _dashboard_config(raw: object) -> DashboardConfig:
