@@ -43,6 +43,16 @@ which of the share and visibility buttons render.
 | `toolbar.visibility` | `public`, `private` | `private` |
 | `toolbar.actions` | list drawn from `share`, `visibility` | both |
 
+:::warning `visibility` is a label, not a control
+
+`toolbar.visibility` sets the badge and padlock the page displays. It does not
+restrict anything: a dashboard marked `private` is exported byte-for-byte
+identically to one marked `public`, rows and all. Access control comes from
+wherever you host the site — see [what a published site
+exposes](./data-exposure.md).
+
+:::
+
 ```yaml
 toolbar:
   visibility: public

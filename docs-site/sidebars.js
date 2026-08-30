@@ -21,6 +21,7 @@ const sidebars = {
         'guides/dashboard-yaml',
         'guides/dashboard-macros',
         'guides/dbt-integration',
+        'guides/data-exposure',
         'guides/ci-cd',
       ],
     },
