@@ -2,8 +2,9 @@
 
 The `dbt` backend reads the project's `profiles.yml` and connects the way dbt
 would, rather than guessing at a local DuckDB file. It dispatches `type:
-duckdb` and `type: trino`; further warehouse types arrive behind optional
-drivers, and the reasoning for that route is in ARCHITECTURE.md.
+duckdb`, `type: trino`, `type: snowflake` and `type: bigquery`; the warehouse
+drivers are optional extras, and the reasoning for that route is in
+ARCHITECTURE.md.
 
 The difference from the default `duckdb` backend is exactness. That one looks
 for a database beside the project and falls back to reading the seed CSVs, which
@@ -19,7 +20,9 @@ from glyf.config import ExecutionConfig
 from glyf.execution.base import SqlExecutionError, SqlExecutor, sql_executor
 from glyf.execution.dbt_profile import DbtProfile, DbtProfileError, load_dbt_profile
 from glyf.execution.duckdb_adbc import AdbcDuckDbExecutor
+from glyf.execution.bigquery_adbc import bigquery_from_profile
 from glyf.execution.result import QueryResult
+from glyf.execution.snowflake_adbc import snowflake_from_profile
 from glyf.execution.trino_dbapi import trino_from_profile
 
 IN_MEMORY = ":memory:"
@@ -53,11 +56,15 @@ def _delegate(profile: DbtProfile, project_root: Path) -> SqlExecutor:
         return _duckdb_from_profile(profile, project_root)
     if profile.type == "trino":
         return trino_from_profile(profile)
+    if profile.type == "snowflake":
+        return snowflake_from_profile(profile)
+    if profile.type == "bigquery":
+        return bigquery_from_profile(profile)
 
     raise SqlExecutionError(
         f"{profile.profiles_path}: target '{profile.target}' of profile "
         f"'{profile.name}' uses '{profile.type}', which glyf cannot execute "
-        "against yet. Supported: duckdb, trino."
+        "against yet. Supported: duckdb, trino, snowflake, bigquery."
     )
 
 

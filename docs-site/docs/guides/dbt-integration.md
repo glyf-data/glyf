@@ -47,7 +47,7 @@ Sources are resolved from the manifest `sources` section.
 
 Chart SQL runs where the backend points. The default is a DuckDB database
 beside the project; the `dbt` backend reaches whatever the project's
-`profiles.yml` names, including a Trino cluster.
+`profiles.yml` names — a Trino cluster, Snowflake, or BigQuery.
 
 The default, `backend: duckdb`, looks for a database beside the project —
 `target/<project>.duckdb`, then `<project>.duckdb` — and falls back to reading
@@ -68,9 +68,14 @@ profile, so credentials stay out of the file. `profiles.yml` is looked for the
 way dbt looks for it — `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`
 — unless `execution.profiles_dir` says otherwise.
 
-`type: duckdb` and `type: trino` targets execute today. A profile naming
-another warehouse is reported as unsupported rather than silently ignored; see
-`ARCHITECTURE.md` for where that is going.
+`type: duckdb`, `type: trino`, `type: snowflake` and `type: bigquery`
+targets execute today. A profile naming another warehouse is reported as
+unsupported rather than silently ignored; see `ARCHITECTURE.md` for where
+that is going.
+
+`glyf doctor` checks the whole chain before a build does: the resolved
+backend, profile and target, whether the driver extra is installed, and a
+`select 1` probe against the warehouse.
 
 ### Trino
 
@@ -103,11 +108,66 @@ than connected unauthenticated. `database` and `schema` become the session
 catalog and schema, so unqualified table names in hand-written SQL resolve —
 `ref()`-resolved SQL is already fully qualified and does not need them.
 
-`glyf doctor` checks the whole chain before a build does: the resolved
-backend, profile and target, whether the driver extra is installed, and a
-`select 1` probe against the warehouse.
+### Snowflake
 
-Every `glyf build` runs every chart's query against the cluster. In CI,
+```bash
+pip install 'glyf-core[snowflake]'
+```
+
+The executor connects over ADBC and follows dbt-snowflake's field names.
+`account`, `user`, `database`, `warehouse`, `schema` and `role` map straight
+through. Auth methods honoured: password (the default), key-pair
+(`private_key_path`, with an optional `private_key_passphrase`),
+`authenticator: externalbrowser`, and `authenticator: oauth` with a `token`.
+Anything else — an Okta URL, `username_password_mfa` — is rejected loudly.
+
+<!-- glyf-docs: skip — a dbt-snowflake profiles.yml, dbt's file rather than a glyf spec -->
+```yaml title="~/.dbt/profiles.yml"
+my_project:
+  target: prod
+  outputs:
+    prod:
+      type: snowflake
+      account: acme-xy12345
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      private_key_path: ~/.ssh/snowflake_key.p8
+      database: analytics
+      warehouse: reporting
+      schema: marts
+      role: reporter
+```
+
+### BigQuery
+
+```bash
+pip install 'glyf-core[bigquery]'
+```
+
+Also over ADBC, following dbt-bigquery's field names — aliases included:
+`project` or `database` is the billing project, `dataset` or `schema` the
+default dataset, and `location` passes through. Auth methods honoured map
+one-to-one onto the driver's: `oauth` (application default credentials — run
+`gcloud auth application-default login` first), `service-account` (a
+`keyfile` path), `service-account-json` (`keyfile_json` inline), and
+`oauth-secrets` (`client_id`, `client_secret`, `refresh_token`).
+
+<!-- glyf-docs: skip — a dbt-bigquery profiles.yml, dbt's file rather than a glyf spec -->
+```yaml title="~/.dbt/profiles.yml"
+my_project:
+  target: prod
+  outputs:
+    prod:
+      type: bigquery
+      method: service-account
+      project: acme-analytics
+      dataset: marts
+      keyfile: "{{ env_var('BIGQUERY_KEYFILE') }}"
+      location: EU
+```
+
+### Cost and CI
+
+Every `glyf build` runs every chart's query against the warehouse. In CI,
 `execution.mode: validate` proves each query still runs and binds its columns
 without fetching data, and `execution.max_rows` bounds what a full build will
 pull; see the [configuration reference](../reference/configuration.md).

@@ -39,6 +39,8 @@ dependencies = [
 [project.optional-dependencies]
 # Warehouse drivers, one extra per type so DuckDB-only installs stay small.
 trino = ["trino>=0.330"]
+snowflake = ["adbc-driver-snowflake>=1.11.0"]
+bigquery = ["adbc-driver-bigquery>=1.11.0"]
 
 [project.scripts]
 glyf = "glyf.cli:app"
@@ -53,6 +55,8 @@ dev = [
     "dbt-core>=1.12.3",
     "dbt-duckdb>=1.10.1",
     "trino>=0.330",
+    "adbc-driver-snowflake>=1.11.0",
+    "adbc-driver-bigquery>=1.11.0",
     "pandas>=3.0.3",
     "polars>=1.42.1",
     "pytest>=8.0",
