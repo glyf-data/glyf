@@ -33,9 +33,9 @@ warehouse:
     memory:
       type: duckdb
       path: ":memory:"
-    snowflake:
-      type: snowflake
-      account: acme
+    redshift:
+      type: redshift
+      host: acme.example.com
 """
 
 
@@ -99,12 +99,12 @@ def test_a_missing_database_says_to_run_dbt(tmp_path: Path) -> None:
 def test_an_unsupported_warehouse_names_the_type(tmp_path: Path) -> None:
     project = _project(tmp_path)
 
-    with pytest.raises(SqlExecutionError, match="uses 'snowflake'"):
+    with pytest.raises(SqlExecutionError, match="uses 'redshift'"):
         execute_sql(
             project,
             QUERY,
             executor="dbt",
-            config=ExecutionConfig(backend="dbt", target="snowflake"),
+            config=ExecutionConfig(backend="dbt", target="redshift"),
         )
 
 

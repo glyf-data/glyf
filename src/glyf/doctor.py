@@ -184,7 +184,11 @@ def _execution_checks(root: Path, config: GlyfConfig) -> list[DoctorCheck]:
 
 # Profile types that need a driver glyf does not ship by default, and the
 # extra that installs it.
-_DRIVER_EXTRAS = {"trino": ("trino", "glyf-core[trino]")}
+_DRIVER_EXTRAS = {
+    "trino": ("trino", "glyf-core[trino]"),
+    "snowflake": ("adbc_driver_snowflake", "glyf-core[snowflake]"),
+    "bigquery": ("adbc_driver_bigquery", "glyf-core[bigquery]"),
+}
 
 
 def _driver_check(profile_type: str) -> DoctorCheck | None:
