@@ -24,7 +24,7 @@ Define charts in SQL, compose dashboards in YAML, publish anywhere.
   │     dbt project      │   │     glyf sources     │   │      glyf build      │
   ├──────────────────────┤   ├──────────────────────┤   ├──────────────────────┤
   │ models/*.sql         │   │ charts     *.ggsql   │   │ resolve  ref()       │
-  │ target/manifest.json │──▶│ dashboards *.yml     │──▶│ execute  DuckDB      │
+  │ target/manifest.json │──▶│ dashboards *.yml     │──▶│ execute  SQL         │
   │ warehouse relations  │   │ macros     *.py      │   │ render   Altair      │
   └──────────────────────┘   └──────────────────────┘   └───────────┬──────────┘
                                                                     │
@@ -117,12 +117,12 @@ In an existing dbt project:
 ```bash
 glyf init      # scaffold glyf.yml, visualisations/, dashboards/
 dbt build      # produce the dbt artifacts glyf reads
-glyf doctor    # check artifacts, charts, and DuckDB execution
+glyf doctor    # check artifacts, charts, and SQL execution
 glyf build     # compile, render, and export the site
 glyf serve     # preview it locally
 ```
 
-`doctor` reports whether the dbt artifacts, chart files, and DuckDB execution
+`doctor` reports whether the dbt artifacts, chart files, and SQL execution
 are ready before your first build, so the first failure is a readable message
 rather than a stack trace.
 
@@ -178,7 +178,8 @@ sections:
 ### 03 — Build once, publish anywhere
 
 One command resolves dbt artifacts, validates chart specs, executes chart SQL
-with DuckDB, renders charts with Altair, and emits files you can publish:
+against your warehouse, renders charts with Altair, and emits files you can
+publish:
 
 ```text
 target/glyf/
@@ -204,7 +205,7 @@ see [what a published site exposes](https://glyf.pages.dev/docs/guides/data-expo
 | Command | What it does |
 | --- | --- |
 | `glyf init` | Scaffold glyf config, chart, and dashboard directories |
-| `glyf doctor` | Check dbt artifacts, chart files, and DuckDB execution |
+| `glyf doctor` | Check dbt artifacts, chart files, and SQL execution |
 | `glyf build` | Full pipeline: compile, render, and export |
 | `glyf serve` | Serve the generated site locally |
 | `glyf list` | List discovered charts and dashboards |
@@ -250,7 +251,8 @@ Then open `examples/simple_dbt/target/glyf/site/index.html`.
 | Capability | |
 | --- | --- |
 | dbt `ref()` and `source()` resolution from `manifest.json` | shipped |
-| GGSQL chart definitions, DuckDB execution, Altair rendering | shipped |
+| GGSQL chart definitions, SQL execution, Altair rendering | shipped |
+| Warehouse execution through the dbt profile (DuckDB, Trino) | shipped |
 | Dashboard YAML, Python macros, self-contained static site | shipped |
 | PNG / SVG chart artifacts and `--zip` export | shipped |
 | Generated typed React components | planned |

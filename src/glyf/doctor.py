@@ -1,9 +1,12 @@
+import importlib.util
 import os
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
 from glyf.config import ConfigError, GlyfConfig, load_config, resolve_project_path
+from glyf.execution.base import SqlExecutionError, get_sql_executor
+from glyf.execution.dbt_profile import DbtProfileError, load_dbt_profile
 from glyf.output.paths import artifact_paths
 from glyf.project.scanner import ProjectScan, scan_project
 
@@ -50,6 +53,7 @@ def run_doctor_checks(
         return DoctorResult(project_root=root, checks=tuple(checks))
 
     checks.extend(_project_checks(scan))
+    checks.extend(_execution_checks(scan.root, config))
     checks.extend(_output_checks(scan.root, config))
     return DoctorResult(project_root=root, checks=tuple(checks))
 
@@ -126,6 +130,76 @@ def _project_checks(scan: ProjectScan) -> list[DoctorCheck]:
         )
 
     return checks
+
+
+def _execution_checks(root: Path, config: GlyfConfig) -> list[DoctorCheck]:
+    """Surface a misconfigured backend here rather than mid-render.
+
+    Resolves the backend, and for the `dbt` backend the profile and target it
+    would connect with, then proves the connection with `select 1`. The probe
+    reaches the warehouse the profile names, which is the point: `glyf build`
+    is about to do the same for every chart.
+    """
+    execution = config.execution
+    try:
+        executor = get_sql_executor(execution.backend, execution)
+    except ValueError as exc:
+        return [DoctorCheck("execution backend", "error", str(exc))]
+    checks = [
+        DoctorCheck("execution backend", "ok", f"using backend '{execution.backend}'")
+    ]
+
+    if execution.backend == "dbt":
+        try:
+            profile = load_dbt_profile(
+                root,
+                profiles_dir=execution.profiles_dir,
+                target=execution.target,
+            )
+        except DbtProfileError as exc:
+            checks.append(DoctorCheck("dbt profile", "error", str(exc)))
+            return checks
+        checks.append(
+            DoctorCheck(
+                "dbt profile",
+                "ok",
+                f"profile '{profile.name}' target '{profile.target}' "
+                f"(type: {profile.type})",
+            )
+        )
+        driver_check = _driver_check(profile.type)
+        if driver_check is not None:
+            checks.append(driver_check)
+            if driver_check.status == "error":
+                return checks
+
+    try:
+        executor.execute(root, "select 1")
+    except SqlExecutionError as exc:
+        checks.append(DoctorCheck("execution probe", "error", str(exc)))
+    else:
+        checks.append(DoctorCheck("execution probe", "ok", "select 1 succeeded"))
+    return checks
+
+
+# Profile types that need a driver glyf does not ship by default, and the
+# extra that installs it.
+_DRIVER_EXTRAS = {"trino": ("trino", "glyf-core[trino]")}
+
+
+def _driver_check(profile_type: str) -> DoctorCheck | None:
+    entry = _DRIVER_EXTRAS.get(profile_type)
+    if entry is None:
+        return None
+    module, extra = entry
+    if importlib.util.find_spec(module) is not None:
+        return DoctorCheck("warehouse driver", "ok", f"'{module}' driver installed")
+    return DoctorCheck(
+        "warehouse driver",
+        "error",
+        f"the profile names a {profile_type} target but the '{module}' driver "
+        f"is not installed; install it with: pip install '{extra}'",
+    )
 
 
 def _output_checks(root: Path, config: GlyfConfig) -> list[DoctorCheck]:
