@@ -113,20 +113,22 @@ src/glyf/dashboard/
   faster is a separate question from rendering them at all, and is being handled
   as its own investigation.
 
-- **Chart SQL reaches the warehouse through the dbt profile, over ADBC.**
-  *Decided, not yet built: DuckDB is the only backend that ships today.* SQL
-  execution is already pluggable — backends register with `@sql_executor` in
-  `glyf.execution.base`, and `execution.backend` selects one — but every
-  registered backend is DuckDB and nothing reads `profiles.yml`, so a project
-  whose models live in Snowflake or BigQuery cannot render charts. The compiled
+- **Chart SQL reaches the warehouse through the dbt profile.**
+  *Shipped for DuckDB and Trino; further warehouse types follow the same
+  shape.* SQL execution is pluggable — backends register with `@sql_executor`
+  in `glyf.execution.base`, and `execution.backend` selects one. The compiled
   SQL is not the problem: `ref()` resolution already substitutes the manifest's
   `relation_name`, so it is warehouse-qualified before it is executed.
 
-  A `dbt` backend will resolve `profiles.yml` and connect over ADBC, one driver
-  per warehouse type behind an optional extra. ADBC because
+  The `dbt` backend resolves `profiles.yml` and connects where the target
+  points, one driver per warehouse type behind an optional extra. The wire
+  protocol is per warehouse: ADBC where a driver exists (Snowflake, BigQuery,
+  Postgres), because
   `adbc-driver-manager` is already a runtime dependency and returns Arrow, which
   is what `QueryResult` holds — a warehouse executor is then the same shape as
-  the DuckDB one. The alternative, driving dbt's own adapters, was rejected:
+  the DuckDB one. Trino has no ADBC driver — it speaks its own HTTP protocol —
+  so its executor uses the official `trino` client, the same one dbt-trino
+  ships on. The alternative, driving dbt's own adapters, was rejected:
   it would make `dbt-core` a runtime dependency of every install, DuckDB-only
   ones included, and would couple `glyf render` to `dbt.adapters.factory`, which
   is not a public API. `profiles.yml` is. The cost of that choice is auth
