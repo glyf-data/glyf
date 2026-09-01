@@ -36,6 +36,43 @@ jobs:
           files: coverage.xml
           fail_ci_if_error: false
 
+  trino:
+    name: trino integration
+    runs-on: ubuntu-latest
+    services:
+      trino:
+        image: trinodb/trino:476
+        ports:
+          - 8080:8080
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install project and development dependencies
+        run: |
+          uv python install "$PYTHON_VERSION"
+          uv sync --all-groups --python "$PYTHON_VERSION"
+
+      - name: Wait for Trino to accept queries
+        run: |
+          for _ in $(seq 1 90); do
+            if curl -fsS http://localhost:8080/v1/info | grep -q '"starting":false'; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Trino did not become ready in time" >&2
+          exit 1
+
+      - name: Run the Trino integration tests
+        env:
+          GLYF_TRINO_HOST: localhost
+        run: uv run pytest tests/test_trino_integration.py -v
+
   rust:
     name: rust core
     runs-on: ubuntu-latest
