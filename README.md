@@ -252,7 +252,7 @@ Then open `examples/simple_dbt/target/glyf/site/index.html`.
 | --- | --- |
 | dbt `ref()` and `source()` resolution from `manifest.json` | shipped |
 | GGSQL chart definitions, SQL execution, Altair rendering | shipped |
-| Warehouse execution through the dbt profile (DuckDB, Trino) | shipped |
+| Warehouse execution through the dbt profile (DuckDB, Trino, Snowflake, BigQuery) | shipped |
 | Dashboard YAML, Python macros, self-contained static site | shipped |
 | PNG / SVG chart artifacts and `--zip` export | shipped |
 | Generated typed React components | planned |

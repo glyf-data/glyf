@@ -114,16 +114,16 @@ src/glyf/dashboard/
   as its own investigation.
 
 - **Chart SQL reaches the warehouse through the dbt profile.**
-  *Shipped for DuckDB and Trino; further warehouse types follow the same
-  shape.* SQL execution is pluggable — backends register with `@sql_executor`
+  *Shipped for DuckDB, Trino, Snowflake and BigQuery.* SQL execution is
+  pluggable — backends register with `@sql_executor`
   in `glyf.execution.base`, and `execution.backend` selects one. The compiled
   SQL is not the problem: `ref()` resolution already substitutes the manifest's
   `relation_name`, so it is warehouse-qualified before it is executed.
 
   The `dbt` backend resolves `profiles.yml` and connects where the target
   points, one driver per warehouse type behind an optional extra. The wire
-  protocol is per warehouse: ADBC where a driver exists (Snowflake, BigQuery,
-  Postgres), because
+  protocol is per warehouse: ADBC where a driver exists (Snowflake and
+  BigQuery ship on it; Postgres would too), because
   `adbc-driver-manager` is already a runtime dependency and returns Arrow, which
   is what `QueryResult` holds — a warehouse executor is then the same shape as
   the DuckDB one. Trino has no ADBC driver — it speaks its own HTTP protocol —
