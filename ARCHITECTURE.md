@@ -142,3 +142,17 @@ src/glyf/dashboard/
   resolution, exposed through `glyf._core`. Python keeps the CLI, execution,
   rendering, dashboards, and file IO, and preserves its public API when logic
   moves into the crate.
+
+- **PII is classified where dbt already classifies it, and enforced at one
+  point.** A column is PII when the dbt project tags it in `schema.yml`
+  (`meta: {pii: true}` or a `pii` tag — the Rust manifest extraction reads
+  both) on a model or source the chart reads, or when `glyf.yml` lists it. No
+  parallel registry. Enforcement happens on the `QueryResult` right after
+  execution and before anything reads it, so all backends, validate mode, the
+  local data file and dashboard filters see the same outcome. The default is
+  to fail the build rather than redact: a redacted encoded column is a
+  meaningless chart, so refusing loudly is the honest response, and `redact`
+  exists for grouping by a sensitive key. Classification is by column name —
+  an alias slips past the manifest and needs listing in `glyf.yml`; column
+  lineage through arbitrary SQL is out of scope. This is defense-in-depth
+  behind the warehouse role the build runs with, not a substitute for it.

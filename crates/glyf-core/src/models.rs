@@ -26,6 +26,9 @@ pub struct ManifestRelation {
     pub resource_type: String,
     pub package_name: Option<String>,
     pub source_name: Option<String>,
+    /// Columns the dbt project classifies as PII: `meta: {pii: true}` or a
+    /// `pii` tag on the column in `schema.yml`.
+    pub pii_columns: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

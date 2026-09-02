@@ -23,6 +23,7 @@ from glyf.output.writer import (
     write_chart_metadata,
     write_compiled_sql,
 )
+from glyf.privacy import PiiPolicyError, apply_pii_policy, classify_pii
 from glyf.project.scanner import ProjectScan, scan_project
 
 
@@ -109,6 +110,18 @@ def render_project(
             )
         except SqlExecutionError as exc:
             raise RenderError(f"{rel_path} SQL execution failed: {exc}") from exc
+
+        # The one place every backend's result passes through before anything
+        # reads it. Under validate mode the result has columns and no rows,
+        # which is all `deny` needs: CI catches a charted email with no data
+        # moved.
+        findings = classify_pii(data.columns, resolution, manifest, config.privacy)
+        try:
+            data = apply_pii_policy(
+                data, findings, config.privacy, chart_path=rel_path
+            )
+        except PiiPolicyError as exc:
+            raise RenderError(str(exc)) from exc
 
         if validate_only:
             _check_columns(chart, data, rel_path)

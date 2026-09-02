@@ -102,6 +102,28 @@ markdown blocks, hand-written filter lists, chart titles, and whatever your
 macros render. A macro that computes a headline number from the data publishes
 that number — the mode withholds the rows, not the conclusions drawn from them.
 
+## Keeping PII out of a chart
+
+The modes above decide how much of a result is published. `privacy` decides
+whether a result may contain personal data at all:
+
+```yaml title="glyf.yml"
+privacy:
+  pii_columns: [contact]
+  on_pii: deny
+```
+
+A column is PII if the dbt project tags it — `meta: {pii: true}` or
+`tags: [pii]` in `schema.yml`, on a model or source the chart reads — or if
+`privacy.pii_columns` lists it. Under `deny`, the default, a chart whose query
+returns such a column fails the build, in validate mode too, and the message
+names the column and where the classification came from. Under `redact`, the
+values are masked or hashed before anything reads them: the chart, the local
+data file, a `source()` filter. The
+[configuration reference](../reference/configuration.md#keeping-pii-out-of-a-chart)
+has the details and the limits — classification is by column name, so an
+alias needs listing in `glyf.yml`.
+
 ## What glyf does not do
 
 **glyf has no access control.** Nothing in a glyf artifact authenticates a
@@ -133,6 +155,8 @@ render.
 2. Do the compiled queries reveal schema or table names you would rather not
    expose?
 3. Does any `source()` filter read a column of names, emails or identifiers?
+   Tag such columns as PII in `schema.yml`, or list them in
+   `privacy.pii_columns`, and the build refuses to chart them.
 4. Does a macro or a markdown block quote a specific figure that should not be
    public?
 5. Is the bucket or host actually restricted to the audience you intend?

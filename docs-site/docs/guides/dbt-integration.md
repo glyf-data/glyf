@@ -197,3 +197,27 @@ glyf export --clean
 ```
 
 This keeps dbt model execution and dashboard rendering separate, which makes CI easier to debug.
+
+## Tagging PII in `schema.yml`
+
+glyf reads column classification from the manifest, so tagging a column as PII
+where the dbt project already documents it is enough:
+
+<!-- glyf-docs: skip — a dbt schema.yml, dbt's file rather than a glyf spec -->
+```yaml title="models/schema.yml"
+models:
+  - name: dim_customers
+    columns:
+      - name: email
+        meta:
+          pii: true
+      - name: phone
+        tags: [pii]
+```
+
+Either spelling counts. A chart that reads `dim_customers` and returns `email`
+or `phone` then fails the build, or has those values redacted, depending on
+`privacy.on_pii` in `glyf.yml` — see
+[keeping PII out of a chart](../reference/configuration.md#keeping-pii-out-of-a-chart).
+Run `dbt compile` after editing `schema.yml`; glyf reads the manifest, not the
+YAML.

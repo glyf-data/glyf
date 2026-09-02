@@ -12,6 +12,10 @@ EXECUTION_MODES = frozenset({"full", "validate"})
 
 ROW_DATA_MODES = frozenset({"include", "minimal", "exclude"})
 
+PII_POLICIES = frozenset({"deny", "redact"})
+
+REDACTION_METHODS = frozenset({"mask", "hash"})
+
 
 @dataclass(frozen=True)
 class RenderConfig:
@@ -59,6 +63,20 @@ class ExportConfig:
 
 
 @dataclass(frozen=True)
+class PrivacyConfig:
+    # Columns to treat as PII on top of what the dbt manifest tags: aliases
+    # and expressions dbt does not model.
+    pii_columns: tuple[str, ...] = ()
+    # What a build does when a chart's result carries a PII column. `deny`
+    # fails it; `redact` rewrites the column's values before anything reads
+    # them.
+    on_pii: str = "deny"
+    # `mask` keeps a hint of the value (`j***@acme.com`); `hash` keeps only
+    # its distinctness, for grouping by a sensitive key.
+    redaction: str = "mask"
+
+
+@dataclass(frozen=True)
 class GlyfConfig:
     visualisations_path: Path = Path("visualisations")
     dashboards_path: Path = Path("dashboards")
@@ -71,6 +89,7 @@ class GlyfConfig:
     render: RenderConfig = RenderConfig()
     dashboard: DashboardConfig = DashboardConfig()
     export: ExportConfig = ExportConfig()
+    privacy: PrivacyConfig = PrivacyConfig()
 
 
 def load_config(project_root: Path, config_path: Path | None = None) -> GlyfConfig:
@@ -107,6 +126,7 @@ def load_config(project_root: Path, config_path: Path | None = None) -> GlyfConf
         render=_render_config(raw.get("render", {})),
         dashboard=_dashboard_config(raw.get("dashboard", {})),
         export=_export_config(raw.get("export", {})),
+        privacy=_privacy_config(raw.get("privacy", {})),
     )
 
 
@@ -192,6 +212,36 @@ def _export_config(raw: object) -> ExportConfig:
             f"Invalid config: 'export.row_data' must be one of {allowed}"
         )
     return ExportConfig(row_data=row_data)
+
+
+def _privacy_config(raw: object) -> PrivacyConfig:
+    if not isinstance(raw, dict):
+        raise ConfigError("Invalid config: 'privacy' must be a mapping")
+
+    columns = raw.get("pii_columns", [])
+    if columns is None:
+        columns = []
+    if not isinstance(columns, list) or not all(
+        isinstance(item, str) and item.strip() for item in columns
+    ):
+        raise ConfigError(
+            "Invalid config: 'privacy.pii_columns' must be a list of column names"
+        )
+    on_pii = _string_value(raw, "on_pii", "deny")
+    if on_pii not in PII_POLICIES:
+        allowed = ", ".join(sorted(PII_POLICIES))
+        raise ConfigError(f"Invalid config: 'privacy.on_pii' must be one of {allowed}")
+    redaction = _string_value(raw, "redaction", "mask")
+    if redaction not in REDACTION_METHODS:
+        allowed = ", ".join(sorted(REDACTION_METHODS))
+        raise ConfigError(
+            f"Invalid config: 'privacy.redaction' must be one of {allowed}"
+        )
+    return PrivacyConfig(
+        pii_columns=tuple(dict.fromkeys(item.strip() for item in columns)),
+        on_pii=on_pii,
+        redaction=redaction,
+    )
 
 
 def _optional_positive_int(raw: dict[object, object], key: str) -> int | None:
