@@ -119,6 +119,10 @@ nothing. `execution.mode: validate` does the same thing from `glyf.yml`.
 Nothing is drawn, deliberately: a chart rendered from a sample looks exactly
 like a real one and would be reviewed, or published, as if it were.
 
+Because no rows leave the warehouse, validate mode is also the right thing to
+run on infrastructure outside it — see
+[where to run builds](../guides/where-to-run-builds.md).
+
 ## Bounding a query with `max_rows`
 
 `execution.max_rows` fails a build when a chart's query returns more rows than

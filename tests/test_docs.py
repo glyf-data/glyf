@@ -107,6 +107,7 @@ CONFIG_KEYS = frozenset(
 NON_DASHBOARD_PAGES = frozenset(
     {
         "integrations/github-actions.md",  # a GitHub Actions workflow
+        "guides/where-to-run-builds.md",  # a GitHub Actions workflow
     }
 )
 

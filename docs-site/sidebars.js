@@ -22,6 +22,7 @@ const sidebars = {
         'guides/dashboard-macros',
         'guides/dbt-integration',
         'guides/data-exposure',
+        'guides/where-to-run-builds',
         'guides/ci-cd',
       ],
     },

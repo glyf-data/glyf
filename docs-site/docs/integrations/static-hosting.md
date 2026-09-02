@@ -43,4 +43,6 @@ default a glyf site carries the rows behind its charts — inline in the dashboa
 HTML — along with the compiled SQL and its table names. Read [what a published
 site exposes](../guides/data-exposure.md) before pointing a public bucket at
 `site/`, and build with `export.row_data: exclude` if the site should carry
-pictures without the data behind them.
+pictures without the data behind them. The site is a snapshot of query results;
+[storing the artifacts](../guides/where-to-run-builds.md#storing-the-artifacts)
+covers keeping it private, encrypted and behind an authenticating edge.
