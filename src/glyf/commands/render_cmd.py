@@ -3,8 +3,9 @@ from pathlib import Path
 
 import typer
 
-from glyf.config import ConfigError, load_config
+from glyf.config import ConfigError, apply_run_overrides, load_config
 from glyf.pipeline import RenderError, render_project
+from glyf.selection import SelectionError
 
 
 def run_render(
@@ -12,12 +13,23 @@ def run_render(
     config_path: Path | None = None,
     *,
     validate: bool = False,
+    target: str | None = None,
+    select: tuple[str, ...] | None = None,
+    output_dir: Path | None = None,
 ) -> None:
     try:
-        config = load_config(project, config_path)
+        config = apply_run_overrides(
+            load_config(project, config_path),
+            target=target,
+            output_dir=output_dir,
+        )
         if validate:
             config = replace(config, execution=replace(config.execution, mode="validate"))
-        result = render_project(project, config)
+        result = render_project(project, config, select=select)
+    except SelectionError as exc:
+        typer.echo("Selection failed")
+        typer.echo(f"  - {exc}")
+        raise typer.Exit(1) from exc
     except ConfigError as exc:
         typer.echo("Config error")
         typer.echo(f"  - {exc}")
@@ -30,6 +42,9 @@ def run_render(
     for warning in result.warnings:
         typer.echo(f"! {warning}")
 
+    if result.selection is not None:
+        # Say what was left out, so a short build is never a surprise.
+        typer.echo(f"\u2713 selected dashboards ({result.selection.describe()})")
     chart_count = len(result.charts)
     typer.echo(f"\u2713 discovered charts ({chart_count})")
     typer.echo("\u2713 compiled SQL")

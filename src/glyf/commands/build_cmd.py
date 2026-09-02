@@ -19,6 +19,9 @@ def run_build(
     config_path: Path | None = None,
     verbose: bool = False,
     validate: bool = False,
+    target: str | None = None,
+    select: tuple[str, ...] | None = None,
+    output_dir: Path | None = None,
 ) -> None:
     _run_step(
         "validate",
@@ -29,7 +32,14 @@ def run_build(
     _run_step(
         "render",
         "checked chart SQL" if validate else "rendered chart artifacts",
-        lambda: run_render(project, config_path, validate=validate),
+        lambda: run_render(
+            project,
+            config_path,
+            validate=validate,
+            target=target,
+            select=select,
+            output_dir=output_dir,
+        ),
         verbose,
     )
     if validate:
@@ -39,7 +49,9 @@ def run_build(
     _run_step(
         "dashboard",
         "generated dashboard HTML",
-        lambda: run_dashboard(project, config_path),
+        lambda: run_dashboard(
+            project, config_path, select=select, output_dir=output_dir
+        ),
         verbose,
     )
     _run_step(
@@ -50,6 +62,7 @@ def run_build(
             clean=clean,
             zip_site=zip_site,
             config_path=config_path,
+            output_dir=output_dir,
         ),
         verbose,
     )

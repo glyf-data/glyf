@@ -40,7 +40,7 @@ def export_site(
     paths.site_dir.mkdir(parents=True, exist_ok=True)
 
     _copy_file(paths.root / "index.html", paths.site_dir / "index.html")
-    _copy_tree(paths.dashboards_dir, paths.site_dir / "dashboards")
+    _mirror_tree(paths.dashboards_dir, paths.site_dir / "dashboards")
     exclude_row_data = config.export.excludes_row_data
     _copy_chart_artifacts(
         paths.charts_dir,
@@ -49,7 +49,10 @@ def export_site(
     )
     if not exclude_row_data:
         # Compiled SQL names the warehouse tables the dashboard was built from.
-        _copy_tree(paths.compiled_dir, paths.site_dir / "compiled")
+        _mirror_tree(paths.compiled_dir, paths.site_dir / "compiled")
+    else:
+        # A wider earlier export may have published it into this directory.
+        shutil.rmtree(paths.site_dir / "compiled", ignore_errors=True)
     copy_dashboard_assets(paths.root, paths.site_dir)
     write_bundle_manifest(
         scan.root,
@@ -92,6 +95,24 @@ def _copy_tree(source: Path, destination: Path) -> None:
     shutil.copytree(source, destination, dirs_exist_ok=True)
 
 
+def _mirror_tree(source: Path, destination: Path) -> None:
+    """Copy `source` over `destination` and drop what `source` no longer has.
+
+    An export without `--clean` copies into a directory an earlier export
+    filled. Merging would leave that build's files in this one's site -- which
+    with a narrower selection means another audience's dashboard, published
+    under this audience's URL.
+    """
+    shutil.copytree(source, destination, dirs_exist_ok=True)
+    _remove_orphans(source, destination)
+
+
+def _remove_orphans(source: Path, destination: Path) -> None:
+    for path in sorted(destination.rglob("*")):
+        if path.is_file() and not (source / path.relative_to(destination)).exists():
+            path.unlink()
+
+
 # What may be published from the charts directory. An allowlist, so an artifact
 # type added later is withheld until someone decides it is publishable --
 # the previous denylist named `*.data.json` and `*.vega.json` and copied
@@ -132,6 +153,10 @@ def _copy_chart_artifacts(
         else:
             shutil.copy2(path, target)
 
+    for path in sorted(destination.rglob("*")):
+        # A chart another build rendered is not this build's to publish.
+        if path.is_file() and not (source / path.relative_to(destination)).exists():
+            path.unlink()
     for suffix in ROW_DATA_SUFFIXES:
         for stale in destination.rglob(f"*{suffix}"):
             stale.unlink()

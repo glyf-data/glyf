@@ -289,6 +289,11 @@ def _dashboards_payload(
         except ValueError:
             continue
         output_path = paths.dashboards_dir / f"{dashboard.name}.html"
+        if not output_path.exists():
+            # A manifest describes the build that ran. A dashboard this build
+            # did not generate -- another audience's, under `--select` -- is
+            # not in the site, and pointing at it would be a 404 at best.
+            continue
         dashboards[dashboard.name] = _dashboard_payload(
             scan.root,
             config,

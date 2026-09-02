@@ -2,7 +2,7 @@ from pathlib import Path
 
 import typer
 
-from glyf.config import ConfigError, load_config
+from glyf.config import ConfigError, apply_run_overrides, load_config
 from glyf.exporter import ExportError, export_site
 
 
@@ -12,9 +12,12 @@ def run_export(
     clean: bool = False,
     zip_site: bool = False,
     config_path: Path | None = None,
+    output_dir: Path | None = None,
 ) -> None:
     try:
-        config = load_config(project, config_path)
+        config = apply_run_overrides(
+            load_config(project, config_path), output_dir=output_dir
+        )
         result = export_site(project, clean=clean, zip_site=zip_site, config=config)
     except ConfigError as exc:
         typer.echo("Config error")
