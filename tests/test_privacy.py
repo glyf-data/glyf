@@ -16,12 +16,15 @@ from pathlib import Path
 
 import pytest
 
+from typer.testing import CliRunner
+
+from glyf.cli import app
 from glyf.config import ConfigError, ExecutionConfig, GlyfConfig, PrivacyConfig, load_config
 from glyf.dashboard.generator import generate_dashboards
 from glyf.exporter import export_site
 from glyf.execution import QueryResult
 from glyf.pipeline import RenderError, render_project
-from glyf.privacy import hash_value, mask_value, redact_columns
+from glyf.privacy import hash_value, mask_value, redact_columns, scan_for_pii
 from tests.helpers import copy_basic_project
 
 EMAIL = "jane.doe@acme.example"
@@ -184,6 +187,168 @@ def test_redaction_keeps_nulls_and_the_other_columns() -> None:
     )
 
 
+# --- the value scan ----------------------------------------------------------
+
+
+def test_an_unclassified_email_column_warns(tmp_path: Path) -> None:
+    project = _project(tmp_path, tagged={})
+    _write_chart(project, "SELECT month, revenue, email AS contact")
+
+    result = render_project(project, _config())
+
+    assert result.warnings == (
+        "visualisations/revenue.ggsql column 'contact' looks like email addresses "
+        "(2 of 2 sampled values) but is not classified as PII. Tag it in "
+        "schema.yml or list it in privacy.pii_columns",
+    )
+    # A warning, not a rewrite: the values are exactly what the query returned.
+    assert result.charts[0].data.rows[0]["contact"] == EMAIL
+
+
+def test_the_scan_never_redacts(tmp_path: Path) -> None:
+    """Even with redaction on, a fuzzy match only ever warns."""
+    project = _project(tmp_path, tagged={})
+    _write_chart(project, "SELECT month, revenue, email AS contact")
+
+    result = render_project(project, _config(on_pii="redact"))
+
+    assert len(result.warnings) == 1
+    assert result.charts[0].data.rows[0]["contact"] == EMAIL
+
+
+def test_strict_turns_the_warning_into_a_failure(tmp_path: Path) -> None:
+    project = _project(tmp_path, tagged={})
+    _write_chart(project, "SELECT month, revenue, email AS contact")
+
+    with pytest.raises(RenderError, match=r"looks like email addresses .* \(privacy.strict\)"):
+        render_project(project, _config(strict=True))
+
+
+def test_a_classified_column_is_not_scanned(tmp_path: Path) -> None:
+    """Classification owns it; a masked email must not trip the email detector."""
+    project = _project(tmp_path, tagged={"email": {"meta": {"pii": True}}})
+    _write_chart(project, "SELECT month, revenue, email")
+
+    result = render_project(project, _config(on_pii="redact"))
+
+    assert result.warnings == ()
+
+
+def test_the_scan_can_be_switched_off(tmp_path: Path) -> None:
+    project = _project(tmp_path, tagged={})
+    _write_chart(project, "SELECT month, revenue, email AS contact")
+
+    result = render_project(project, _config(scan=False))
+
+    assert result.warnings == ()
+
+
+def test_validate_mode_has_no_values_to_scan(tmp_path: Path) -> None:
+    """`limit 0` moves no rows, so only the classification runs in CI."""
+    project = _project(tmp_path, tagged={})
+    _write_chart(project, "SELECT month, revenue, email AS contact")
+    config = replace(_config(), execution=ExecutionConfig(mode="validate"))
+
+    result = render_project(project, config)
+
+    assert result.warnings == ()
+
+
+def test_glyf_build_prints_the_warning_without_verbose(tmp_path: Path) -> None:
+    """A warning nobody sees is a silent downgrade."""
+    project = _project(tmp_path, tagged={})
+    _write_chart(project, "SELECT month, revenue, email AS contact")
+
+    result = CliRunner().invoke(app, ["build", "--project", str(project)])
+
+    assert result.exit_code == 0, result.output
+    assert "! visualisations/revenue.ggsql column 'contact' looks like email" in result.output
+    assert "✓ rendered chart artifacts" in result.output
+
+
+@pytest.mark.parametrize(
+    ("kind", "values"),
+    [
+        ("email addresses", ["jane@acme.example", "j.doe+x@mail.example.org"]),
+        ("phone numbers", ["+1-555-010-0123", "(415) 555-0100", "+14155550100"]),
+        ("card numbers", ["4111 1111 1111 1111", "5500-0000-0000-0004"]),
+        ("social security numbers", ["123-45-6789", "078-05-1120"]),
+    ],
+)
+def test_each_detector_names_what_it_saw(kind: str, values: list[str]) -> None:
+    data = _strings("v", values)
+
+    (suspect,) = scan_for_pii(data)
+
+    assert suspect.kind == kind
+    assert suspect.column == "v"
+    assert (suspect.matched, suspect.sampled) == (len(values), len(values))
+
+
+@pytest.mark.parametrize(
+    "values",
+    [
+        ["2026-01-15", "2026-02-15"],  # dates are not phone numbers
+        ["4155550100", "2125550199"],  # bare digits are IDs until proven otherwise
+        ["4111111111111112", "4111111111111113"],  # fails Luhn
+        ["000-45-6789", "900-45-6789", "123-00-6789", "123-45-0000"],  # never issued
+        ["North", "South", "j***@acme.example"],  # a masked value is not an address
+        ["x@y", "not an email", ""],
+    ],
+)
+def test_lookalikes_do_not_warn(values: list[str]) -> None:
+    assert scan_for_pii(_strings("v", values)) == ()
+
+
+def test_a_card_number_column_needs_a_majority() -> None:
+    """One random digit string in ten passes Luhn, so a few hits in an ID column are noise."""
+    ids = [f"{n:016d}" for n in range(1000, 1040)]  # some of these pass Luhn by chance
+    assert scan_for_pii(_strings("order_id", ids)) == ()
+
+    mostly_cards = ["4111 1111 1111 1111"] * 30 + ids[:10]
+    (suspect,) = scan_for_pii(_strings("payment", mostly_cards))
+    assert suspect.kind == "card numbers"
+
+
+def test_one_address_in_twenty_free_text_values_is_enough() -> None:
+    notes = ["fine"] * 19 + ["call jane@acme.example"]  # not a match: the whole value must be one
+    assert scan_for_pii(_strings("note", notes)) == ()
+
+    notes = ["fine"] * 19 + ["jane@acme.example"]
+    (suspect,) = scan_for_pii(_strings("note", notes))
+    assert (suspect.matched, suspect.sampled) == (1, 20)
+
+
+def test_sampling_reads_across_the_result_not_just_the_top() -> None:
+    values = ["fine"] * 5000 + ["jane@acme.example"] * 5000
+
+    (suspect,) = scan_for_pii(_strings("note", values))
+
+    assert suspect.sampled == 200
+    assert suspect.matched == 100
+
+
+def test_only_string_columns_are_scanned() -> None:
+    data = QueryResult.from_records(
+        ("n", "s"), tuple({"n": 4111111111111111, "s": "4111 1111 1111 1111"} for _ in range(3))
+    )
+
+    (suspect,) = scan_for_pii(data)
+
+    assert suspect.column == "s"
+
+
+def test_scan_and_strict_load_from_glyf_yml(tmp_path: Path) -> None:
+    (tmp_path / "glyf.yml").write_text(
+        "privacy:\n  scan: false\n  strict: true\n", encoding="utf-8"
+    )
+
+    config = load_config(tmp_path)
+
+    assert (config.privacy.scan, config.privacy.strict) == (False, True)
+    assert (PrivacyConfig().scan, PrivacyConfig().strict) == (True, False)
+
+
 # --- configuration -----------------------------------------------------------
 
 
@@ -238,11 +403,23 @@ def _config(
     pii_columns: tuple[str, ...] = (),
     on_pii: str = "deny",
     redaction: str = "mask",
+    scan: bool = True,
+    strict: bool = False,
 ) -> GlyfConfig:
     return replace(
         GlyfConfig(),
-        privacy=PrivacyConfig(pii_columns=pii_columns, on_pii=on_pii, redaction=redaction),
+        privacy=PrivacyConfig(
+            pii_columns=pii_columns,
+            on_pii=on_pii,
+            redaction=redaction,
+            scan=scan,
+            strict=strict,
+        ),
     )
+
+
+def _strings(name: str, values: list[str]) -> QueryResult:
+    return QueryResult.from_records((name,), tuple({name: value} for value in values))
 
 
 def _project(tmp_path: Path, *, tagged: dict[str, dict[str, object]]) -> Path:

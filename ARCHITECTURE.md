@@ -154,5 +154,9 @@ src/glyf/dashboard/
   meaningless chart, so refusing loudly is the honest response, and `redact`
   exists for grouping by a sensitive key. Classification is by column name —
   an alias slips past the manifest and needs listing in `glyf.yml`; column
-  lineage through arbitrary SQL is out of scope. This is defense-in-depth
-  behind the warehouse role the build runs with, not a substitute for it.
+  lineage through arbitrary SQL is out of scope. Behind the list, a regex
+  scan over sampled values of unclassified string columns catches the alias
+  nobody listed — and it only ever warns (`privacy.strict` turns that into a
+  failure), because a fuzzy match that silently redacted would be a wrong
+  chart with a clean conscience. This is defense-in-depth behind the
+  warehouse role the build runs with, not a substitute for it.

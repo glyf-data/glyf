@@ -73,4 +73,9 @@ def _run_step(
     except Exception:
         typer.echo(output.getvalue(), nl=False)
         raise
+    # A step's detail is noise on success, except for what it warned about:
+    # a warning nobody sees is a silent downgrade.
+    for line in output.getvalue().splitlines():
+        if line.startswith("! "):
+            typer.echo(line)
     typer.echo(f"✓ {summary}")

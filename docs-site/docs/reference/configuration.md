@@ -35,6 +35,8 @@ privacy:
   pii_columns: []
   on_pii: deny
   redaction: mask
+  scan: true
+  strict: false
 
 dashboard:
   theme: light
@@ -72,6 +74,8 @@ dashboard:
 | `privacy.pii_columns` | `[]` | Column names to treat as PII in addition to those the dbt project tags. For aliases and expressions dbt does not model. |
 | `privacy.on_pii` | `deny` | What a build does when a chart's query returns a PII column. `deny` fails the build; `redact` rewrites the column's values before anything reads them. See [keeping PII out of a chart](#keeping-pii-out-of-a-chart). |
 | `privacy.redaction` | `mask` | How `redact` rewrites a value. `mask` keeps a hint (`j***@acme.com`); `hash` keeps only distinctness, for grouping by a sensitive key. |
+| `privacy.scan` | `true` | Read the values of unclassified string columns and warn when they look like email addresses, phone numbers, card numbers or social security numbers. Warns only — never redacts. See [the value scan](#the-value-scan). |
+| `privacy.strict` | `false` | Fail the build on a scan warning instead of printing it. |
 
 ## Render
 
@@ -193,6 +197,41 @@ writes `select email as contact` returns a column called `contact`, which no
 manifest tags; that is what `privacy.pii_columns` is for. Matching is
 case-insensitive, and a tag on a model the chart does not read does not apply.
 Column lineage through arbitrary SQL is out of scope.
+
+### The value scan
+
+Behind the classification sits a safety net for the alias nobody listed and
+the column nobody tagged. With `privacy.scan: true`, the default, a full build
+samples the values of every string column the classification did not cover —
+up to 200, spread across the result — and warns when they read like:
+
+| | matches | does not match |
+| --- | --- | --- |
+| email addresses | `jane@acme.example` | `j***@acme.example`, `x@y` |
+| phone numbers | `+1-555-010-0123`, `(415) 555-0100`, `+14155550100` | `4155550100` (a bare run of digits is an ID until proven otherwise), dates |
+| card numbers | 13–19 digits passing the Luhn check, and only when most of the column does — one random digit string in ten passes Luhn | an order-id column with a few accidental hits |
+| social security numbers | `123-45-6789` | area `000`, `666` or `9xx`, group `00`, serial `0000` — ranges never issued |
+
+A whole value has to match; an address inside a sentence does not count. One
+match in twenty sampled values is enough to warn, except for card numbers,
+which need a majority.
+
+```text
+! signups.ggsql column 'contact' looks like email addresses (200 of 200
+sampled values) but is not classified as PII. Tag it in schema.yml or list it
+in privacy.pii_columns
+```
+
+**The scan warns and never redacts.** A fuzzy match is a guess; a guess that
+silently rewrote a column would produce a wrong chart with nobody the wiser.
+The fix is to classify the column — then the deterministic policy above takes
+over, and the scan skips it. `privacy.strict: true` fails the build on a
+warning instead, for teams that would rather classify than be surprised.
+
+The scan reads rows, so it runs in full builds only; [validate mode](#validate-mode)
+moves no rows and runs the classification alone. `glyf build` prints scan
+warnings even without `--verbose`. Numeric columns are not scanned: a phone
+number stored as an integer has already lost the shape the detectors look for.
 
 This is defense-in-depth. The primary control is the warehouse role the build
 runs with: grant it the marts a dashboard needs and not the raw or staging

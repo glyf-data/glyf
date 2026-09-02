@@ -74,6 +74,11 @@ class PrivacyConfig:
     # `mask` keeps a hint of the value (`j***@acme.com`); `hash` keeps only
     # its distinctness, for grouping by a sensitive key.
     redaction: str = "mask"
+    # Look at the values of unclassified columns for things that read like
+    # emails, phone numbers, card numbers or SSNs. Fuzzy, so it warns.
+    scan: bool = True
+    # ...unless strict, when a warning fails the build instead.
+    strict: bool = False
 
 
 @dataclass(frozen=True)
@@ -241,6 +246,8 @@ def _privacy_config(raw: object) -> PrivacyConfig:
         pii_columns=tuple(dict.fromkeys(item.strip() for item in columns)),
         on_pii=on_pii,
         redaction=redaction,
+        scan=_bool_value(raw, "scan", True),
+        strict=_bool_value(raw, "strict", False),
     )
 
 

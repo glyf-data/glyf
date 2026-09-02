@@ -23,7 +23,12 @@ from glyf.output.writer import (
     write_chart_metadata,
     write_compiled_sql,
 )
-from glyf.privacy import PiiPolicyError, apply_pii_policy, classify_pii
+from glyf.privacy import (
+    PiiPolicyError,
+    apply_pii_policy,
+    classify_pii,
+    scan_for_pii,
+)
 from glyf.project.scanner import ProjectScan, scan_project
 
 
@@ -141,6 +146,22 @@ def render_project(
                 "Aggregate the query or raise execution.max_rows; glyf will not "
                 "draw a chart from part of a result."
             )
+
+        if config.privacy.scan:
+            # The safety net behind the classification above: it reads
+            # values, so it needs rows, which is why validate mode cannot
+            # run it. It warns rather than redacts -- a fuzzy match that
+            # silently rewrote a column would be a wrong chart nobody knew
+            # about.
+            classified = tuple(finding.name for finding in findings)
+            for suspect in scan_for_pii(data, skip=classified):
+                message = (
+                    f"{rel_path} {suspect.describe()} but is not classified as "
+                    "PII. Tag it in schema.yml or list it in privacy.pii_columns"
+                )
+                if config.privacy.strict:
+                    raise RenderError(f"{message} (privacy.strict).")
+                warnings.append(message)
 
         write_chart_data(scan.root, chart, artifacts, data)
 

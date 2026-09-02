@@ -165,6 +165,14 @@ data file, a `source()` filter. The
 has the details and the limits — classification is by column name, so an
 alias needs listing in `glyf.yml`.
 
+Behind the list, a full build also scans the values of the columns nobody
+classified and warns when they look like email addresses, phone numbers, card
+numbers or social security numbers. The scan
+[warns and never redacts](../reference/configuration.md#the-value-scan): a
+fuzzy guess that silently rewrote a column would be a wrong chart. Classify the
+column and the warning goes away; set `privacy.strict: true` to fail the build
+on it instead.
+
 ## What glyf does not do
 
 **glyf has no access control.** Nothing in a glyf artifact authenticates a
