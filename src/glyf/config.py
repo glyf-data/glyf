@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import yaml
@@ -96,6 +96,24 @@ class GlyfConfig:
     export: ExportConfig = ExportConfig()
     privacy: PrivacyConfig = PrivacyConfig()
 
+    def with_output_dir(self, output_dir: Path) -> "GlyfConfig":
+        """The same config writing everything under `output_dir`.
+
+        The derived directories move with it, overriding `compiled_path`,
+        `charts_path`, `dashboards_output_path` and `site_path` whatever
+        `glyf.yml` set them to: a run told where to write should not scatter
+        half its output somewhere else.
+        """
+        root = Path(output_dir)
+        return replace(
+            self,
+            output_path=root,
+            compiled_path=root / "compiled",
+            charts_path=root / "charts",
+            dashboards_output_path=root / "dashboards",
+            site_path=root / "site",
+        )
+
 
 def load_config(project_root: Path, config_path: Path | None = None) -> GlyfConfig:
     root = project_root.expanduser().resolve()
@@ -133,6 +151,27 @@ def load_config(project_root: Path, config_path: Path | None = None) -> GlyfConf
         export=_export_config(raw.get("export", {})),
         privacy=_privacy_config(raw.get("privacy", {})),
     )
+
+
+def apply_run_overrides(
+    config: GlyfConfig,
+    *,
+    target: str | None = None,
+    output_dir: Path | None = None,
+) -> GlyfConfig:
+    """Config with a run's command-line overrides applied."""
+    if output_dir is not None:
+        config = config.with_output_dir(output_dir)
+    if target is not None:
+        if config.execution.backend != "dbt":
+            raise ConfigError(
+                "Invalid config: --target names a dbt profile target, which needs "
+                f"execution.backend: dbt; this project uses "
+                f"'{config.execution.backend}'. Without it the target would be "
+                "ignored and the build would run as the same identity."
+            )
+        config = replace(config, execution=replace(config.execution, target=target))
+    return config
 
 
 def resolve_project_path(project_root: Path, path: Path) -> Path:

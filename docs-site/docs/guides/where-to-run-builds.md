@@ -98,6 +98,107 @@ whichever human ran it, and there is a log of what was published when. With
 dashboards there is a third: a laptop build may contain rows that the service
 role could not have read, and a bucket is a poor place to discover that.
 
+## Building one artifact per audience
+
+A published dashboard is a static file: one materialised view of the data,
+identical for everyone who opens it. There is no per-viewer filtering inside
+it and there cannot be. When two audiences may see different numbers, the
+static-native answer is two artifacts, each built as the audience that will
+read it.
+
+```bash
+glyf build --target finance --select tag:finance --output-dir artifacts/finance
+glyf build --target exec    --select tag:exec    --output-dir artifacts/exec
+```
+
+Each flag does one thing, and only the first is a privacy control.
+
+### `--target` names the identity, not the destination
+
+`--target` is dbt's word: it selects one of the named blocks under `outputs`
+in `profiles.yml`, and that block says which warehouse user or role the
+queries run as.
+
+<!-- glyf-docs: skip — a dbt profiles.yml, dbt's file rather than a glyf spec -->
+```yaml title="~/.dbt/profiles.yml"
+analytics:
+  target: finance        # the default when nobody passes --target
+  outputs:
+    finance:             # <- what `--target finance` selects
+      type: trino
+      user: svc-glyf-finance
+    exec:
+      type: trino
+      user: svc-glyf-exec
+```
+
+The warehouse then applies its own access control to that identity: an Open
+Policy Agent or Ranger rule on Trino, a masking or row-access policy on
+Snowflake, column-level security and IAM on BigQuery. None of that is
+configured in dbt or in glyf — it is administered wherever the data lives, and
+it applies to every client that connects, glyf included.
+
+**That is where the restriction comes from.** A build running as
+`svc-glyf-finance` receives only what that identity is allowed to read, so its
+artifacts cannot contain anything more. glyf never widens access; it inherits
+the ceiling of the credential it was given. It follows that per-audience
+builds do nothing at all if every target connects as the same role — the
+feature has teeth only where the warehouse policies exist.
+
+`--target` requires `execution.backend: dbt`. With any other backend the
+target would be ignored, and a build that silently ran as the wrong identity
+is worse than one that refuses.
+
+### `--select` decides which dashboards get built
+
+A selector is `tag:NAME`, `name:NAME`, or a bare dashboard name, and it may be
+repeated for a union. The build produces the matching dashboards and exactly
+the charts they reference:
+
+```yaml title="dashboards/executive.yml"
+name: executive
+title: Executive Dashboard
+tags:
+  - exec
+```
+
+This matters for more than tidiness. A chart whose table an audience's role
+cannot read does not come back empty — the query fails, and a failed chart
+fails the build. The audience that should not see a dashboard must not build
+it. A selector that matches no dashboard is an error rather than an empty
+site.
+
+### `--output-dir` keeps the results apart
+
+It writes `compiled/`, `charts/`, `dashboards/` and `site/` beneath the
+directory you name, so one audience's build does not overwrite another's. It
+is staging, not a boundary: a directory controls nothing, and what keeps the
+two artifacts separate in the end is publishing them to different places
+behind different access groups.
+
+Within one output directory, a build always describes itself: artifacts from
+a previous, wider build are removed rather than left to be published
+alongside. Even so, give each audience its own directory — reusing one and
+relying on the pruning is a single mistake away from the wrong thing.
+
+### Putting it together
+
+The pipeline runs the loop and publishes each result to its own location:
+
+```bash
+for audience in finance exec; do
+  glyf build \
+    --target "$audience" \
+    --select "tag:$audience" \
+    --output-dir "artifacts/$audience"
+  aws s3 sync "artifacts/$audience/site" "s3://dashboards-$audience/" --delete
+done
+```
+
+Each bucket is then fronted by the access group for that audience, as below.
+The warehouse decides what each artifact could contain; the edge decides who
+can open it.
+
 ## Storing the artifacts
 
 A glyf site is a snapshot of query results at build time, rendered. It is

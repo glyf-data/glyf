@@ -160,3 +160,19 @@ src/glyf/dashboard/
   failure), because a fuzzy match that silently redacted would be a wrong
   chart with a clean conscience. This is defense-in-depth behind the
   warehouse role the build runs with, not a substitute for it.
+
+- **Per-audience restriction is one build per warehouse identity, not a
+  filter inside the artifact.** A published dashboard is a static file, so it
+  is one materialised view of the data for everyone who opens it; per-viewer
+  filtering belongs to a hosted tier, not to a file. `--target` therefore
+  selects the dbt profile target, which names the identity the queries run
+  as, and the warehouse's own policies decide what comes back — glyf inherits
+  that ceiling and never widens it. `--select` decides which dashboards a
+  build produces, because a chart whose table the identity cannot read fails
+  the build rather than coming back empty, and `--output-dir` keeps the
+  results apart. Only the first is a control; the other two are mechanics.
+  Consequently a build's output directory is made to describe that build —
+  chart artifacts and dashboard HTML from a wider earlier build are pruned,
+  the manifest lists only what was generated, and export mirrors rather than
+  merges — because export copies a directory, and a stale file there is
+  another audience's data published under this audience's URL.

@@ -74,6 +74,50 @@ ValidateOption = Annotated[
     ),
 ]
 
+TargetOption = Annotated[
+    str | None,
+    typer.Option(
+        "--target",
+        "-t",
+        help=(
+            "dbt profile target to run the queries as. The target names the "
+            "warehouse identity, so its role decides what the artifacts can "
+            "contain. Requires execution.backend: dbt."
+        ),
+    ),
+]
+
+SelectOption = Annotated[
+    list[str] | None,
+    typer.Option(
+        "--select",
+        "-s",
+        help=(
+            "Build only the dashboards matching a selector, and the charts "
+            "they use: tag:NAME, name:NAME, or a bare dashboard name. Repeat "
+            "for a union."
+        ),
+    ),
+]
+
+OutputDirOption = Annotated[
+    Path | None,
+    typer.Option(
+        "--output-dir",
+        file_okay=False,
+        dir_okay=True,
+        help=(
+            "Write artifacts here instead of output_path, with compiled/, "
+            "charts/, dashboards/ and site/ beneath it. Keeps one build per "
+            "audience apart."
+        ),
+    ),
+]
+
+
+def _selectors(select: list[str] | None) -> tuple[str, ...] | None:
+    return tuple(select) if select else None
+
 
 @app.command("init")
 def init_command(
@@ -157,15 +201,28 @@ def render_command(
     project: ProjectOption = Path("."),
     config: ConfigOption = None,
     validate: ValidateOption = False,
+    target: TargetOption = None,
+    select: SelectOption = None,
+    output_dir: OutputDirOption = None,
 ) -> None:
     """Generate compiled SQL and chart artifacts."""
-    run_render(project, config, validate=validate)
+    run_render(
+        project,
+        config,
+        validate=validate,
+        target=target,
+        select=_selectors(select),
+        output_dir=output_dir,
+    )
 
 
 @app.command("build")
 def build_command(
     project: ProjectOption = Path("."),
     config: ConfigOption = None,
+    target: TargetOption = None,
+    select: SelectOption = None,
+    output_dir: OutputDirOption = None,
     clean: Annotated[
         bool,
         typer.Option(
@@ -195,6 +252,9 @@ def build_command(
         config_path=config,
         verbose=verbose,
         validate=validate,
+        target=target,
+        select=_selectors(select),
+        output_dir=output_dir,
     )
 
 

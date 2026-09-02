@@ -17,6 +17,7 @@ from glyf.dashboard.macros import (
 from glyf.dashboard.renderer import DashboardBuildMeta, DashboardRenderer
 from glyf.output.paths import artifact_paths
 from glyf.project.scanner import ProjectScan, scan_project
+from glyf.selection import resolve_selection
 
 
 class DashboardGenerationError(ValueError):
@@ -40,6 +41,8 @@ class DashboardGenerationResult:
 def generate_dashboards(
     project: Path,
     config: GlyfConfig | None = None,
+    *,
+    select: tuple[str, ...] | None = None,
 ) -> DashboardGenerationResult:
     config = config or GlyfConfig()
     exclude_row_data = config.export.excludes_row_data
@@ -55,8 +58,12 @@ def generate_dashboards(
     build_meta = DashboardBuildMeta.now()
     macro_context = MacroContext(scan.root, config)
 
+    selection = resolve_selection(scan, select)
+    dashboard_files = (
+        scan.dashboard_files if selection is None else selection.dashboard_files
+    )
     dashboards: list[GeneratedDashboard] = []
-    for dashboard_path in scan.dashboard_files:
+    for dashboard_path in dashboard_files:
         try:
             dashboard = load_dashboard(dashboard_path)
         except ValueError as exc:
@@ -117,6 +124,14 @@ def generate_dashboards(
                 charts=ordered_chart_artifacts,
             )
         )
+
+    # The dashboards directory describes the build that just ran. A wider
+    # earlier build left HTML here, and export copies the directory -- so
+    # another audience's dashboard would be published under this one's URL.
+    generated_names = {item.dashboard.name for item in dashboards}
+    for stale in paths.dashboards_dir.glob("*.html"):
+        if stale.stem not in generated_names:
+            stale.unlink()
 
     index_path = paths.root / "index.html"
     index_path.parent.mkdir(parents=True, exist_ok=True)

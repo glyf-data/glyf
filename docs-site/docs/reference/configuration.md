@@ -61,7 +61,7 @@ dashboard:
 | Key | Default | Description |
 | --- | --- | --- |
 | `execution.backend` | `duckdb` | Where chart SQL runs. `duckdb` finds a database beside the project; `dbt` uses the project's `profiles.yml` and reaches its `duckdb`, `trino`, `snowflake` and `bigquery` targets (each warehouse needs its extra: `glyf-core[trino]`, `glyf-core[snowflake]`, `glyf-core[bigquery]`). |
-| `execution.target` | profile's own | `dbt` backend only. Render against a target other than the profile's default. Overrides `DBT_TARGET`. |
+| `execution.target` | profile's own | `dbt` backend only. Render against a target other than the profile's default. Overrides `DBT_TARGET`; `--target` overrides both. The target names the warehouse identity the queries run as — see [building one artifact per audience](../guides/where-to-run-builds.md#building-one-artifact-per-audience). |
 | `execution.profiles_dir` | dbt's search order | `dbt` backend only. Where to find `profiles.yml`, instead of `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`. |
 | `execution.mode` | `full` | `full` runs the queries and draws the charts. `validate` runs each with `limit 0` and draws nothing — see [validate mode](#validate-mode). |
 | `execution.max_rows` | unset | Fail the build if a chart's query returns more than this many rows. Unset means no limit. |

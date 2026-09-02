@@ -15,6 +15,7 @@ from glyf.ggsql.renderer import (
 )
 from glyf.manifest.loader import ManifestError, load_manifest
 from glyf.manifest.resolver import resolve_refs
+from glyf.output.paths import artifact_paths
 from glyf.output.writer import (
     ChartArtifacts,
     chart_artifact_paths,
@@ -30,6 +31,7 @@ from glyf.privacy import (
     scan_for_pii,
 )
 from glyf.project.scanner import ProjectScan, scan_project
+from glyf.selection import Selection, resolve_selection
 
 
 @dataclass(frozen=True)
@@ -44,6 +46,8 @@ class RenderedChart:
 class RenderResult:
     scan: ProjectScan
     charts: tuple[RenderedChart, ...]
+    # Which dashboards this run was restricted to, if any.
+    selection: Selection | None = None
     # True when the run only checked the queries; no chart artifacts exist.
     validated_only: bool = False
     # Downgrades worth telling the user about, rather than doing silently.
@@ -57,6 +61,8 @@ class RenderError(ValueError):
 def render_project(
     project: Path,
     config: GlyfConfig | None = None,
+    *,
+    select: tuple[str, ...] | None = None,
 ) -> RenderResult:
     config = config or GlyfConfig()
     execution = config.execution
@@ -70,6 +76,7 @@ def render_project(
     )
     warnings: list[str] = []
     scan = scan_project(project, config)
+    selection = resolve_selection(scan, select)
     if scan.manifest_path is None:
         raise RenderError(
             "Missing target/manifest.json. Run dbt compile or dbt build before render."
@@ -80,8 +87,20 @@ def render_project(
     except ManifestError as exc:
         raise RenderError(str(exc)) from exc
 
+    ggsql_files = scan.ggsql_files
+    if selection is not None:
+        ggsql_files = tuple(
+            path for path in ggsql_files if path.stem in selection.chart_names
+        )
+        missing = sorted(selection.chart_names - {path.stem for path in ggsql_files})
+        if missing:
+            joined = ", ".join(f"'{name}'" for name in missing)
+            raise RenderError(
+                f"selected dashboards reference unknown chart {joined}"
+            )
+
     rendered: list[RenderedChart] = []
-    for path in scan.ggsql_files:
+    for path in ggsql_files:
         try:
             chart = parse_ggsql_file(path)
         except GgsqlParseError as exc:
@@ -204,12 +223,40 @@ def render_project(
             )
         )
 
+    if selection is not None and not validate_only:
+        # The output directory has to describe the build that just ran. A
+        # previous, wider build left artifacts here, and export copies the
+        # directory rather than a list -- so another audience's chart would
+        # ride along into this one's site.
+        _prune_unselected_artifacts(scan.root, config, selection.chart_names)
+
     return RenderResult(
         scan=scan,
         charts=tuple(rendered),
         validated_only=validate_only,
         warnings=tuple(warnings),
+        selection=selection,
     )
+
+
+def _prune_unselected_artifacts(
+    root: Path, config: GlyfConfig, keep: frozenset[str]
+) -> None:
+    paths = artifact_paths(root, config)
+    directories = (
+        paths.charts_dir,
+        paths.compiled_dir,
+        paths.normalized_data_dir,
+        paths.vega_data_dir,
+    )
+    for directory in directories:
+        if not directory.is_dir():
+            continue
+        for path in directory.iterdir():
+            # `revenue.data.json` and `revenue.vega.json` carry the chart name
+            # before the first dot, not in `Path.stem`.
+            if path.is_file() and path.name.split(".")[0] not in keep:
+                path.unlink()
 
 
 def _discard(*paths: Path) -> None:
