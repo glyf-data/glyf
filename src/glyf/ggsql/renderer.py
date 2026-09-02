@@ -1,4 +1,6 @@
+import html
 import json
+import re
 from pathlib import Path
 
 import altair as alt
@@ -64,6 +66,22 @@ def required_columns(chart: GgsqlChart) -> tuple[str, ...]:
     roles = ("x", "y", "color")
     fields = [chart.field_for_role(role) for role in roles]
     return tuple(dict.fromkeys(field for field in fields if field is not None))
+
+
+def prune_to_encoded_columns(chart: GgsqlChart, data: QueryResult) -> QueryResult:
+    """The result reduced to the columns the chart encodes.
+
+    A chart built from this carries nothing the picture does not show: an
+    inlined Vega `datasets` block lists only these columns, and so do the
+    tooltips. Values are untouched -- the chart must agree with the warehouse.
+    A column the chart binds but the result lacks is left for `build_chart`
+    to report.
+    """
+    available = set(data.columns)
+    keep = [field for field in required_columns(chart) if field in available]
+    if len(keep) == len(data.columns):
+        return data
+    return QueryResult.from_arrow(data.to_arrow().select(keep))
 
 
 def missing_columns(chart: GgsqlChart, columns: tuple[str, ...]) -> tuple[str, ...]:
@@ -189,6 +207,32 @@ def _coerce_query_result(data: QueryResult | ArrowStreamExportable) -> QueryResu
         "chart renderer expected a QueryResult or an Arrow-exportable dataframe "
         "(pyarrow, polars, pandas >= 2.2, or a DuckDB relation)"
     )
+
+
+_SVG_ARIA_LABEL = re.compile(r'aria-label="([^"]*)"')
+
+
+def strip_svg_row_values(svg_path: Path, chart: GgsqlChart) -> None:
+    """Replace each mark's `field: value; ...` label with the field names alone.
+
+    Vega labels a data mark with the values it was drawn from, one
+    `field: value` per encoded channel, and gives axes, legends and titles
+    prose labels of their own. Only the former carry the rows; the latter
+    describe text the page already shows. A mark still announces which columns
+    it came from, so a screen reader can tell a bar from a legend, but a reader
+    gets what the pixels show and nothing more precise.
+    """
+    fields = required_columns(chart)
+    row_label = tuple(f"{html.escape(field, quote=True)}: " for field in fields)
+    field_names = html.escape("; ".join(fields), quote=True)
+
+    def relabel(match: re.Match[str]) -> str:
+        if match.group(1).startswith(row_label):
+            return f'aria-label="{field_names}"'
+        return match.group(0)
+
+    svg = svg_path.read_text(encoding="utf-8")
+    svg_path.write_text(_SVG_ARIA_LABEL.sub(relabel, svg), encoding="utf-8")
 
 
 def _patch_svg_fonts(svg_path: Path) -> None:

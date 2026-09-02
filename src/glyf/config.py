@@ -10,7 +10,7 @@ class ConfigError(ValueError):
 
 EXECUTION_MODES = frozenset({"full", "validate"})
 
-ROW_DATA_MODES = frozenset({"include", "exclude"})
+ROW_DATA_MODES = frozenset({"include", "minimal", "exclude"})
 
 
 @dataclass(frozen=True)
@@ -43,6 +43,8 @@ class DashboardConfig:
 
 @dataclass(frozen=True)
 class ExportConfig:
+    # `minimal` publishes only the columns each chart encodes: Vega specs are
+    # pruned to them and SVG accessibility labels keep field names, not values.
     # `exclude` publishes pictures instead of data: PNG only, no Vega specs, no
     # compiled SQL, no values resolved out of a chart's rows.
     row_data: str = "include"
@@ -50,6 +52,10 @@ class ExportConfig:
     @property
     def excludes_row_data(self) -> bool:
         return self.row_data == "exclude"
+
+    @property
+    def prunes_row_data(self) -> bool:
+        return self.row_data == "minimal"
 
 
 @dataclass(frozen=True)
