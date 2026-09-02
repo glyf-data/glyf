@@ -58,7 +58,7 @@ dashboard:
 | `execution.profiles_dir` | dbt's search order | `dbt` backend only. Where to find `profiles.yml`, instead of `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`. |
 | `execution.mode` | `full` | `full` runs the queries and draws the charts. `validate` runs each with `limit 0` and draws nothing — see [validate mode](#validate-mode). |
 | `execution.max_rows` | unset | Fail the build if a chart's query returns more than this many rows. Unset means no limit. |
-| `export.row_data` | `include` | `exclude` publishes rendered PNGs only — no chart rows, Vega specs or compiled SQL. See [publishing without the rows](#publishing-without-the-rows). |
+| `export.row_data` | `include` | `minimal` publishes only the columns each chart encodes — see [publishing only what the chart shows](#publishing-only-what-the-chart-shows). `exclude` publishes rendered PNGs only — no chart rows, Vega specs or compiled SQL — see [publishing without the rows](#publishing-without-the-rows). |
 
 ## Render
 
@@ -124,6 +124,34 @@ Both bounds are applied in SQL, so the warehouse sends less over the wire. They
 bound transfer and render time, **not** what the warehouse scans: an aggregate
 is computed in full whatever limit follows it.
 
+## Publishing only what the chart shows
+
+By default a chart ships more than it draws. An interactive chart inlines its
+whole result set into the dashboard page — every column the query returned,
+whether or not a `VISUALISE` role binds it — and a static SVG labels each mark
+with the exact values it was drawn from.
+
+```yaml title="glyf.yml"
+export:
+  row_data: minimal
+```
+
+That keeps the interactivity and prunes the rest. The invariant: **a `minimal`
+export contains no information beyond what the rendered chart displays.**
+
+| | under `minimal` |
+| --- | --- |
+| Vega specs | `datasets` carries only the columns the `VISUALISE` clause encodes; tooltips, zoom and legend filtering keep working, because Vega needs nothing else |
+| SVG marks | accessibility labels keep the field names and drop the values: `month; revenue` instead of `month: 2026-03; revenue: 79000` |
+| values | never rounded or transformed — a chart that disagrees with the warehouse would be worse than the precision it reveals |
+| compiled SQL | published, as under `include`; it names the columns, not their values |
+| `source(chart, field)` filters | resolved, as under `include`; you asked for that column's values by name |
+| `target/glyf/data/*.data.json` | keeps every column locally; it is never published in any mode |
+
+Axis ticks, legend entries and titles keep their labels: they describe text
+the page already shows. The published `bundle.json` reports
+`security.row_data: "minimal"`.
+
 ## Publishing without the rows
 
 A normal export publishes the data along with the pictures, and not obviously:
@@ -152,5 +180,5 @@ The published `bundle.json` reports `security.row_data: "excluded"` and leaves
 `artifacts.svg` and `artifacts.compiled_sql` null, so a consumer is not sent to
 a file that was deliberately withheld.
 
-This is about what the artifacts contain, not about who can read them. Access
-control is whatever your host provides.
+Both modes are about what the artifacts contain, not about who can read them.
+Access control is whatever your host provides.

@@ -6,7 +6,13 @@ from glyf.execution import QueryResult, SqlExecutionError, execute_sql
 from glyf.execution.limits import wrap_row_limit
 from glyf.ggsql.models import GgsqlChart
 from glyf.ggsql.parser import GgsqlParseError, parse_ggsql_file
-from glyf.ggsql.renderer import ChartRenderError, missing_columns, render_chart
+from glyf.ggsql.renderer import (
+    ChartRenderError,
+    missing_columns,
+    prune_to_encoded_columns,
+    render_chart,
+    strip_svg_row_values,
+)
 from glyf.manifest.loader import ManifestError, load_manifest
 from glyf.manifest.resolver import resolve_refs
 from glyf.output.writer import (
@@ -50,6 +56,7 @@ def render_project(
     execution = config.execution
     validate_only = execution.mode == "validate"
     exclude_row_data = config.export.excludes_row_data
+    prune_row_data = config.export.prunes_row_data
     render_config = (
         replace(config.render, formats=("png",))
         if exclude_row_data
@@ -136,10 +143,13 @@ def render_project(
                     "(export.row_data: exclude)"
                 )
 
+        # `.data.json` above keeps every column for the local build; what the
+        # chart is drawn from -- and so what its Vega spec inlines -- may not.
+        chart_data = prune_to_encoded_columns(chart, data) if prune_row_data else data
         try:
             render_chart(
                 chart,
-                data,
+                chart_data,
                 artifacts.png,
                 artifacts.svg,
                 render_config,
@@ -147,6 +157,8 @@ def render_project(
             )
         except ChartRenderError as exc:
             raise RenderError(f"{rel_path} chart rendering failed: {exc}") from exc
+        if prune_row_data and artifacts.svg.exists():
+            strip_svg_row_values(artifacts.svg, chart)
 
         write_chart_metadata(scan.root, chart, artifacts)
         rendered.append(

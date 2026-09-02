@@ -51,6 +51,39 @@ customers.
 whether or not the dashboard shows it. `dashboard.show_compiled_sql: false`
 removes the drawer from the page; the files remain, at a predictable URL.
 
+## Publishing only what the chart shows
+
+```yaml title="glyf.yml"
+export:
+  row_data: minimal
+```
+
+This keeps every chart as it is — interactive charts stay interactive — and
+strips what the picture does not show. An interactive chart's `datasets` block
+is pruned to the columns its `VISUALISE` clause encodes, so a query that
+selects `customer_id` alongside the two columns it plots no longer publishes
+`customer_id`. An SVG mark's accessibility label keeps the field names and
+drops the values: `plan; sessions` rather than `plan: Pro; sessions: 6610`.
+
+| Published file | Carries under `minimal` |
+| --- | --- |
+| `dashboards/*.html` | Encoded columns only, in the inlined Vega spec; SVG labels without values. |
+| `charts/*.svg` | The picture, and which columns each mark came from. |
+| `charts/*.png` | The picture only. |
+| `charts/*.json` | Chart metadata, as before. |
+| `compiled/*.sql` | The chart's SQL, as before — it is metadata, not data. |
+| `bundle.json` | As before, plus `security.row_data: "minimal"`. |
+
+Values are never rounded or otherwise transformed. A chart whose numbers
+disagree with the warehouse is a worse problem than the precision an exact
+value reveals, so the mode prunes columns and touches nothing else. What it
+guarantees: **a `minimal` export contains no information beyond what the
+rendered chart displays.** The encoded values are still there — Vega needs them
+to draw — but they are the values the pixels already reveal.
+
+A `source(chart, field)` filter is resolved as usual. It names a column
+explicitly, so its distinct values are something you asked to publish.
+
 ## Publishing without the rows
 
 ```yaml title="glyf.yml"
@@ -95,6 +128,8 @@ render.
 
 1. Would you be comfortable handing someone the rows behind every chart? If not,
    set `export.row_data: exclude`, or aggregate further in the chart's SQL.
+   If the plotted values are fine but the query selects more columns than it
+   plots, `export.row_data: minimal` publishes only the plotted ones.
 2. Do the compiled queries reveal schema or table names you would rather not
    expose?
 3. Does any `source()` filter read a column of names, emails or identifiers?

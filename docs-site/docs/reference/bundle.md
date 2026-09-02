@@ -92,7 +92,7 @@ is missing, it falls back to the modification time of the generated
 | `internal_artifacts_included` | boolean | Whether the artifacts it points at include internal ones. |
 | `internal_artifacts` | array of strings | Which directories those are. Empty in a public manifest. |
 | `browser_visible_data` | string | Prose note on what publishing the described site exposes to a browser. |
-| `row_data` | string | **Optional.** Present as `"excluded"` when the site was built with `export.row_data: exclude`; absent otherwise. |
+| `row_data` | string | **Optional.** `"minimal"` when the site was built with `export.row_data: minimal`, `"excluded"` under `export.row_data: exclude`; absent otherwise. |
 
 ## `charts`
 
@@ -127,7 +127,10 @@ Under `export.row_data: exclude` (see
 [the configuration reference](./configuration.md#publishing-without-the-rows)),
 `svg` and `compiled_sql` are `null` too, because those files are not published.
 `security.row_data` is then `"excluded"`, which is the field to branch on if a
-consumer needs to know whether row data exists at all.
+consumer needs to know whether row data exists at all. Under
+`export.row_data: minimal` every artifact path is present as usual and
+`security.row_data` is `"minimal"`: the SVG and any inlined Vega spec carry
+only the columns the chart encodes.
 
 ## `dashboards`
 

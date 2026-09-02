@@ -44,7 +44,7 @@ def write_bundle_manifest(
         "paths": _paths_payload(public),
         "security": _security_payload(
             public,
-            public and config.export.excludes_row_data,
+            config.export.row_data if public else "include",
         ),
         "charts": _charts_payload(
             scan.root,
@@ -109,8 +109,21 @@ def _paths_payload(public: bool) -> dict[str, object]:
     }
 
 
-def _security_payload(public: bool, exclude_row_data: bool = False) -> dict[str, object]:
-    if public and exclude_row_data:
+def _security_payload(public: bool, row_data: str = "include") -> dict[str, object]:
+    if public and row_data == "minimal":
+        return {
+            "public_export": True,
+            "browser_visible_data": (
+                "This export publishes only the columns each chart encodes. "
+                "Vega specifications carry those columns alone, SVG "
+                "accessibility labels name fields without values, and compiled "
+                "SQL is included."
+            ),
+            "internal_artifacts_included": False,
+            "internal_artifacts": [],
+            "row_data": "minimal",
+        }
+    if public and row_data == "exclude":
         return {
             "public_export": True,
             "browser_visible_data": (
