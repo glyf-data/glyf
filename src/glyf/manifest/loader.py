@@ -16,6 +16,9 @@ class ManifestRelation:
     resource_type: str
     package_name: str | None = None
     source_name: str | None = None
+    # Columns the dbt project classifies as PII in `schema.yml`, by
+    # `meta: {pii: true}` or a `pii` tag.
+    pii_columns: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -46,6 +49,20 @@ class DbtManifest:
         for source in self.sources:
             if source.source_name == source_name and source.name == table_name:
                 return source.relation_name
+        return None
+
+    def node_for_ref(self, name: str) -> ManifestRelation | None:
+        for node in self.refable_nodes:
+            if node.name == name:
+                return node
+        return None
+
+    def node_for_source(
+        self, source_name: str, table_name: str
+    ) -> ManifestRelation | None:
+        for source in self.sources:
+            if source.source_name == source_name and source.name == table_name:
+                return source
         return None
 
 
@@ -83,6 +100,7 @@ def _relation_from_core(raw: object) -> ManifestRelation:
         resource_type=_required_str(raw, "resource_type"),
         package_name=_optional_str(raw, "package_name"),
         source_name=_optional_str(raw, "source_name"),
+        pii_columns=tuple(str(item) for item in _optional_list(raw, "pii_columns")),
     )
 
 
@@ -98,6 +116,13 @@ def _optional_str(raw: dict[str, object], key: str) -> str | None:
     if value is None or isinstance(value, str):
         return value
     raise ManifestError(f"Rust core returned invalid manifest field '{key}'")
+
+
+def _optional_list(raw: dict[str, object], key: str) -> list[object]:
+    value = raw.get(key, [])
+    if not isinstance(value, list):
+        raise ManifestError(f"Rust core returned invalid manifest field '{key}'")
+    return value
 
 
 def _required_list(raw: dict[str, object], key: str) -> list[object]:

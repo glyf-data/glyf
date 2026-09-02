@@ -31,6 +31,11 @@ render:
 export:
   row_data: include
 
+privacy:
+  pii_columns: []
+  on_pii: deny
+  redaction: mask
+
 dashboard:
   theme: light
   embed_charts: true
@@ -59,6 +64,14 @@ dashboard:
 | `execution.mode` | `full` | `full` runs the queries and draws the charts. `validate` runs each with `limit 0` and draws nothing — see [validate mode](#validate-mode). |
 | `execution.max_rows` | unset | Fail the build if a chart's query returns more than this many rows. Unset means no limit. |
 | `export.row_data` | `include` | `minimal` publishes only the columns each chart encodes — see [publishing only what the chart shows](#publishing-only-what-the-chart-shows). `exclude` publishes rendered PNGs only — no chart rows, Vega specs or compiled SQL — see [publishing without the rows](#publishing-without-the-rows). |
+
+## Privacy
+
+| Key | Default | Description |
+| --- | --- | --- |
+| `privacy.pii_columns` | `[]` | Column names to treat as PII in addition to those the dbt project tags. For aliases and expressions dbt does not model. |
+| `privacy.on_pii` | `deny` | What a build does when a chart's query returns a PII column. `deny` fails the build; `redact` rewrites the column's values before anything reads them. See [keeping PII out of a chart](#keeping-pii-out-of-a-chart). |
+| `privacy.redaction` | `mask` | How `redact` rewrites a value. `mask` keeps a hint (`j***@acme.com`); `hash` keeps only distinctness, for grouping by a sensitive key. |
 
 ## Render
 
@@ -123,6 +136,63 @@ result looks completely plausible and is wrong.
 Both bounds are applied in SQL, so the warehouse sends less over the wire. They
 bound transfer and render time, **not** what the warehouse scans: an aggregate
 is computed in full whatever limit follows it.
+
+## Keeping PII out of a chart
+
+A chart's query result is classified once, after it runs and before anything
+reads it — the renderer, the local data file, a dashboard filter — so every
+backend is covered by the same rule. A column is PII if either of two sources
+says so:
+
+1. **The dbt project.** A column tagged in `schema.yml` with `meta: {pii: true}`
+   or `tags: [pii]`, on any model or source the chart's SQL reads through
+   `ref()` or `source()`. glyf reads this from `target/manifest.json`; there is
+   no second registry to maintain.
+2. **`glyf.yml`.** The `privacy.pii_columns` list, for columns dbt does not
+   model — an alias, a computed expression.
+
+```yaml title="glyf.yml"
+privacy:
+  pii_columns: [contact, contact_phone]
+  on_pii: deny
+```
+
+Under `deny`, the default, a build whose chart returns a PII column fails and
+names the column and where the classification came from:
+
+```
+visualisations/signups.ggsql returns a PII column: 'email' (tagged pii on
+model dim_customers). Drop it from the query, or set privacy.on_pii: redact to
+publish it masked.
+```
+
+This holds in [validate mode](#validate-mode) too: the `limit 0` result still
+has its columns, so CI catches a charted email with no rows moved. Redacting an
+encoded column would produce a meaningless chart, which is why refusing is the
+default.
+
+Under `redact`, the column is rewritten instead:
+
+| | `redaction: mask` | `redaction: hash` |
+| --- | --- | --- |
+| `jane@acme.com` | `j***@acme.com` | `2c1a…` (16 hex characters) |
+| `+1 555 0100` | `+***` | `9f0e…` |
+| `NULL` | `NULL` | `NULL` |
+| distinct inputs | may collide | stay distinct |
+
+Every value becomes a string, whatever it was. `hash` is for grouping by a
+sensitive key without showing it; it is unsalted, so a value someone can guess
+is not hidden from them — it keeps the key groupable, not secret.
+
+**What this cannot see.** Classification is by column name. A query that
+writes `select email as contact` returns a column called `contact`, which no
+manifest tags; that is what `privacy.pii_columns` is for. Matching is
+case-insensitive, and a tag on a model the chart does not read does not apply.
+Column lineage through arbitrary SQL is out of scope.
+
+This is defense-in-depth. The primary control is the warehouse role the build
+runs with: grant it the marts a dashboard needs and not the raw or staging
+layers, and there is nothing for glyf to catch.
 
 ## Publishing only what the chart shows
 

@@ -96,6 +96,7 @@ CONFIG_KEYS = frozenset(
         "render",
         "dashboard",
         "export",
+        "privacy",
     }
 )
 
