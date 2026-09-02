@@ -94,6 +94,44 @@ is missing, it falls back to the modification time of the generated
 | `browser_visible_data` | string | Prose note on what publishing the described site exposes to a browser. |
 | `row_data` | string | **Optional.** `"minimal"` when the site was built with `export.row_data: minimal`, `"excluded"` under `export.row_data: exclude`; absent otherwise. |
 
+## `build`
+
+**Optional.** The build provenance record: what this artifact contains and how
+it was made. Present in the local manifest, and in a published one only under
+`export.provenance: public` — it names the warehouse identity the queries ran
+as and the selectors that narrowed the build, which is recon material on a
+public site. The same record is written to `target/glyf/build.json`, which
+`glyf export` never copies.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `record_version` | number | Schema version of the record. `1`. |
+| `built_at` | string | When the render ran, ISO 8601 UTC. |
+| `duration_ms` | number | How long the render took. |
+| `outcome` | string | `"success"`, or `"failed"` in an event log. |
+| `error` | string \| null | Why a failed build stopped. `null` on success. |
+| `project` | string | The project directory's name. |
+| `dbt_manifest_generated_at` | string \| null | `metadata.generated_at` from the dbt manifest: which dbt run the artifacts were built from. |
+| `execution` | object | `backend`, `target`, `mode`, `max_rows`. `target` names the warehouse identity. |
+| `export` | object | `row_data`. |
+| `privacy` | object | `on_pii`, `redaction`, `scan`, `strict`, `pii_columns`. |
+| `selection` | object \| null | `selectors` and the `dashboards` they matched; `null` when the build was not restricted. |
+| `charts` | object | Keyed by chart name; see below. |
+
+### `build.charts[]`
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `compiled_sql_sha256` | string | First 16 hex characters of the compiled SQL's digest. Enough to notice that what ran changed, without republishing the query. |
+| `row_count` | number \| null | Rows the query returned. `null` under validate mode, which fetches no rows — that is not zero rows. |
+| `redacted_columns` | array of strings | **Optional.** Columns the PII policy rewrote. |
+| `scan_warnings` | array of objects | **Optional.** What the value scan flagged: `column`, `kind`, `matched`, `sampled`. |
+
+The record is the build describing itself. Like `security`, it is descriptive:
+nothing verifies it, and it is not evidence. A tamper-evident history means
+shipping these records somewhere append-only, which is what `--log-json` is
+for.
+
 ## `charts`
 
 An object keyed by chart name — the `.ggsql` file's stem, and the same name a

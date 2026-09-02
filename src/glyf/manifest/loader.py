@@ -26,6 +26,8 @@ class DbtManifest:
     path: Path
     nodes: tuple[ManifestRelation, ...]
     sources: tuple[ManifestRelation, ...]
+    # When dbt last built the manifest, from its own `metadata.generated_at`.
+    generated_at: str | None = None
 
     @property
     def models(self) -> tuple[ManifestRelation, ...]:
@@ -87,6 +89,7 @@ def _manifest_from_core(raw: dict[str, object]) -> DbtManifest:
         sources=tuple(
             _relation_from_core(item) for item in _required_list(raw, "sources")
         ),
+        generated_at=_optional_str(raw, "generated_at"),
     )
 
 

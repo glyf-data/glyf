@@ -30,6 +30,11 @@ TOP_LEVEL_KEYS = {
     "security",
 }
 
+# `build` is the provenance record: present in a local manifest, and in a
+# public one only under `export.provenance: public`. Covered by
+# tests/test_provenance.py.
+OPTIONAL_TOP_LEVEL_KEYS = {"build"}
+
 PATH_KEYS = {"assets", "charts", "compiled", "dashboards", "index"}
 INTERNAL_PATH_KEYS = PATH_KEYS | {"data"}
 DATA_PATH_KEYS = {"normalized", "vega"}
@@ -163,7 +168,8 @@ def test_generated_at_is_null_without_an_index(tmp_path: Path) -> None:
 
 
 def _assert_common_shape(bundle: dict) -> None:
-    assert set(bundle) == TOP_LEVEL_KEYS
+    assert TOP_LEVEL_KEYS <= set(bundle)
+    assert set(bundle) <= TOP_LEVEL_KEYS | OPTIONAL_TOP_LEVEL_KEYS
     assert bundle["bundle_version"] == BUNDLE_VERSION
     assert isinstance(bundle["glyf_version"], str)
     assert bundle["project"] == "basic"

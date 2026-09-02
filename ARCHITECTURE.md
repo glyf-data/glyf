@@ -176,3 +176,17 @@ src/glyf/dashboard/
   the manifest lists only what was generated, and export mirrors rather than
   merges — because export copies a directory, and a stale file there is
   another audience's data published under this audience's URL.
+
+- **A build records itself; only one of the four audit questions is glyf's.**
+  Which queries ran belongs to the warehouse's logs, who opened a dashboard to
+  the edge's, and who copied the numbers out to nobody. What went into an
+  artifact and how it was made is glyf's alone, and was being thrown away.
+  `render_project` therefore writes `build.json` beside the other artifacts --
+  identity, dbt manifest time, selection, privacy policy and its effect, per
+  chart a row count and an SQL digest -- and the local `bundle.json` embeds
+  it. Publishing it is opt-in (`export.provenance`), because the record names
+  the warehouse identity and the selectors. `--log-json` appends the same
+  record, failures included, to a JSON Lines file: the manifest describes the
+  artifact that exists now, and only an external append-only log is a history.
+  The record is descriptive, exactly like the `security` block -- nothing
+  verifies it, and saying so is part of shipping it.

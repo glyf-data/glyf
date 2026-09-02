@@ -22,6 +22,7 @@ def run_build(
     target: str | None = None,
     select: tuple[str, ...] | None = None,
     output_dir: Path | None = None,
+    log_json: Path | None = None,
 ) -> None:
     _run_step(
         "validate",
@@ -39,6 +40,7 @@ def run_build(
             target=target,
             select=select,
             output_dir=output_dir,
+            log_json=log_json,
         ),
         verbose,
     )

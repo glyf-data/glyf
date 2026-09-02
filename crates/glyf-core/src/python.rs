@@ -41,6 +41,7 @@ fn chart_to_python(py: Python<'_>, chart: GgsqlChart) -> PyResult<Py<PyAny>> {
 fn manifest_to_python(py: Python<'_>, manifest: DbtManifest) -> PyResult<Py<PyAny>> {
     let dict = PyDict::new(py);
     dict.set_item("path", manifest.path)?;
+    dict.set_item("generated_at", manifest.generated_at)?;
     dict.set_item("nodes", relations_to_python(py, manifest.nodes)?)?;
     dict.set_item("sources", relations_to_python(py, manifest.sources)?)?;
     Ok(dict.into_any().unbind())
@@ -83,6 +84,9 @@ fn manifest_from_python(raw: &Bound<'_, PyDict>) -> PyResult<DbtManifest> {
         .collect::<PyResult<Vec<_>>>()?;
     Ok(DbtManifest {
         path,
+        // Ref resolution does not consult it, so the Python side does not
+        // send it back across.
+        generated_at: None,
         nodes,
         sources,
     })

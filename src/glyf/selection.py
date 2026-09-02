@@ -33,6 +33,7 @@ class Selection:
 
     selectors: tuple[str, ...]
     dashboard_files: tuple[Path, ...]
+    dashboard_names: tuple[str, ...]
     chart_names: frozenset[str]
 
     def describe(self) -> str:
@@ -72,6 +73,7 @@ def resolve_selection(
             wanted_names.add(text.lower())
 
     matched: list[Path] = []
+    matched_names: list[str] = []
     chart_names: set[str] = set()
     for path in scan.dashboard_files:
         try:
@@ -82,6 +84,7 @@ def resolve_selection(
         tags = {tag.lower() for tag in dashboard.tags}
         if dashboard.name.lower() in wanted_names or tags & wanted_tags:
             matched.append(path)
+            matched_names.append(dashboard.name)
             chart_names.update(dashboard.artifact_chart_names)
 
     if not matched:
@@ -94,5 +97,6 @@ def resolve_selection(
     return Selection(
         selectors=tuple(selectors),
         dashboard_files=tuple(matched),
+        dashboard_names=tuple(matched_names),
         chart_names=frozenset(chart_names),
     )

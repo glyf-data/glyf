@@ -44,6 +44,7 @@ audience. See [where to run builds](../guides/where-to-run-builds.md#building-on
 | `--target`, `-t` | dbt profile target to run the queries as. It names the warehouse identity, so its role decides what the artifacts can contain. Requires `execution.backend: dbt`; with any other backend the command fails rather than ignoring it. |
 | `--select`, `-s` | Build only the dashboards matching a selector — `tag:NAME`, `name:NAME`, or a bare dashboard name — and the charts they use. Repeat for a union. A selector matching nothing is an error. |
 | `--output-dir` | Write artifacts here instead of `output_path`, with `compiled/`, `charts/`, `dashboards/` and `site/` beneath it. Overrides the individual path keys in `glyf.yml`. |
+| `--log-json` | Append this build's provenance record to a [JSON Lines](https://jsonlines.org) file, one object per build, failures included. See [what a build records about itself](./configuration.md#what-a-build-records-about-itself). |
 
 ## Shared options
 

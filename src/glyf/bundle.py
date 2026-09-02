@@ -12,6 +12,7 @@ from glyf.dashboard.loader import Dashboard, DashboardFilter, load_dashboard
 from glyf.dashboard.renderer import DashboardBuildMeta
 from glyf.output.paths import artifact_paths
 from glyf.project.scanner import scan_project
+from glyf.provenance import read_build_record
 
 
 BUNDLE_VERSION = "1"
@@ -54,6 +55,11 @@ def write_bundle_manifest(
         ),
         "dashboards": _dashboards_payload(scan.root, config, dashboards),
     }
+    record = read_build_record(paths.root / "build.json")
+    if record is not None and (not public or config.export.publishes_provenance):
+        # The record names the warehouse identity the queries ran as and the
+        # selectors that narrowed the build, so publishing it is opt-in.
+        payload["build"] = record
     target_path.parent.mkdir(parents=True, exist_ok=True)
     target_path.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
