@@ -12,6 +12,8 @@ EXECUTION_MODES = frozenset({"full", "validate"})
 
 ROW_DATA_MODES = frozenset({"include", "minimal", "exclude"})
 
+PROVENANCE_MODES = frozenset({"local", "public"})
+
 PII_POLICIES = frozenset({"deny", "redact"})
 
 REDACTION_METHODS = frozenset({"mask", "hash"})
@@ -52,6 +54,14 @@ class ExportConfig:
     # `exclude` publishes pictures instead of data: PNG only, no Vega specs, no
     # compiled SQL, no values resolved out of a chart's rows.
     row_data: str = "include"
+    # Where the build provenance record goes. `local` keeps it in build.json
+    # and the local bundle; `public` also publishes it, which means publishing
+    # the warehouse identity and the selectors.
+    provenance: str = "local"
+
+    @property
+    def publishes_provenance(self) -> bool:
+        return self.provenance == "public"
 
     @property
     def excludes_row_data(self) -> bool:
@@ -255,7 +265,13 @@ def _export_config(raw: object) -> ExportConfig:
         raise ConfigError(
             f"Invalid config: 'export.row_data' must be one of {allowed}"
         )
-    return ExportConfig(row_data=row_data)
+    provenance = _string_value(raw, "provenance", "local")
+    if provenance not in PROVENANCE_MODES:
+        allowed = ", ".join(sorted(PROVENANCE_MODES))
+        raise ConfigError(
+            f"Invalid config: 'export.provenance' must be one of {allowed}"
+        )
+    return ExportConfig(row_data=row_data, provenance=provenance)
 
 
 def _privacy_config(raw: object) -> PrivacyConfig:

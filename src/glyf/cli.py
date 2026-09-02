@@ -115,6 +115,21 @@ OutputDirOption = Annotated[
 ]
 
 
+LogJsonOption = Annotated[
+    Path | None,
+    typer.Option(
+        "--log-json",
+        file_okay=True,
+        dir_okay=False,
+        help=(
+            "Append a JSON Lines record of this build -- identity, selection, "
+            "privacy policy, per-chart row counts -- to this file, for a log "
+            "collector to ship."
+        ),
+    ),
+]
+
+
 def _selectors(select: list[str] | None) -> tuple[str, ...] | None:
     return tuple(select) if select else None
 
@@ -204,6 +219,7 @@ def render_command(
     target: TargetOption = None,
     select: SelectOption = None,
     output_dir: OutputDirOption = None,
+    log_json: LogJsonOption = None,
 ) -> None:
     """Generate compiled SQL and chart artifacts."""
     run_render(
@@ -213,6 +229,7 @@ def render_command(
         target=target,
         select=_selectors(select),
         output_dir=output_dir,
+        log_json=log_json,
     )
 
 
@@ -223,6 +240,7 @@ def build_command(
     target: TargetOption = None,
     select: SelectOption = None,
     output_dir: OutputDirOption = None,
+    log_json: LogJsonOption = None,
     clean: Annotated[
         bool,
         typer.Option(
@@ -255,6 +273,7 @@ def build_command(
         target=target,
         select=_selectors(select),
         output_dir=output_dir,
+        log_json=log_json,
     )
 
 

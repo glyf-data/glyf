@@ -1,4 +1,6 @@
+import time
 from dataclasses import dataclass, replace
+from datetime import datetime, timezone
 from pathlib import Path
 
 from glyf.config import ExecutionConfig, GlyfConfig
@@ -31,6 +33,13 @@ from glyf.privacy import (
     scan_for_pii,
 )
 from glyf.project.scanner import ProjectScan, scan_project
+from glyf.provenance import (
+    BuildRecord,
+    ChartRecord,
+    build_record,
+    sql_digest,
+    write_build_record,
+)
 from glyf.selection import Selection, resolve_selection
 
 
@@ -48,6 +57,9 @@ class RenderResult:
     charts: tuple[RenderedChart, ...]
     # Which dashboards this run was restricted to, if any.
     selection: Selection | None = None
+    # What the run did, for the audit record. None only when unset by a
+    # caller constructing a result by hand.
+    build: BuildRecord | None = None
     # True when the run only checked the queries; no chart artifacts exist.
     validated_only: bool = False
     # Downgrades worth telling the user about, rather than doing silently.
@@ -75,6 +87,11 @@ def render_project(
         else config.render
     )
     warnings: list[str] = []
+    started = time.monotonic()
+    built_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace(
+        "+00:00", "Z"
+    )
+    chart_records: list[ChartRecord] = []
     scan = scan_project(project, config)
     selection = resolve_selection(scan, select)
     if scan.manifest_path is None:
@@ -147,8 +164,23 @@ def render_project(
         except PiiPolicyError as exc:
             raise RenderError(str(exc)) from exc
 
+        redacted = (
+            tuple(finding.name for finding in findings)
+            if config.privacy.on_pii == "redact"
+            else ()
+        )
+
         if validate_only:
             _check_columns(chart, data, rel_path)
+            chart_records.append(
+                ChartRecord(
+                    name=chart.name,
+                    compiled_sql_sha256=sql_digest(resolution.sql),
+                    # A validate run fetches no rows; that is not zero rows.
+                    row_count=None,
+                    redacted_columns=redacted,
+                )
+            )
             rendered.append(
                 RenderedChart(
                     chart=chart,
@@ -173,7 +205,17 @@ def render_project(
             # silently rewrote a column would be a wrong chart nobody knew
             # about.
             classified = tuple(finding.name for finding in findings)
-            for suspect in scan_for_pii(data, skip=classified):
+            suspects = scan_for_pii(data, skip=classified)
+            scan_warnings = tuple(
+                {
+                    "column": suspect.column,
+                    "kind": suspect.kind,
+                    "matched": suspect.matched,
+                    "sampled": suspect.sampled,
+                }
+                for suspect in suspects
+            )
+            for suspect in suspects:
                 message = (
                     f"{rel_path} {suspect.describe()} but is not classified as "
                     "PII. Tag it in schema.yml or list it in privacy.pii_columns"
@@ -181,6 +223,18 @@ def render_project(
                 if config.privacy.strict:
                     raise RenderError(f"{message} (privacy.strict).")
                 warnings.append(message)
+        else:
+            scan_warnings = ()
+
+        chart_records.append(
+            ChartRecord(
+                name=chart.name,
+                compiled_sql_sha256=sql_digest(resolution.sql),
+                row_count=len(data),
+                redacted_columns=redacted,
+                scan_warnings=scan_warnings,
+            )
+        )
 
         write_chart_data(scan.root, chart, artifacts, data)
 
@@ -230,12 +284,28 @@ def render_project(
         # ride along into this one's site.
         _prune_unselected_artifacts(scan.root, config, selection.chart_names)
 
+    record = build_record(
+        project=scan.root.name,
+        built_at=built_at,
+        config=config,
+        charts=tuple(chart_records),
+        selectors=None if selection is None else selection.selectors,
+        dashboards=None if selection is None else selection.dashboard_names,
+        dbt_manifest_generated_at=manifest.generated_at,
+        duration_ms=int((time.monotonic() - started) * 1000),
+    )
+    # An artifact of the render, written where the others are. `glyf export`
+    # does not copy the output root, so it stays local unless someone opts in
+    # to publishing it through the bundle.
+    write_build_record(artifact_paths(scan.root, config).root / "build.json", record)
+
     return RenderResult(
         scan=scan,
         charts=tuple(rendered),
         validated_only=validate_only,
         warnings=tuple(warnings),
         selection=selection,
+        build=record,
     )
 
 

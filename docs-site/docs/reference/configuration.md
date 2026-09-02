@@ -30,6 +30,7 @@ render:
 
 export:
   row_data: include
+  provenance: local
 
 privacy:
   pii_columns: []
@@ -65,6 +66,7 @@ dashboard:
 | `execution.profiles_dir` | dbt's search order | `dbt` backend only. Where to find `profiles.yml`, instead of `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`. |
 | `execution.mode` | `full` | `full` runs the queries and draws the charts. `validate` runs each with `limit 0` and draws nothing — see [validate mode](#validate-mode). |
 | `execution.max_rows` | unset | Fail the build if a chart's query returns more than this many rows. Unset means no limit. |
+| `export.provenance` | `local` | Where the build provenance record goes. `local` keeps it in `build.json` and the local `bundle.json`; `public` also publishes it, which publishes the warehouse identity and the selectors. See [what a build records about itself](#what-a-build-records-about-itself). |
 | `export.row_data` | `include` | `minimal` publishes only the columns each chart encodes — see [publishing only what the chart shows](#publishing-only-what-the-chart-shows). `exclude` publishes rendered PNGs only — no chart rows, Vega specs or compiled SQL — see [publishing without the rows](#publishing-without-the-rows). |
 
 ## Privacy
@@ -236,6 +238,36 @@ number stored as an integer has already lost the shape the detectors look for.
 This is defense-in-depth. The primary control is the warehouse role the build
 runs with: grant it the marts a dashboard needs and not the raw or staging
 layers, and there is nothing for glyf to catch.
+
+## What a build records about itself
+
+Every render writes `target/glyf/build.json`: what went into the artifacts and
+how they were made. It is the one audit question glyf can answer. Which
+queries ran is in the warehouse's own logs, who opened a dashboard is in the
+edge's, and who copied the numbers out is answerable by nobody.
+
+The record carries the identity the queries ran as, the dbt run the artifacts
+were built from, the selection, the privacy policy and what it did, and per
+chart a row count and a digest of the SQL. The
+[bundle reference](./bundle.md#build) lists every field.
+
+It is **not published by default**. `export.provenance: public` embeds it in
+the published `bundle.json` as well, and should be set only for an internal
+site: the record names the warehouse identity and the selectors.
+
+```bash
+glyf build --log-json /var/log/glyf/builds.jsonl
+```
+
+`--log-json` appends the same record to a file as
+[JSON Lines](https://jsonlines.org), one object per build, for a log collector
+to ship. Failed builds are appended too, with `outcome: "failed"` and the
+error — a log of successes only is a weak audit. `build.json` describes the
+artifact currently in the output directory; the log file is the history.
+
+The record is the build describing itself. Nothing verifies it, and it is not
+evidence. Retention and tamper resistance belong to whoever runs the pipeline;
+see [where to run builds](../guides/where-to-run-builds.md).
 
 ## Publishing only what the chart shows
 

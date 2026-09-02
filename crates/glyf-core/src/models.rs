@@ -34,6 +34,8 @@ pub struct ManifestRelation {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DbtManifest {
     pub path: String,
+    /// `metadata.generated_at` from the manifest: when dbt last built it.
+    pub generated_at: Option<String>,
     pub nodes: Vec<ManifestRelation>,
     pub sources: Vec<ManifestRelation>,
 }

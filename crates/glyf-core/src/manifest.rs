@@ -9,6 +9,8 @@ struct RawManifest {
     nodes: Value,
     #[serde(default)]
     sources: Value,
+    #[serde(default)]
+    metadata: Value,
 }
 
 pub fn load_manifest_json_text(text: &str, path: &str) -> Result<DbtManifest, CoreError> {
@@ -48,6 +50,12 @@ pub fn load_manifest_json_text(text: &str, path: &str) -> Result<DbtManifest, Co
 
     Ok(DbtManifest {
         path: path.to_string(),
+        generated_at: raw
+            .metadata
+            .get("generated_at")
+            .and_then(Value::as_str)
+            .filter(|value| !value.is_empty())
+            .map(str::to_string),
         nodes,
         sources,
     })
@@ -187,6 +195,29 @@ mod tests {
         assert_eq!(manifest.nodes[0].name, "fct_orders");
         assert_eq!(manifest.sources[0].relation_name, "main.raw_orders");
         assert!(manifest.nodes[0].pii_columns.is_empty());
+        assert!(manifest.generated_at.is_none());
+    }
+
+    #[test]
+    fn reads_the_manifest_build_time() {
+        let manifest = load_manifest_json_text(
+            r#"{
+              "metadata": {"generated_at": "2026-09-02T10:00:00.000000Z"},
+              "nodes": {
+                "model.basic.fct_orders": {
+                  "name": "fct_orders",
+                  "relation_name": "main.fct_orders"
+                }
+              }
+            }"#,
+            "target/manifest.json",
+        )
+        .unwrap();
+
+        assert_eq!(
+            manifest.generated_at.as_deref(),
+            Some("2026-09-02T10:00:00.000000Z")
+        );
     }
 
     #[test]

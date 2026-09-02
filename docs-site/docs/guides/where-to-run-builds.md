@@ -236,6 +236,40 @@ published by default because it is metadata rather than data, which is the
 right default for an internal site. On a public one, `export.row_data: exclude`
 withholds it and `dashboard.show_compiled_sql: false` removes the drawer.
 
+## Keeping a record of what was built
+
+Every render writes `target/glyf/build.json`, describing the run: the identity
+the queries ran as, the dbt run behind the tables, the selection, the privacy
+policy and what it did, and per chart a row count and a digest of the SQL. It
+stays local unless `export.provenance: public` is set.
+
+That file describes the artifact currently in the output directory. For a
+history, have the pipeline append each build to a log:
+
+```bash
+glyf build \
+  --target finance \
+  --select tag:finance \
+  --output-dir artifacts/finance \
+  --log-json /var/log/glyf/builds.jsonl
+```
+
+One JSON object per line, failures included, ready for whatever ships your
+logs. Two limits worth stating plainly:
+
+- **The record is the build describing itself.** Nothing verifies it. It
+  answers "what did this build do" for someone who trusts the build, not
+  "prove this artifact is what it claims".
+- **Retention and integrity are yours.** glyf writes the line; keeping it
+  append-only, off the machine that wrote it, and for as long as your policy
+  requires is the pipeline's job.
+
+The other audit questions are answered elsewhere and better. Which queries ran
+against the warehouse is in its own logs, and a build under a dedicated
+service role is attributable there. Who opened a dashboard is in the edge's
+logs. Who copied the numbers off the screen is answerable by nobody, which is
+threat C in [what a published site exposes](./data-exposure.md#what-glyf-does-not-do).
+
 ## Checklist
 
 1. Does CI run `glyf build --validate`, and only that?
@@ -247,3 +281,5 @@ withholds it and `dashboard.show_compiled_sql: false` removes the drawer.
 5. Is the bucket private, encrypted with your key, and reachable only through
    an authenticating edge?
 6. Is there a retention rule for old builds?
+7. Does the pipeline keep the build records, and somewhere the build cannot
+   rewrite?
