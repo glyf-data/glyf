@@ -8,6 +8,47 @@ this page* but *what is in it*.
 
 By default, a published site contains the data behind its charts.
 
+## What "protecting the data" means
+
+A glyf artifact contains data, so protecting it means a control at every
+boundary the data crosses — not one feature. It helps to separate three
+different things people mean by the phrase:
+
+| | The concern | Who solves it |
+| --- | --- | --- |
+| **A** | Don't ship rows the chart doesn't show — extra columns, other rows, personal data. | glyf: [`export.row_data`](#publishing-only-what-the-chart-shows) and [`privacy`](#keeping-pii-out-of-a-chart). Solvable. |
+| **B** | Control who can open the link. | Where you host: an identity-aware edge and a locked-down artifact store. Never the HTML itself. Solvable — see [where to run builds](./where-to-run-builds.md#storing-the-artifacts). |
+| **C** | Stop an authorised viewer from extracting what the chart displays. | Nobody. A rendered chart *is* the data, at the precision the pixels show. See [below](#what-glyf-does-not-do). |
+
+The layers, from the warehouse outward:
+
+```text
+Warehouse role        what the build CAN read          primary control
+  (Trino OPA/Ranger,  grant the marts a dashboard      — glyf inherits it,
+   Snowflake roles,   needs, never raw or staging        never widens it
+   BigQuery IAM)
+
+glyf build            row_data: minimal | exclude      defense-in-depth
+                      privacy: deny | redact
+
+Where it runs         validate in CI = zero egress     see "where to run
+                      full builds inside the perimeter   builds"
+
+Artifact store        S3 + bucket policy + KMS         an artifact is data;
+                      versioning and lifecycle           store it like data
+
+Edge                  signed URLs / cookies,           who opens the link
+                      Cloudflare Access, IdP proxy
+```
+
+**glyf never expands read access.** A build runs with whatever credential it is
+given and sees exactly what that credential sees — a limited role produces a
+limited dashboard, a full-access role produces a full one. Someone with full
+warehouse access leaking data through glyf is the same problem as leaking it
+through a SQL client, and it has the same answer: warehouse governance, not a
+chart tool. glyf's own controls are the layer *behind* the role ceiling, for
+the rows that were legitimately readable but should not travel.
+
 ## What a default export contains
 
 | Published file | Carries |
@@ -140,6 +181,15 @@ one marked public.
 build did — whether internal artifacts were included, and whether row data was
 excluded — so a consumer can inspect it. Nothing reads it back or enforces it.
 
+**No tool stops an authorised viewer from keeping what they can see.** A
+chart displays values; a viewer who can open it can read them off, screenshot
+them, or, for an interactive chart, pull them out of the page. Tableau's
+"disable download" is a removed button, not a boundary, and glyf makes no
+stronger claim. What glyf can do is make sure the page holds nothing *beyond*
+what it displays (`row_data: minimal`) — the rest is deciding who may open it,
+and, in a hosted setting, watermarking and audit so that extraction is
+attributable rather than prevented.
+
 **Interactive dashboards load Vega from a CDN.** A dashboard containing an
 `INTERACT` chart fetches `vega`, `vega-lite` and `vega-embed` from
 `cdn.jsdelivr.net` at page load, so a reader's browser contacts a third party.
@@ -160,3 +210,6 @@ render.
 4. Does a macro or a markdown block quote a specific figure that should not be
    public?
 5. Is the bucket or host actually restricted to the audience you intend?
+6. Did the build run where the data is allowed to go? A GitHub-hosted runner
+   is outside your warehouse's boundary — see
+   [where to run builds](./where-to-run-builds.md).
