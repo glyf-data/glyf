@@ -2,6 +2,66 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## 0.6.0 - 2026-09-03
+
+A chart too large to draw now fails with an error instead of killing the
+build, and a large line or area chart can be reduced to the marks its pixels
+can actually show.
+
+### A chart that cannot be drawn fails like anything else
+
+- `render.max_marks`, default `500000`, bounds what a chart may draw. Above it
+  the build stops with an error naming the chart and what to change.
+
+  Before this, it did not stop -- it died. glyf hands every mark to a renderer
+  that holds them all in memory at once, and when that memory ran out the
+  process was killed rather than returning an error: no build output, a stack
+  trace from inside the renderer where a traceback should be, and in a
+  multi-chart build no way to tell which query was responsible. A one-series
+  line chart rendered at 500,000 rows and died above it.
+
+  Unlike `execution.max_rows`, this applies to a project that has configured
+  nothing, because the projects that hit it are the ones that never set a
+  bound. The default is the largest chart observed to render on one machine;
+  the real limit belongs to the renderer's memory, so raise it if your builds
+  are fine above it, and `null` removes it.
+
+### Downsampling a large line or area chart
+
+- `render.downsample` reduces a line or area chart returning more than
+  `render.downsample_over` rows (default `25000`) to four rows per pixel
+  column: the leftmost, the rightmost, the highest and the lowest. Those are
+  the rows a line renderer's output depends on in that column, so the picture
+  does not change -- the vertical extent of every column is preserved exactly.
+  On a 120,000 row chart that is 1,675 marks and a 0.5 MB SVG, against
+  120,000 marks and 35 MB.
+
+  The rows kept are rows the warehouse returned, never values computed from
+  them. Averaging each column instead would redraw the series: a noisy one
+  loses its envelope, and an outlier narrower than one column disappears into
+  the mean of its neighbours.
+
+  It is opt-in because a downsampled chart's artifacts carry fewer rows than
+  the query returned, which is a decision about what gets published rather
+  than one a build should make on a project's behalf.
+
+- Scatter, bar and pie charts are not downsampled, and neither is a chart
+  whose x axis is not numeric or temporal. Each says so rather than passing
+  silently: downsampling asked for and not given matters more than the
+  successful case, because the build is about to draw every mark.
+
+- `build.json` records `downsampled_to` beside a chart's `row_count`, since
+  the published artifacts carry the former.
+
+### Also
+
+- `bench/` holds the measurements behind both features -- render cost against
+  mark count, where rendering stops working, and whether a downsampling
+  strategy still draws the same chart. `make bench` runs the sweep; none of it
+  runs in CI.
+- A config error for a `privacy.*` or `render.*` boolean now names that
+  section instead of reporting it as `dashboard.`.
+
 ## 0.5.0 - 2026-09-03
 
 Charts now execute against a real warehouse, and a build can be told how much

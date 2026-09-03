@@ -1,6 +1,6 @@
 [project]
 name = "glyf-core"
-version = "0.5.0"
+version = "0.6.0"
 description = "visualization build step to data pipeline"
 readme = "README.md"
 requires-python = ">=3.11"
