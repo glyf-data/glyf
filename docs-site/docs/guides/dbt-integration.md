@@ -75,7 +75,10 @@ that is going.
 
 `glyf doctor` checks the whole chain before a build does: the resolved
 backend, profile and target, whether the driver extra is installed, and a
-`select 1` probe against the warehouse.
+`select 1` probe against the warehouse. Run it first against a warehouse you
+have not used with glyf before — it reaches the same database `glyf build`
+is about to, so credentials and network routes fail there rather than
+part-way through rendering.
 
 ### Trino
 

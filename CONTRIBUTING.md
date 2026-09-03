@@ -203,6 +203,32 @@ not practical, explain that in the pull request.
 Keep generated dbt `target/` outputs and exported dashboard artifacts out of
 version control unless a fixture is intentionally part of a test.
 
+### Verifying against a real warehouse
+
+CI runs DuckDB and, in a service container, Trino. Snowflake and BigQuery have
+no free container to run against, so their executors are tested against fakes:
+that covers the SQL and the result mapping, but not credentials, network routes
+or a driver's real auth flow.
+
+`tests/test_warehouse_manual.py` is the by-hand half. Point it at a real dbt
+profile and it runs the same execution chain a build uses — a `select 1` and
+the `limit 0` probe that validate mode sends:
+
+```bash
+export GLYF_WAREHOUSE_PROFILES_DIR=~/.dbt   # directory holding profiles.yml
+export GLYF_WAREHOUSE_PROFILE=my_profile    # a profile name inside it
+export GLYF_WAREHOUSE_TARGET=prod           # optional; defaults to the profile's target
+uv run pytest tests/test_warehouse_manual.py -v
+```
+
+Without the first two variables the file skips, so it stays out of the way of a
+normal `make test`. It works for any type the dbt backend dispatches, Trino
+included. Please say in the pull request which warehouse you ran it against
+when a change touches execution.
+
+Users have the same check without the test suite: `glyf doctor` resolves the
+profile and target and runs its own `select 1`.
+
 ## Commit Messages
 
 Commit subjects follow [Conventional Commits](https://www.conventionalcommits.org/):

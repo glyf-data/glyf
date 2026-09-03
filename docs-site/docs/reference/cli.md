@@ -133,7 +133,9 @@ Next steps:
 
 ### `doctor`
 
-Use `doctor` to check whether the dbt project has the required config, manifest, chart files, dashboard files, and output directories.
+Use `doctor` to check whether the dbt project has the required config, manifest, chart files, dashboard files, and output directories, and whether the execution backend can actually be reached.
+
+This is the check to run first against a new warehouse. For `backend: dbt` it resolves the profile and target the project would connect with, reports whether that warehouse's driver extra is installed, and then proves the connection with a `select 1`. Credentials, network routes and auth flows are exercised here rather than part-way through a build.
 
 ```bash title="Command"
 uv run glyf doctor --project-dir examples/simple_dbt
@@ -148,14 +150,29 @@ Project: examples/simple_dbt
 [OK] dbt_project.yml: found dbt_project.yml
 [OK] manifest.json: found target/manifest.json
 [OK] visualisations: found 5 .ggsql file(s)
-[OK] dashboards: found 1 dashboard YAML file(s)
+[OK] dashboards: found 2 dashboard YAML file(s)
 [OK] visualisation files: 5 .ggsql file(s) discovered
-[OK] dashboard files: 1 dashboard YAML file(s) discovered
+[OK] dashboard files: 2 dashboard YAML file(s) discovered
+[OK] execution backend: using backend 'duckdb'
+[OK] execution probe: select 1 succeeded
 [OK] output directory: found target/glyf
 [OK] compiled directory: found target/glyf/compiled
 [OK] charts directory: found target/glyf/charts
+[OK] data directory: found target/glyf/data
+[OK] normalized data directory: found target/glyf/data/normalized
+[OK] vega data directory: found target/glyf/data/vega
 [OK] dashboards output directory: found target/glyf/dashboards
 [OK] site directory: found target/glyf/site
+```
+
+Against a real warehouse the execution checks name what they resolved, so a
+failure says which profile and target were tried:
+
+```text title="Output"
+[OK] execution backend: using backend 'dbt'
+[OK] dbt profile: profile 'analytics' target 'prod' (type: snowflake)
+[OK] warehouse driver: 'adbc_driver_snowflake' driver installed
+[OK] execution probe: select 1 succeeded
 ```
 
 ### `list`
