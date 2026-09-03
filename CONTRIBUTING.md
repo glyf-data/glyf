@@ -177,6 +177,12 @@ Run the full local CI flow over both languages:
 make ci
 ```
 
+Measure render cost against mark count (slow, never part of CI):
+
+```bash
+make bench
+```
+
 Run the CLI directly during development:
 
 ```bash

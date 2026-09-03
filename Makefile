@@ -9,7 +9,8 @@ DOCS_BRANCH   ?= main
 
 .DEFAULT_GOAL := help
 .PHONY: help python install test coverage build example-build example-serve \
-        dashboard-ci rust python-ci ci docs-install docs-dev docs-build docs-deploy
+        dashboard-ci rust python-ci ci docs-install docs-dev docs-build docs-deploy \
+        bench
 
 help: ## List available targets
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "} {printf "  %-16s %s\n", $$1, $$2}'
@@ -69,3 +70,8 @@ docs-build: ## Build the static docs site into docs-site/build
 
 docs-deploy: docs-build ## Build and publish the docs site to Cloudflare Pages
 	cd $(DOCS_DIR) && npx wrangler@4 pages deploy build --project-name=$(DOCS_PROJECT) --branch=$(DOCS_BRANCH)
+
+# ----------------------------------------------------------------- benchmarks
+
+bench: ## Measure mark count against render cost; see bench/README.md
+	uv run python bench/downsampling.py sweep
