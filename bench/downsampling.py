@@ -80,6 +80,26 @@ def make_line_data(rows: int) -> pa.Table:
     """).to_arrow_table()
 
 
+def make_spike_data(rows: int, spike_rows: int = 40) -> pa.Table:
+    """A smooth curve carrying one outlier narrower than a single bin.
+
+    The case that separates the strategies. At 800 bins over 100k rows a bin
+    spans 125 rows, so a 40-row spike lives entirely inside one: an average
+    over that bin dilutes it away, while the bin's maximum is the spike itself.
+    A real series' outlier looks like this, and losing it is the one failure a
+    downsampled chart must not have.
+    """
+    start = int(rows * 0.61)
+    return duckdb.sql(f"""
+        select
+            i as x,
+            sin(i / ({rows} / 12.0)) * 20 + 40
+                + case when i between {start} and {start + spike_rows}
+                       then 45 else 0 end                       as y
+        from range({rows}) t(i)
+    """).to_arrow_table()
+
+
 # -------------------------------------------------------------- downsampling
 
 def bin_mean(table: pa.Table, x: str, y: str, bins: int) -> pa.Table:
@@ -366,6 +386,56 @@ def cmd_density(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_fidelity(args: argparse.Namespace) -> int:
+    """Does a strategy still draw the same chart? Sizes cannot answer that.
+
+    Two series a downsampled chart is allowed to fail on: one whose noise
+    envelope is the picture, and one carrying an outlier narrower than a bin.
+    Each is rendered at full resolution and under each strategy, and the peak
+    each one kept is reported next to the artifacts, because a strategy that
+    loses the outlier still produces a clean, plausible, wrong chart.
+    """
+    rows = args.rows[0]
+    bins = args.bins
+    cases = (
+        ("noisy", make_line_data(rows)),
+        ("spike", make_spike_data(rows)),
+    )
+
+    print(f"{rows:,} rows, {bins} bins (one bin spans {rows // bins} rows)\n")
+    print(HEADER + f"{'peak':>9}")
+    print("-" * (len(HEADER) + 9))
+    verdicts: list[str] = []
+
+    for label, data in cases:
+        baseline_peak = duckdb.sql("select max(y) from data").fetchone()[0]
+        for draw in args.draw:
+            chart = spec_for(f"{label}_{draw}", draw, None)
+            measured = measure(f"{draw} {label} baseline", chart, data, rows, args.out)
+            print(measured.row() + f"{baseline_peak:>9.1f}", flush=True)
+
+            for name, fn in (("m4", bin_m4), ("mean", bin_mean)):
+                binned, ms = timed(fn, data, "x", "y", bins)
+                kept = duckdb.sql("select max(y) from binned").fetchone()[0]
+                measured = measure(
+                    f"{draw} {label} {name} {bins}", chart, binned, rows, args.out, ms
+                )
+                print(measured.row() + f"{kept:>9.1f}", flush=True)
+                if abs(kept - baseline_peak) > 0.01:
+                    verdicts.append(
+                        f"{name} lost the {label} peak in the {draw} chart: "
+                        f"{baseline_peak:.1f} -> {kept:.1f}"
+                    )
+
+    print()
+    for verdict in verdicts:
+        print(f"  {verdict}")
+    if not verdicts:
+        print("  every strategy kept every peak")
+    print(f"\ncompare the artifacts under {args.out}/ -- a kept peak is not a kept chart")
+    return 0
+
+
 def rows_list(value: str) -> list[int]:
     return [int(part) for part in value.split(",")]
 
@@ -373,7 +443,12 @@ def rows_list(value: str) -> list[int]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT, help="where artifacts go")
-    sub = parser.add_subparsers(dest="command", required=True)
+    # `_probe` is the child half of `ceiling`, not something to run by hand, so
+    # the metavar lists the commands that are. argparse has no way to hide a
+    # subparser: help=SUPPRESS prints the sentinel rather than suppressing it.
+    sub = parser.add_subparsers(
+        dest="command", required=True, metavar="{sweep,ceiling,fidelity,density}"
+    )
 
     sweep = sub.add_parser("sweep", help="baseline vs downsampled, per row count")
     sweep.add_argument("--rows", type=rows_list, default=[1_000, 10_000, 100_000])
@@ -396,7 +471,15 @@ def main(argv: list[str] | None = None) -> int:
     density.add_argument("--rows", type=rows_list, default=[100_000])
     density.set_defaults(func=cmd_density)
 
-    probe = sub.add_parser("_probe", help=argparse.SUPPRESS)
+    fidelity = sub.add_parser("fidelity", help="does a strategy draw the same chart?")
+    fidelity.add_argument("--rows", type=rows_list, default=[100_000])
+    fidelity.add_argument("--bins", type=int, default=800)
+    fidelity.add_argument(
+        "--draw", nargs="+", default=["line", "area"], choices=["line", "area"]
+    )
+    fidelity.set_defaults(func=cmd_fidelity)
+
+    probe = sub.add_parser("_probe")
     probe.add_argument("rows", type=rows_list)
     probe.set_defaults(func=cmd_probe)
 
