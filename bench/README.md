@@ -13,6 +13,7 @@ and no file-size number catches it.
 ```bash
 uv run python bench/downsampling.py sweep      # baseline vs downsampled, per row count
 uv run python bench/downsampling.py ceiling    # where rendering stops working
+uv run python bench/downsampling.py fidelity   # does a strategy draw the same chart?
 uv run python bench/downsampling.py density    # a binned scatter that keeps its counts
 ```
 
@@ -64,12 +65,48 @@ exception. A one-series line chart renders at 500k rows and aborts above it:
 That is vl-convert's V8 heap, around 1.4 GB. It takes the whole process with it
 — exit 133, no Python traceback, a V8 C stack trace instead.
 
+### Whether a strategy draws the same chart
+
+`fidelity` answers the question sizes cannot. It renders two series a
+downsampled chart is allowed to fail on — one whose noise envelope is the
+picture, one carrying an outlier narrower than a single bin — at full
+resolution and under each strategy, and reports the peak each one kept.
+
+100k rows at 800 bins, so one bin spans 125 rows and the 40-row spike lives
+entirely inside one:
+
+| case | strategy | marks | render ms | SVG MB | peak |
+| --- | --- | --- | --- | --- | --- |
+| line, noisy | baseline | 100,000 | 2732 | 27.59 | 86.0 |
+| line, noisy | M4 | 3,139 | 133 | 0.87 | **86.0** |
+| line, noisy | mean | 800 | 70 | 0.24 | 80.8 |
+| area, noisy | baseline | 100,000 | 907 | 2.69 | 86.0 |
+| area, noisy | M4 | 3,139 | 90 | 0.09 | **86.0** |
+| area, noisy | mean | 800 | 67 | 0.04 | 80.8 |
+| line, spike | baseline | 100,000 | 2403 | 27.63 | 102.3 |
+| line, spike | M4 | 1,606 | 88 | 0.45 | **102.3** |
+| line, spike | mean | 800 | 67 | 0.24 | 72.1 |
+| area, spike | baseline | 100,000 | 763 | 2.73 | 102.3 |
+| area, spike | M4 | 1,606 | 75 | 0.05 | **102.3** |
+| area, spike | mean | 800 | 63 | 0.04 | 72.1 |
+
+M4 kept every peak exactly, in both chart types. Mean lost all four — and the
+spike case is the one to look at: a 30-point outlier averaged down to nothing,
+in a chart that still looks clean, plausible and wrong.
+
+Note what the area rows cost at full resolution. An area chart is one filled
+path, so its baseline SVG is 2.7 MB where the line's is 27.6 MB — the line
+chart's bulk is the point marker `mark_line(point=True)` draws per row, not the
+line itself. Downsampling helps both, for different reasons.
+
 ### What the pictures show
 
 Numbers rank the strategies; only the rendered artifacts separate them.
 
-- **M4 is faithful.** At 100k rows it reproduces the baseline image — same
-  noise envelope, same y range, same shape — at 3,143 marks instead of 100,000.
+- **M4 is faithful, for lines and for areas.** At 100k rows it reproduces the
+  baseline image — same noise envelope, same y range, same shape — at ~3,100
+  marks instead of 100,000. An area chart's filled shape survives it too: the
+  boundary M4 keeps is the boundary the fill is drawn under.
 - **Mean is not.** It keeps the signal and drops the spread with it: on the test
   series the y axis silently narrowed from 14–86 to 20–80 and the envelope
   disappeared. The chart looks clean, and is not the chart the data draws.
