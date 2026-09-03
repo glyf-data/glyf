@@ -87,6 +87,7 @@ dashboard:
 | `render.formats` | `[svg, png]` | Chart artifact formats. Only `svg` and `png` are accepted; anything else fails config loading. |
 | `render.default_width` | `800` | Chart width in pixels when a `.ggsql` file sets none. |
 | `render.default_height` | `400` | Chart height in pixels when a `.ggsql` file sets none. |
+| `render.max_marks` | `500000` | The most marks a chart may draw — see [how many marks a chart may draw](#how-many-marks-a-chart-may-draw). `null` removes the bound. |
 
 ## Dashboard
 
@@ -146,6 +147,50 @@ result looks completely plausible and is wrong.
 Both bounds are applied in SQL, so the warehouse sends less over the wire. They
 bound transfer and render time, **not** what the warehouse scans: an aggregate
 is computed in full whatever limit follows it.
+
+## How many marks a chart may draw
+
+`render.max_marks` fails a chart that would draw more marks than the renderer
+can survive:
+
+```text
+visualisations/events.ggsql would draw 612000 marks, more than the 500000 glyf
+will render. The renderer holds every mark in memory at once and the whole
+build dies when it runs out, so glyf stops first. Aggregate the query, or raise
+render.max_marks if this machine can take it.
+```
+
+Unlike `max_rows`, this one applies to a project that has configured nothing.
+It has to: glyf draws a chart by handing every mark to a renderer that holds
+them all in memory at once, and when that memory runs out the process is killed
+rather than returning an error. What reaches you then is an out-of-memory abort
+and a stack trace from inside the renderer — no chart named, no build output,
+and in a multi-chart build no way to tell which query was responsible. The
+budget turns that into a normal build failure that names the chart.
+
+`500000` is the largest single-series chart observed to render, on one machine.
+The real limit belongs to the renderer's memory rather than to glyf, so it
+moves with the platform and the chart. Raise it if your builds are fine above
+it; lower it if a build has ever died without an error. Setting it to `null`
+removes the bound, and with it the only thing standing in front of the abort:
+
+```yaml
+render:
+  max_marks: 750000
+```
+
+### Which bound to reach for
+
+| | `execution.max_rows` | `render.max_marks` |
+| --- | --- | --- |
+| bounds | what the query returns | what the chart draws |
+| default | unset | `500000` |
+| applied | in SQL, before the rows travel | after execution, before rendering |
+| exists to | keep an unbounded query from running away | keep an oversized chart from killing the build |
+
+A project that sets `max_rows` below `max_marks` will never see the mark
+budget, which is a reasonable way to run: the query fails earlier and more
+cheaply. The budget is there for everyone who has not.
 
 ## Keeping PII out of a chart
 
