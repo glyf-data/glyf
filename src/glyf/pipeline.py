@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from glyf.config import ExecutionConfig, GlyfConfig
+from glyf.downsample import downsample_m4, plan_downsampling
 from glyf.execution import QueryResult, SqlExecutionError, execute_sql
 from glyf.execution.limits import wrap_row_limit
 from glyf.ggsql.models import GgsqlChart
@@ -198,14 +199,47 @@ def render_project(
                 "draw a chart from part of a result."
             )
 
-        if render_config.max_marks is not None and len(data) > render_config.max_marks:
+        # Downsampling comes first: the budget below bounds what is drawn, and
+        # what is drawn is what survives this.
+        plan = plan_downsampling(
+            chart,
+            data,
+            enabled=render_config.downsample,
+            over_rows=render_config.downsample_over,
+            width=chart.width or render_config.default_width,
+        )
+        if plan.applied:
+            render_data, marks = downsample_m4(chart, data, plan.bins)
+            if marks < len(data):
+                plan = replace(plan, marks=marks)
+                warnings.append(plan.describe(rel_path))
+            else:
+                # Every row was already the extreme of its own bin, so this
+                # kept all of them. Reporting a downsample that removed nothing
+                # would be noise, and the record would claim a reduction that
+                # did not happen.
+                render_data = data
+                plan = replace(plan, applied=False, marks=len(data))
+        else:
+            render_data = data
+            if plan.reason:
+                # Downsampling was asked for and could not be given. Saying so
+                # matters more than the successful case: the build is about to
+                # draw every mark, which is what the user turned this on to
+                # avoid.
+                warnings.append(plan.describe(rel_path))
+
+        if (
+            render_config.max_marks is not None
+            and len(render_data) > render_config.max_marks
+        ):
             # Not a preference: past this the renderer stops failing and starts
             # aborting. vl-convert inlines every mark into a V8 heap, and when
             # that heap runs out it kills the process -- exit 133 and a C stack
             # trace, no traceback, and in a multi-chart build no clue which
             # chart did it. glyf has to stop while it can still say.
             raise RenderError(
-                f"{rel_path} would draw {len(data)} marks, more than the "
+                f"{rel_path} would draw {len(render_data)} marks, more than the "
                 f"{render_config.max_marks} glyf will render. The renderer holds "
                 "every mark in memory at once and the whole build dies when it "
                 "runs out, so glyf stops first. Aggregate the query, or raise "
@@ -247,6 +281,7 @@ def render_project(
                 row_count=len(data),
                 redacted_columns=redacted,
                 scan_warnings=scan_warnings,
+                downsampled_to=plan.marks if plan.applied else None,
             )
         )
 
@@ -266,7 +301,11 @@ def render_project(
 
         # `.data.json` above keeps every column for the local build; what the
         # chart is drawn from -- and so what its Vega spec inlines -- may not.
-        chart_data = prune_to_encoded_columns(chart, data) if prune_row_data else data
+        chart_data = (
+            prune_to_encoded_columns(chart, render_data)
+            if prune_row_data
+            else render_data
+        )
         try:
             render_chart(
                 chart,

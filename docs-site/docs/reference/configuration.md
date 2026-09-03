@@ -88,6 +88,8 @@ dashboard:
 | `render.default_width` | `800` | Chart width in pixels when a `.ggsql` file sets none. |
 | `render.default_height` | `400` | Chart height in pixels when a `.ggsql` file sets none. |
 | `render.max_marks` | `500000` | The most marks a chart may draw — see [how many marks a chart may draw](#how-many-marks-a-chart-may-draw). `null` removes the bound. |
+| `render.downsample` | `false` | Reduce a large line or area chart to the marks its pixels can show — see [downsampling a large chart](#downsampling-a-large-chart). |
+| `render.downsample_over` | `25000` | Rows a chart may return before downsampling applies to it. |
 
 ## Dashboard
 
@@ -179,18 +181,86 @@ render:
   max_marks: 750000
 ```
 
+## Downsampling a large chart
+
+An 800-pixel-wide chart cannot show more than 800 distinguishable positions
+across its x axis, but glyf draws a mark per row regardless. `render.downsample`
+reduces a line or area chart to the marks its pixels can actually show:
+
+```yaml
+render:
+  downsample: true
+  downsample_over: 25000
+```
+
+A chart returning more than `downsample_over` rows keeps four rows per pixel
+column — the leftmost, the rightmost, the highest and the lowest — which are
+exactly the rows a line renderer's output depends on in that column. Everything
+dropped would have been painted over by something else. Measured on a 120,000
+row chart, that is 1,675 marks instead of 120,000, and a 0.5 MB SVG instead of
+35 MB.
+
+The bin count comes from the chart's own width and is not configurable: one bin
+per horizontal pixel is what makes the reduction invisible, and fewer bins is
+where it starts to move the line.
+
+### Why it is opt-in
+
+A downsampled chart's artifacts carry fewer rows than the query returned. That
+is a decision about what gets published, in the same territory as
+[`export.row_data`](#publishing-only-what-the-chart-shows), so glyf does not
+make it on a project's behalf even though the picture does not change.
+
+### What it does not change
+
+The rows kept are rows the warehouse returned, never values computed from them.
+That is the difference between this and averaging each column: an average
+redraws the series, so a noisy one loses its envelope and an outlier narrower
+than one column disappears into the mean of its neighbours. Keeping the highest
+and lowest row of each column preserves the vertical extent of every column
+exactly, which is what a drawn line is made of.
+
+### What it applies to
+
+| | downsampled |
+| --- | --- |
+| `line`, `area` over `downsample_over` rows | yes |
+| `scatter` | no — binning a scatter snaps its marks to a lattice and drops the density it exists to show |
+| `bar`, `pie` | no — a mark per category, not per pixel column |
+| a non-numeric x axis | no — bins over a string axis would be bins over the warehouse's row order |
+
+A build says which charts it downsampled, and says when it could not:
+
+```text
+! visualisations/events.ggsql: 120000 rows downsampled to 1675 marks (M4, 800 bins)
+! visualisations/scatter.ggsql: 60000 rows, downsampling applies to line and area
+  charts only; rendering all 60000 marks
+```
+
+The second matters more than the first: downsampling was asked for, could not
+be given, and the build is about to draw every mark. A chart with a string x
+axis reports the column and its type, so the fix — casting the axis in the
+chart's SQL — is visible from the message.
+
+Downsampling is recorded in [`build.json`](#what-a-build-records-about-itself)
+as `downsampled_to` beside the chart's `row_count`, because the published
+artifacts carry the former rather than the latter.
+
 ### Which bound to reach for
 
-| | `execution.max_rows` | `render.max_marks` |
-| --- | --- | --- |
-| bounds | what the query returns | what the chart draws |
-| default | unset | `500000` |
-| applied | in SQL, before the rows travel | after execution, before rendering |
-| exists to | keep an unbounded query from running away | keep an oversized chart from killing the build |
+| | `execution.max_rows` | `render.downsample` | `render.max_marks` |
+| --- | --- | --- | --- |
+| does what | fails the build | reduces the marks | fails the chart |
+| bounds | what the query returns | what the chart draws | what the renderer is asked to draw |
+| default | unset | off | `500000` |
+| applied | in SQL, before the rows travel | after execution | after downsampling, before rendering |
+| exists to | keep an unbounded query from running away | keep a large chart small without changing it | keep an oversized chart from killing the build |
 
-A project that sets `max_rows` below `max_marks` will never see the mark
-budget, which is a reasonable way to run: the query fails earlier and more
-cheaply. The budget is there for everyone who has not.
+They compose in that order. A project that sets `max_rows` below `max_marks`
+will never see the mark budget, which is a reasonable way to run: the query
+fails earlier and more cheaply. With downsampling on, the budget applies to
+what is left after it, so a chart that downsampling brings under the budget
+builds normally.
 
 ## Keeping PII out of a chart
 

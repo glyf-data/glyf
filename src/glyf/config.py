@@ -33,6 +33,13 @@ class RenderConfig:
     # limit is the heap's, so it varies by platform. `null` removes the
     # budget, and with it the only thing standing in front of the abort.
     max_marks: int | None = 500_000
+    # Reduce a large line or area chart to the marks its pixels can show,
+    # rather than drawing one per row. Opt-in, because a downsampled chart
+    # publishes fewer rows than the query returned and that is the author's
+    # call to make, not a build's.
+    downsample: bool = False
+    # How many rows a chart may return before downsampling applies to it.
+    downsample_over: int = 25_000
 
 
 @dataclass(frozen=True)
@@ -243,6 +250,8 @@ def _render_config(raw: object) -> RenderConfig:
         default_height=_positive_int(raw, "default_height", 400),
         renderer=_string_value(raw, "renderer", "altair"),
         max_marks=_optional_positive_int(raw, "max_marks", default=500_000),
+        downsample=_bool_value(raw, "downsample", False, section="render"),
+        downsample_over=_positive_int(raw, "downsample_over", 25_000),
     )
 
 
@@ -310,8 +319,8 @@ def _privacy_config(raw: object) -> PrivacyConfig:
         pii_columns=tuple(dict.fromkeys(item.strip() for item in columns)),
         on_pii=on_pii,
         redaction=redaction,
-        scan=_bool_value(raw, "scan", True),
-        strict=_bool_value(raw, "strict", False),
+        scan=_bool_value(raw, "scan", True, section="privacy"),
+        strict=_bool_value(raw, "strict", False, section="privacy"),
     )
 
 
@@ -357,8 +366,10 @@ def _dashboard_config(raw: object) -> DashboardConfig:
 
     return DashboardConfig(
         theme=theme,
-        embed_charts=_bool_value(raw, "embed_charts", True),
-        show_compiled_sql=_bool_value(raw, "show_compiled_sql", True),
+        embed_charts=_bool_value(raw, "embed_charts", True, section="dashboard"),
+        show_compiled_sql=_bool_value(
+            raw, "show_compiled_sql", True, section="dashboard"
+        ),
     )
 
 
@@ -369,10 +380,12 @@ def _positive_int(raw: dict[object, object], key: str, default: int) -> int:
     return value
 
 
-def _bool_value(raw: dict[object, object], key: str, default: bool) -> bool:
+def _bool_value(
+    raw: dict[object, object], key: str, default: bool, *, section: str
+) -> bool:
     value = raw.get(key, default)
     if not isinstance(value, bool):
-        raise ConfigError(f"Invalid config: 'dashboard.{key}' must be true or false")
+        raise ConfigError(f"Invalid config: '{section}.{key}' must be true or false")
     return value
 
 

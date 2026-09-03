@@ -49,6 +49,10 @@ class ChartRecord:
     redacted_columns: tuple[str, ...] = ()
     # Columns the value scan flagged but nobody classified.
     scan_warnings: tuple[dict[str, Any], ...] = ()
+    # Marks actually drawn, when downsampling drew fewer than `row_count`.
+    # The artifacts carry these rather than the rows the query returned, so a
+    # build that publishes them has to say so.
+    downsampled_to: int | None = None
 
     def to_payload(self) -> dict[str, Any]:
         payload: dict[str, Any] = {
@@ -59,6 +63,8 @@ class ChartRecord:
             payload["redacted_columns"] = list(self.redacted_columns)
         if self.scan_warnings:
             payload["scan_warnings"] = [dict(item) for item in self.scan_warnings]
+        if self.downsampled_to is not None:
+            payload["downsampled_to"] = self.downsampled_to
         return payload
 
 
