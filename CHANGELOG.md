@@ -2,6 +2,69 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## 0.5.0 - 2026-09-03
+
+Charts now execute against a real warehouse, and a build can be told how much
+of the data it is allowed to publish.
+
+### Warehouse execution
+
+- Chart SQL runs through the dbt profile the project already has, on DuckDB,
+  Trino, Snowflake and BigQuery. Set `execution.backend: dbt` in `glyf.yml`
+  and glyf resolves `profiles.yml` the way dbt does, honouring `env_var()`
+  and `--target`. A profile naming an unsupported warehouse is reported as
+  such rather than silently ignored.
+- Trino, Snowflake and BigQuery drivers ship as extras: `glyf-core[trino]`,
+  `glyf-core[snowflake]`, `glyf-core[bigquery]`.
+- `glyf doctor` now checks the execution chain before a build does — the
+  resolved backend, profile and target, whether the driver extra is
+  installed, and a `select 1` against the warehouse itself.
+- Added validate mode and a row guardrail: `--validate` binds columns without
+  fetching rows, and `execution.max_rows` fails a build that would pull more
+  than expected.
+
+Trino runs against a service container in CI; Snowflake and BigQuery are
+tested against fakes, which covers the SQL and the result mapping but not a
+live account's auth flow. `glyf doctor` is the check to run against your own
+warehouse first.
+
+### Controlling what a build publishes
+
+- `export.row_data: minimal` publishes only the columns a chart actually
+  encodes, pruning both the inlined dataset and the row values SVG marks
+  carry. `exclude` ships no row data at all.
+- Columns can be classified as PII from dbt `meta: {pii: true}` or
+  `tags: [pii]` in the manifest, and from `privacy.pii_columns` in
+  `glyf.yml`. `privacy.on_pii: deny` fails the build; `redact` masks or
+  hashes the values instead.
+- A value scan samples unclassified string columns for email addresses,
+  card numbers, phone numbers and social security numbers, and warns.
+  `privacy.strict: true` turns those warnings into a failed build.
+- `glyf build` accepts `--target`, `--select` and `--output-dir`, so one
+  project can produce a different artifact per audience — a narrower
+  warehouse role, a subset of dashboards, and its own output directory.
+  `--select` takes `tag:NAME`, `name:NAME` or a bare dashboard name.
+- Fixed three cases where a rebuild left stale artifacts behind: export
+  merged into the destination instead of mirroring it, the bundle manifest
+  listed dashboards that were never built, and `glyf dashboard` never pruned
+  removed dashboards' HTML.
+
+### Build records
+
+- Every build writes `build.json` next to its artifacts: what ran, which
+  charts, their row counts, a digest of each compiled statement, and any
+  redactions or scan warnings. `--log-json` appends the same record to a
+  JSON Lines log. The record stays local unless `export.provenance: public`
+  puts it in the published bundle.
+
+### Documentation
+
+- New guides on what publishing exposes and where to run a build, including
+  the threat model glyf does and does not address.
+- Documented `bundle.json` as a versioned contract, and every `glyf.yml`
+  block in the docs is now executed as a test so the documentation cannot
+  drift from the config loader.
+
 ## 0.4.0 - 2026-08-29
 
 - `toolbar.actions` in dashboard YAML now controls which of the share and

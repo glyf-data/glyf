@@ -58,7 +58,7 @@ curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh
 curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh -s -- --update
 
 # install an exact version
-curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh -s -- --version 0.4.0
+curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh -s -- --version 0.5.0
 ```
 
 The script never uses `sudo`. It installs into uv's tool directory
@@ -115,7 +115,7 @@ uv tool install ./glyf_core-<version>-cp311-abi3-<platform>.whl
 To pin a version from PyPI instead:
 
 ```bash
-uv tool install "glyf-core==0.4.0"
+uv tool install "glyf-core==0.5.0"
 ```
 
 ## Windows
