@@ -25,6 +25,14 @@ class RenderConfig:
     default_width: int = 800
     default_height: int = 400
     renderer: str = "altair"
+    # The most marks glyf will hand the renderer. An SVG spends a node per
+    # mark and vl-convert inlines the lot into a JavaScript heap that aborts
+    # the process outright when it runs out -- exit 133 and a V8 stack trace,
+    # with no chart named. The budget turns that into a normal build error.
+    # 500,000 is the largest single-series chart observed to render; the real
+    # limit is the heap's, so it varies by platform. `null` removes the
+    # budget, and with it the only thing standing in front of the abort.
+    max_marks: int | None = 500_000
 
 
 @dataclass(frozen=True)
@@ -234,6 +242,7 @@ def _render_config(raw: object) -> RenderConfig:
         default_width=_positive_int(raw, "default_width", 800),
         default_height=_positive_int(raw, "default_height", 400),
         renderer=_string_value(raw, "renderer", "altair"),
+        max_marks=_optional_positive_int(raw, "max_marks", default=500_000),
     )
 
 
@@ -306,8 +315,17 @@ def _privacy_config(raw: object) -> PrivacyConfig:
     )
 
 
-def _optional_positive_int(raw: dict[object, object], key: str) -> int | None:
-    if key not in raw or raw[key] is None:
+def _optional_positive_int(
+    raw: dict[object, object], key: str, *, default: int | None = None
+) -> int | None:
+    """A positive integer, an absent key, or an explicit `null`.
+
+    An absent key takes `default`; a key written as `null` means the bound is
+    off, which is not the same thing when the default is a number.
+    """
+    if key not in raw:
+        return default
+    if raw[key] is None:
         return None
     value = raw[key]
     if not isinstance(value, int) or isinstance(value, bool) or value <= 0:

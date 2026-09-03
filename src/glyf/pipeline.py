@@ -198,6 +198,20 @@ def render_project(
                 "draw a chart from part of a result."
             )
 
+        if render_config.max_marks is not None and len(data) > render_config.max_marks:
+            # Not a preference: past this the renderer stops failing and starts
+            # aborting. vl-convert inlines every mark into a V8 heap, and when
+            # that heap runs out it kills the process -- exit 133 and a C stack
+            # trace, no traceback, and in a multi-chart build no clue which
+            # chart did it. glyf has to stop while it can still say.
+            raise RenderError(
+                f"{rel_path} would draw {len(data)} marks, more than the "
+                f"{render_config.max_marks} glyf will render. The renderer holds "
+                "every mark in memory at once and the whole build dies when it "
+                "runs out, so glyf stops first. Aggregate the query, or raise "
+                "render.max_marks if this machine can take it."
+            )
+
         if config.privacy.scan:
             # The safety net behind the classification above: it reads
             # values, so it needs rows, which is why validate mode cannot
