@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glyf — Sales walkthrough preview</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#101114;color:#e8edf5;font:16px system-ui,sans-serif;padding:32px}main{max-width:1400px;margin:auto}h1{font-size:24px;margin:0 0 8px}p{color:#9aa8bb;line-height:1.6}video{display:block;width:100%;border:1px solid #354055;border-radius:8px;background:#1e1e1e}nav{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}button,a{color:#93c5fd;background:#1e1e1e;border:1px solid #354055;border-radius:3px;padding:12px 16px;cursor:pointer;text-decoration:none;font:inherit}button:hover,button:focus-visible,button[aria-current="step"]{background:#16345b;border-color:#2563eb}button[data-complete="true"]::after{content:' ✓'}small{color:#9da5b4}
+</style>
+<main>
+<h1>Sales dashboard · walkthrough preview</h1>
+<p>42 seconds · dbt model → GGSQL chart → dashboard YAML → build → rendered dashboard</p>
+<video id="walkthrough" controls playsinline preload="metadata" poster="poster.png" src="glyf-sales-walkthrough.mp4"></video>
+<nav aria-label="Video chapters">
+<button data-time="0">01 · dbt model</button><button data-time="6">02 · GGSQL chart</button><button data-time="13">03 · Dashboard YAML</button><button data-time="20">04 · Build</button><button data-time="28">05 · Rendered dashboard</button><a href="glyf-sales-walkthrough.mp4" download>Download MP4</a>
+</nav>
+<small>Staged editor animation using the repository’s sample files and CLI success messages. Dashboard footage uses the existing rendered sales example. No landing page changes.</small>
+</main>
+<script>
+const video=document.querySelector('video');
+const buttons=[...document.querySelectorAll('[data-time]')];
+buttons.forEach(button=>button.addEventListener('click',()=>{video.currentTime=Number(button.dataset.time);video.play()}));
+function updateStages(){
+  const stage=buttons.findLastIndex(button=>video.currentTime>=Number(button.dataset.time));
+  buttons.forEach((button,index)=>{
+    if(index===stage)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');
+    button.dataset.complete=String(index<stage||video.currentTime>=40);
+  });
+}
+video.addEventListener('timeupdate',updateStages);updateStages();
+</script>
+</html>
