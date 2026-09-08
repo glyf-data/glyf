@@ -770,7 +770,6 @@ function FeaturesSection() {
 function HowItWorks() {
   const walkthroughUrl = useBaseUrl('/assets/walkthrough/glyf-sales-walkthrough.mp4');
   const walkthroughPoster = useBaseUrl('/assets/walkthrough/poster.png');
-  const salesDashboardUrl = useBaseUrl('/dashboards/sales-dashboard/dashboards/sales.html');
 
   return (
     <section className="howSection">
@@ -793,28 +792,10 @@ function HowItWorks() {
             width="1600"
             height="1000"
             aria-label="Sales dashboard walkthrough: from a dbt model to a rendered dashboard"
-            aria-describedby="how-walkthrough-caption"
           >
             <source src={walkthroughUrl} type="video/mp4" />
             <a href={walkthroughUrl}>Watch the sales dashboard walkthrough.</a>
           </video>
-          <figcaption id="how-walkthrough-caption" className="howWalkthroughCaption">
-            <div>
-              <strong>From dbt project to sales dashboard.</strong>
-              <span>A 42-second walkthrough · No audio</span>
-            </div>
-            <a href={salesDashboardUrl}>Explore the dashboard <span aria-hidden="true">↗</span></a>
-          </figcaption>
-          <details className="howWalkthroughTranscript">
-            <summary>Read the walkthrough</summary>
-            <ol>
-              <li>Start with <code>models/fct_sales.sql</code>, which aggregates revenue and orders by month, region, and channel.</li>
-              <li>Open <code>visualisations/monthly_revenue.ggsql</code>. Reference the dbt model and use <code>VISUALISE</code> and <code>DRAW line</code> to define a revenue chart.</li>
-              <li>In <code>dashboards/sales.yml</code>, arrange monthly revenue, channel revenue, and regional revenue in a two-column dashboard.</li>
-              <li>Run <code>uv run glyf build</code> to validate the project, render charts, generate dashboard HTML, and export the static site.</li>
-              <li>Open the rendered Sales Dashboard to view the revenue trend, channel split, and regional share.</li>
-            </ol>
-          </details>
         </figure>
         <div className="howCodeGrid">
           <article className="howCodeStep">
