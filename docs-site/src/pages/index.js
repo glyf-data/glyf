@@ -787,7 +787,7 @@ function HowItWorks() {
             className="howWalkthroughVideo"
             controls
             playsInline
-            preload="none"
+            preload="metadata"
             poster={walkthroughPoster}
             width="1600"
             height="1000"
