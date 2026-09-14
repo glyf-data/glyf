@@ -1,0 +1,39 @@
+name: Feature request
+description: Ask for a chart, output, or workflow Glyf doesn't support yet.
+title: "[Feature]: "
+labels: ["feature request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping shape Glyf. Every request with the `feature request` label shows up on the
+        [public roadmap](https://github.com/glyf-data/glyf/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22+sort%3Areactions-%2B1-desc).
+        If your idea is already there, add a 👍 to that issue instead of opening a new one.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The chart, dashboard, or workflow you need, and who it is for.
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: What do you do today?
+      description: The workaround you use now (a BI tool, a notebook, custom code) and where it falls short.
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like Glyf to do?
+      description: If you have an idea of the GGSQL, dashboard YAML, or CLI you would expect, sketch it here.
+  - type: input
+    id: stack
+    attributes:
+      label: Your stack
+      placeholder: dbt 1.9, Snowflake, published to S3
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contributing
+      options:
+        - label: I'd be willing to help build or test this.
