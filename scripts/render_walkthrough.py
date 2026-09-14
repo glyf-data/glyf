@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'docs-site/static/assets/walkthrough'
 QA = ROOT / 'target/glyf/walkthrough'
 EXAMPLE = ROOT / 'examples/sales_dashboard'
-W, H, FPS, DURATION = 1600, 1000, 20, 42
+W, H, FPS, DURATION = 1600, 940, 20, 42
 FONT_DIR = ROOT / 'docs-site/static/dashboards/sales-dashboard/assets/fonts'
 FONTS = {}
 def font(size, mono=False, bold=False):
@@ -161,24 +161,7 @@ def draw_frame(t):
         view.paste(shot,((1502-sw)//2,-round(max(0,pan))))
         im.paste(view,(49,232))
         d=ImageDraw.Draw(im)
-    # Connected workflow: completed nodes, current stage and upcoming work.
-    names=['dbt model','GGSQL chart','Dashboard YAML','Build','Rendered dashboard']
-    final_complete = t >= 40
-    for i,name in enumerate(names):
-        x=74+i*304
-        active=i==stage
-        done = i<stage or final_complete
-        if i<4:
-            d.line((x+20,935,x+284,935),fill=ACCENT if i<stage else '#353940',width=2)
-        d.ellipse((x-17,918,x+17,952),fill=ACCENT if done or active else BG,outline=ACCENT if done or active else '#576171',width=2)
-        if done:
-            txt(x-8,924,'✓',21,TEXT)
-        else:
-            txt(x-5,922,str(i+1),19,TEXT if active else MUTED)
-        # Labels sit under the connector, with explicit completion state.
-        txt(x-17,959,name,18,TEXT if active or done else MUTED)
-        state='Complete' if done else ('In progress' if active else 'Up next')
-        txt(x+31,914,state,13,BLUE_TEXT if done or active else MUTED)
+    # Chapter navigation belongs to the player so viewers can seek to a stage.
     return im
 
 if __name__ == '__main__':
