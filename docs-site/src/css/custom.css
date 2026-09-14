@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&family=Kalam:wght@300&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600&display=swap');
 
 :root {
   --ifm-color-primary: #008f5f;
@@ -11,9 +11,9 @@
   --ifm-background-color: #ffffff;
   --ifm-font-color-base: #111827;
   --ifm-heading-color: #0f172a;
-  --ifm-font-family-base: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --ifm-heading-font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --ifm-font-family-monospace: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --ifm-font-family-base: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ifm-heading-font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --ifm-font-family-monospace: 'B612 Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   --ifm-code-font-size: 95%;
   --ifm-navbar-height: 112px;
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.96);
@@ -3992,9 +3992,9 @@ body,
   --glyf-copy: #8d98ad;
   --glyf-copy-strong: #c7d0dd;
   --glyf-accent: #4ade80;
-  --ifm-heading-font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --glyf-display-font: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --ifm-font-family-monospace: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --ifm-heading-font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --glyf-display-font: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --ifm-font-family-monospace: 'B612 Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
 html[data-theme='dark'],
@@ -4243,12 +4243,12 @@ samp,
 /* Final font stack override after Docusaurus/base CSS ordering. */
 :root,
 [data-theme='dark'] {
-  --ifm-heading-font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --glyf-display-font: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --ifm-font-family-monospace: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --ifm-heading-font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --glyf-display-font: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --ifm-font-family-monospace: 'B612 Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
-/* Final code typography: JetBrains Mono, normal weight, compact size. */
+/* Final code typography: B612 Mono, normal weight, compact size. */
 code,
 pre,
 kbd,
@@ -4268,8 +4268,8 @@ samp,
 
 /* Landing redesign override: darker open-source tool aesthetic and stable theme contrast. */
 :root {
-  --glyf-display-font: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --glyf-ui-font: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --glyf-display-font: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --glyf-ui-font: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --glyf-ink: #080c12;
   --glyf-ink-2: #0d131c;
   --glyf-panel: #111823;
@@ -8670,36 +8670,6 @@ div[class*='codeBlockContent'] pre code,
   margin-bottom: 2.5rem !important;
 }
 
-.featureIntroButton,
-[data-theme='dark'] .featureIntroButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.5rem;
-  margin-top: 0.85rem;
-  margin-bottom: 1rem;
-  padding: 0 1rem;
-  border: 1px solid #000000;
-  border-radius: 6px;
-  background: #000000;
-  color: #ffffff !important;
-  font-family: var(--ifm-font-family-monospace) !important;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1;
-  text-decoration: none !important;
-  text-transform: uppercase;
-}
-
-.featureIntroButton:hover,
-[data-theme='dark'] .featureIntroButton:hover {
-  background: #111111;
-  border-color: #111111;
-  color: #ffffff !important;
-  text-decoration: none !important;
-}
-
 .featureIntroSignals,
 [data-theme='dark'] .featureIntroSignals {
   display: grid;
@@ -8760,19 +8730,6 @@ div[class*='codeBlockContent'] pre code,
 
 .featureStoryNav::-webkit-scrollbar {
   display: none;
-}
-
-.featureStoryLogo,
-[data-theme='dark'] .featureStoryLogo {
-  flex: 0 0 auto;
-  margin-right: 1.75rem;
-  padding: 1rem 0;
-  color: #000000 !important;
-  font-family: var(--ifm-heading-font-family) !important;
-  font-size: 1.18rem;
-  font-style: italic;
-  line-height: 1;
-  text-decoration: none !important;
 }
 
 .featureStoryNavLinks,
@@ -9247,11 +9204,6 @@ div[class*='codeBlockContent'] pre code,
 }
 
 @media (max-width: 640px) {
-  .featureStoryLogo,
-  [data-theme='dark'] .featureStoryLogo {
-    display: none;
-  }
-
   .featureStoryNavLink,
   [data-theme='dark'] .featureStoryNavLink {
     padding-left: 0.4rem;
@@ -10610,20 +10562,80 @@ div[class*='announcementBarContent'],
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 8 / 5;
+  aspect-ratio: 80 / 47;
   border: 1px solid #334155;
   border-radius: 12px;
   background: #101114;
   box-shadow: 0 20px 60px rgb(15 23 42 / 14%);
 }
 
-/* Final hero stack: centered copy first, workflow SVG below. */
+/* Landing-page surfaces share the hero's cool blue-white palette. */
+.landingSections > section {
+  border-top: 1px solid #dbe3ef !important;
+}
+.landingSections > .howSection,
+.landingSections > .personasSection {
+  background: #ffffff !important;
+}
+.landingSections > .featuresSection {
+  background: #f4f7fc !important;
+}
+.landingSections .featureStoryBlock {
+  border-color: #dbe3ef !important;
+  background: #ffffff !important;
+}
+.landingSections > .band {
+  background:
+    linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    #f9fbfe !important;
+  background-size: 44px 44px !important;
+}
+
+/* Hero copy and the final step from dbt models to visualization artifacts. */
+.landingHero .landingHero__sellingPoint {
+  margin: 0 0 1.5rem;
+  color: #0041d9;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.howChapterTimeline { display: flex; gap: 4px; padding-top: 8px; }
+.howChapter { position: relative; flex-basis: 0; min-width: 0; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.howChapterTrack { display: block; height: 5px; border-radius: 2px; background: linear-gradient(to right, #2563eb var(--chapter-progress), #94a3b8 var(--chapter-progress)); transition: height 120ms ease; }
+.howChapter:hover .howChapterTrack,
+.howChapter:focus-visible .howChapterTrack { height: 9px; }
+.howChapter:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; border-radius: 3px; }
+.howChapterTooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); width: max-content; max-width: 200px; padding: 6px 10px; border-radius: 5px; color: #f8fafc; background: #101114; font-size: 12px; pointer-events: none; visibility: hidden; }
+.howChapter:first-child .howChapterTooltip { left: 0; transform: none; }
+.howChapter:last-child .howChapterTooltip { left: auto; right: 0; transform: none; }
+.howChapter:hover .howChapterTooltip,
+.howChapter:focus-visible .howChapterTooltip { visibility: visible; }
+.howChapterCaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; font-size: 13px; color: var(--ifm-color-emphasis-700); }
+
+.landingHero .heroPrimaryButton,
+[data-theme='dark'] .landingHero .heroPrimaryButton {
+  background: #0047ff !important;
+  border-color: #0047ff !important;
+  color: #ffffff !important;
+}
+.landingHero .heroPrimaryButton:hover,
+[data-theme='dark'] .landingHero .heroPrimaryButton:hover {
+  background: #003bcc !important;
+  border-color: #003bcc !important;
+}
+
 .landingHero .landingHero__layout,
 .landingHero .landingHero__layout.container,
 [data-theme='dark'] .landingHero .landingHero__layout,
 [data-theme='dark'] .landingHero .landingHero__layout.container {
-  display: block !important;
-  max-width: 1180px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: clamp(2rem, 4vw, 4rem) !important;
+  max-width: 1240px !important;
   padding-top: clamp(4.5rem, 7vh, 6.5rem) !important;
   padding-bottom: clamp(4.5rem, 7vh, 6.5rem) !important;
 }
@@ -10632,33 +10644,37 @@ div[class*='announcementBarContent'],
 [data-theme='dark'] .landingHero .landingHero__content {
   display: flex !important;
   width: 100% !important;
-  max-width: 1040px !important;
-  margin: 0 auto !important;
+  max-width: 100% !important;
+  min-width: 0;
+  margin: 0 !important;
   flex-direction: column !important;
-  align-items: center !important;
-  text-align: center !important;
+  align-items: flex-start !important;
+  text-align: left !important;
 }
 
 .landingHero h1,
 [data-theme='dark'] .landingHero h1 {
   max-width: 24ch !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  text-align: center !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  text-align: left !important;
 }
 
 .landingHero .landingHero__lead,
 [data-theme='dark'] .landingHero .landingHero__lead {
   max-width: 46rem !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  text-align: center !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  text-align: left !important;
 }
 
 .landingHero .buttonRow,
 [data-theme='dark'] .landingHero .buttonRow {
-  justify-content: center !important;
+  justify-content: flex-start !important;
 }
+
+.howCodeStep > span,
+[data-theme='dark'] .howCodeStep > span { font-weight: 400 !important; }
 
 .landingHero .heroCodeVisual,
 [data-theme='dark'] .landingHero .heroCodeVisual {
@@ -10684,3 +10700,901 @@ div[class*='announcementBarContent'],
   height: auto !important;
   margin: 0 auto !important;
 }
+
+/* Homepage hero: copy on the left, models -> glyf build -> outputs diagram on the right. */
+.glyfHero {
+  --hero-blue: #1f4fe0;
+  --hero-blue-strong: #1740c4;
+  --hero-ink: #0f172a;
+  --hero-muted: #5b6b82;
+  --hero-line: #dbe3ef;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--hero-line);
+  background:
+    radial-gradient(60% 70% at 78% 45%, rgba(31, 79, 224, 0.08), transparent 70%),
+    linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    #f9fbfe;
+  background-size: auto, 44px 44px, 44px 44px, auto;
+  color: var(--hero-ink);
+  font-family: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.glyfHero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: clamp(2rem, 3.5vw, 3rem);
+  max-width: 1400px;
+  padding-block: clamp(2rem, 5vh, 4.5rem);
+}
+.glyfHero__copy { min-width: 0; }
+.glyfHero .glyfHero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 1.5rem;
+  padding: 4px 12px;
+  border: 1px solid #c7d6fb;
+  border-radius: 999px;
+  background: #eef3ff;
+  color: var(--hero-blue);
+  font-size: 0.85rem;
+  font-weight: 600 !important;
+}
+.glyfHero__badge::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--hero-blue);
+}
+.glyfHero .glyfHero__title {
+  max-width: 18ch;
+  margin: 0 0 1.25rem;
+  color: var(--hero-ink);
+  font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.2rem, 3.4vw, 3.3rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-align: left;
+}
+.glyfHero .glyfHero__title span { display: block; color: var(--hero-blue); }
+.glyfHero__lead {
+  max-width: 34rem;
+  margin: 0 0 2rem;
+  color: var(--hero-muted);
+  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+  line-height: 1.6;
+}
+.glyfHero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 2.25rem; }
+.glyfHero .glyfHero__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 28px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+.glyfHero .glyfHero__button--primary {
+  background: var(--hero-blue);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(31, 79, 224, 0.25);
+}
+.glyfHero .glyfHero__button--primary:hover { background: var(--hero-blue-strong); color: #fff; }
+.glyfHero .glyfHero__button--secondary {
+  border-color: var(--hero-line);
+  background: #fff;
+  color: var(--hero-ink);
+}
+.glyfHero .glyfHero__button--secondary:hover { border-color: #9fb5e6; color: var(--hero-ink); }
+.glyfHero__button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+.glyfHero .glyfHero__button:focus-visible,
+.glyfHeroDiagram a:focus-visible { outline: 2px solid var(--hero-blue); outline-offset: 3px; }
+.glyfHero__traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--hero-muted);
+  font-size: 0.92rem;
+}
+.glyfHero__traits li { display: inline-flex; align-items: center; gap: 8px; margin: 0; }
+.glyfHero__traits svg { width: 18px; height: 18px; fill: none; stroke: var(--hero-blue); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Diagram */
+.glyfHeroDiagram { position: relative; min-width: 0; margin: 0; }
+.glyfHeroNote {
+  position: absolute;
+  margin: 0;
+  color: #6a7d9c;
+  /* !important: a global `p { font-family … !important }` rule would otherwise win. */
+  font-family: 'Kalam', 'Bradley Hand', cursive !important;
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.05;
+  transform: rotate(-8deg);
+}
+.glyfHeroNote--bottom { position: relative; flex: none; transform: rotate(-8deg) translateY(-14px); }
+.glyfHeroNoteArrow { position: absolute; width: 44px; height: 30px; fill: none; stroke: #6b8ae6; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.glyfHeroNote--bottom .glyfHeroNoteArrow { right: -40px; top: 18px; transform: rotate(10deg); }
+.glyfHeroFlow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 0.85fr) 28px minmax(0, 1.35fr);
+  align-items: stretch;
+}
+.glyfHeroCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid var(--hero-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 24px rgba(15, 23, 42, 0.05);
+  color: var(--hero-ink);
+}
+.glyfHeroCardText { display: flex; flex-direction: column; min-width: 0; }
+.glyfHeroCard strong { font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
+.glyfHeroCard small { color: var(--hero-muted); font-size: 0.78rem; line-height: 1.4; }
+.glyfHeroIcon { display: inline-flex; flex: none; width: 30px; height: 30px; align-items: center; justify-content: center; }
+.glyfHeroIcon svg { width: 26px; height: 26px; fill: none; stroke: var(--hero-blue); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.glyfHeroIcon--dbt svg { fill: #ff694b; stroke: none; }
+/* Four equal rows so the input wires (12.5 / 37.5 / 62.5 / 87.5%) land on each card's centre. */
+.glyfHeroInputs { display: grid; grid-template-rows: repeat(4, 1fr); }
+.glyfHeroInput { align-self: center; padding: 12px 14px; }
+.glyfHeroTag {
+  align-self: flex-start;
+  margin-top: 5px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #eaf0fd;
+  color: var(--hero-blue);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.glyfHeroWires { width: 100%; height: 100%; overflow: visible; }
+.glyfHeroWires path { fill: none; stroke: #7d9be6; stroke-width: 1.5; }
+.glyfHeroHub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  gap: 4px;
+  padding: 22px 12px;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #3366f0, var(--hero-blue-strong));
+  box-shadow: 0 0 0 6px rgba(31, 79, 224, 0.1), 0 18px 40px rgba(31, 79, 224, 0.35);
+  color: #fff;
+  text-align: center;
+}
+.glyfHeroHub img { width: 40px; height: 40px; margin-bottom: 6px; filter: brightness(0) invert(1); }
+.glyfHeroHub strong { font-size: 1.15rem; font-weight: 600; }
+.glyfHeroHub small { color: rgba(255, 255, 255, 0.82); font-size: 0.72rem; }
+/* Slot heights are fixed ratios (2.2 : 1 : 1) so the output wires land on each card's centre. */
+.glyfHeroOutputs { display: grid; grid-template-rows: 2.2fr 1fr 1fr; }
+.glyfHeroSlot { display: flex; align-items: center; min-height: 0; padding-block: 6px; }
+.glyfHeroSlot > .glyfHeroCard { width: 100%; }
+.glyfHero .glyfHeroOutput { padding: 14px 16px; text-decoration: none; transition: border-color 120ms ease, transform 120ms ease; }
+.glyfHero .glyfHeroOutput:hover { border-color: #9fb5e6; color: var(--hero-ink); text-decoration: none; transform: translateY(-1px); }
+.glyfHeroOutput .glyfHeroCardText { flex: 1; }
+.glyfHeroChevron { display: inline-flex; margin-left: auto; }
+.glyfHeroChevron svg { width: 18px; height: 18px; fill: none; stroke: var(--hero-blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.glyfHeroOutput--dashboards { flex-direction: column; align-items: stretch; gap: 10px; }
+.glyfHeroOutputHead { display: flex; align-items: center; gap: 10px; }
+.glyfHeroMini { display: block; padding: 10px 12px; border: 1px solid #e8edf5; border-radius: 8px; background: #fbfcfe; }
+.glyfHeroMiniLabel { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 0.75rem; font-weight: 600; }
+.glyfHeroMiniBadge { display: inline-flex; align-items: center; gap: 5px; padding: 1px 7px; border-radius: 999px; background: #e9f8ef; color: #1c7c45; font-size: 0.68rem; }
+.glyfHeroMiniBadge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #22a05a; }
+.glyfHeroSpark { display: block; width: 100%; height: 38px; }
+.glyfHeroSparkArea { fill: rgba(31, 79, 224, 0.08); }
+.glyfHeroSparkLine { fill: none; stroke: var(--hero-blue); stroke-width: 1.8; }
+.glyfHeroBars { display: flex; align-items: flex-end; gap: 5px; height: 40px; }
+.glyfHeroBars span { flex: 1; border-radius: 2px 2px 0 0; background: #9db4f2; }
+.glyfHeroBars span.is-strong { background: var(--hero-blue); }
+.glyfHeroShip { display: flex; align-items: center; justify-content: flex-end; gap: 3.5rem; margin-top: 0.75rem; }
+.glyfHeroDestinations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 5px 10px;
+  border: 1px solid var(--hero-line);
+  border-radius: 999px;
+  background: #fff;
+  list-style: none;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+.glyfHeroDestinations li { display: flex; align-items: center; justify-content: center; width: 30px; height: 28px; margin: 0; }
+.glyfHeroDestinations svg { width: 18px; height: 18px; }
+.glyfHeroDestinations .glyfHeroDestinationsMore { width: 24px; color: #8a97ab; font-size: 0.95rem; letter-spacing: 1px; }
+
+@media (max-width: 1100px) {
+  .glyfHero__inner { grid-template-columns: minmax(0, 1fr); }
+  .glyfHero .glyfHero__title { max-width: 16ch; }
+  .glyfHeroDiagram { width: 100%; max-width: 760px; justify-self: center; }
+}
+@media (max-width: 680px) {
+  .glyfHeroDiagram { padding-top: 0; }
+  .glyfHeroHub { padding: 14px 12px; }
+  .glyfHeroHub img { width: 28px; height: 28px; margin-bottom: 2px; }
+  .glyfHeroNote { display: none; }
+  .glyfHeroFlow { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .glyfHeroWires { display: none; }
+  .glyfHeroInputs { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; gap: 8px; }
+  .glyfHeroInput { flex-direction: column; align-items: flex-start; align-self: stretch; gap: 6px; padding: 12px; }
+  .glyfHeroInput small { display: none; }
+  .glyfHeroOutputs { grid-template-rows: none; }
+  .glyfHeroSlot { padding-block: 4px; }
+  .glyfHeroShip { justify-content: flex-start; margin-top: 0.75rem; }
+  .glyfHeroDestinations { border-radius: 14px; }
+}
+@media (max-width: 420px) {
+  .glyfHeroInput strong { font-size: 0.82rem; }
+  .glyfHero .glyfHero__button { flex: 1 1 100%; justify-content: center; }
+}
+
+/*
+ * Typography system (landing page, navbar, footer):
+ *   Newsreader      headings, one weight (500); italic 600 is the Glyf wordmark
+ *   Hanken Grotesk  all UI and body text, weights 400 / 500 / 600
+ *   B612 Mono       code windows only
+ *   Kalam           the "Ship anywhere" note only
+ */
+.glyfHero h1,
+.landingSections h2,
+.landingSections h3,
+[data-theme='dark'] .landingSections h2,
+[data-theme='dark'] .landingSections h3 {
+  font-family: 'Newsreader', Georgia, 'Times New Roman', serif !important;
+  font-weight: 500 !important;
+}
+
+.landingSections p,
+.landingSections li,
+[data-theme='dark'] .landingSections p {
+  font-weight: 400 !important;
+}
+
+/* Labels that used monospace move to the UI font. */
+.landingSections .eyebrow,
+.landingSections .featureStoryTag,
+.landingSections .howCodeStep > span,
+[data-theme='dark'] .landingSections .eyebrow,
+[data-theme='dark'] .landingSections .featureStoryTag,
+[data-theme='dark'] .landingSections .howCodeStep > span {
+  font-family: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+.landingSections .featureStoryNavLink,
+.landingSections .featureIntroSignalMark,
+[data-theme='dark'] .landingSections .featureStoryNavLink,
+[data-theme='dark'] .landingSections .featureIntroSignalMark {
+  font-family: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+}
+.landingSections .personaCard > span,
+[data-theme='dark'] .landingSections .personaCard > span {
+  font-family: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+}
+/* Weights the loaded font files actually provide. */
+.navbar__item,
+.navbar__link,
+.navbarGithubLink span,
+[data-theme='dark'] .navbar__item,
+[data-theme='dark'] .navbar__link,
+[data-theme='dark'] .navbarGithubLink span {
+  font-weight: 600 !important;
+}
+.footerBrand,
+.footerBrand span,
+[data-theme='dark'] .footerBrand,
+[data-theme='dark'] .footerBrand span {
+  font-weight: 600 !important;
+}
+.footer.footer--dark .footer__link-item,
+[data-theme='dark'] .footer.footer--dark .footer__link-item {
+  font-weight: 500 !important;
+}
+
+/* Older rules with higher specificity that the block above has to outrank. */
+.landingSections .sectionHeader h2,
+[data-theme='dark'] .landingSections .sectionHeader h2 {
+  font-weight: 500 !important;
+}
+.landingSections .featureStoryName,
+.landingSections .featureStoryName span,
+[data-theme='dark'] .landingSections .featureStoryName,
+[data-theme='dark'] .landingSections .featureStoryName span {
+  font-family: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+.landingSections .featureStoryName .featureStatus {
+  font-size: 0.72rem !important;
+}
+nav.navbar .navbar__items .navbar__item,
+nav.navbar .navbar__items .navbar__link {
+  font-weight: 600 !important;
+}
+
+/* Feature tabs: a sticky segmented pill; the active tab takes the hero blue. */
+.landingSections .featureIntroSignals {
+  margin-bottom: 2.5rem !important;
+}
+.landingSections .featuresSection .featureStoryNav,
+[data-theme='dark'] .landingSections .featuresSection .featureStoryNav {
+  top: calc(var(--ifm-navbar-height) + 12px);
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 2.75rem;
+  padding: 4px;
+  border: 1px solid #dbe3ef;
+  border-radius: 999px;
+  background: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+.landingSections .featuresSection .featureStoryNavLinks {
+  gap: 2px;
+}
+.landingSections .featuresSection .featureStoryNavLink,
+[data-theme='dark'] .landingSections .featuresSection .featureStoryNavLink {
+  padding: 9px 18px;
+  border: 0;
+  border-radius: 999px;
+  color: #5b6b82 !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2;
+  text-transform: none !important;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.landingSections .featuresSection .featureStoryNavLink:hover,
+[data-theme='dark'] .landingSections .featuresSection .featureStoryNavLink:hover {
+  background: #eef3fb;
+  color: #0f172a !important;
+}
+.landingSections .featuresSection .featureStoryNavLink.is-active,
+[data-theme='dark'] .landingSections .featuresSection .featureStoryNavLink.is-active {
+  background: #1f4fe0;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(31, 79, 224, 0.25);
+}
+.landingSections .featuresSection .featureStoryNavLink:focus-visible {
+  outline: 2px solid #1f4fe0;
+  outline-offset: 2px;
+}
+@media (max-width: 640px) {
+  .landingSections .featuresSection .featureStoryNavLink,
+  [data-theme='dark'] .landingSections .featuresSection .featureStoryNavLink {
+    padding: 8px 14px;
+    font-size: 0.85rem !important;
+  }
+}
+
+/* Header: compact brand, quiet links with a blue active state, pill GitHub button. */
+nav.navbar,
+[data-theme='dark'] nav.navbar {
+  border-bottom: 1px solid #dbe3ef !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: none !important;
+}
+nav.navbar .navbar__brand,
+[data-theme='dark'] nav.navbar .navbar__brand {
+  gap: 0.5rem !important;
+  margin-right: 2rem;
+}
+nav.navbar .navbar__logo,
+nav.navbar .navbar__logo img,
+[data-theme='dark'] nav.navbar .navbar__logo,
+[data-theme='dark'] nav.navbar .navbar__logo img {
+  width: 40px !important;
+  height: 40px !important;
+}
+nav.navbar .navbar__title,
+[data-theme='dark'] nav.navbar .navbar__title {
+  color: #0f172a !important;
+  font-size: 1.85rem !important;
+  font-weight: 600 !important;
+}
+nav.navbar .navbar__items .navbar__item,
+nav.navbar .navbar__items .navbar__link {
+  color: #334155 !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  transition: color 140ms ease;
+}
+nav.navbar .navbar__items .navbar__link:hover,
+nav.navbar .navbar__items .navbar__link--active {
+  color: #1f4fe0 !important;
+}
+/* !important: an older .navbarGithubLink rule (warm palette, 10px corners) sets these with !important. */
+nav.navbar .navbarGithubLink,
+[data-theme='dark'] nav.navbar .navbarGithubLink {
+  min-height: 2.5rem !important;
+  padding: 0 1.1rem !important;
+  border: 1px solid #dbe3ef !important;
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+  font-size: 0.9rem !important;
+}
+nav.navbar .navbarGithubLink:hover,
+[data-theme='dark'] nav.navbar .navbarGithubLink:hover {
+  border-color: #9fb5e6 !important;
+  color: #0f172a !important;
+  transform: none;
+}
+nav.navbar .navbarGithubLink span {
+  font-weight: 500 !important;
+}
+@media (max-width: 996px) {
+  nav.navbar .navbar__logo,
+  nav.navbar .navbar__logo img,
+  [data-theme='dark'] nav.navbar .navbar__logo,
+  [data-theme='dark'] nav.navbar .navbar__logo img {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  nav.navbar .navbar__title,
+  [data-theme='dark'] nav.navbar .navbar__title {
+    font-size: 1.6rem !important;
+  }
+}
+
+/* Features: blue checks, full-width sticky tab band, edge-to-edge code cards, badges, roadmap strip. */
+.landingSections .featureIntroSignalMark {
+  border-color: #1f4fe0 !important;
+  background: #1f4fe0 !important;
+}
+.landingSections .featureStorySection {
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 5.5rem);
+}
+.landingSections .featuresSection .featureStoryNavBand {
+  position: sticky;
+  top: calc(var(--ifm-navbar-height) - 16px);
+  z-index: 20;
+  margin: 0 0 2.25rem;
+  padding-block: 10px;
+  background: #f4f7fc;
+  /* Paint the band edge to edge without widening the layout. */
+  box-shadow: 0 0 0 100vmax #f4f7fc;
+  clip-path: inset(0 -100vmax);
+}
+.landingSections .featuresSection .featureStoryNavBand .featureStoryNav,
+[data-theme='dark'] .landingSections .featuresSection .featureStoryNavBand .featureStoryNav {
+  position: static;
+  margin: 0;
+}
+
+.landingSections .featureStoryBlock,
+[data-theme='dark'] .landingSections .featureStoryBlock {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: 14px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+.landingSections .featureStoryBlock:hover {
+  border-color: #b9cbee !important;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+.landingSections .featureStoryBlock .featureStoryVisual {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+}
+.landingSections .featureStoryBlock .featureStoryVisual > .featureMacWindow {
+  flex: 1;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+.landingSections .featureStoryBlock .featureStoryNote {
+  padding: 1.1rem 1.4rem 1.3rem !important;
+  border-top: 1px solid #e6ecf5;
+}
+.landingSections .featureStoryBlock .featureStoryDesc {
+  margin: 0.35rem 0 0 !important;
+}
+.landingSections .featuresSection .featureStatus,
+[data-theme='dark'] .landingSections .featuresSection .featureStatus {
+  padding: 1px 8px;
+  border: 1px solid #c7d6fb !important;
+  border-radius: 999px;
+  background: #eef3ff !important;
+  color: #1f4fe0 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+}
+
+.featureRoadmap {
+  margin-top: 3rem;
+  padding: 1.5rem 1.75rem 1.75rem;
+  border: 1px dashed #b9cbee;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+}
+.landingSections .featureRoadmap .eyebrow {
+  margin: 0;
+}
+.featureRoadmapList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 2rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.landingSections .featureRoadmapList li {
+  margin: 0;
+}
+.featureRoadmapList strong {
+  display: block;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.landingSections .featureRoadmapList p {
+  margin: 0.3rem 0 0;
+  color: #5b6b82 !important;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+@media (max-width: 900px) {
+  .featureRoadmapList { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .landingSections .featuresSection .featureStoryNav {
+    -webkit-mask-image: linear-gradient(90deg, #000 86%, transparent);
+    mask-image: linear-gradient(90deg, #000 86%, transparent);
+  }
+  .featureRoadmap { padding: 1.25rem; }
+}
+
+/* Who it's for: role icons and a hover state. */
+.landingSections .personaCard {
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+.landingSections .personaCard:hover {
+  border-color: #b9cbee !important;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+.personaIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 0.9rem;
+  border-radius: 10px;
+  background: #eef3ff;
+}
+.personaIcon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: #1f4fe0;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* GGSQL + Glyf band: a credit, so smaller headings and marks. */
+.landingSections .band .ggsqlCopyTitle,
+[data-theme='dark'] .landingSections .band .ggsqlCopyTitle {
+  font-size: clamp(1.5rem, 2.4vw, 2rem) !important;
+  line-height: 1.2 !important;
+}
+.landingSections .band .ggsqlCopyTitleMark,
+[data-theme='dark'] .landingSections .band .ggsqlCopyTitleMark {
+  width: 48px;
+  height: 48px;
+  flex-basis: 48px;
+}
+
+/* Closing call to action before the footer. */
+.landingSections > .ctaBand,
+[data-theme='dark'] .landingSections > .ctaBand {
+  border-top: 0 !important;
+  background:
+    radial-gradient(60% 90% at 50% 0%, rgba(255, 255, 255, 0.12), transparent 70%),
+    linear-gradient(135deg, #2a5cf0, #1740c4) !important;
+  color: #ffffff;
+}
+.ctaBand__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: clamp(3.5rem, 7vw, 5.5rem);
+  text-align: center;
+}
+.landingSections .ctaBand h2,
+[data-theme='dark'] .landingSections .ctaBand h2 {
+  margin: 0 0 0.75rem;
+  color: #ffffff !important;
+  font-size: clamp(2rem, 3.6vw, 2.8rem) !important;
+  line-height: 1.15;
+}
+.landingSections .ctaBand p {
+  max-width: 36rem;
+  margin: 0 0 1.5rem;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+.ctaBand__install {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 100%;
+  margin: 0 0 1.75rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 10px;
+  background: rgba(8, 15, 40, 0.28);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'B612 Mono', SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  overflow-x: auto;
+}
+.landingSections .ctaBand__install code {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #ffffff !important;
+  font-size: inherit;
+  white-space: nowrap;
+}
+.ctaBand__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.landingSections .ctaBand__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 26px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.landingSections .ctaBand__button--primary {
+  background: #ffffff;
+  color: #1740c4 !important;
+}
+.landingSections .ctaBand__button--primary:hover {
+  background: #eef3ff;
+  color: #1740c4 !important;
+}
+.landingSections .ctaBand__button--secondary {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff !important;
+}
+.landingSections .ctaBand__button--secondary:hover {
+  border-color: #ffffff;
+  color: #ffffff !important;
+}
+.landingSections .ctaBand__button svg {
+  width: 18px;
+  height: 18px;
+}
+.landingSections .ctaBand__button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* Roadmap panel: planned items linked to their GitHub issues, plus an ask to open a feature request. */
+.landingSections .featureRoadmap {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #dbe3ef;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.featureRoadmapHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 1.5rem 1.75rem 0;
+}
+.landingSections .featureRoadmapHead .eyebrow {
+  margin: 0;
+}
+.landingSections .featureRoadmap .featureRoadmapList {
+  margin: 1.25rem 0 0;
+  padding: 0 1.75rem 1.5rem;
+}
+.landingSections .featureRoadmapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 0.6rem;
+  color: #1f4fe0 !important;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none !important;
+}
+.landingSections .featureRoadmapLink:hover {
+  text-decoration: underline !important;
+}
+.featureRoadmapAsk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  padding: 1.25rem 1.75rem;
+  border-top: 1px solid #e6ecf5;
+  background: #f7f9fd;
+}
+.featureRoadmapAskIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #eef3ff;
+}
+.featureRoadmapAskIcon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: #1f4fe0;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.featureRoadmapAskText {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+.featureRoadmapAskText strong {
+  display: block;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.landingSections .featureRoadmapAskText p {
+  margin: 0.2rem 0 0;
+  color: #5b6b82 !important;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.landingSections .featureRoadmapButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.landingSections .featureRoadmapButton--secondary {
+  border-color: #dbe3ef;
+  background: #ffffff;
+  color: #0f172a !important;
+}
+.landingSections .featureRoadmapButton--secondary:hover {
+  border-color: #9fb5e6;
+  color: #0f172a !important;
+}
+.landingSections .featureRoadmapButton--primary {
+  background: #1f4fe0;
+  box-shadow: 0 6px 16px rgba(31, 79, 224, 0.25);
+  color: #ffffff !important;
+}
+.landingSections .featureRoadmapButton--primary:hover {
+  background: #1740c4;
+  color: #ffffff !important;
+}
+.landingSections .featureRoadmapButton:focus-visible,
+.landingSections .featureRoadmapLink:focus-visible {
+  outline: 2px solid #1f4fe0;
+  outline-offset: 3px;
+}
+.featureRoadmapButton svg {
+  width: 16px;
+  height: 16px;
+}
+@media (max-width: 640px) {
+  .featureRoadmapHead { padding: 1.25rem 1.25rem 0; }
+  .landingSections .featureRoadmap .featureRoadmapList { padding: 0 1.25rem 1.25rem; }
+  .featureRoadmapAsk { padding: 1.25rem; }
+  .landingSections .featureRoadmapAsk .featureRoadmapButton { width: 100%; justify-content: center; }
+}
+
+/* Walkthrough video: a Get Started-style pill over the poster until playback starts. */
+.howWalkthroughFrame {
+  position: relative;
+}
+.landingSections .howWalkthroughPlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 999px;
+  background: #1f4fe0;
+  box-shadow: 0 0 0 8px rgba(31, 79, 224, 0.18), 0 14px 36px rgba(31, 79, 224, 0.45);
+  color: #ffffff;
+  cursor: pointer;
+  font-family: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  transition: background-color 120ms ease, transform 120ms ease;
+}
+.landingSections .howWalkthroughPlay:hover {
+  background: #1740c4;
+  transform: translate(-50%, -50%) scale(1.03);
+}
+.landingSections .howWalkthroughPlay:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
+}
+.howWalkthroughPlay svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+.howWalkthroughPlayTime {
+  padding-left: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+@media (max-width: 640px) {
+  .landingSections .howWalkthroughPlay {
+    min-height: 44px;
+    padding: 0 18px;
+    font-size: 0.9rem;
+  }
+}
+

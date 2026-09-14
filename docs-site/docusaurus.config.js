@@ -57,14 +57,6 @@ const config = {
         disableSwitch: true,
         respectPrefersColorScheme: false,
       },
-      announcementBar: {
-        id: 'glyf-studio',
-        content:
-          '<a class="studioAnnouncementLink" href="https://glyfdata.com" aria-label="Introducing Glyf Studio">Introducing Glyf Studio <span aria-hidden="true">→</span></a>',
-        backgroundColor: '#0047ff',
-        textColor: '#ffffff',
-        isCloseable: false,
-      },
       navbar: {
         title: 'Glyf',
         logo: {
@@ -89,11 +81,6 @@ const config = {
             ],
           },
           {
-            href: 'https://github.com/glyf-data/glyf/blob/main/CHANGELOG.md',
-            label: 'Changelog',
-            position: 'right',
-          },
-          {
             type: 'html',
             position: 'right',
             value:
@@ -104,6 +91,9 @@ const config = {
       footer: {
         style: 'dark',
         links: [
+          {label: 'Docs', to: '/docs/intro'},
+          {label: 'GitHub', href: 'https://github.com/glyf-data/glyf'},
+          {label: 'Community', to: '/docs/resources/community'},
           {label: 'Apache License', href: 'https://github.com/glyf-data/glyf/blob/main/LICENSE'},
         ],
         copyright: '<strong class="footerBrand">Glyf<span>.</span></strong><span class="footerTagline">Visualization is a build step. Treat it like one.</span>',

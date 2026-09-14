@@ -7,6 +7,7 @@ const featureSections = [
   {
     id: 'integration',
     tag: 'integration',
+    label: 'Integration',
     title: 'Your dbt project is the source of truth.',
     description:
       'Glyf reads your dbt manifest directly. Charts reference models the same way dbt models reference each other, with ref(). No copy-pasting SQL and no schema drift.',
@@ -30,8 +31,35 @@ const featureSections = [
     ],
   },
   {
+    id: 'ai',
+    tag: 'ai',
+    label: 'AI',
+    title: 'Agents that understand your chart graph.',
+    description:
+      'Glyf will expose a spec graph over MCP so agents can reason about model-to-chart dependencies, assess downstream impact, and open informed pull requests.',
+    items: [
+      {
+        name: 'Agent-ready MCP server',
+        desc: 'Agents will list charts, fetch specs, and query upstream model dependencies. impact_of_model() will return every downstream chart affected by a schema change.',
+        status: 'soon',
+        reverse: false,
+        visual: 'mcpImpact',
+        filename: 'MCP session — Claude Agent ↔ Glyf',
+      },
+      {
+        name: 'Natural language chart edits',
+        desc: 'Describe a chart change in plain language. Glyf will translate it to a SQL diff, validate the build, attach the visual diff, and open a pull request.',
+        status: 'soon',
+        reverse: true,
+        visual: 'mcpEdit',
+        filename: 'MCP session — natural language edit',
+      },
+    ],
+  },
+  {
     id: 'exports',
     tag: 'exports',
+    label: 'Exports',
     title: 'Charts that live anywhere.',
     description:
       'No BI server to maintain. Glyf builds self-contained artifacts that teams can host in docs, apps, CI pipelines, or static storage.',
@@ -45,18 +73,19 @@ const featureSections = [
         filename: 'terminal',
       },
       {
-        name: 'Generated React components',
-        desc: 'Glyf will compile dashboards to typed .tsx components with inferred prop interfaces, to drop into your product codebase with no BI SDK dependency.',
-        status: 'roadmap',
+        name: 'React components',
+        desc: '@glyf/react loads the bundle.json every build writes and renders its charts with GlyfProvider and GlyfChart, as SVG or PNG. No BI SDK and no server.',
+        status: 'preview',
         reverse: true,
-        visual: 'tsxOutput',
-        filename: 'dist/RevenueWeekly.tsx — auto-generated',
+        visual: 'reactEmbed',
+        filename: 'app/Analytics.tsx',
       },
     ],
   },
   {
     id: 'customization',
     tag: 'customization',
+    label: 'Customization',
     title: 'Dashboard logic as reviewed code.',
     description:
       'Thresholds, color mappings, and conditional labels all live in Python macros and YAML specs. Reusable, testable, and visible in code review.',
@@ -79,57 +108,16 @@ const featureSections = [
       },
     ],
   },
-  {
-    id: 'observability',
-    tag: 'observability',
-    title: 'Know when something breaks or shifts.',
-    description:
-      'On the roadmap: visual diffs and alert hooks as build outputs, so regressions surface in CI before a dashboard change reaches stakeholders.',
-    items: [
-      {
-        name: 'Visual diff as a build artifact',
-        desc: 'Each build will generate a side-by-side visual diff against the previous build, highlighting metric shifts, new categories, and trend reversals.',
-        status: 'roadmap',
-        reverse: false,
-        visual: 'visualDiff',
-        filename: 'artifacts/visual-diff — build #84 vs #83',
-      },
-      {
-        name: 'Pipeline hooks and alerts',
-        desc: 'Alerts will be declared directly in dashboard YAML, with conditions evaluated against query results at build time and severity-based routing.',
-        status: 'roadmap',
-        reverse: true,
-        visual: 'alertsYaml',
-        filename: 'dashboards/revenue.yaml — alerts block',
-      },
-    ],
-  },
-  {
-    id: 'ai',
-    tag: 'ai',
-    title: 'Agents that understand your chart graph.',
-    description:
-      'Glyf will expose a spec graph over MCP so agents can reason about model-to-chart dependencies, assess downstream impact, and open informed pull requests.',
-    items: [
-      {
-        name: 'Agent-ready MCP server',
-        desc: 'Agents will list charts, fetch specs, and query upstream model dependencies. impact_of_model() will return every downstream chart affected by a schema change.',
-        status: 'roadmap',
-        reverse: false,
-        visual: 'mcpImpact',
-        filename: 'MCP session — Claude Agent ↔ Glyf',
-      },
-      {
-        name: 'Natural language chart edits',
-        desc: 'Describe a chart change in plain language. Glyf will translate it to a SQL diff, validate the build, attach the visual diff, and open a pull request.',
-        status: 'roadmap',
-        reverse: true,
-        visual: 'mcpEdit',
-        filename: 'MCP session — natural language edit',
-      },
-    ],
-  },
 ];
+
+const roadmapItems = [
+  ['Visual diffs', 'Every build compares each chart with the previous build and flags metric shifts, new categories, and trend reversals.', 'https://github.com/glyf-data/glyf/issues/136'],
+  ['Pipeline alerts', 'Alert conditions declared in dashboard YAML, evaluated against query results at build time and routed by severity.', 'https://github.com/glyf-data/glyf/issues/137'],
+];
+
+// Open feature requests, most upvoted first; the template applies the "feature request" label.
+const roadmapIssuesUrl = 'https://github.com/glyf-data/glyf/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22+sort%3Areactions-%2B1-desc';
+const featureRequestUrl = 'https://github.com/glyf-data/glyf/issues/new?template=feature_request.yml';
 
 const featureLinks = [
   ['Quickstart', 'Run the included analytical project and render your first dashboard.', '/docs/get-started/quickstart'],
@@ -157,7 +145,7 @@ const personas = [
   ['Analytics Engineer', 'You work in dbt. Glyf is your next step.', 'You know SQL. You version-control everything. You should not need LookML or a BI platform UI to publish a declared dashboard artifact.'],
   ['Data Scientist', 'Charts in SQL, not one-off notebooks.', 'Write SQL-style chart definitions that run in the pipeline, stay current, and live beside the models they query.'],
   ['Data Leader', 'Reduce platform dependency.', 'Glyf is open source, runs locally, and produces outputs your team already knows how to deploy and review.'],
-  ['Application Engineer', 'Import or publish a dashboard artifact.', 'The data team owns the spec. You consume rendered output or future components without negotiating with an embedded analytics vendor.'],
+  ['Application Engineer', 'Import or publish a dashboard artifact.', 'The data team owns the spec. You fetch bundle.json and show the SVG or PNG it points to, without an embedded analytics vendor.'],
 ];
 
 function DbtMark() {
@@ -316,17 +304,200 @@ function VectorIcon({type}) {
   );
 }
 
-function HeroCodeWindow() {
+const heroInputs = [
+  {icon: 'dbt', title: 'dbt models', detail: 'Your data models'},
+  {icon: 'declarative', title: 'YAML layouts', detail: 'Define charts & pages'},
+  {icon: 'code', title: 'Python macros', detail: 'Transform & extend'},
+  {icon: 'database', title: 'Warehouse data', detail: 'DuckDB · Snowflake · BigQuery', tag: 'Apache Arrow'},
+];
+
+const heroTraits = [
+  ['bolt', 'Code-first'],
+  ['engine', 'Rust engine'],
+  ['agent', 'Agent-ready'],
+  ['server', 'No BI server'],
+];
+
+// Brand marks from Simple Icons (CC0), https://simpleicons.org
+const heroDestinations = [
+  {
+    name: 'Amazon S3',
+    color: '#569A31',
+    path: 'M20.913 13.147l.12-.895c.947.576 1.258.922 1.354 1.071-.16.031-.562.046-1.474-.176zm-2.174 7.988a.547.547 0 0 0-.005.073c0 .084-.207.405-1.124.768a10.28 10.28 0 0 1-1.438.432c-1.405.325-3.128.504-4.853.504-4.612 0-7.412-1.184-7.412-1.704a.547.547 0 0 0-.005-.073L1.81 5.602c.135.078.28.154.432.227.042.02.086.038.128.057.134.062.272.122.417.18l.179.069c.154.058.314.114.478.168.043.013.084.029.13.043.207.065.423.127.646.187l.176.044c.175.044.353.087.534.127a23.414 23.414 0 0 0 .843.17l.121.023c.252.045.508.085.768.122.071.011.144.02.216.03.2.027.4.053.604.077l.24.027c.245.026.49.05.74.07l.081.009c.275.022.552.04.83.056l.233.012c.21.01.422.018.633.025a33.088 33.088 0 0 0 2.795-.026l.232-.011c.278-.016.555-.034.83-.056l.08-.008c.25-.02.497-.045.742-.072l.238-.026c.205-.024.408-.05.609-.077.07-.01.141-.019.211-.03.261-.037.519-.078.772-.122l.111-.02c.215-.04.427-.082.634-.125l.212-.047c.186-.041.368-.085.546-.13l.166-.042c.225-.06.444-.122.654-.189.04-.012.077-.026.115-.038a10.6 10.6 0 0 0 .493-.173c.058-.021.114-.044.17-.066.15-.06.293-.12.43-.185.038-.017.079-.034.116-.052.153-.073.3-.15.436-.228l-.976 7.245c-2.488-.78-5.805-2.292-7.311-3a1.09 1.09 0 0 0-1.088-1.085c-.6 0-1.088.489-1.088 1.088 0 .6.488 1.089 1.088 1.089.196 0 .378-.056.537-.148 1.72.812 5.144 2.367 7.715 3.15zm-7.42-20.047c5.677 0 9.676 1.759 9.75 2.736l-.014.113c-.01.033-.031.067-.048.101-.015.028-.026.057-.047.087-.024.033-.058.068-.09.102-.028.03-.051.06-.084.09-.038.035-.087.07-.133.105-.04.03-.074.06-.119.091-.053.036-.116.071-.177.107-.05.03-.095.06-.15.09-.068.036-.147.073-.222.11-.059.028-.114.057-.177.085-.084.038-.177.074-.268.111-.068.027-.13.054-.203.082-.097.036-.205.072-.31.107-.075.026-.148.053-.228.079-.111.035-.233.069-.35.103-.085.024-.165.05-.253.073-.124.034-.258.065-.389.098-.093.022-.181.046-.278.068-.139.032-.287.061-.433.091-.098.02-.191.041-.293.06-.155.03-.32.057-.482.084-.1.018-.198.036-.302.052-.166.026-.342.048-.515.072-.11.014-.213.03-.325.044-.181.023-.372.041-.56.06-.11.012-.218.025-.332.036-.188.016-.386.029-.58.043-.122.009-.24.02-.364.028-.207.012-.422.02-.635.028-.12.005-.234.012-.354.016a35.605 35.605 0 0 1-2.069 0c-.12-.004-.234-.011-.352-.016-.214-.008-.43-.016-.637-.028-.122-.008-.238-.02-.36-.027-.195-.015-.394-.028-.584-.044-.11-.01-.215-.024-.324-.035-.19-.02-.384-.038-.568-.06l-.315-.044c-.176-.024-.355-.046-.525-.073-.1-.015-.192-.033-.29-.05-.167-.028-.335-.055-.494-.086-.096-.018-.183-.038-.276-.056-.151-.032-.305-.062-.45-.095-.09-.02-.173-.043-.26-.064-.138-.034-.277-.067-.407-.102-.082-.022-.157-.046-.235-.069a11.75 11.75 0 0 1-.368-.108c-.075-.024-.141-.049-.213-.073-.11-.037-.223-.075-.325-.113-.067-.025-.125-.051-.188-.077-.096-.038-.195-.076-.282-.115-.06-.027-.11-.054-.166-.08-.08-.039-.162-.077-.233-.116-.052-.028-.094-.055-.142-.084-.063-.038-.13-.075-.185-.113-.043-.029-.075-.058-.113-.086-.048-.037-.098-.073-.139-.11-.032-.029-.054-.057-.08-.087-.033-.035-.069-.07-.093-.104-.02-.03-.031-.058-.046-.086-.018-.035-.039-.068-.049-.102l-.015-.113c.076-.977 4.074-2.736 9.748-2.736zm12.182 12.124c-.118-.628-.84-1.291-2.31-2.128l.963-7.16a.531.531 0 0 0 .005-.073C22.16 1.581 16.447 0 11.32 0 6.194 0 .482 1.581.482 3.851a.58.58 0 0 0 .005.072L2.819 21.25c.071 2.002 5.236 2.75 8.5 2.75 1.805 0 3.615-.188 5.098-.531.598-.138 1.133-.3 1.592-.48 1.18-.467 1.789-1.053 1.813-1.739l.945-7.018c.557.131 1.016.197 1.389.197.54 0 .902-.137 1.134-.413a.956.956 0 0 0 .21-.804Z',
+  },
+  {
+    name: 'Notion',
+    color: '#000000',
+    path: 'M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z',
+  },
+  {
+    name: 'Cloudflare Pages',
+    color: '#F38020',
+    path: 'M16.5088 16.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559 0 0 1-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489 2.1601-.8868 2.5537-1.9136l.499-1.3013c.0215-.0561.0293-.1128.0147-.168-.5625-2.5463-2.835-4.4453-5.5499-4.4453-2.5039 0-4.6284 1.6177-5.3876 3.8614-.4927-.3658-1.1187-.5625-1.794-.499-1.2026.119-2.1665 1.083-2.2861 2.2856-.0283.31-.0069.6128.0635.894C1.5683 13.171 0 14.7754 0 16.752c0 .1748.0142.3515.0352.5273.0141.083.0844.1475.1689.1475h15.9814c.0909 0 .1758-.0645.2032-.1553l.12-.4268zm2.7568-5.5634c-.0771 0-.1611 0-.2383.0112-.0566 0-.1054.0415-.127.0976l-.3378 1.1744c-.1475.5068-.0918.9707.1543 1.3164.2256.3164.6055.498 1.0625.5195l1.8437.1133c.0557 0 .1055.0263.1329.0703.0283.043.0351.1074.0214.1562-.0283.084-.1132.1485-.204.1553l-1.921.1123c-1.041.0488-2.1582.8867-2.5527 1.914l-.1406.3585c-.0283.0713.0215.1416.0986.1416h6.5977c.0771 0 .1474-.0489.169-.126.1122-.4082.1757-.837.1757-1.2803 0-2.6025-2.125-4.727-4.7344-4.727',
+  },
+  {
+    name: 'GitHub Pages',
+    color: '#181717',
+    path: 'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12',
+  },
+  {
+    name: 'Streamlit',
+    color: '#FF4B4B',
+    path: 'M16.673 11.32l6.862-3.618c.233-.136.554.12.442.387L20.463 17.1zm-8.556-.229l3.473-5.187c.203-.328.578-.316.793-.028l7.886 11.75zm-3.375 7.25c-.28 0-.835-.284-.993-.716l-3.72-9.46c-.118-.331.139-.614.48-.464l19.474 10.306c-.149.147-.453.337-.72.334z',
+  },
+];
+
+const heroMetricBars = [22, 38, 30, 52, 44, 70, 58, 82, 66, 96];
+
+function HeroGlyph({type}) {
+  if (type === 'dbt') {
+    return <DbtMark />;
+  }
+  if (type === 'declarative') {
+    return <WhyGlyfIcon type="declarative" />;
+  }
+  if (type === 'agent') {
+    return <WhyGlyfIcon type="agent" />;
+  }
+  if (type === 'bolt') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M13 3L5 13.5H11.5L10.5 21L19 10.5H12.5L13 3Z" />
+      </svg>
+    );
+  }
+  if (type === 'server') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4" y="4" width="16" height="7" rx="1.5" />
+        <rect x="4" y="13" width="16" height="7" rx="1.5" />
+        <path d="M8 7.5H8.1M8 16.5H8.1M3 3L21 21" />
+      </svg>
+    );
+  }
+  if (type === 'chevron') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 6L15 12L9 18" />
+      </svg>
+    );
+  }
+  if (type === 'engine') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="7" y="7" width="10" height="10" rx="1.5" />
+        <path d="M10 3V7M14 3V7M10 17V21M14 17V21M3 10H7M3 14H7M17 10H21M17 14H21" />
+      </svg>
+    );
+  }
+  if (type === 'database') {
+    return <VectorIcon type="database" />;
+  }
+  return <WhyGlyfIcon type="code" />;
+}
+
+function HeroArrow({className}) {
   return (
-    <div className="heroCodeVisual" aria-label="Glyf build workflow diagram">
-      <div className="heroCodeWindow">
-        <img
-          className="heroDiagramImage"
-          src="/img/glyf-hero-diagram-v3.svg"
-          alt="Diagram showing Glyf workflow from data sources through dbt and chart composition to generated outputs."
-        />
+    <svg className={className} viewBox="0 0 60 40" aria-hidden="true">
+      <path d="M4 4C10 22 28 32 52 32" />
+      <path d="M44 25L53 32L44 38" />
+    </svg>
+  );
+}
+
+function HeroDiagram() {
+  const logoUrl = useBaseUrl('/img/glyf-logo-v4.svg');
+  const hostedDashboardUrl = useBaseUrl('/dashboards/sales-dashboard/dashboards/sales.html');
+  return (
+    <figure className="glyfHeroDiagram" aria-label="dbt models, YAML layouts, and Python macros go through glyf build and ship as dashboards, embedded analytics, and hosted dashboards">
+      <div className="glyfHeroFlow">
+        <div className="glyfHeroInputs">
+          {heroInputs.map((item) => (
+            <div className="glyfHeroCard glyfHeroInput" key={item.title}>
+              <span className={`glyfHeroIcon glyfHeroIcon--${item.icon}`}><HeroGlyph type={item.icon} /></span>
+              <span className="glyfHeroCardText">
+                <strong>{item.title}</strong>
+                <small>{item.detail}</small>
+                {item.tag ? <span className="glyfHeroTag">{item.tag}</span> : null}
+              </span>
+            </div>
+          ))}
+        </div>
+        <svg className="glyfHeroWires glyfHeroWires--in" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 12.5C50 12.5 50 50 100 50M0 37.5C50 37.5 50 50 100 50M0 62.5C50 62.5 50 50 100 50M0 87.5C50 87.5 50 50 100 50" vectorEffect="non-scaling-stroke" />
+        </svg>
+        <div className="glyfHeroHub">
+          <img src={logoUrl} alt="" width="44" height="44" />
+          <strong>Glyf build</strong>
+          <small>Validate · render · export</small>
+        </div>
+        <svg className="glyfHeroWires glyfHeroWires--out" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 50C50 50 50 26.19 100 26.19M0 50C50 50 50 64.29 100 64.29M0 50C50 50 50 88.1 100 88.1" vectorEffect="non-scaling-stroke" />
+        </svg>
+        <div className="glyfHeroOutputs">
+          <div className="glyfHeroSlot glyfHeroSlot--tall">
+            <Link className="glyfHeroCard glyfHeroOutput glyfHeroOutput--dashboards" to="/docs/examples/gallery">
+              <span className="glyfHeroOutputHead">
+                <span className="glyfHeroIcon"><SmallChartIcon type="bars" /></span>
+                <strong>Dashboards</strong>
+                <span className="glyfHeroChevron"><HeroGlyph type="chevron" /></span>
+              </span>
+              <span className="glyfHeroMini">
+                <span className="glyfHeroMiniLabel">Revenue <span className="glyfHeroMiniBadge">Rendered</span></span>
+                <svg className="glyfHeroSpark" viewBox="0 0 200 56" preserveAspectRatio="none" aria-hidden="true">
+                  <path className="glyfHeroSparkArea" d="M0 46L22 40L40 44L62 30L84 36L106 24L128 26L150 12L172 22L200 16V56H0Z" />
+                  <path className="glyfHeroSparkLine" d="M0 46L22 40L40 44L62 30L84 36L106 24L128 26L150 12L172 22L200 16" vectorEffect="non-scaling-stroke" />
+                </svg>
+              </span>
+              <span className="glyfHeroMini">
+                <span className="glyfHeroMiniLabel">Product metrics</span>
+                <span className="glyfHeroBars" aria-hidden="true">
+                  {heroMetricBars.map((height, index) => (
+                    <span key={index} style={{height: `${height}%`}} className={index % 2 ? 'is-strong' : undefined} />
+                  ))}
+                </span>
+              </span>
+            </Link>
+          </div>
+          <div className="glyfHeroSlot">
+            <Link className="glyfHeroCard glyfHeroOutput" to="/docs/integrations/embedded-analytics">
+              <span className="glyfHeroIcon"><HeroGlyph type="code" /></span>
+              <span className="glyfHeroCardText">
+                <strong>Embedded analytics</strong>
+                <small>SVG · PNG · app</small>
+              </span>
+              <span className="glyfHeroChevron"><HeroGlyph type="chevron" /></span>
+            </Link>
+          </div>
+          <div className="glyfHeroSlot">
+            <a className="glyfHeroCard glyfHeroOutput" href={hostedDashboardUrl}>
+              <span className="glyfHeroIcon"><SmallChartIcon type="line" /></span>
+              <span className="glyfHeroCardText">
+                <strong>Hosted dashboards</strong>
+                <small>HTML · S3 · docs</small>
+              </span>
+              <span className="glyfHeroChevron"><HeroGlyph type="chevron" /></span>
+            </a>
+          </div>
+        </div>
       </div>
-    </div>
+      <div className="glyfHeroShip">
+        <p className="glyfHeroNote glyfHeroNote--bottom" aria-hidden="true">
+          Ship anywhere
+          <HeroArrow className="glyfHeroNoteArrow" />
+        </p>
+        <ul className="glyfHeroDestinations" aria-label="Static output can be published to">
+          {heroDestinations.map((item) => (
+            <li key={item.name} title={item.name}>
+              <svg viewBox="0 0 24 24" role="img" aria-label={item.name} style={{fill: item.color}}>
+                <path d={item.path} />
+              </svg>
+            </li>
+          ))}
+          <li className="glyfHeroDestinationsMore" aria-hidden="true">···</li>
+        </ul>
+      </div>
+    </figure>
   );
 }
 
@@ -340,34 +511,6 @@ function FeatureMacWindow({filename, children}) {
         <span className="featureMacFilename">{filename}</span>
       </div>
       <div className="featureMacBody">{children}</div>
-    </div>
-  );
-}
-
-function FeatureDiffVisual() {
-  return (
-    <div className="featureDiffVisual">
-      <div className="featureDiffColumn">
-        <div className="featureDiffLabel">Build #83 — before</div>
-        <div className="featureMiniChart">
-          {[55, 72, 60, 85, 90, 78, 82].map((height) => (
-            <span className="featureMiniBar featureMiniBar--before" key={`before-${height}`} style={{height: `${height}%`}} />
-          ))}
-        </div>
-      </div>
-      <div className="featureDiffColumn">
-        <div className="featureDiffLabel">Build #84 — after</div>
-        <div className="featureMiniChart">
-          {[55, 72, 60, 85, 44, 78, 82].map((height, index) => (
-            <span
-              className={`featureMiniBar${index === 4 ? ' featureMiniBar--drop' : ' featureMiniBar--after'}`}
-              key={`after-${height}-${index}`}
-              style={{height: `${height}%`}}
-            />
-          ))}
-        </div>
-        <div className="featureAnnotation">week 5 dropped 47%{'\n'}new category introduced — review needed</div>
-      </div>
     </div>
   );
 }
@@ -483,26 +626,6 @@ function FeatureVisual({item}) {
 <span className="codeMuted">Drop into S3, Notion, GitHub Pages, or CI artifacts.</span></code></pre>
         </FeatureMacWindow>
       );
-    case 'tsxOutput':
-      return (
-        <FeatureMacWindow filename={item.filename}>
-          <pre><code><span className="codeMuted">// generated by glyf — do not edit manually</span>{'\n'}
-<span className="codeKw">import</span> {'{ '}<span className="codeFn">GlyfChart</span>{' } '}<span className="codeKw">from</span> <span className="codeStr">'@glyf/react'</span>{'\n\n'}
-<span className="codeKw">export interface</span> <span className="codeFn">RevenueWeeklyProps</span> {'{'}{'\n'}
-{'  '}startDate?: <span className="codeVar">string</span>{'\n'}
-{'  '}planFilter?: <span className="codeVar">string</span>[] {'\n'}
-{'}'}{'\n\n'}
-<span className="codeKw">export function</span> <span className="codeFn">RevenueWeekly</span>({'{ '}startDate, planFilter {'}'}) {'{'}{'\n'}
-{'  '}<span className="codeKw">return</span> ({'\n'}
-{'    '}&#60;<span className="codeFn">GlyfChart</span>{'\n'}
-{'      '}spec=<span className="codeStr">"revenue_weekly"</span>{'\n'}
-{'      '}params={'{'}{'{ '}startDate, planFilter {'}'}{'}'}{'\n'}
-{'    '}/&#62;{'\n'}
-{'  '}){'\n'}
-{'}'}
-<span className="codeMuted"> // typed props, no BI SDK dependency</span></code></pre>
-        </FeatureMacWindow>
-      );
     case 'pythonMacros':
       return (
         <FeatureMacWindow filename={item.filename}>
@@ -536,31 +659,6 @@ charts:{'\n'}
 <span className="codeOk">✓</span> <span className="codeMuted">dashboard spec validated — 3 charts</span></code></pre>
         </FeatureMacWindow>
       );
-    case 'visualDiff':
-      return (
-        <FeatureMacWindow filename={item.filename}>
-          <FeatureDiffVisual />
-        </FeatureMacWindow>
-      );
-    case 'alertsYaml':
-      return (
-        <FeatureMacWindow filename={item.filename}>
-          <pre><code>charts:{'\n'}
-{'  '}- id: <span className="codeStr">revenue_weekly</span>{'\n'}
-{'    '}sql: <span className="codeStr">./revenue_weekly.sql</span>{'\n'}
-{'    '}alerts:{'\n'}
-{'      '}- <span className="codeKw">channel</span>: <span className="codeStr">"#data-alerts"</span>{'\n'}
-{'        '}<span className="codeKw">condition</span>: <span className="codeStr">"wow_pct &lt; -0.10"</span>{'\n'}
-{'        '}<span className="codeKw">message</span>: <span className="codeStr">"Revenue dropped &gt;10% WoW"</span>{'\n'}
-{'        '}<span className="codeKw">severity</span>: <span className="codeWarn">warn</span>{'\n\n'}
-{'      '}- <span className="codeKw">channel</span>: <span className="codeStr">"#incidents"</span>{'\n'}
-{'        '}<span className="codeKw">condition</span>: <span className="codeStr">"wow_pct &lt; -0.25"</span>{'\n'}
-{'        '}<span className="codeKw">message</span>: <span className="codeStr">"Revenue dropped &gt;25% — investigate"</span>{'\n'}
-{'        '}<span className="codeKw">severity</span>: <span className="codeHi">critical</span>{'\n\n'}
-<span className="codeOk">✓</span> alert registered revenue_weekly / warn{'\n'}
-<span className="codeOk">✓</span> alert registered revenue_weekly / critical</code></pre>
-        </FeatureMacWindow>
-      );
     case 'mcpImpact':
       return (
         <FeatureMacWindow filename={item.filename}>
@@ -571,6 +669,21 @@ charts:{'\n'}
       return (
         <FeatureMacWindow filename={item.filename}>
           <FeatureMcpTrace variant="edit" />
+        </FeatureMacWindow>
+      );
+    case 'reactEmbed':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code><span className="codeKw">import</span> {'{ '}<span className="codeFn">GlyfProvider</span>, <span className="codeFn">GlyfChart</span>{' }'} <span className="codeKw">from</span> <span className="codeStr">'@glyf/react'</span>{'\n\n'}
+<span className="codeKw">export function</span> <span className="codeFn">Analytics</span>() {'{'}{'\n'}
+{'  '}<span className="codeKw">return</span> ({'\n'}
+{'    '}&lt;<span className="codeFn">GlyfProvider</span> bundleUrl=<span className="codeStr">"/glyf/product_analytics/bundle.json"</span>&gt;{'\n'}
+{'      '}&lt;<span className="codeFn">GlyfChart</span> name=<span className="codeStr">"activation_by_plan"</span> artifact=<span className="codeStr">"svg"</span> /&gt;{'\n'}
+{'      '}&lt;<span className="codeFn">GlyfChart</span> name=<span className="codeStr">"revenue_weekly"</span> showTitle /&gt;{'\n'}
+{'    '}&lt;/<span className="codeFn">GlyfProvider</span>&gt;{'\n'}
+{'  '}){'\n'}
+{'}'}{'\n\n'}
+<span className="codeOk">✓</span> <span className="codeMuted">reads bundle.json · renders SVG or PNG · no BI SDK</span></code></pre>
         </FeatureMacWindow>
       );
     default:
@@ -587,28 +700,29 @@ charts:{'\n'}
 
 function HomepageHeader() {
   return (
-    <header className="landingHero">
-      <div className="container landingHero__layout">
-        <div className="landingHero__content">
-          <h1>
-            <span>Open Source Visualization build tool to data pipeline</span>
+    <header className="glyfHero">
+      <div className="container glyfHero__inner">
+        <div className="glyfHero__copy">
+          <p className="glyfHero__badge">Open source</p>
+          <h1 className="glyfHero__title">
+            Build visualizations <span>the way you build pipelines</span>
           </h1>
-          <p className="landingHero__lead">
-            Ship charts from the same pipeline as your data.
-            <br />
-            Define charts, compose dashboards and publish anywhere.
+          <p className="glyfHero__lead">
+            Glyf is an open source, code-first build step for defining, testing, and shipping
+            charts and dashboards from your dbt models.
           </p>
-          <div className="buttonRow">
-            <Link className="heroPrimaryButton" to="/docs/get-started/quickstart">
+          <div className="glyfHero__actions">
+            <Link className="glyfHero__button glyfHero__button--primary" to="/docs/get-started/quickstart">
               <span aria-hidden="true">&gt;_</span> Get Started <span aria-hidden="true">&rarr;</span>
             </Link>
-            <Link className="heroGithubButton" to="/docs/examples/gallery">
-              <SmallChartIcon type="bars" />
-              Open Gallery
-            </Link>
           </div>
-          <HeroCodeWindow />
+          <ul className="glyfHero__traits">
+            {heroTraits.map(([icon, label]) => (
+              <li key={label}><HeroGlyph type={icon} />{label}</li>
+            ))}
+          </ul>
         </div>
+        <HeroDiagram />
       </div>
     </header>
   );
@@ -698,7 +812,7 @@ function FeaturesSection() {
             <span className="featureIntroSignalMark" aria-hidden="true">
               ✓
             </span>
-            <span>Rust core for fast validation and compilation.</span>
+            <span>Broken refs and missing charts fail validation before anything ships.</span>
           </div>
           <div className="featureIntroSignal">
             <span className="featureIntroSignalMark" aria-hidden="true">
@@ -713,27 +827,23 @@ function FeaturesSection() {
             <span>Integrated with dbt and GGSQL today. SQLMesh and more on the roadmap.</span>
           </div>
         </div>
-        <Link className="featureIntroButton" to="/docs/resources/roadmap">
-          View roadmap &rarr;
-        </Link>
-        <div className="featureStoryNav" role="navigation" aria-label="Feature section anchors">
-          <a className="featureStoryLogo" href="#features-top">
-            Glyf
-          </a>
-          <div className="featureStoryNavLinks">
-            {featureSections.map((section) => (
-              <a
-                className={`featureStoryNavLink${section.id === activeFeatureSection ? ' is-active' : ''}`}
-                href={`#${section.id}`}
-                key={section.id}
-                onClick={() => setActiveFeatureSection(section.id)}
-              >
-                {section.tag}
-              </a>
-            ))}
+        <div className="featureStoryNavBand">
+          <div className="featureStoryNav" role="navigation" aria-label="Feature section anchors">
+            <div className="featureStoryNavLinks">
+              {featureSections.map((section) => (
+                <a
+                  className={`featureStoryNavLink${section.id === activeFeatureSection ? ' is-active' : ''}`}
+                  href={`#${section.id}`}
+                  key={section.id}
+                  onClick={() => setActiveFeatureSection(section.id)}
+                >
+                  {section.label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="featureStories" id="features-top">
+        <div className="featureStories">
           {featureSections.map((section) => (
             <article className="featureStorySection" data-feature-anchor id={section.id} key={section.id}>
               <div className="featureStoryHeader">
@@ -750,8 +860,11 @@ function FeaturesSection() {
                     <div className="featureStoryNote">
                       <div className="featureStoryName">
                         <span>{item.name}</span>
-                        {item.status === 'roadmap' ? (
-                          <span className="featureStatus featureStatus--roadmap">Roadmap</span>
+                        {item.status === 'soon' ? (
+                          <span className="featureStatus">Coming soon</span>
+                        ) : null}
+                        {item.status === 'preview' ? (
+                          <span className="featureStatus">Preview</span>
                         ) : null}
                       </div>
                       <p className="featureStoryDesc">{item.desc}</p>
@@ -762,14 +875,70 @@ function FeaturesSection() {
             </article>
           ))}
         </div>
+        <div className="featureRoadmap">
+          <div className="featureRoadmapHead">
+            <p className="eyebrow">Roadmap</p>
+            <a className="featureRoadmapButton featureRoadmapButton--secondary" href={roadmapIssuesUrl}>
+              View roadmap <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+          <ul className="featureRoadmapList">
+            {roadmapItems.map(([title, description, issueUrl]) => (
+              <li key={title}>
+                <strong>{title}</strong>
+                <p>{description}</p>
+                <a className="featureRoadmapLink" href={issueUrl}>
+                  Discuss on GitHub <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="featureRoadmapAsk">
+            <span className="featureRoadmapAskIcon" aria-hidden="true"><SparkleIcon /></span>
+            <div className="featureRoadmapAskText">
+              <strong>Missing something?</strong>
+              <p>Describe the chart or workflow you need. Feature requests land on the public roadmap, where anyone can add a 👍.</p>
+            </div>
+            <a className="featureRoadmapButton featureRoadmapButton--primary" href={featureRequestUrl}>
+              Request a feature
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
+const walkthroughChapters = [
+  {start: 0, title: 'dbt model'},
+  {start: 6, title: 'GGSQL chart'},
+  {start: 13, title: 'Dashboard YAML'},
+  {start: 20, title: 'Build'},
+  {start: 28, title: 'Rendered dashboard'},
+];
+
+function walkthroughTime(seconds) {
+  return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
+}
+
 function HowItWorks() {
   const walkthroughUrl = useBaseUrl('/assets/walkthrough/glyf-sales-walkthrough.mp4');
   const walkthroughPoster = useBaseUrl('/assets/walkthrough/poster.png');
+  const videoRef = React.useRef(null);
+  const [currentTime, setCurrentTime] = React.useState(0);
+  const [duration, setDuration] = React.useState(42);
+  const [playing, setPlaying] = React.useState(false);
+  const activeChapter = walkthroughChapters.reduce(
+    (active, chapter, index) => currentTime >= chapter.start ? index : active, 0,
+  );
+
+  function jumpToChapter(start) {
+    const video = videoRef.current;
+    if (!video) return;
+    video.currentTime = start;
+    setCurrentTime(start);
+    video.play().catch(() => {});
+  }
 
   return (
     <section className="howSection">
@@ -783,19 +952,66 @@ function HowItWorks() {
           </p>
         </div>
         <figure className="howWalkthrough">
-          <video
-            className="howWalkthroughVideo"
-            controls
-            playsInline
-            preload="metadata"
-            poster={walkthroughPoster}
-            width="1600"
-            height="1000"
-            aria-label="Sales dashboard walkthrough: from a dbt model to a rendered dashboard"
-          >
-            <source src={walkthroughUrl} type="video/mp4" />
-            <a href={walkthroughUrl}>Watch the sales dashboard walkthrough.</a>
-          </video>
+          <div className="howWalkthroughFrame">
+            <video
+              ref={videoRef}
+              className="howWalkthroughVideo"
+              onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
+              onPlay={() => setPlaying(true)}
+              onEnded={() => setPlaying(false)}
+              onLoadedMetadata={(event) => {
+                const value = event.currentTarget.duration;
+                if (Number.isFinite(value) && value > 28) setDuration(value);
+              }}
+              controls
+              playsInline
+              preload="metadata"
+              poster={walkthroughPoster}
+              width="1600"
+              height="940"
+              aria-label="Sales dashboard walkthrough: from a dbt model to a rendered dashboard"
+            >
+              <source src={walkthroughUrl} type="video/mp4" />
+              <a href={walkthroughUrl}>Watch the sales dashboard walkthrough.</a>
+            </video>
+            {playing ? null : (
+              <button
+                type="button"
+                className="howWalkthroughPlay"
+                onClick={() => videoRef.current?.play().catch(() => {})}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5.5V18.5L18.5 12L8 5.5Z" />
+                </svg>
+                View Demo
+                <span className="howWalkthroughPlayTime">{walkthroughTime(duration)}</span>
+              </button>
+            )}
+          </div>
+          <nav className="howChapterTimeline" aria-label="Walkthrough chapters">
+            {walkthroughChapters.map((chapter, index) => {
+              const end = walkthroughChapters[index + 1]?.start ?? duration;
+              const progress = Math.max(0, Math.min(1, (currentTime - chapter.start) / (end - chapter.start)));
+              return (
+                <button
+                  type="button"
+                  key={chapter.start}
+                  className="howChapter"
+                  style={{flexGrow: end - chapter.start, '--chapter-progress': `${progress * 100}%`}}
+                  aria-label={`${chapter.title}, jump to ${walkthroughTime(chapter.start)}`}
+                  aria-current={index === activeChapter ? 'step' : undefined}
+                  onClick={() => jumpToChapter(chapter.start)}
+                >
+                  <span className="howChapterTrack" />
+                  <span className="howChapterTooltip">{walkthroughTime(chapter.start)} · {chapter.title}</span>
+                </button>
+              );
+            })}
+          </nav>
+          <figcaption className="howChapterCaption">
+            <span>{walkthroughTime(currentTime)} / {walkthroughTime(duration)} · {walkthroughChapters[activeChapter].title}</span>
+            <span>Choose a chapter to jump ahead</span>
+          </figcaption>
         </figure>
         <div className="howCodeGrid">
           <article className="howCodeStep">
@@ -845,6 +1061,12 @@ function HowItWorks() {
 }
 
 function PersonasSection() {
+  const personaIcons = [
+    <VectorIcon type="database" />,
+    <VectorIcon type="notebook" />,
+    <SmallChartIcon type="line" />,
+    <VectorIcon type="component" />,
+  ];
   return (
     <section className="personasSection">
       <div className="container">
@@ -853,8 +1075,9 @@ function PersonasSection() {
           <h2>Built for everyone who touches data.</h2>
         </div>
         <div className="personasGrid">
-          {personas.map(([role, title, description]) => (
+          {personas.map(([role, title, description], index) => (
             <article className="personaCard" key={role}>
+              <div className="personaIcon" aria-hidden="true">{personaIcons[index]}</div>
               <span>{role}</span>
               <h3>{title}</h3>
               <p>{description}</p>
@@ -867,6 +1090,8 @@ function PersonasSection() {
 }
 
 function GgsqlSection() {
+  const ggsqlLogoUrl = useBaseUrl('/img/ggsql-icon.svg');
+  const glyfLogoUrl = useBaseUrl('/img/glyf-logo-v4.svg');
   return (
     <section className="band">
       <div className="container ggsqlLayout">
@@ -878,7 +1103,7 @@ function GgsqlSection() {
             <div className="ggsqlCopyHeader">
               <img
                 className="ggsqlCopyTitleMark ggsqlCopyTitleMark--ggsql"
-                src="https://ggsql.org/assets/icon.svg"
+                src={ggsqlLogoUrl}
                 alt="GGSQL logo"
                 loading="lazy"
               />
@@ -894,14 +1119,14 @@ function GgsqlSection() {
             <div className="ggsqlCopyHeader">
               <img
                 className="ggsqlCopyTitleMark ggsqlCopyTitleMark--glyf"
-                src="/img/glyf-logo-v4.svg"
+                src={glyfLogoUrl}
                 alt="Glyf logo"
                 loading="lazy"
               />
               <h2 className="ggsqlCopyTitle">Glyf brings it into an analytics-engineering workflow.</h2>
             </div>
             <p>
-              Glyf built on top of GGSQL today and adds the surrounding project layer: dbt artifact
+              Glyf is built on top of GGSQL and adds the surrounding project layer: dbt artifact
               resolution, dashboard YAML, validation commands, and rendered outputs your team
               can publish.
             </p>
@@ -933,6 +1158,29 @@ function FeatureLinks() {
   );
 }
 
+function CtaSection() {
+  return (
+    <section className="ctaBand">
+      <div className="container ctaBand__inner">
+        <h2>Turn your dbt project into dashboards.</h2>
+        <p>Install glyf, point it at your dbt project, and build your first dashboard.</p>
+        <div className="ctaBand__install">
+          <span aria-hidden="true">$</span>
+          <code>uv tool install glyf-core</code>
+        </div>
+        <div className="ctaBand__actions">
+          <Link className="ctaBand__button ctaBand__button--primary" to="/docs/get-started/quickstart">
+            <span aria-hidden="true">&gt;_</span> Get Started <span aria-hidden="true">&rarr;</span>
+          </Link>
+          <a className="ctaBand__button ctaBand__button--secondary" href="https://github.com/glyf-data/glyf">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <Layout
@@ -940,11 +1188,12 @@ export default function Home() {
       description="Glyf is the open-source build step for dbt-aware visualization artifacts."
     >
       <HomepageHeader />
-      <main>
+      <main className="landingSections">
         <HowItWorks />
         <FeaturesSection />
         <PersonasSection />
         <GgsqlSection />
+        <CtaSection />
       </main>
     </Layout>
   );
