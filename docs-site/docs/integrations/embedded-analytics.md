@@ -27,9 +27,9 @@ the [bundle manifest reference](../reference/bundle.md).
 
 ## Publish the site
 
-Copy `target/glyf/site/` anywhere the application can fetch static files —
+Copy `target/glyf/site/` anywhere the application can fetch static files:
 Cloudflare Pages, S3 and CloudFront, R2, an internal static server, or the
-application's own public folder:
+application's own public folder.
 
 ```text
 https://analytics.example.com/glyf/product_analytics/bundle.json
@@ -46,7 +46,7 @@ differences field by field.
 
 The manifest omits those *paths*; the exported dashboards still carry the chart
 rows in their HTML. If the published site should contain no row data, build it
-with `export.row_data: exclude` — [what a published site
+with `export.row_data: exclude`. [What a published site
 exposes](../guides/data-exposure.md) covers what that changes. If an
 application needs interactive Vega rendering or row-level access control,
 serve a scoped bundle from your own backend rather than publishing the

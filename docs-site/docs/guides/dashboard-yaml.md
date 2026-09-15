@@ -48,7 +48,7 @@ which of the share and visibility buttons render.
 `toolbar.visibility` sets the badge and padlock the page displays. It does not
 restrict anything: a dashboard marked `private` is exported byte-for-byte
 identically to one marked `public`, rows and all. Access control comes from
-wherever you host the site — see [what a published site
+wherever you host the site. See [what a published site
 exposes](./data-exposure.md).
 
 :::

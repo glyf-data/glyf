@@ -57,4 +57,4 @@ The workflow above runs a full build on a GitHub-hosted runner, which is fine
 for the DuckDB example it builds. For a project whose charts query a
 warehouse, a full build pulls every chart's rows onto GitHub's machines. Run
 `glyf build --validate` in GitHub Actions instead, and full builds inside your
-perimeter — see [where to run builds](../guides/where-to-run-builds.md).
+perimeter. See [where to run builds](../guides/where-to-run-builds.md).

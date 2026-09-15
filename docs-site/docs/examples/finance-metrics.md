@@ -22,7 +22,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/finance-metrics/dashboards/
 
 ## What it demonstrates
 
-- All five chart types — line, bar, area, scatter, and pie — from one set of finance models.
+- All five chart types (line, bar, area, scatter, and pie) from one set of finance models.
 - Section-level dashboard columns such as `65% 35%` and `35% 65%`.
 
 ## Run it

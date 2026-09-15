@@ -30,7 +30,7 @@ target/glyf/glyf-site.zip
 `dbt build` executes inside the warehouse. `glyf build` pulls each chart's
 result rows to the machine running it, so on a GitHub-hosted runner the data
 leaves your warehouse's boundary. The recommended split is `glyf build
---validate` in CI — zero rows moved — and full builds inside the perimeter,
+--validate` in CI, which moves zero rows, and full builds inside the perimeter,
 published from the pipeline under a service role. See
 [where to run builds](./where-to-run-builds.md).
 

@@ -4,9 +4,9 @@
 
 # glyf
 
-**Open source visualization build tool for your data pipeline.**
+**Build visualizations the way you build pipelines.**
 
-Ship charts from the same pipeline as your data.<br />
+An open source, code-first build step for charts and dashboards from your dbt models.<br />
 Define charts in SQL, compose dashboards in YAML, publish anywhere.
 
 [![PyPI](https://img.shields.io/pypi/v/glyf-core?style=flat-square&label=pypi&color=008f5f&labelColor=0f172a)](https://pypi.org/project/glyf-core/)
@@ -67,7 +67,7 @@ glyf --version
 ```
 
 <details>
-<summary><b>Other ways to install</b> — one-line script, Homebrew, pipx, pip, offline</summary>
+<summary><b>Other ways to install</b>: one-line script, Homebrew, pipx, pip, offline</summary>
 
 <br />
 
@@ -78,8 +78,8 @@ never uses `sudo`, and accepts `--update`, `--version X`, and `--help`:
 curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh
 ```
 
-**Homebrew.** `brew trust` is required, not optional — Homebrew 6.0 refuses to
-load formulae from untrusted third-party taps:
+**Homebrew.** `brew trust` is required. Homebrew 6.0 refuses to load formulae
+from untrusted third-party taps:
 
 ```bash
 brew tap glyf-data/glyf
@@ -128,7 +128,7 @@ rather than a stack trace.
 
 ## How it works
 
-### 01 — Write charts in GGSQL
+### 01. Write charts in GGSQL
 
 SQL you already know, extended with a visualization grammar. Use `ref()` to
 reference dbt models directly, exactly as a dbt model would:
@@ -147,7 +147,7 @@ CONFIG width => 900
 glyf resolves each reference to its schema path from `target/manifest.json` and
 validates the query before it renders anything.
 
-### 02 — Compose dashboards in YAML
+### 02. Compose dashboards in YAML
 
 Lay charts out into sections. Use Python macros for labels, thresholds, and
 reusable components, so a dashboard change is a one-line diff in review:
@@ -175,7 +175,7 @@ sections:
         width: 2
 ```
 
-### 03 — Build once, publish anywhere
+### 03. Build once, publish anywhere
 
 One command resolves dbt artifacts, validates chart specs, executes chart SQL
 against your warehouse, renders charts with Altair, and emits files you can
@@ -185,7 +185,7 @@ publish:
 target/glyf/
 ├── compiled/     resolved chart SQL
 ├── charts/       rendered PNG / SVG, and chart metadata
-├── data/         chart rows and Vega specs — internal, never published
+├── data/         chart rows and Vega specs, internal and never published
 ├── dashboards/   generated dashboard pages
 ├── assets/       CSS and fonts
 ├── index.html    landing page
@@ -197,8 +197,8 @@ No BI server to maintain. Drop `site/` into S3, GitHub Pages, a docs site, or a
 CI artifact. Publish `site/` rather than `target/glyf/`: the rest is working
 output, and `data/` holds the raw rows.
 
-A published site carries the data behind its charts unless you ask otherwise —
-see [what a published site exposes](https://glyf.pages.dev/docs/guides/data-exposure).
+A published site carries the data behind its charts unless you ask otherwise.
+See [what a published site exposes](https://glyf.pages.dev/docs/guides/data-exposure).
 
 ## CLI
 
