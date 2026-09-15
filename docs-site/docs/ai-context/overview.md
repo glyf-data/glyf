@@ -1,8 +1,8 @@
 # AI Assistants
 
 Coding assistants do well at drafting `.ggsql` charts and dashboard YAML for a
-glyf project, because everything they need is in files — the dbt manifest,
-`glyf.yml`, the chart and dashboard directories — and the CLI validates the
+glyf project, because everything they need is in files: the dbt manifest,
+`glyf.yml`, and the chart and dashboard directories. The CLI validates the
 result.
 
 ## Brief

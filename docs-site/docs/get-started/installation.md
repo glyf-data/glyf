@@ -40,8 +40,8 @@ trusted, so `brew trust` is required, not optional. It is a one-time step per
 machine.
 
 Upgrade with `brew upgrade glyf`. The formula installs the published wheels
-into its own virtualenv, so expect roughly 270 MB on disk — mostly the
-Arrow, DuckDB and Vega-renderer native libraries. `brew install uv && uv tool
+into its own virtualenv, so expect roughly 270 MB on disk, mostly the Arrow,
+DuckDB and Vega-renderer native libraries. `brew install uv && uv tool
 install glyf-core` gives the same command in less space.
 
 ## One-line install script

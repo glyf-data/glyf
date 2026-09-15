@@ -22,7 +22,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/sales-dashboard/dashboards/
 
 ## What it demonstrates
 
-- Three charts — monthly revenue, channel mix, regional sales — all querying one `fct_sales` model.
+- Three charts (monthly revenue, channel mix, regional sales) all querying one `fct_sales` model.
 - The simplest dashboard shape: a `charts` list with no sections or macros.
 
 ## Run it

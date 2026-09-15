@@ -6,7 +6,7 @@ It lets analytics engineers define chart queries in `.ggsql`, connect them to an
 
 The chart syntax builds on the SQL-first visualisation model from [ggsql](https://ggsql.org), which brings Grammar of Graphics-style clauses such as `VISUALISE`, `DRAW`, `SCALE`, and `LABEL` into SQL workflows.
 
-Use it when you want visualizations to live beside analytical code, move through code review, and produce static output for internal reporting, client delivery, or lightweight documentation.
+Use it when you want visualisations to live beside analytical code, move through code review, and produce static output for internal reporting, client delivery, or lightweight documentation.
 
 ## Who it is for
 
@@ -14,9 +14,9 @@ Use it when you want visualizations to live beside analytical code, move through
 - Developers who prefer code review, CI, and static publishing over a running BI service for lightweight reporting.
 - Teams that want generated dashboard artifacts they can inspect, archive, and publish anywhere.
 
-## What it is not
+## How it runs
 
-`glyf` is not a dbt adapter, hosted BI server, metrics store, or drag-and-drop dashboard editor. `glyf` is artifact-driven, not dbt-runtime-driven. The goal is a deterministic CLI workflow:
+`glyf` runs beside dbt rather than inside it. dbt builds the tables; glyf reads `target/manifest.json`, executes each chart's query, and renders artifacts from the results. Nothing runs between builds:
 
 ```bash
 dbt build

@@ -1,7 +1,7 @@
 # Quickstart
 
 *Glyf is pronounced like **"glyph"**. \
-In typography, a glyph is the visible form of a symbol; in visualization, Glyf is the visible form of your data pipeline, turning modeled data into charts and dashboards that can be built, reviewed, and published like any other project artifact.*
+In typography, a glyph is the visible form of a symbol; in visualisation, Glyf is the visible form of your data pipeline, turning modeled data into charts and dashboards that can be built, reviewed, and published like any other project artifact.*
 
 This adds glyf to a dbt project you already have. `glyf init` creates the folders and starter files; you then point the starter chart at a real model and build.
 
@@ -153,5 +153,5 @@ examples/simple_dbt/target/glyf/site/index.html
 - Learn the [project structure](project-structure.md).
 - Explore the [examples gallery](../examples/gallery.md).
 - Run the pipeline step by step with `glyf validate`, `glyf render`,
-  `glyf dashboard`, and `glyf export` when debugging — see the
+  `glyf dashboard`, and `glyf export` when debugging. See the
   [CLI reference](../reference/cli.md).

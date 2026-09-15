@@ -1184,8 +1184,8 @@ function CtaSection() {
 export default function Home() {
   return (
     <Layout
-      title="Ship charts from the same pipeline as your data"
-      description="Glyf is the open-source build step for dbt-aware visualization artifacts."
+      title="Build visualizations the way you build pipelines"
+      description="Glyf is an open source, code-first build step for defining, testing, and shipping charts and dashboards from your dbt models."
     >
       <HomepageHeader />
       <main className="landingSections">

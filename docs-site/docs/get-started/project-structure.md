@@ -44,24 +44,24 @@ my_dbt_project/
 
 Everything glyf generates lives under `target/glyf/`. Each directory is written
 by one stage of the build, so the table below doubles as a map of what runs
-when — `glyf build` runs all four stages in order.
+when. `glyf build` runs all four stages in order.
 
 | Path | Written by | Contains |
 | --- | --- | --- |
 | `compiled/` | `render` | One `.sql` per chart: the query with `ref()` and `source()` resolved. |
-| `charts/` | `render` | One `.png`, `.svg` and `.json` per chart. The JSON is metadata — title, type, the columns bound to x and y, and where the other files are. |
+| `charts/` | `render` | One `.png`, `.svg` and `.json` per chart. The JSON is metadata: title, type, the columns bound to x and y, and where the other files are. |
 | `data/normalized/` | `render` | Every row of each chart's result, as JSON. **Internal**: never exported. |
-| `data/vega/` | `render` | A Vega-Lite spec per *interactive* chart — one with an `INTERACT` clause. **Internal**: never exported. |
+| `data/vega/` | `render` | A Vega-Lite spec per *interactive* chart, one with an `INTERACT` clause. **Internal**: never exported. |
 | `dashboards/` | `dashboard` | One generated `.html` page per dashboard. |
 | `index.html` | `dashboard` | The landing page linking the dashboards. |
 | `assets/` | `dashboard` | `dashboard.css` and the web fonts the pages use. |
-| `bundle.json` | `dashboard` | A manifest of everything built — see the [bundle reference](../reference/bundle.md). |
+| `bundle.json` | `dashboard` | A manifest of everything built. See the [bundle reference](../reference/bundle.md). |
 | `site/` | `export` | **The publish-ready copy. This is the directory you host.** |
 | `glyf-site.zip` | `export --zip` | An archive of `site/`. |
 
 `site/` is a copy, not the original: it holds the dashboards, chart images,
 compiled SQL and assets, plus its own `bundle.json`, and deliberately leaves out
-everything under `data/`. Publish `site/` and nothing else — copying
+everything under `data/`. Publish `site/` and nothing else; copying
 `target/glyf/` wholesale would duplicate every file and ship the internal ones.
 
 What `site/` contains depends on `export.row_data`; see

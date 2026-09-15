@@ -1,7 +1,6 @@
 # dbt Integration
 
 `glyf` integrates with dbt through artifacts rather than dbt internals.
-It is artifact-driven, not dbt-runtime-driven.
 
 Primary artifact:
 
@@ -47,11 +46,12 @@ Sources are resolved from the manifest `sources` section.
 
 Chart SQL runs where the backend points. The default is a DuckDB database
 beside the project; the `dbt` backend reaches whatever the project's
-`profiles.yml` names — a Trino cluster, Snowflake, or BigQuery.
+`profiles.yml` names: a Trino cluster, Snowflake, or BigQuery.
 
-The default, `backend: duckdb`, looks for a database beside the project —
-`target/<project>.duckdb`, then `<project>.duckdb` — and falls back to reading
-the seed CSVs, which is what lets the examples render before dbt has run.
+The default, `backend: duckdb`, looks for a database beside the project,
+`target/<project>.duckdb` and then `<project>.duckdb`, and falls back to
+reading the seed CSVs, which is what lets the examples render before dbt has
+run.
 
 `backend: dbt` reads the project's `profiles.yml` instead and connects where the
 selected target points, the way dbt does:
@@ -65,8 +65,8 @@ execution:
 Nothing is guessed: if the target names a database that does not exist, glyf
 says so rather than connecting to an empty one. `env_var()` is expanded in the
 profile, so credentials stay out of the file. `profiles.yml` is looked for the
-way dbt looks for it — `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`
-— unless `execution.profiles_dir` says otherwise.
+way dbt looks for it, `DBT_PROFILES_DIR` then the project directory then
+`~/.dbt`, unless `execution.profiles_dir` says otherwise.
 
 `type: duckdb`, `type: trino`, `type: snowflake` and `type: bigquery`
 targets execute today. A profile naming another warehouse is reported as
@@ -76,9 +76,9 @@ that is going.
 `glyf doctor` checks the whole chain before a build does: the resolved
 backend, profile and target, whether the driver extra is installed, and a
 `select 1` probe against the warehouse. Run it first against a warehouse you
-have not used with glyf before — it reaches the same database `glyf build`
-is about to, so credentials and network routes fail there rather than
-part-way through rendering.
+have not used with glyf before. It reaches the same database `glyf build` is
+about to, so credentials and network routes fail there rather than part-way
+through rendering.
 
 ### Trino
 
@@ -88,7 +88,7 @@ Install the driver extra, then point `backend: dbt` at a dbt-trino target:
 pip install 'glyf-core[trino]'
 ```
 
-<!-- glyf-docs: skip — a dbt-trino profiles.yml, dbt's file rather than a glyf spec -->
+<!-- glyf-docs: skip: a dbt-trino profiles.yml, dbt's file rather than a glyf spec -->
 ```yaml title="~/.dbt/profiles.yml"
 my_project:
   target: prod
@@ -108,7 +108,7 @@ my_project:
 The auth methods glyf honours are `none`, `ldap` (user and password), and
 `jwt` (`jwt_token`); a profile using another method is rejected loudly rather
 than connected unauthenticated. `database` and `schema` become the session
-catalog and schema, so unqualified table names in hand-written SQL resolve —
+catalog and schema, so unqualified table names in hand-written SQL resolve.
 `ref()`-resolved SQL is already fully qualified and does not need them.
 
 ### Snowflake
@@ -122,9 +122,9 @@ The executor connects over ADBC and follows dbt-snowflake's field names.
 through. Auth methods honoured: password (the default), key-pair
 (`private_key_path`, with an optional `private_key_passphrase`),
 `authenticator: externalbrowser`, and `authenticator: oauth` with a `token`.
-Anything else — an Okta URL, `username_password_mfa` — is rejected loudly.
+Anything else, an Okta URL or `username_password_mfa`, is rejected loudly.
 
-<!-- glyf-docs: skip — a dbt-snowflake profiles.yml, dbt's file rather than a glyf spec -->
+<!-- glyf-docs: skip: a dbt-snowflake profiles.yml, dbt's file rather than a glyf spec -->
 ```yaml title="~/.dbt/profiles.yml"
 my_project:
   target: prod
@@ -146,15 +146,15 @@ my_project:
 pip install 'glyf-core[bigquery]'
 ```
 
-Also over ADBC, following dbt-bigquery's field names — aliases included:
+Also over ADBC, following dbt-bigquery's field names, aliases included:
 `project` or `database` is the billing project, `dataset` or `schema` the
 default dataset, and `location` passes through. Auth methods honoured map
-one-to-one onto the driver's: `oauth` (application default credentials — run
+one-to-one onto the driver's: `oauth` (application default credentials; run
 `gcloud auth application-default login` first), `service-account` (a
 `keyfile` path), `service-account-json` (`keyfile_json` inline), and
 `oauth-secrets` (`client_id`, `client_secret`, `refresh_token`).
 
-<!-- glyf-docs: skip — a dbt-bigquery profiles.yml, dbt's file rather than a glyf spec -->
+<!-- glyf-docs: skip: a dbt-bigquery profiles.yml, dbt's file rather than a glyf spec -->
 ```yaml title="~/.dbt/profiles.yml"
 my_project:
   target: prod
@@ -199,14 +199,15 @@ glyf dashboard
 glyf export --clean
 ```
 
-This keeps dbt model execution and dashboard rendering separate, which makes CI easier to debug.
+This keeps dbt model execution and dashboard rendering separate, which makes CI
+easier to debug.
 
 ## Tagging PII in `schema.yml`
 
 glyf reads column classification from the manifest, so tagging a column as PII
 where the dbt project already documents it is enough:
 
-<!-- glyf-docs: skip — a dbt schema.yml, dbt's file rather than a glyf spec -->
+<!-- glyf-docs: skip: a dbt schema.yml, dbt's file rather than a glyf spec -->
 ```yaml title="models/schema.yml"
 models:
   - name: dim_customers
@@ -220,7 +221,7 @@ models:
 
 Either spelling counts. A chart that reads `dim_customers` and returns `email`
 or `phone` then fails the build, or has those values redacted, depending on
-`privacy.on_pii` in `glyf.yml` — see
+`privacy.on_pii` in `glyf.yml`. See
 [keeping PII out of a chart](../reference/configuration.md#keeping-pii-out-of-a-chart).
 Run `dbt compile` after editing `schema.yml`; glyf reads the manifest, not the
 YAML.

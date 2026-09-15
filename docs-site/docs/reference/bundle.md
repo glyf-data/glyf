@@ -2,7 +2,7 @@
 
 Every glyf build writes a JSON manifest that lists the dashboards and charts it
 produced and where their artifacts live. It is the contract between a glyf
-build and anything that consumes it — Glyf Studio, the planned JavaScript
+build and anything that consumes it: Glyf Studio, the planned JavaScript
 packages, or an application of your own that fetches the exported site.
 
 ```json title="target/glyf/site/bundle.json"
@@ -98,9 +98,9 @@ is missing, it falls back to the modification time of the generated
 
 **Optional.** The build provenance record: what this artifact contains and how
 it was made. Present in the local manifest, and in a published one only under
-`export.provenance: public` — it names the warehouse identity the queries ran
-as and the selectors that narrowed the build, which is recon material on a
-public site. The same record is written to `target/glyf/build.json`, which
+`export.provenance: public`, because it names the warehouse identity the
+queries ran as and the selectors that narrowed the build, which is recon
+material on a public site. The same record is written to `target/glyf/build.json`, which
 `glyf export` never copies.
 
 | Field | Type | Description |
@@ -123,7 +123,7 @@ public site. The same record is written to `target/glyf/build.json`, which
 | Field | Type | Description |
 | --- | --- | --- |
 | `compiled_sql_sha256` | string | First 16 hex characters of the compiled SQL's digest. Enough to notice that what ran changed, without republishing the query. |
-| `row_count` | number \| null | Rows the query returned. `null` under validate mode, which fetches no rows — that is not zero rows. |
+| `row_count` | number \| null | Rows the query returned. `null` under validate mode, which fetches no rows rather than zero rows. |
 | `redacted_columns` | array of strings | **Optional.** Columns the PII policy rewrote. |
 | `scan_warnings` | array of objects | **Optional.** What the value scan flagged: `column`, `kind`, `matched`, `sampled`. |
 
@@ -134,7 +134,7 @@ for.
 
 ## `charts`
 
-An object keyed by chart name — the `.ggsql` file's stem, and the same name a
+An object keyed by chart name: the `.ggsql` file's stem, and the same name a
 dashboard's `charts` list refers to.
 
 | Field | Type | Description |
@@ -172,7 +172,7 @@ only the columns the chart encodes.
 
 ## `dashboards`
 
-An object keyed by dashboard name — the `name` in its YAML.
+An object keyed by dashboard name: the `name` in its YAML.
 
 | Field | Type | Description |
 | --- | --- | --- |
@@ -194,8 +194,8 @@ An object keyed by dashboard name — the `name` in its YAML.
 | `values` | array of strings | The filter's values, always resolved. |
 | `source` | object | **Optional.** Present when the YAML used `source(chart, field)`; records the `chart` and `field` the values came from. |
 
-`values` is populated either way — a consumer that only renders the controls can
-ignore `source` entirely.
+`values` is populated either way, so a consumer that only renders the controls
+can ignore `source` entirely.
 
 ## What the public manifest changes
 
@@ -212,8 +212,8 @@ Nothing else differs. The public manifest does not *reference* the normalised
 data or the Vega specs that stay under `target/glyf/`.
 
 That is a statement about the manifest, not about the site. The dashboard pages
-published alongside it still carry the chart rows — inline in a Vega
-specification for an interactive chart, and in an SVG's per-mark labels
+published alongside it still carry the chart rows, inline in a Vega
+specification for an interactive chart and in an SVG's per-mark labels
 otherwise. Withholding the paths does not withhold the data. See
 [what a published site exposes](../guides/data-exposure.md), and
 `export.row_data: exclude` if the site should carry no rows at all.
