@@ -1,0 +1,79 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 52px 68px 46px;
+    font-family: 'Hanken Grotesk', system-ui, sans-serif;
+    color: #0f172a;
+    background:
+      radial-gradient(58% 72% at 88% 40%, rgba(31,79,224,0.10), transparent 70%),
+      linear-gradient(rgba(15,23,42,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,23,42,0.035) 1px, transparent 1px),
+      #f9fbfe;
+    background-size: auto, 44px 44px, 44px 44px, auto;
+  }
+  .top { display: flex; align-items: center; gap: 14px; }
+  .mark { font-family: 'Newsreader', Georgia, serif; font-style: italic; font-weight: 600; font-size: 36px; letter-spacing: -0.01em; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 7px 16px 8px; border: 1px solid #dbe3ef; border-radius: 999px;
+    background: #fff; color: #1f4fe0; font-size: 17px; font-weight: 600; letter-spacing: 0.01em;
+  }
+  .badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #1f4fe0; }
+  .mid { display: flex; align-items: center; gap: 48px; flex: 1; }
+  h1 {
+    font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+    font-size: 62px; line-height: 1.08; letter-spacing: -0.015em; max-width: 560px;
+  }
+  h1 span { color: #1f4fe0; }
+  p.lead { margin-top: 22px; max-width: 540px; color: #5b6b82; font-size: 23px; line-height: 1.5; }
+  .flow { display: flex; align-items: center; gap: 18px; flex: none; }
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .card {
+    background: #fff; border: 1px solid #e3e9f3; border-radius: 14px;
+    padding: 13px 18px; font-size: 18px; font-weight: 600; white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(15,23,42,0.05);
+  }
+  .card small { display: block; font-size: 14px; font-weight: 500; color: #7c8ba3; margin-top: 2px; }
+  .arrow { width: 26px; height: 2px; background: #c3d0e6; position: relative; flex: none; }
+  .arrow::after { content: ''; position: absolute; right: -1px; top: -4px; border-left: 8px solid #c3d0e6; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+  .build {
+    background: linear-gradient(160deg, #2a5ce8, #1740c4); color: #fff; border-radius: 18px;
+    padding: 24px 22px; text-align: center; box-shadow: 0 16px 34px rgba(23,64,196,0.28); flex: none;
+  }
+  .build strong { display: block; font-size: 21px; font-weight: 600; }
+  .build em { display: block; font-style: normal; font-size: 14px; opacity: 0.82; margin-top: 5px; letter-spacing: 0.02em; }
+  .bot { display: flex; align-items: center; justify-content: space-between; color: #5b6b82; font-size: 20px; }
+  .traits { display: flex; gap: 26px; font-weight: 500; }
+  .traits span::before { content: '●'; color: #1f4fe0; font-size: 9px; vertical-align: 3px; margin-right: 9px; }
+  .url { font-weight: 600; color: #1f4fe0; }
+</style></head>
+<body>
+  <div class="top"><span class="mark">Glyf</span><span class="badge">Open source</span></div>
+
+  <div class="mid">
+    <div>
+      <h1>Build visualizations <span>the way you build pipelines</span></h1>
+      <p class="lead">A code-first build step for charts and dashboards from your dbt models.</p>
+    </div>
+    <div class="flow">
+      <div class="stack">
+        <div class="card">dbt models<small>ref() &middot; sources</small></div>
+        <div class="card">GGSQL charts<small>SQL grammar</small></div>
+        <div class="card">YAML layouts<small>dashboards</small></div>
+      </div>
+      <div class="arrow"></div>
+      <div class="build"><strong>glyf build</strong><em>validate &middot; render &middot; export</em></div>
+    </div>
+  </div>
+
+  <div class="bot">
+    <div class="traits"><span>Code-first</span><span>Rust engine</span><span>No BI server</span></div>
+    <div class="url">glyf.pages.dev</div>
+  </div>
+</body></html>
