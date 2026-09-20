@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Ask in Slack
+    url: https://glyf.pages.dev/slack
+    about: The quickest way to get help. Join the glyf community and ask in the help channel.
+  - name: Ask in GitHub Discussions
+    url: https://github.com/glyf-data/glyf/discussions
+    about: Questions and ideas that others will want to find later.
+  - name: Read the documentation
+    url: https://glyf.pages.dev
+    about: Guides, the CLI and configuration reference, and the example projects.

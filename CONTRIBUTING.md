@@ -1,213 +1,144 @@
 # Contributing to glyf
 
-Thanks for considering a contribution to `glyf`.
+Thanks for considering a contribution. `glyf` is an early-stage, open source
+build tool for charts and dashboards that live beside dbt projects, and it gets
+better fastest through small, concrete changes: a bug fixed with a test, an
+error message that says what to do, an example that teaches something.
 
-`glyf` is an early-stage project for SQL-first, chart-as-code dashboards
-that live beside dbt projects. Contributions are welcome, especially when they
-make the CLI more reliable, the documentation clearer, or the example projects
-easier to learn from.
+This guide takes you from "I found something" to a merged pull request.
 
-This guide explains how to prepare a contribution, set up a local development
-environment, and describe your work when opening a pull request.
+## Where to get help
 
-## Read This First
+Stuck on setup, not sure whether an idea fits, or want a second opinion before
+you write code? Ask. Nobody expects you to work it out alone.
 
-`glyf` is still early. Contributions are welcome, but review is selective.
+| | |
+| --- | --- |
+| **[Slack](https://glyf.pages.dev/slack)** | The quickest answer. Ask in the help channel; say what you ran and what happened. |
+| **[Discussions](https://github.com/glyf-data/glyf/discussions)** | Questions and ideas that others will want to find later. |
+| **[Issues](https://github.com/glyf-data/glyf/issues)** | Bugs and concrete feature requests. |
 
-You can still open an issue or PR, but please do so knowing that maintainers may:
+## Your first contribution, in five steps
 
-- ask you to reduce scope
-- defer the work
-- close the PR
-- rework the idea in a different way later
+1. **Pick something small.** A docs fix, a clearer error message, a bug with a
+   test. For anything larger, [open an issue first](#what-to-work-on) so you do
+   not build something that cannot be merged.
+2. **Set up**: fork, clone, then `uv sync --all-groups`. You need Python, `uv`
+   and a Rust toolchain; [details below](#set-up).
+3. **Make the change, with a test.** Run `make ci` before you push.
+4. **Open a pull request** with a [Conventional Commits](#commit-messages)
+   title. Say what changed, why, and how you tested it.
+5. **Sign the CLA with one comment.** A bot asks on your first pull request;
+   you reply with one sentence, once, and never again.
+   [What it means](#sign-the-cla).
 
-That is not meant to be unfriendly. It is meant to keep the project coherent
-while the product surface, architecture, and release workflow are still
-stabilizing.
+## What to work on
 
-Small, focused changes are much more likely to be reviewed and merged than
-large, opinionated, or speculative ones.
-
-## Discussions
-
-The repository has GitHub Discussions enabled for feedback, questions about
-direction or adoption, workflow pain points, and ideas that are not yet
-concrete enough for an issue. If you are not sure whether something should be
-an issue, feature request, or pull request, start there.
-
-## Before You Start
-
-Small, focused contributions are easiest to review and merge. Good first
-contributions include:
+Good first contributions:
 
 - documentation fixes and examples
 - small bug fixes with tests
-- improvements to error messages and validation
-- focused parser, resolver, renderer, dashboard, or CLI changes
+- clearer error messages and validation
+- focused changes to the parser, resolver, renderer, dashboards or CLI
 
-For larger changes, please open an issue before writing code. This is especially
-important for new chart syntax, dashboard behavior, dbt integration changes,
-public APIs, packaging changes, or licensing and governance topics.
+Most likely to be merged: small bug fixes, reliability and performance work
+with a measurement, documentation with concrete examples, and tightly scoped
+maintenance.
 
-## What We Are Most Likely To Accept
+**Open an issue before writing code** for new chart syntax, dashboard
+behaviour, dbt integration changes, public APIs, packaging, or anything about
+licensing and governance. An issue does not guarantee a merge, but it is how
+you find out early whether the idea fits.
 
-- small bug fixes
-- small reliability improvements
-- focused performance work
-- documentation improvements with concrete examples
-- constrained usability fixes to the CLI, dashboard generation, or validation
-- tightly scoped maintenance work that clearly improves the project without
-  changing its direction
+Least likely to be merged: large pull requests that mix unrelated changes,
+features nobody discussed, rewrites of working subsystems, and syntax or API
+changes without a workflow that motivates them. These are usually closed and
+redirected into an issue, which is no judgement on the work. `glyf` has one
+maintainer and its shape is still settling, so it stays coherent by staying
+small.
 
-## What We Are Least Likely To Accept
+## Set up
 
-- large PRs that mix unrelated changes
-- drive-by feature work without prior discussion
-- broad product-scope expansion
-- opinionated rewrites of working subsystems
-- syntax or API changes without a clear motivating workflow
+You need:
 
-If you open a large PR full of new behavior without prior discussion, it is
-very likely to be closed or redirected into an issue first.
-
-## Governance and Conduct
-
-This project is maintained by a single owner. See [GOVERNANCE.md](./GOVERNANCE.md)
-for how decisions are made.
-
-All participation in this project is covered by the
-[Code of Conduct](./CODE_OF_CONDUCT.md). Be direct, respectful, and focused on
-the work.
-
-## Contributor License Agreement (CLA)
-
-Before substantive contributions are merged, contributors must accept the
-[Contributor License Agreement](./CLA.md). This applies to code, tests,
-documentation, examples, configuration, and other material intended to become
-part of the project.
-
-The CLA is a license grant to the project owner, Kannan Kalidasan. It does not
-transfer copyright ownership. Contributors keep copyright and authorship in their
-work, while granting the project owner the rights needed to maintain,
-distribute, sublicense, relicense, and commercialize the project over time.
-
-You do not need to sign the CLA before opening issues, asking questions,
-commenting on discussions, or reporting bugs.
-
-### How to Sign
-
-Until an automated CLA workflow is configured, CLA signing is handled with a
-pull request comment.
-
-1. Open your pull request.
-2. Read [CLA.md](./CLA.md).
-3. Post this statement as a pull request comment from the GitHub account used to
-   submit the contribution:
-
-```text
-I have read and agree to the glyf Contributor License Agreement in CLA.md.
-
-GitHub username: @your-username
-Pull request: #123
-Date: YYYY-MM-DD
-```
-
-4. The maintainer records the CLA acceptance before merge.
-
-Do not paste private legal names, signatures, addresses, or other personal
-details into public GitHub comments. If your employer or another organisation
-may own rights in your contribution, confirm that you have permission before
-signing.
-
-## Development Setup
-
-You will need:
-
-- Python 3.11 or later
-- [`uv`](https://docs.astral.sh/uv/)
-- `make`, to run the same command groups used by CI (`make` lists them)
-
-Clone the repository, then install the project and development dependencies:
+- **Python 3.11** or later
+- **[`uv`](https://docs.astral.sh/uv/)**, which manages the environment and
+  every Python command here. Do not use `pip`, `poetry` or `conda`.
+- **A Rust toolchain, 1.83 or later**, from [rustup](https://rustup.rs). The
+  parser and resolver are a Rust crate compiled into the Python package, so
+  installing the project compiles it. CI uses 1.98.0.
+- `make`, to run the same command groups CI runs. `make` with no arguments
+  lists them.
 
 ```bash
-uv sync --all-groups
-```
-
-Or use the Makefile target:
-
-```bash
-make install
-```
-
-To install a specific Python version through `uv` and use it for the project:
-
-```bash
-make install PYTHON_VERSION=3.12
-```
-
-## Useful Commands
-
-Run the test suite:
-
-```bash
-make test
-```
-
-Build the package:
-
-```bash
-make build
-```
-
-Run the example dashboard workflow used by GitHub Actions:
-
-```bash
-make dashboard-ci
-```
-
-Check the Rust core — formatting, clippy and its unit tests:
-
-```bash
-make rust
-```
-
-Run the full local CI flow over both languages:
-
-```bash
-make ci
-```
-
-Measure render cost against mark count (slow, never part of CI):
-
-```bash
-make bench
-```
-
-Run the CLI directly during development:
-
-```bash
+git clone https://github.com/<you>/glyf.git
+cd glyf
+uv sync --all-groups      # installs dependencies and compiles the Rust core
 uv run glyf --help
-uv run glyf doctor --project-dir examples/simple_dbt
-uv run glyf render --project-dir examples/simple_dbt
 ```
 
-## Testing Expectations
+Check the whole thing works by building an example:
 
-Please add or update tests when a change affects behavior. In particular, add
-coverage for changes to:
+```bash
+make example-build        # dbt seed, dbt build, glyf doctor, glyf build
+```
 
-- `.ggsql` parsing
-- dbt manifest resolution
-- chart rendering
-- dashboard generation
-- export behavior
-- CLI commands and validation
+### After you change Rust
 
-Documentation-only changes do not need tests. For small changes where tests are
-not practical, explain that in the pull request.
+Python does not see a Rust change until the extension is rebuilt:
 
-Keep generated dbt `target/` outputs and exported dashboard artifacts out of
-version control unless a fixture is intentionally part of a test.
+```bash
+uv sync --all-groups --reinstall-package glyf-core
+```
+
+The same applies after switching branches. If a test fails with an error that
+belongs to a different branch, the compiled extension is stale; rebuild it.
+
+### Where things live
+
+| Path | What |
+| --- | --- |
+| `crates/glyf-core/` | Rust: `.ggsql` parsing and validation, dbt manifest loading, `ref()`/`source()` resolution, image comparison. Compiles to `glyf._core`. |
+| `src/glyf/` | Python: the CLI, the render pipeline, SQL execution, charts, dashboards, export. |
+| `src/glyf/ggsql/`, `src/glyf/manifest/` | Thin Python wrappers over the Rust core. |
+| `tests/` | The Python test suite. Rust tests sit beside the code they test. |
+| `examples/` | Small dbt projects that double as fixtures and as the demo dashboards. |
+| `docs-site/` | The documentation site. |
+
+[ARCHITECTURE.md](./ARCHITECTURE.md) explains the design. The short rule:
+parsing, validation and resolution go in Rust first and are exposed through
+`glyf._core`; CLI, rendering, dashboards and file IO are Python. Do not
+duplicate core logic in Python.
+
+## Make the change
+
+```bash
+make test        # the Python suite
+make rust        # Rust formatting, clippy and unit tests
+make ci          # everything CI runs, in one command
+```
+
+Run the CLI against an example while you work:
+
+```bash
+uv run glyf doctor --project-dir examples/simple_dbt
+uv run glyf build  --project-dir examples/simple_dbt
+uv run glyf serve  --project-dir examples/simple_dbt
+```
+
+`make bench` measures render cost against mark count. It is slow and never
+part of CI.
+
+### Tests
+
+Add or update tests when behaviour changes, in particular for `.ggsql`
+parsing, manifest resolution, chart rendering, dashboard generation, export,
+and CLI commands. **A change that crosses the Rust/Python boundary needs tests
+on both sides.** Documentation-only changes need none. Where a test is not
+practical, say why in the pull request.
+
+Keep dbt `target/` output and exported dashboards out of version control unless
+a fixture is deliberately part of a test.
 
 ### Verifying against a real warehouse
 
@@ -269,83 +200,106 @@ To check a range by hand:
 scripts/check-commit-message.sh --range origin/main..HEAD
 ```
 
-## Pull Request Guidelines
+## Open the pull request
 
-If you still want to open a PR:
-
-- keep it small
-- explain exactly what changed
-- explain exactly why the change should exist
-- do not mix unrelated fixes together
-- update docs or examples when user-facing behavior changes
-
-If the PR changes the docs site or anything visual, include before/after
-screenshots. If the change depends on motion, timing, transitions, or
-interaction details, include a short screen recording.
-
-If reviewers have to guess what changed, review will slow down considerably.
-
-Before opening a pull request:
-
-1. Keep the change focused on one problem.
-2. Rebase or update your branch from `main`.
-3. Run the relevant checks, preferably `make ci` for behavior changes.
-4. Update documentation or examples if user-facing behavior changed.
-5. Make sure generated files, caches, and local database files are not included.
-
-In the pull request description, include:
+Keep it to one problem. In the description, say:
 
 - what changed
-- why the change is needed
+- why it is needed
 - how you tested it
-- any follow-up work or known limitations
+- any follow-up or known limitation
 
-The maintainer may ask for changes, decline a PR, or suggest opening a separate
-issue for a larger design discussion. That keeps review clear while the project
-is still early.
+If the change is visual, on the docs site or in a rendered chart, include
+before and after screenshots. If it depends on motion or interaction, a short
+recording.
 
-Opening a PR does not create an obligation on the maintainer side to review,
-merge, or continue supporting that exact implementation direction.
+These checks run on every pull request:
 
-## Reporting Bugs
+| Check | What it needs |
+| --- | --- |
+| `test` on Python 3.11, 3.12, 3.13 | `make test` passes |
+| `rust core` | `make rust` passes |
+| `conventional-commits` | every commit and the title follow the format |
+| `visual diff` | nothing; it reports what your change does to the example dashboards, as pictures |
+| `cla` | you have signed; see below |
 
-When opening a bug report, please include:
+## Sign the CLA
 
-- the `glyf` version or commit
+`glyf` asks contributors to accept a
+[Contributor License Agreement](./CLA.md) before a contribution is merged. In
+plain terms:
+
+- **You keep the copyright** in your work, and your authorship.
+- You confirm the work is yours to contribute.
+- You grant the project owner the rights needed to keep distributing the
+  project, including relicensing it.
+
+It is a licence grant, not a transfer of ownership. [CLA.md](./CLA.md) has a
+plain-language summary at the top and the agreement below it.
+
+**Signing takes one comment.** On your first pull request a bot posts a
+comment. Reply on the pull request with exactly this sentence:
+
+```text
+I have read the CLA Document and I hereby sign the CLA
+```
+
+The `cla` check turns green and your GitHub username is recorded. **You sign
+once.** Every later pull request from the same account passes without asking.
+
+- You do not need to sign to open issues, comment, ask questions or report
+  bugs.
+- If the check does not update, comment `recheck`.
+- Do not put a legal name, a signature or an address in the comment. The
+  sentence and your GitHub account are the whole record.
+- If your employer may own rights in what you write, confirm you have
+  permission before signing.
+
+## What review looks like
+
+`glyf` has one maintainer, so review takes the time it takes; small and
+well-described pull requests go first. You may be asked to narrow the scope, to
+split the change, or to move a design question into an issue, and sometimes a
+pull request is declined. Opening one does not oblige the maintainer to merge
+it or to keep that implementation direction. If yours has gone quiet for a
+week, a nudge in Slack is welcome.
+
+## Reporting bugs
+
+Include:
+
+- the `glyf` version (`glyf --version`) or commit
 - your Python version
-- the dbt adapter and dbt version, if relevant
+- the dbt adapter and version, if relevant
 - the command you ran
-- the error output or unexpected result
-- a minimal example project or `.ggsql` file when possible
+- the error output or the unexpected result
+- the output of `glyf doctor`
+- a minimal project or `.ggsql` file when you can
 
-The best bug reports are reproducible with a small example.
+The best bug reports reproduce with a small example.
 
-## Proposing Features
+## Proposing features
 
-Feature requests are welcome, but they should explain the workflow they support.
-Please include:
+Explain the workflow the feature supports:
 
 - the problem you are trying to solve
-- why existing behavior is not enough
-- a small example of the desired user experience
-- whether the feature belongs in the CLI, chart syntax, dashboard config, docs,
-  or examples
+- why existing behaviour is not enough
+- a small example of what you would want to type and what you would expect back
+- whether it belongs in the CLI, the chart syntax, dashboard config, docs or
+  examples
 
-For syntax changes, examples are more useful than abstract descriptions. Show
-what the `.ggsql` or YAML should look like and what output you expect.
+For syntax, an example beats a description: show the `.ggsql` or YAML and the
+output you expect. If the idea is still broad, start in Discussions or Slack.
 
-For non-trivial feature work, open an issue first. That does not guarantee a PR
-will be accepted, but it reduces the chance that you spend time building
-something that does not match the intended product direction.
+## Documentation
 
-If the idea is still early, broad, or exploratory, use Discussions before
-opening an issue.
+Documentation is part of the product, and small corrections are real
+contributions. Prefer a working example to a promise, and describe what works
+today. The docs test suite parses every chart and loads every dashboard the
+pages show, so an example that does not run fails CI.
 
-## Documentation Contributions
+## Governance and conduct
 
-Documentation is part of the product. Clear examples, troubleshooting notes, and
-small corrections are valuable contributions.
-
-When changing docs, prefer practical examples over broad promises. `glyf`
-is still alpha-stage, so documentation should be honest about what works today
-and what is still evolving.
+[GOVERNANCE.md](./GOVERNANCE.md) explains how decisions are made. All
+participation is covered by the [Code of Conduct](./CODE_OF_CONDUCT.md): be
+direct, be respectful, and keep it about the work.

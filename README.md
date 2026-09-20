@@ -14,8 +14,9 @@ Define charts in SQL, compose dashboards in YAML, publish anywhere.
 [![Python](https://img.shields.io/badge/python-3.11%2B-0047FF?style=flat-square&labelColor=0f172a)](https://github.com/glyf-data/glyf/blob/main/pyproject.toml)
 [![Rust](https://img.shields.io/badge/rust-1.83%2B-0047FF?style=flat-square&labelColor=0f172a)](https://github.com/glyf-data/glyf/blob/main/crates/glyf-core/Cargo.toml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-475569?style=flat-square&labelColor=0f172a)](https://github.com/glyf-data/glyf/blob/main/LICENSE)
+[![Slack](https://img.shields.io/badge/slack-join%20the%20community-0047FF?style=flat-square&logo=slack&logoColor=white&labelColor=0f172a)](https://glyf.pages.dev/slack)
 
-[Install](#install) · [Quickstart](#quickstart) · [How it works](#how-it-works) · [CLI](#cli) · [Examples](#examples) · [Docs](#documentation)
+[Install](#install) · [Quickstart](#quickstart) · [How it works](#how-it-works) · [CLI](#cli) · [Examples](#examples) · [Docs](#documentation) · [Community](#community)
 
 </div>
 
@@ -278,30 +279,47 @@ readable directly in the repository:
 | [CI/CD](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/ci-cd.md) | Building glyf in a pipeline |
 | [Troubleshooting](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/resources/troubleshooting.md) | Common failures |
 
+## Community
+
+Questions, ideas, or something not working? Come and ask.
+
+| | |
+| --- | --- |
+| **[Join the Slack](https://glyf.pages.dev/slack)** | The quickest way to get help, and where glyf gets built in the open. Ask in the help channel. |
+| **[Discussions](https://github.com/glyf-data/glyf/discussions)** | Questions and ideas that others will want to find later. |
+| **[Issues](https://github.com/glyf-data/glyf/issues)** | Bugs and feature requests. |
+| **[Roadmap](https://glyf.pages.dev/docs/resources/roadmap)** | What shipped recently and what is planned. |
+
+React components for embedding glyf output in a web application are in
+[glyf-js](https://github.com/glyf-data/glyf-js). They are experimental.
+
 ## Contributing
 
+Contributions are welcome, and small ones most of all: a bug fixed with a test,
+a clearer error message, a better example. **[CONTRIBUTING.md](./CONTRIBUTING.md)**
+takes you from a fresh clone to a merged pull request in five steps.
+
+```bash
+git clone https://github.com/<you>/glyf.git && cd glyf
+uv sync --all-groups      # needs Python 3.11+, uv and a Rust toolchain
+make ci                   # everything CI runs
+```
+
+Signing the [CLA](./CLA.md) is one comment on your first pull request, once.
+You keep the copyright in your work.
+
 <details>
-<summary><b>Developing from this repository</b></summary>
+<summary><b>More on developing from this repository</b></summary>
 
 <br />
 
-```bash
-uv sync
-```
-
 Dev dependencies include `dbt-core` and `dbt-duckdb` for the bundled examples.
 
-The `Makefile` runs the same checks locally and in GitHub Actions:
-
-```bash
-make ci                      # the full pipeline
-make ci PYTHON_VERSION=3.12  # against a specific Python
-```
-
 `make` on its own lists every target. Individual steps: `make install`,
-`make test`, `make coverage`, `make build`, `make dashboard-ci`. `make test`
-runs pytest with coverage and writes `coverage.xml`, which CI uploads to
-Codecov.
+`make test`, `make coverage`, `make build`, `make rust`, `make dashboard-ci`.
+`make test` runs pytest with coverage and writes `coverage.xml`, which CI
+uploads to Codecov. `make ci PYTHON_VERSION=3.12` runs against a specific
+Python.
 
 Run the docs site locally with Node.js installed:
 
@@ -313,8 +331,7 @@ npm start
 
 </details>
 
-Issues and pull requests are welcome. Paths in `glyf.yml` and dashboard YAML use
-forward slashes on every platform.
+Paths in `glyf.yml` and dashboard YAML use forward slashes on every platform.
 
 ## License
 

@@ -3252,6 +3252,55 @@ nav.navbar .navbarGithubLink:hover {
 nav.navbar .navbarGithubLink span {
   font-weight: 500 !important;
 }
+/* The one filled control in the bar: joining is the action the bar asks for.
+   Stated once; see the note on the token palette about equal-specificity
+   overrides. */
+nav.navbar .navbarSlackLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  margin-right: 0.6rem;
+  padding: 0 1.1rem;
+  border: 1px solid #1d4ed8;
+  border-radius: 999px;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+nav.navbar .navbarSlackLink:hover {
+  border-color: #1740c4;
+  background: #1740c4;
+  color: #ffffff;
+  text-decoration: none;
+}
+nav.navbar .navbarSlackLink:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 3px;
+}
+nav.navbar .navbarSlackMark {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+nav.navbar .navbar-sidebar__items .navbarSlackLink {
+  margin: 1rem 0.9rem 0;
+}
+/* Between the desktop bar and the burger there is no room for two labelled
+   buttons and five links; the Slack mark alone still says what it is. */
+@media (min-width: 997px) and (max-width: 1180px) {
+  nav.navbar .navbarSlackLink span {
+    display: none;
+  }
+  nav.navbar .navbarSlackLink {
+    padding: 0 0.75rem;
+  }
+}
 @media (max-width: 996px) {
   nav.navbar .navbar__logo,
   nav.navbar .navbar__logo img {
@@ -3688,6 +3737,109 @@ nav.navbar .navbarGithubLink span {
     min-height: 44px;
     padding: 0 18px;
     font-size: 0.9rem;
+  }
+}
+
+/* ---------- Landing: community ---------- */
+.communitySection {
+  padding: clamp(3.5rem, 7vw, 6rem) 0;
+  border-top: 1px solid #dbe3ef;
+  background: #ffffff;
+}
+.communitySection__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+.landingSections .communitySection h2 {
+  margin: 0 0 1rem;
+  color: #0f172a;
+  font-size: clamp(2rem, 3.4vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.communitySection__lead p {
+  max-width: 30rem;
+  margin: 0 0 1.75rem;
+  color: #475569;
+  font-size: 1.1rem;
+  line-height: 1.65;
+}
+.communitySection__join {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 3.25rem;
+  padding: 0 1.6rem;
+  border-radius: 999px;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-size: 1.02rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 120ms ease;
+}
+.communitySection__join:hover {
+  background: #1740c4;
+  color: #ffffff;
+  text-decoration: none;
+}
+.communitySection__join:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 4px;
+}
+.communitySection__join svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+.communitySection__links {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #dbe3ef;
+  list-style: none;
+}
+.communitySection__links li {
+  border-bottom: 1px solid #dbe3ef;
+}
+.communitySection__links a {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1.15rem 0.25rem;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 120ms ease;
+}
+.communitySection__links a:hover {
+  background: #f5f8ff;
+  text-decoration: none;
+}
+.communitySection__links a:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: -2px;
+}
+.communitySection__links strong {
+  color: #0f172a;
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+.communitySection__links a:hover strong {
+  color: #1d4ed8;
+}
+.communitySection__links span {
+  color: #475569;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+@media (max-width: 900px) {
+  .communitySection__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .communitySection__links a {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
   }
 }
 

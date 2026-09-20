@@ -43,7 +43,7 @@ PyO3.
 
 ```bash
 uv sync --all-groups            # install
-uv run maturin develop          # rebuild the Rust extension
+uv sync --all-groups --reinstall-package glyf-core   # rebuild the Rust extension
 uv run pytest                   # Python tests
 cargo test -p glyf-core         # Rust tests
 cargo fmt --all                 # apply Rust formatting
