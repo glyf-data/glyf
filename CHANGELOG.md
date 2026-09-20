@@ -2,6 +2,22 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- `export.row_data: minimal` left row values in a chart's SVG when the chart
+  set `LABEL x_title` or `LABEL y_title`. Vega leads a mark's accessibility
+  label with the axis title (`Month: 2026-03; Revenue: 1200; ...`), and glyf
+  recognised a mark's label by the column name it expected it to start with,
+  so a titled chart's labels were passed over and its values stayed in the
+  SVG and in the dashboard page that inlines it. A mark is now told from an
+  axis, legend or title by the role Vega gives the element, and a labelled
+  element with no role is treated as a mark.
+
+  A chart without axis titles was not affected. `export.row_data: exclude`
+  was not affected: it publishes no SVG.
+
 ## 0.6.0 - 2026-09-03
 
 A chart too large to draw now fails with an error instead of killing the
