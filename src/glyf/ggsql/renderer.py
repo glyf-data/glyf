@@ -209,30 +209,39 @@ def _coerce_query_result(data: QueryResult | ArrowStreamExportable) -> QueryResu
     )
 
 
-_SVG_ARIA_LABEL = re.compile(r'aria-label="([^"]*)"')
+_SVG_LABELLED_TAG = re.compile(r'<[^<>]*\baria-label="[^"]*"[^<>]*>')
+_SVG_ARIA_LABEL = re.compile(r'aria-label="[^"]*"')
+_SVG_ROLE_DESCRIPTION = re.compile(r'aria-roledescription="([^"]*)"')
+# What Vega calls the elements whose label repeats text the page already shows.
+# Anything else it labels is a data mark.
+_SVG_GUIDE_ROLES = frozenset({"axis", "legend", "title", "subtitle"})
 
 
 def strip_svg_row_values(svg_path: Path, chart: GgsqlChart) -> None:
     """Replace each mark's `field: value; ...` label with the field names alone.
 
     Vega labels a data mark with the values it was drawn from, one
-    `field: value` per encoded channel, and gives axes, legends and titles
+    `name: value` per encoded channel, and gives axes, legends and titles
     prose labels of their own. Only the former carry the rows; the latter
     describe text the page already shows. A mark still announces which columns
     it came from, so a screen reader can tell a bar from a legend, but a reader
     gets what the pixels show and nothing more precise.
+
+    A mark is told from a guide by the role Vega gives the element, not by how
+    its label reads: the name in `name: value` is the axis title when the chart
+    sets one, so a label cannot be recognised by the column it starts with.
     """
-    fields = required_columns(chart)
-    row_label = tuple(f"{html.escape(field, quote=True)}: " for field in fields)
-    field_names = html.escape("; ".join(fields), quote=True)
+    field_names = html.escape("; ".join(required_columns(chart)), quote=True)
 
     def relabel(match: re.Match[str]) -> str:
-        if match.group(1).startswith(row_label):
-            return f'aria-label="{field_names}"'
-        return match.group(0)
+        tag = match.group(0)
+        role = _SVG_ROLE_DESCRIPTION.search(tag)
+        if role is not None and role.group(1) in _SVG_GUIDE_ROLES:
+            return tag
+        return _SVG_ARIA_LABEL.sub(f'aria-label="{field_names}"', tag, count=1)
 
     svg = svg_path.read_text(encoding="utf-8")
-    svg_path.write_text(_SVG_ARIA_LABEL.sub(relabel, svg), encoding="utf-8")
+    svg_path.write_text(_SVG_LABELLED_TAG.sub(relabel, svg), encoding="utf-8")
 
 
 def _patch_svg_fonts(svg_path: Path) -> None:

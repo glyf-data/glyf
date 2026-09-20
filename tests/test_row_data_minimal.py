@@ -104,6 +104,34 @@ def test_svg_mark_labels_keep_field_names_and_drop_values(tmp_path: Path) -> Non
     assert f"revenue: {ENCODED_REVENUE}" in included_svg
 
 
+def test_svg_mark_labels_drop_values_when_the_axes_are_titled(tmp_path: Path) -> None:
+    """Vega leads a mark's label with the axis title, not the column name."""
+    project = _project(tmp_path)
+    (project / "visualisations" / "revenue.ggsql").write_text(
+        "SELECT month, region, revenue, secret_col\n"
+        "FROM {{ ref('fct_orders') }}\n"
+        "\n"
+        "VISUALISE month AS x, revenue AS y, region AS color\n"
+        "DRAW bar\n"
+        "LABEL title => 'Monthly Revenue'\n"
+        "LABEL x_title => 'Month'\n"
+        "LABEL y_title => 'Revenue'\n",
+        encoding="utf-8",
+    )
+    render_project(project, _config("minimal"))
+    svg = (project / "target" / "glyf" / "charts" / "revenue.svg").read_text(
+        encoding="utf-8"
+    )
+
+    labels = re.findall(r'aria-label="([^"]*)"', svg)
+
+    assert "month; revenue; region" in labels, "the marks name their columns"
+    assert ENCODED_REVENUE not in svg
+    assert not [label for label in labels if label.startswith("Month: ")]
+    # The axis still says what it is titled; that text is on the page.
+    assert [label for label in labels if label.startswith("X-axis titled 'Month'")]
+
+
 def test_svg_still_describes_what_the_page_shows(tmp_path: Path) -> None:
     """Axes, legends and titles are text on the page; their labels stay."""
     project = _built_project(tmp_path, row_data="minimal")
