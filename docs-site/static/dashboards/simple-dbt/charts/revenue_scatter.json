@@ -7,6 +7,7 @@
     "zoom",
     "legend_filter"
   ],
+  "metadata_path": "target/glyf/charts/revenue_scatter.json",
   "name": "revenue_scatter",
   "png_path": "target/glyf/charts/revenue_scatter.png",
   "svg_path": "target/glyf/charts/revenue_scatter.svg",

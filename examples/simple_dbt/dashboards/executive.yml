@@ -23,7 +23,7 @@ sections:
     items:
       - metric:
           label: Sample revenue
-          value: "$7.6k"
+          value: "$5.1k"
           note: Generated from six seed rows.
       - markdown:
           title: Context
