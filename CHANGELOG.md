@@ -20,6 +20,8 @@ All notable changes to `glyf` will be documented in this file.
   The report goes to `target/glyf/diff/`: `index.html` with each changed chart
   before, after and marked up, `summary.md` for a pull request comment, and
   `diff.json` for a script. `--fail-on-change` exits 1 when anything moved.
+  The command prints each changed chart followed by what moved in its rows, so
+  a CI log reads without downloading the report.
   `--threshold` and `--tolerance` loosen the comparison for builds rendered on
   different machines; both default to zero because glyf's renders are
   byte-stable since 0.8.0.

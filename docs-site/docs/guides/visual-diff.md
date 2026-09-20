@@ -24,10 +24,17 @@ glyf diff --baseline /tmp/baseline
 
 ```text
 ~ bookings_trend: 6.1% of the picture moved (the rows changed)
+    sum of bookings 1,079,700 → 974,000 (-9.8%)
 ~ margin_share: 31.3% of the picture moved (the rows changed)
+    rows 4 → 3
+    gone from department: Partners
+    sum of gross_margin 503,700 → 446,500 (-11.4%)
 ✓ 2 changed, 6 unchanged
 ✓ wrote target/glyf/diff/index.html
 ```
+
+Each changed chart is followed by what moved in its rows, so the CI log tells
+the story without downloading the report.
 
 `--baseline` takes a `target/glyf` directory, an exported site, or a project
 that contains one.

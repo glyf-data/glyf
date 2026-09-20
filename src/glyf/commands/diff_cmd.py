@@ -4,7 +4,7 @@ import typer
 
 from glyf.config import ConfigError, load_config, resolve_project_path
 from glyf.diff import DiffError, compare_builds, headline, write_report
-from glyf.diff.report import format_percent
+from glyf.diff.report import describe_data, format_percent
 
 
 def run_diff(
@@ -38,6 +38,10 @@ def run_diff(
                 f"~ {chart.name}: {format_percent(chart.changed_percent)} of the picture moved "
                 f"({'; '.join(chart.reasons)})"
             )
+            # What moved in the rows, under the chart it moved in: a CI log is
+            # read more often than the report is downloaded.
+            for line in describe_data(chart.data):
+                typer.echo(f"    {line}")
         elif chart.status == "added":
             typer.echo(f"+ {chart.name}: added")
         elif chart.status == "removed":
