@@ -8,8 +8,17 @@ html.plugin-docs {
   --doc-ink: #0f172a;
   --doc-body: #334155;
   --doc-quiet: #64748b;
+  --doc-faint: #94a3b8;
   --doc-rule: #dbe3ef;
+  --doc-rule-soft: #e8edf5;
+  --doc-page: #ffffff;
+  --doc-surface: #ffffff;
+  --doc-sidebar: #fbfcfe;
+  --doc-hover: #eef2f9;
   --doc-wash: #f5f8ff;
+  --doc-row-hover: #fafcff;
+  --doc-code-bg: #edf1f8;
+  --doc-code-ink: #1e293b;
   --doc-accent: #1d4ed8;
   --doc-accent-wash: #eaf0ff;
   --doc-measure: 46rem;
@@ -19,7 +28,7 @@ html.plugin-docs {
 
 html.plugin-docs .theme-doc-sidebar-container {
   border-right: 1px solid var(--doc-rule) !important;
-  background: #fbfcfe;
+  background: var(--doc-sidebar);
 }
 
 html.plugin-docs main [class*='docItemContainer'] {
@@ -34,76 +43,67 @@ html.plugin-docs main .container {
 /* ---------- Sidebar ---------- */
 
 html.plugin-docs .theme-doc-sidebar-menu {
-  padding: 1.25rem 0.75rem 2rem;
-  font-size: 0.95rem;
+  padding: 1.1rem 0.85rem 2.5rem;
+  font-size: 0.92rem;
 }
 
-html.plugin-docs .theme-doc-sidebar-menu .menu__link,
-html.plugin-docs .theme-doc-sidebar-menu .menu__caret {
-  border-radius: 8px;
-  background: transparent;
+html.plugin-docs .theme-doc-sidebar-menu .menu__list-item {
+  margin: 0;
 }
 
 html.plugin-docs .theme-doc-sidebar-menu .menu__link {
-  padding: 0.42rem 0.75rem;
+  display: flex;
+  align-items: center;
+  min-height: 2.15rem;
+  margin: 1px 0;
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  background: transparent;
   color: var(--doc-body);
   font-weight: 450;
-  line-height: 1.35;
+  line-height: 1.3;
   transition: color 120ms ease, background-color 120ms ease;
 }
 
 html.plugin-docs .theme-doc-sidebar-menu .menu__link:hover {
-  background: #eef2f9;
+  background: var(--doc-hover);
   color: var(--doc-ink);
 }
 
-/* A category names a group; it reads as a heading, not as one more link. */
-html.plugin-docs .theme-doc-sidebar-item-category-level-1 {
-  margin-top: 1.1rem;
-}
-html.plugin-docs
-  .theme-doc-sidebar-item-category-level-1
-  > .menu__list-item-collapsible
-  > .menu__link {
-  color: var(--doc-ink);
-  font-weight: 650;
-  letter-spacing: -0.005em;
-}
-html.plugin-docs
-  .theme-doc-sidebar-item-category-level-1
-  > .menu__list-item-collapsible:hover {
-  background: transparent;
-}
-
-/* The pages of a group hang off one rule, and the current page marks its place
-   on that rule. */
-html.plugin-docs .theme-doc-sidebar-item-category-level-1 > .menu__list {
-  margin: 0.15rem 0 0 0.75rem;
-  padding-left: 0;
-  border-left: 1px solid var(--doc-rule);
-}
-html.plugin-docs .theme-doc-sidebar-item-category-level-1 > .menu__list .menu__link {
-  margin-left: -1px;
-  padding-left: 0.95rem;
-  border-left: 2px solid transparent;
-  border-radius: 0 8px 8px 0;
-}
 html.plugin-docs .theme-doc-sidebar-menu .menu__link--active:not(.menu__link--sublist) {
   background: var(--doc-accent-wash);
   color: var(--doc-accent);
   font-weight: 600;
 }
+
+/* A group is a label over its pages. It does not open or close, so it is not a
+   control and does not look like one. */
+/* Named as specifically as the `margin: 0` above, which would otherwise win. */
+html.plugin-docs .theme-doc-sidebar-menu .theme-doc-sidebar-item-category-level-1 {
+  margin-top: 1.6rem;
+}
 html.plugin-docs
   .theme-doc-sidebar-item-category-level-1
-  > .menu__list
-  .menu__link--active {
-  border-left-color: var(--doc-accent);
+  > .menu__list-item-collapsible {
+  background: transparent;
 }
-
-html.plugin-docs .menu__caret::before,
-html.plugin-docs .menu__link--sublist-caret::after {
-  opacity: 0.45;
-  background-size: 1.35rem 1.35rem;
+html.plugin-docs
+  .theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link {
+  min-height: 0;
+  margin-bottom: 0.35rem;
+  padding: 0 0.7rem;
+  background: transparent;
+  color: var(--doc-ink);
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.005em;
+  cursor: default;
+}
+html.plugin-docs .theme-doc-sidebar-item-category-level-1 > .menu__list {
+  margin: 0;
+  padding-left: 0;
 }
 
 /* ---------- Breadcrumbs ---------- */
@@ -123,7 +123,7 @@ html.plugin-docs .breadcrumbs__item--active .breadcrumbs__link {
   font-weight: 600;
 }
 html.plugin-docs a.breadcrumbs__link:hover {
-  background: #eef2f9 !important;
+  background: var(--doc-hover) !important;
   color: var(--doc-ink);
 }
 
@@ -224,11 +224,11 @@ html.plugin-docs .theme-doc-markdown li {
   padding-left: 0.2rem;
 }
 html.plugin-docs .theme-doc-markdown li::marker {
-  color: #94a3b8;
+  color: var(--doc-faint);
 }
 
 html.plugin-docs .hash-link {
-  color: #94a3b8;
+  color: var(--doc-faint);
   text-decoration: none;
 }
 
@@ -238,8 +238,8 @@ html.plugin-docs .theme-doc-markdown :not(pre) > code {
   padding: 0.12em 0.4em;
   border: 0;
   border-radius: 5px;
-  background: #edf1f8;
-  color: #1e293b;
+  background: var(--doc-code-bg);
+  color: var(--doc-code-ink);
   font-size: 0.875em;
   vertical-align: baseline;
 }
@@ -270,7 +270,7 @@ html.plugin-docs .theme-code-block[class*='language-']::before {
   padding: 0.5rem 1.2rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.16);
   background: rgba(148, 163, 184, 0.07);
-  color: #94a3b8;
+  color: var(--doc-faint);
   font-family: var(--ifm-font-family-base);
   font-size: 0.74rem;
   font-weight: 600;
@@ -332,18 +332,18 @@ html.plugin-docs .theme-doc-markdown table th {
 html.plugin-docs .theme-doc-markdown table td {
   padding: 0.75rem 1rem;
   border: 0;
-  border-bottom: 1px solid #e8edf5;
+  border-bottom: 1px solid var(--doc-rule-soft);
   vertical-align: top;
 }
 html.plugin-docs .theme-doc-markdown table tr {
   border: 0;
-  background: #ffffff !important;
+  background: var(--doc-surface) !important;
 }
 html.plugin-docs .theme-doc-markdown table tbody tr:last-child td {
   border-bottom: 0;
 }
 html.plugin-docs .theme-doc-markdown table tbody tr:hover td {
-  background: #fafcff;
+  background: var(--doc-row-hover);
 }
 /* The first column of a reference table is the thing being looked up. */
 html.plugin-docs .theme-doc-markdown table td:first-child {
@@ -456,7 +456,7 @@ html.plugin-docs .pagination-nav__link {
   padding: 1rem 1.2rem;
   border: 1px solid var(--doc-rule);
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--doc-surface);
   transition: border-color 120ms ease, background-color 120ms ease;
 }
 html.plugin-docs .pagination-nav__link:hover {
@@ -498,7 +498,7 @@ html.plugin-docs .buildSteps {
   padding: 0;
   border: 1px solid var(--doc-rule);
   border-radius: 14px;
-  background: #ffffff;
+  background: var(--doc-surface);
   list-style: none;
   overflow: hidden;
   counter-reset: build-step;
@@ -568,7 +568,7 @@ html.plugin-docs .theme-doc-markdown .docMap a {
   padding: 1.15rem 1.25rem 1.25rem;
   border: 1px solid var(--doc-rule);
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--doc-surface);
   color: inherit;
   text-decoration: none;
   transition: border-color 120ms ease, background-color 120ms ease;
@@ -617,6 +617,164 @@ html.plugin-docs .theme-doc-markdown .docMap a.docMap__start:hover {
 }
 html.plugin-docs .docMap a.docMap__start:hover strong {
   color: #ffffff;
+}
+
+/* ---------- Roadmap page ---------- */
+
+html.plugin-docs .roadmapJump {
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--doc-rule);
+  border-radius: 10px;
+  background: var(--doc-wash);
+  color: var(--doc-body);
+  font-size: 0.97rem;
+}
+
+html.plugin-docs .roadmapStatus {
+  display: inline-block;
+  margin-bottom: 0.7rem;
+  padding: 0.18rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+html.plugin-docs .roadmapStatus--merged {
+  background: var(--doc-accent);
+  color: #ffffff;
+}
+
+/* The one thing that is actually on its way gets the one filled treatment. */
+html.plugin-docs .roadmapNext {
+  padding: 1.5rem 1.6rem 1.6rem;
+  border: 1px solid var(--doc-accent);
+  border-radius: 14px;
+  background: var(--doc-accent-wash);
+}
+html.plugin-docs .theme-doc-markdown .roadmapNext h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+}
+html.plugin-docs .roadmapNext p {
+  margin: 0 0 0.9rem;
+  color: var(--doc-body);
+}
+
+html.plugin-docs .roadmapGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+}
+html.plugin-docs .theme-doc-markdown a.roadmapCard {
+  display: flex;
+  flex-direction: column;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid var(--doc-rule);
+  border-radius: 12px;
+  background: var(--doc-surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+html.plugin-docs .theme-doc-markdown a.roadmapCard:hover {
+  border-color: var(--doc-accent);
+  background: var(--doc-wash);
+}
+html.plugin-docs .roadmapCard strong {
+  color: var(--doc-ink);
+  font-size: 1.02rem;
+}
+html.plugin-docs .roadmapCard span {
+  flex: 1;
+  margin: 0.4rem 0 0.9rem;
+  color: var(--doc-body);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+html.plugin-docs .roadmapCard em {
+  color: var(--doc-accent);
+  font-size: 0.86rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
+html.plugin-docs .theme-doc-markdown ul.roadmapList {
+  padding: 0;
+  border-top: 1px solid var(--doc-rule);
+  list-style: none;
+}
+html.plugin-docs .theme-doc-markdown ul.roadmapList li {
+  margin: 0;
+  padding: 0.8rem 0.1rem;
+  border-bottom: 1px solid var(--doc-rule);
+  font-size: 0.98rem;
+}
+
+html.plugin-docs .roadmapAsk {
+  margin-top: 1.4rem;
+  color: var(--doc-body);
+}
+
+/* Releases, newest first, on one line through time. */
+html.plugin-docs .theme-doc-markdown ol.roadmapTimeline {
+  margin: 1.4rem 0 1.6rem;
+  padding: 0 0 0 1.6rem;
+  border-left: 2px solid var(--doc-rule);
+  list-style: none;
+}
+html.plugin-docs .theme-doc-markdown ol.roadmapTimeline li {
+  position: relative;
+  margin: 0 0 1.9rem;
+  padding: 0;
+}
+html.plugin-docs .theme-doc-markdown ol.roadmapTimeline li:last-child {
+  margin-bottom: 0;
+}
+html.plugin-docs ol.roadmapTimeline li::before {
+  position: absolute;
+  top: 0.45rem;
+  left: calc(-1.6rem - 7px);
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--doc-accent);
+  border-radius: 50%;
+  background: var(--doc-page);
+  content: '';
+}
+html.plugin-docs .roadmapTimeline__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.8rem;
+  margin-bottom: 0.3rem;
+}
+html.plugin-docs .theme-doc-markdown a.roadmapVersion {
+  padding: 0.1rem 0.6rem;
+  border-radius: 6px;
+  background: var(--doc-code-bg);
+  color: var(--doc-ink) !important;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+html.plugin-docs .theme-doc-markdown a.roadmapVersion:hover {
+  background: var(--doc-accent-wash);
+  color: var(--doc-accent) !important;
+}
+html.plugin-docs .roadmapTimeline time {
+  color: var(--doc-quiet);
+  font-size: 0.86rem;
+}
+html.plugin-docs .roadmapTimeline strong {
+  display: block;
+  color: var(--doc-ink);
+  font-size: 1.08rem;
+}
+html.plugin-docs .roadmapTimeline p {
+  margin: 0.3rem 0 0;
+  font-size: 0.97rem;
+  line-height: 1.6;
 }
 
 /* ---------- Small screens ---------- */
@@ -675,6 +833,9 @@ html.plugin-docs .docMap a.docMap__start:hover strong {
   }
   html.plugin-docs .theme-doc-markdown .docMap a {
     grid-column: span 6;
+  }
+  html.plugin-docs .roadmapGrid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
