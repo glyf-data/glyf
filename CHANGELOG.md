@@ -2,7 +2,12 @@
 
 All notable changes to `glyf` will be documented in this file.
 
-## Unreleased
+## 0.7.0 - 2026-09-20
+
+Three more chart types, two example projects rebuilt around them, and two
+fixes: one to what `export.row_data: minimal` leaves in an SVG, and one to the
+first chart a new project validates.
+
 
 ### Three more chart types
 
