@@ -99,3 +99,14 @@ def test_parse_ggsql_rejects_invalid_config_value() -> None:
 def test_parse_ggsql_requires_x_and_y_mappings() -> None:
     with pytest.raises(GgsqlParseError, match="requires x and y mappings"):
         parse_ggsql("select 1\n\nVISUALISE region AS color\nDRAW bar\n")
+
+
+def test_parse_ggsql_accepts_double_quoted_labels() -> None:
+    chart = parse_ggsql(
+        "select 1\n\nVISUALISE a AS x, b AS y\nDRAW line\n"
+        "LABEL title => \"This month's revenue\"\n"
+        "LABEL x_title => 'Month'\n"
+    )
+
+    assert chart.title == "This month's revenue"
+    assert chart.x_title == "Month"

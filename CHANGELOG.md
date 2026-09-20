@@ -18,6 +18,15 @@ All notable changes to `glyf` will be documented in this file.
   A chart without axis titles was not affected. `export.row_data: exclude`
   was not affected: it publishes no SVG.
 
+- A `LABEL` value in double quotes failed validation with `Parse tree contains
+  errors` or `VISUALISE clause was not recognized`. ggsql reads single-quoted
+  strings only, and glyf passed the line to it unchanged. Both quote styles
+  now validate.
+
+  This is the form `glyf init` writes and the quickstart shows, so the starter
+  chart of a new project failed `glyf validate` until its quotes were changed
+  by hand. The documentation tests now parse every chart the docs show.
+
 ## 0.6.0 - 2026-09-03
 
 A chart too large to draw now fails with an error instead of killing the

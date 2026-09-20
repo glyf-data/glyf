@@ -49,6 +49,9 @@ Optional role:
 - `x_title`
 - `y_title`
 
+A label value is quoted with single or double quotes: `LABEL title => 'Revenue'`
+or `LABEL title => "Revenue"`.
+
 ## Config
 
 - `width`: positive integer.
