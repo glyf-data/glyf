@@ -16,7 +16,7 @@ class ChartMetadata:
     title: str | None
     chart_type: str
     x: str
-    y: str
+    y: str | None
     compiled_sql_path: Path
     data_json_path: Path
     png_path: Path
@@ -90,7 +90,6 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         "name",
         "chart_type",
         "x",
-        "y",
         "compiled_sql_path",
         "data_json_path",
         "png_path",
@@ -104,6 +103,13 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
     title = raw.get("title")
     if title is not None and not isinstance(title, str):
         raise ChartArtifactError(f"chart metadata for '{chart_name}' has invalid title")
+
+    # A histogram counts rows per bin of x and binds no y column.
+    y = raw.get("y")
+    if y is not None and not isinstance(y, str):
+        raise ChartArtifactError(f"chart metadata for '{chart_name}' has invalid y")
+    if y is None and raw["chart_type"] != "histogram":
+        raise ChartArtifactError(f"chart metadata for '{chart_name}' missing y")
 
     interactions = raw.get("interactions", [])
     if not isinstance(interactions, list) or not all(
@@ -124,7 +130,7 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         title=title,
         chart_type=raw["chart_type"],
         x=raw["x"],
-        y=raw["y"],
+        y=y,
         compiled_sql_path=project_root / raw["compiled_sql_path"],
         data_json_path=project_root / raw["data_json_path"],
         png_path=project_root / raw["png_path"],

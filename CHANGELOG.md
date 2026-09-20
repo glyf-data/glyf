@@ -4,6 +4,28 @@ All notable changes to `glyf` will be documented in this file.
 
 ## Unreleased
 
+### Three more chart types
+
+- `DRAW histogram` counts the rows in each bin of `x`. It takes no `y`
+  mapping; `color` stacks the bars.
+- `DRAW boxplot` draws the quartiles of `y` for each `x` value, with outliers
+  as points.
+- `DRAW heatmap` draws one cell per `x` and `y` pair, shaded by a numeric
+  `color`. `tile`, ggsql's name for it, is accepted as an alias. Cells keep the
+  order the query returns them in, so an `ORDER BY` decides the axis order.
+
+  All three are part of ggsql's grammar and are validated by it like the
+  existing types. A text column where one of them needs numbers fails the
+  render with an error naming the column. `legend_filter` is rejected at
+  validation for `boxplot` and `heatmap`, where a legend selection has nothing
+  to bind to.
+
+- `bundle.json` and a chart's metadata record `y` as `null` for a histogram.
+  `bundle_version` stays `"1"`: no existing chart's entry changes.
+- `glyf init --chart-type` still offers `line`, `bar`, `scatter`, `area` and
+  `pie`. The starter query maps a date to a value, which is not the shape the
+  new types draw.
+
 ### Fixed
 
 - `export.row_data: minimal` left row values in a chart's SVG when the chart

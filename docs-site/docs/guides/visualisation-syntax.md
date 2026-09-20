@@ -25,22 +25,86 @@ INTERACT tooltip, zoom
 
 `DRAW` chooses a chart type.
 
-Required roles:
+Roles:
 
-- `x`
-- `y`
-
-Optional role:
-
-- `color`
+- `x`: required by every chart type.
+- `y`: required by every chart type except `histogram`, which rejects it.
+- `color`: optional, except for `heatmap`, which requires it.
 
 ## Chart types
 
-- `line`
-- `bar`
-- `scatter`
-- `area`
-- `pie`
+| `DRAW` | Draws | Roles |
+| --- | --- | --- |
+| `line` | One line per `color` value. | `x`, `y`, optional `color` |
+| `bar` | One bar per `x` value, stacked by `color`. | `x`, `y`, optional `color` |
+| `scatter` | One point per row. `point` is accepted as an alias. | `x`, `y`, optional `color` |
+| `area` | One filled area per `color` value. | `x`, `y`, optional `color` |
+| `pie` | One slice per `x` value, sized by `y`. | `x`, `y`, optional `color` |
+| `histogram` | The number of rows in each bin of `x`, stacked by `color`. | `x`, optional `color` |
+| `boxplot` | The quartiles of `y` for each `x` value, with outliers as points. | `x`, `y`, optional `color` |
+| `heatmap` | One cell per `x` and `y` pair, shaded by `color`. `tile` is accepted as an alias. | `x`, `y`, `color` |
+
+Any other `DRAW` value fails validation with `unsupported chart type`.
+
+### Histogram
+
+```sql
+SELECT order_amount, region
+FROM {{ ref('fct_orders') }}
+
+VISUALISE order_amount AS x, region AS color
+DRAW histogram
+LABEL title => 'Order size'
+LABEL x_title => 'Order amount'
+LABEL y_title => 'Orders'
+```
+
+The query returns one row per observation, not one row per bin. glyf divides
+`x` into at most 30 bins and counts the rows in each. A `y` mapping fails
+validation, because the y axis is the count.
+
+### Boxplot
+
+```sql
+SELECT plan, sessions
+FROM {{ ref('fct_product_usage') }}
+
+VISUALISE plan AS x, sessions AS y
+DRAW boxplot
+LABEL title => 'Sessions by plan'
+```
+
+The query returns one row per observation. Each `x` value gets a box from the
+first to the third quartile of `y` with a line at the median. Whiskers extend
+1.5 times the interquartile range, and rows beyond them are drawn as points.
+Without a `LABEL y_title`, the y axis is titled with the column name.
+
+### Heatmap
+
+```sql
+SELECT weekday, hour, sessions
+FROM {{ ref('fct_sessions_by_hour') }}
+ORDER BY weekday_number, hour
+
+VISUALISE hour AS x, weekday AS y, sessions AS color
+DRAW heatmap
+LABEL title => 'Sessions by hour'
+```
+
+The query returns one row per cell. Both axes are discrete, so a numeric `x`
+such as an hour is drawn as 24 columns rather than a continuous scale.
+
+Cells appear in the order the query returns them. Use `ORDER BY` to put Monday
+before Tuesday; without it the order is whatever the warehouse returns.
+
+### Numeric columns
+
+A histogram's `x`, a boxplot's `y` and a heatmap's `color` must be integer or
+floating-point columns. A text column fails the render:
+
+```text
+histogram needs a numeric x column and 'region' is string
+```
 
 ## Labels
 
@@ -67,9 +131,13 @@ INTERACT tooltip, zoom, legend_filter
 
 Supported interactions:
 
-- `tooltip`: adds Vega-Lite tooltips for encoded fields.
+- `tooltip`: adds Vega-Lite tooltips for encoded fields. A `histogram` tooltip
+  shows the bin and its count. A `boxplot` tooltip shows the quartiles of the box
+  under the pointer.
 - `zoom`: enables pan and zoom for local interactive dashboard previews.
-- `legend_filter`: lets users filter by legend values. This requires a `color` mapping.
+- `legend_filter`: lets users filter by legend values. This requires a `color`
+  mapping. It is not supported for `boxplot` or `heatmap` and fails validation
+  there.
 
 Interactive charts still write PNG and SVG artifacts. They also write a Vega-Lite JSON artifact, which dashboard pages embed with the Vega runtime scripts. The exported dashboard is still static HTML, but interactive rendering needs a browser with JavaScript enabled and access to those scripts.
 

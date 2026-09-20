@@ -3,7 +3,7 @@
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">{{ title or chart.metadata.title or chart.metadata.name }}</div>
-      <div class="glyf-card-subtitle">{{ chart.metadata.x }} -> {{ chart.metadata.y }}</div>
+      <div class="glyf-card-subtitle">{{ chart.metadata.x }}{% if chart.metadata.y %} -> {{ chart.metadata.y }}{% endif %}</div>
     </div>
     <span class="glyf-badge glyf-mono">{{ chart.metadata.chart_type }}</span>
   </div>

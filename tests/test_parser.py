@@ -85,8 +85,8 @@ def test_parse_ggsql_rejects_unsupported_interaction() -> None:
 
 
 def test_parse_ggsql_rejects_unsupported_chart_type() -> None:
-    with pytest.raises(GgsqlParseError, match="unsupported chart type 'heatmap'"):
-        parse_ggsql("select 1\n\nVISUALISE a AS x, b AS y\nDRAW heatmap\n")
+    with pytest.raises(GgsqlParseError, match="unsupported chart type 'violin'"):
+        parse_ggsql("select 1\n\nVISUALISE a AS x, b AS y\nDRAW violin\n")
 
 
 def test_parse_ggsql_rejects_invalid_config_value() -> None:
@@ -110,3 +110,59 @@ def test_parse_ggsql_accepts_double_quoted_labels() -> None:
 
     assert chart.title == "This month's revenue"
     assert chart.x_title == "Month"
+
+
+def test_parse_ggsql_supports_histogram_with_x_alone() -> None:
+    chart = parse_ggsql(
+        "select amount, region from fct_orders\n\n"
+        "VISUALISE amount AS x, region AS color\n"
+        "DRAW histogram\n"
+    )
+
+    assert chart.draw_type == "histogram"
+    assert chart.field_for_role("x") == "amount"
+    assert chart.field_for_role("y") is None
+
+
+def test_parse_ggsql_rejects_histogram_with_y_mapping() -> None:
+    with pytest.raises(GgsqlParseError, match="takes no y mapping"):
+        parse_ggsql("select 1\n\nVISUALISE a AS x, b AS y\nDRAW histogram\n")
+
+
+def test_parse_ggsql_supports_boxplot() -> None:
+    chart = parse_ggsql("select 1\n\nVISUALISE region AS x, amount AS y\nDRAW boxplot\n")
+
+    assert chart.draw_type == "boxplot"
+
+
+@pytest.mark.parametrize("draw", ["heatmap", "tile"])
+def test_parse_ggsql_supports_heatmap_and_tile_alias(draw: str) -> None:
+    chart = parse_ggsql(
+        f"select 1\n\nVISUALISE hour AS x, weekday AS y, orders AS color\nDRAW {draw}\n"
+    )
+
+    assert chart.draw_type == "heatmap"
+
+
+def test_parse_ggsql_requires_color_mapping_for_heatmap() -> None:
+    with pytest.raises(GgsqlParseError, match="heatmap requires x, y and color"):
+        parse_ggsql("select 1\n\nVISUALISE hour AS x, weekday AS y\nDRAW heatmap\n")
+
+
+@pytest.mark.parametrize(
+    ("draw", "mapping"),
+    [
+        ("boxplot", "region AS x, amount AS y, region AS color"),
+        ("heatmap", "hour AS x, weekday AS y, orders AS color"),
+    ],
+)
+def test_parse_ggsql_rejects_legend_filter_where_it_cannot_bind(
+    draw: str, mapping: str
+) -> None:
+    with pytest.raises(
+        GgsqlParseError,
+        match=f"legend_filter interaction is not supported for {draw} charts",
+    ):
+        parse_ggsql(
+            f"select 1\n\nVISUALISE {mapping}\nDRAW {draw}\nINTERACT legend_filter\n"
+        )

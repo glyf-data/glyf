@@ -140,8 +140,8 @@ dashboard's `charts` list refers to.
 | Field | Type | Description |
 | --- | --- | --- |
 | `title` | string \| null | The chart's `LABEL title`, if it has one. |
-| `chart_type` | string \| null | The `DRAW` type: `line`, `bar`, `scatter`, `pie`, and so on. |
-| `fields` | object | `x` and `y`, the column names bound to those roles. |
+| `chart_type` | string \| null | The `DRAW` type: `line`, `bar`, `scatter`, `area`, `pie`, `histogram`, `boxplot` or `heatmap`. The aliases `point` and `tile` are recorded as `scatter` and `heatmap`. |
+| `fields` | object | `x` and `y`, the column names bound to those roles. `y` is `null` for a `histogram`, which binds no y column. |
 | `artifacts` | object | See below. |
 | `interactions` | array of strings | **Optional.** Present only when the chart declares `INTERACT`. |
 

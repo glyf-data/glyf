@@ -8,7 +8,16 @@ class GgsqlParseError(ValueError):
     """Raised when a ggsql file cannot be parsed."""
 
 
-SUPPORTED_CHART_TYPES = {"line", "bar", "scatter", "area", "pie"}
+SUPPORTED_CHART_TYPES = {
+    "line",
+    "bar",
+    "scatter",
+    "area",
+    "pie",
+    "histogram",
+    "boxplot",
+    "heatmap",
+}
 SUPPORTED_CONFIG_KEYS = {"width", "height"}
 SUPPORTED_INTERACTIONS = {"tooltip", "zoom", "legend_filter"}
 

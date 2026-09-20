@@ -123,9 +123,9 @@ def test_render_project_reports_unsupported_chart_type(tmp_path: Path) -> None:
     (project / "visualisations" / "revenue.ggsql").write_text(
         "select month, revenue from {{ ref('fct_orders') }}\n\n"
         "VISUALISE month AS x, revenue AS y\n"
-        "DRAW heatmap\n",
+        "DRAW violin\n",
         encoding="utf-8",
     )
 
-    with pytest.raises(RenderError, match="unsupported chart type 'heatmap'"):
+    with pytest.raises(RenderError, match="unsupported chart type 'violin'"):
         render_project(project)
