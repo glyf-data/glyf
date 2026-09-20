@@ -4,12 +4,19 @@ import re
 from pathlib import Path
 
 import altair as alt
+import pyarrow as pa
+import pyarrow.compute as pc
 
 from glyf.config import RenderConfig
 from glyf.execution.result import ArrowStreamExportable, QueryResult
 from glyf.ggsql.models import GgsqlChart
 from glyf.ggsql.parser import SUPPORTED_CHART_TYPES
 from glyf.renderers import chart_renderer, get_chart_renderer
+
+
+HISTOGRAM_MAX_BINS = 30
+BOXPLOT_MIN_SIZE = 6
+BOXPLOT_MAX_SIZE = 80
 
 
 class ChartRenderError(ValueError):
@@ -103,13 +110,15 @@ def build_chart(
 ) -> alt.Chart:
     config = config or RenderConfig()
     frame = _coerce_query_result(data).to_arrow()
-    x_field = chart.field_for_role("x")
-    y_field = chart.field_for_role("y")
-    if x_field is None or y_field is None:
-        raise ChartRenderError("VISUALISE requires x and y mappings")
-
     if chart.draw_type not in SUPPORTED_CHART_TYPES:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
+
+    x_field = chart.field_for_role("x")
+    y_field = chart.field_for_role("y")
+    if x_field is None:
+        raise ChartRenderError(f"{chart.draw_type} requires an x mapping")
+    if y_field is None and chart.draw_type != "histogram":
+        raise ChartRenderError("VISUALISE requires x and y mappings")
 
     color_field = chart.field_for_role("color")
     required_fields = list(required_columns(chart))
@@ -119,6 +128,16 @@ def build_chart(
         joined = ", ".join(f"'{field}'" for field in missing)
         raise ChartRenderError(f"query result missing chart column {joined}")
 
+    # These three compute from the column rather than plot it, and the renderer
+    # answers a text column with an empty chart instead of an error.
+    numeric_role = {"histogram": "x", "boxplot": "y", "heatmap": "color"}.get(
+        chart.draw_type
+    )
+    if numeric_role is not None:
+        numeric_field = chart.field_for_role(numeric_role)
+        if numeric_field is not None:
+            _require_numeric(frame, numeric_field, numeric_role, chart.draw_type)
+
     width = chart.width or config.default_width
     height = chart.height or config.default_height
     title: str | alt.TitleParams | None = chart.title
@@ -126,6 +145,7 @@ def build_chart(
         title = alt.TitleParams(text=chart.title, subtitle=chart.subtitle)
 
     encoding: dict[str, object]
+    tooltips = [alt.Tooltip(field) for field in dict.fromkeys(required_fields)]
     if chart.draw_type == "pie":
         encoding = {
             "theta": alt.Theta(y_field, title=chart.y_title),
@@ -134,6 +154,39 @@ def build_chart(
                 title=chart.x_title if color_field is None else color_field,
             ),
         }
+    elif chart.draw_type == "histogram":
+        # The rows are binned and counted by the renderer, so the y axis and
+        # the tooltip describe a bin rather than any column of the query.
+        bins = alt.Bin(maxbins=HISTOGRAM_MAX_BINS)
+        encoding = {
+            "x": alt.X(x_field, bin=bins, title=chart.x_title),
+            "y": alt.Y("count()", title=chart.y_title),
+        }
+        tooltips = [alt.Tooltip(x_field, bin=bins), alt.Tooltip("count()")]
+        if color_field is not None:
+            encoding["color"] = alt.Color(color_field)
+            tooltips.append(alt.Tooltip(color_field))
+    elif chart.draw_type == "heatmap":
+        # Both axes are discrete cells, and `sort=None` keeps the order the
+        # query returned them in: an ORDER BY is how a heatmap puts Monday
+        # before Tuesday.
+        if color_field is None:
+            raise ChartRenderError("heatmap requires x, y and color mappings")
+        encoding = {
+            "x": alt.X(x_field, type="ordinal", sort=None, title=chart.x_title),
+            "y": alt.Y(y_field, type="ordinal", sort=None, title=chart.y_title),
+            "color": alt.Color(color_field, type="quantitative"),
+        }
+    elif chart.draw_type == "boxplot":
+        # The mark names its tooltip rows after the y title -- "Median of
+        # revenue" -- so an absent title falls back to the column rather than
+        # to None, which it would print as "Median of null".
+        encoding = {
+            "x": alt.X(x_field, axis=alt.Axis(labelAngle=0), title=chart.x_title),
+            "y": alt.Y(y_field, title=chart.y_title or y_field),
+        }
+        if color_field is not None:
+            encoding["color"] = alt.Color(color_field)
     else:
         encoding = {
             "x": alt.X(x_field, axis=alt.Axis(labelAngle=0), title=chart.x_title),
@@ -141,9 +194,10 @@ def build_chart(
         }
         if color_field is not None:
             encoding["color"] = alt.Color(color_field)
-    if "tooltip" in chart.interactions:
-        tooltip_fields = list(dict.fromkeys(required_fields))
-        encoding["tooltip"] = [alt.Tooltip(field) for field in tooltip_fields]
+    # A boxplot keeps the renderer's own tooltip -- the quartiles of the box
+    # under the pointer -- which a list of row fields would replace.
+    if "tooltip" in chart.interactions and chart.draw_type != "boxplot":
+        encoding["tooltip"] = tooltips
 
     properties: dict[str, object] = {
         "width": width,
@@ -183,6 +237,12 @@ def build_chart(
         rendered = base.mark_circle(size=80)
     elif chart.draw_type == "area":
         rendered = base.mark_area(opacity=0.7)
+    elif chart.draw_type == "histogram":
+        rendered = base.mark_bar()
+    elif chart.draw_type == "boxplot":
+        rendered = base.mark_boxplot(size=_boxplot_size(frame, x_field, width))
+    elif chart.draw_type == "heatmap":
+        rendered = base.mark_rect()
     else:
         rendered = base.mark_arc()
 
@@ -196,6 +256,25 @@ def build_chart(
     if "zoom" in chart.interactions:
         rendered = rendered.interactive()
     return rendered
+
+
+def _require_numeric(frame: pa.Table, field: str, role: str, draw_type: str) -> None:
+    column_type = frame.schema.field(field).type
+    if pa.types.is_integer(column_type) or pa.types.is_floating(column_type):
+        return
+    raise ChartRenderError(
+        f"{draw_type} needs a numeric {role} column and '{field}' is {column_type}"
+    )
+
+
+def _boxplot_size(frame: pa.Table, x_field: str, width: int) -> int:
+    """Box width in pixels: half of each category's share of the plot.
+
+    The renderer's default is a fixed 14 pixels, which reads as a hairline on
+    a two-category chart the width glyf draws.
+    """
+    categories = max(pc.count_distinct(frame.column(x_field)).as_py(), 1)
+    return max(BOXPLOT_MIN_SIZE, min(BOXPLOT_MAX_SIZE, width // (categories * 2)))
 
 
 def _coerce_query_result(data: QueryResult | ArrowStreamExportable) -> QueryResult:

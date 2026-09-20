@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import re
 
@@ -40,11 +41,11 @@ def test_render_chart_writes_png_and_svg(tmp_path: Path) -> None:
 
 
 def test_render_chart_rejects_unsupported_chart_type(tmp_path: Path) -> None:
-    with pytest.raises(GgsqlParseError, match="unsupported chart type 'heatmap'"):
+    with pytest.raises(GgsqlParseError, match="unsupported chart type 'violin'"):
         parse_ggsql(
             "select month, revenue from fct_orders\n\n"
             "VISUALISE month AS x, revenue AS y\n"
-            "DRAW heatmap\n",
+            "DRAW violin\n",
             name="revenue",
         )
 
@@ -177,3 +178,125 @@ def test_render_chart_uses_custom_python_renderer(tmp_path: Path) -> None:
 
     assert (tmp_path / "custom.txt").read_text(encoding="utf-8") == "custom_revenue"
     assert (tmp_path / "custom.svg").read_text(encoding="utf-8") == "1"
+
+
+def _render_spec(tmp_path: Path, text: str, data: pd.DataFrame) -> dict[str, object]:
+    chart = parse_ggsql(text, name="chart")
+    vega_json_path = tmp_path / "chart.vega.json"
+    render_chart(
+        chart,
+        data,
+        tmp_path / "chart.png",
+        tmp_path / "chart.svg",
+        vega_json_path=vega_json_path,
+    )
+    assert (tmp_path / "chart.png").read_bytes().startswith(b"\x89PNG")
+    assert "<svg" in (tmp_path / "chart.svg").read_text(encoding="utf-8")
+    return json.loads(vega_json_path.read_text(encoding="utf-8"))
+
+
+def test_render_chart_bins_and_counts_a_histogram(tmp_path: Path) -> None:
+    spec = _render_spec(
+        tmp_path,
+        "select amount, region from fct_orders\n\n"
+        "VISUALISE amount AS x, region AS color\n"
+        "DRAW histogram\n"
+        "INTERACT tooltip, legend_filter\n",
+        pd.DataFrame(
+            {
+                "amount": [12.0, 14.5, 18.0, 40.0, 41.5, 90.0],
+                "region": ["North", "North", "South", "South", "North", "South"],
+            }
+        ),
+    )
+
+    encoding = spec["encoding"]
+    assert spec["mark"]["type"] == "bar"
+    assert encoding["x"]["field"] == "amount"
+    assert encoding["x"]["bin"] == {"maxbins": 30}
+    assert encoding["y"]["aggregate"] == "count"
+    assert "field" not in encoding["y"]
+    assert encoding["color"]["field"] == "region"
+    # The tooltip describes the bar -- a bin and its count -- not a row.
+    assert [item.get("aggregate", item.get("field")) for item in encoding["tooltip"]] == [
+        "amount",
+        "count",
+        "region",
+    ]
+
+
+def test_render_chart_draws_a_boxplot_with_its_own_tooltip(tmp_path: Path) -> None:
+    spec = _render_spec(
+        tmp_path,
+        "select region, amount from fct_orders\n\n"
+        "VISUALISE region AS x, amount AS y\n"
+        "DRAW boxplot\n"
+        "INTERACT tooltip\n",
+        pd.DataFrame(
+            {
+                "region": ["North"] * 5 + ["South"] * 5,
+                "amount": [10, 12, 13, 15, 60, 20, 22, 23, 25, 27],
+            }
+        ),
+    )
+
+    assert spec["mark"]["type"] == "boxplot"
+    # Two categories across the default 800 pixels, capped.
+    assert spec["mark"]["size"] == 80
+    assert spec["encoding"]["x"]["field"] == "region"
+    assert spec["encoding"]["y"]["field"] == "amount"
+    # The tooltip reads "Median of <y title>", so the title is never null.
+    assert spec["encoding"]["y"]["title"] == "amount"
+    # A row-field tooltip would replace the quartile summary the mark provides.
+    assert "tooltip" not in spec["encoding"]
+
+
+def test_render_chart_draws_a_heatmap_in_query_order(tmp_path: Path) -> None:
+    spec = _render_spec(
+        tmp_path,
+        "select hour, weekday, orders from fct_orders\n\n"
+        "VISUALISE hour AS x, weekday AS y, orders AS color\n"
+        "DRAW heatmap\n"
+        "INTERACT tooltip\n",
+        pd.DataFrame(
+            {
+                "hour": [9, 10, 9, 10],
+                "weekday": ["Mon", "Mon", "Tue", "Tue"],
+                "orders": [4, 9, 2, 7],
+            }
+        ),
+    )
+
+    encoding = spec["encoding"]
+    assert spec["mark"]["type"] == "rect"
+    assert encoding["x"]["type"] == "ordinal"
+    assert encoding["y"]["type"] == "ordinal"
+    # Alphabetical order would put Friday first; the query's order stands.
+    assert encoding["x"]["sort"] is None
+    assert encoding["y"]["sort"] is None
+    assert encoding["color"] == {"field": "orders", "type": "quantitative"}
+    assert [item["field"] for item in encoding["tooltip"]] == ["hour", "weekday", "orders"]
+
+
+@pytest.mark.parametrize(
+    ("draw", "mapping", "message"),
+    [
+        ("histogram", "region AS x", "histogram needs a numeric x column and 'region' is"),
+        ("boxplot", "month AS x, region AS y", "boxplot needs a numeric y column and 'region' is"),
+        (
+            "heatmap",
+            "month AS x, revenue AS y, region AS color",
+            "heatmap needs a numeric color column and 'region' is",
+        ),
+    ],
+)
+def test_render_chart_reports_a_text_column_where_a_number_is_computed(
+    tmp_path: Path, draw: str, mapping: str, message: str
+) -> None:
+    chart = parse_ggsql(f"select 1\n\nVISUALISE {mapping}\nDRAW {draw}\n", name="chart")
+    data = pd.DataFrame(
+        {"month": ["2026-01", "2026-02"], "region": ["North", "South"], "revenue": [1, 2]}
+    )
+
+    with pytest.raises(ChartRenderError, match=message):
+        render_chart(chart, data, tmp_path / "chart.png", tmp_path / "chart.svg")

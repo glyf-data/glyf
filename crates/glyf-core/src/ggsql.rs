@@ -44,7 +44,6 @@ pub fn parse_ggsql_text(
         .first()
         .ok_or_else(|| CoreError::Parse("missing VISUALISE section".to_string()))?;
     let visualise = parse_visualise(visualise_line)?;
-    validate_required_roles(&visualise)?;
 
     let mut draw_type = None;
     let mut labels = BTreeMap::new();
@@ -112,6 +111,8 @@ pub fn parse_ggsql_text(
 
     let draw_type =
         draw_type.ok_or_else(|| CoreError::Parse("missing DRAW directive".to_string()))?;
+    validate_required_roles(&draw_type, &visualise)?;
+    validate_interactions(&draw_type, &interactions)?;
 
     Ok(GgsqlChart {
         path: path.unwrap_or(name).to_string(),
@@ -201,6 +202,7 @@ fn normalize_draw_for_ggsql(line: &str, draw: &str, mapping: &str) -> String {
         .map(str::trim_start)
         .unwrap_or_default();
     let ggsql_draw = match draw {
+        "heatmap" => "tile",
         "pie" => "bar",
         "scatter" => "point",
         other => other,
@@ -291,15 +293,54 @@ fn parse_visualise(line: &str) -> Result<Vec<VisualiseMapping>, CoreError> {
     Ok(mappings)
 }
 
-fn validate_required_roles(visualise: &[VisualiseMapping]) -> Result<(), CoreError> {
+fn validate_required_roles(
+    draw_type: &str,
+    visualise: &[VisualiseMapping],
+) -> Result<(), CoreError> {
     let roles = visualise
         .iter()
         .map(|mapping| mapping.role.as_str())
         .collect::<BTreeSet<_>>();
-    if !roles.contains("x") || !roles.contains("y") {
-        return Err(CoreError::Parse(
-            "VISUALISE requires x and y mappings".to_string(),
-        ));
+    match draw_type {
+        "histogram" => {
+            if !roles.contains("x") {
+                return Err(CoreError::Parse(
+                    "histogram requires an x mapping".to_string(),
+                ));
+            }
+            if roles.contains("y") {
+                return Err(CoreError::Parse(
+                    "histogram counts the rows in each bin of x and takes no y mapping".to_string(),
+                ));
+            }
+        }
+        "heatmap" => {
+            if !roles.contains("x") || !roles.contains("y") || !roles.contains("color") {
+                return Err(CoreError::Parse(
+                    "heatmap requires x, y and color mappings".to_string(),
+                ));
+            }
+        }
+        _ => {
+            if !roles.contains("x") || !roles.contains("y") {
+                return Err(CoreError::Parse(
+                    "VISUALISE requires x and y mappings".to_string(),
+                ));
+            }
+        }
+    }
+    Ok(())
+}
+
+fn validate_interactions(draw_type: &str, interactions: &[String]) -> Result<(), CoreError> {
+    // A boxplot is a composite mark a legend selection cannot bind to, and a
+    // heatmap's colour is a continuous scale with no legend entries to click.
+    if matches!(draw_type, "boxplot" | "heatmap")
+        && interactions.iter().any(|item| item == "legend_filter")
+    {
+        return Err(CoreError::Parse(format!(
+            "legend_filter interaction is not supported for {draw_type} charts"
+        )));
     }
     Ok(())
 }
@@ -313,12 +354,25 @@ fn parse_draw(line: &str) -> Option<String> {
 fn legacy_draw_type(draw: &str) -> &str {
     match draw {
         "point" => "scatter",
+        "tile" => "heatmap",
         other => other,
     }
 }
 
 fn is_supported_draw(draw: &str) -> bool {
-    matches!(draw, "area" | "bar" | "line" | "pie" | "point" | "scatter")
+    matches!(
+        draw,
+        "area"
+            | "bar"
+            | "boxplot"
+            | "heatmap"
+            | "histogram"
+            | "line"
+            | "pie"
+            | "point"
+            | "scatter"
+            | "tile"
+    )
 }
 
 fn parse_key_value_directive(line: &str, keyword: &str) -> Option<(String, String)> {
@@ -406,5 +460,109 @@ mod tests {
 
         assert_eq!(chart.labels.get("title").unwrap(), "This month's revenue");
         assert_eq!(chart.labels.get("x_title").unwrap(), "Month");
+    }
+
+    #[test]
+    fn parses_histogram_with_x_alone() {
+        let chart = parse_ggsql_text(
+            "SELECT amount, region FROM fct_orders\n\nVISUALISE amount AS x, region AS color\nDRAW histogram\nINTERACT tooltip, legend_filter\n",
+            "order_size",
+            None,
+        )
+        .unwrap();
+
+        assert_eq!(chart.draw_type, "histogram");
+        assert_eq!(chart.visualise.len(), 2);
+    }
+
+    #[test]
+    fn rejects_histogram_with_y_mapping() {
+        let error = parse_ggsql_text(
+            "SELECT amount, revenue FROM fct_orders\n\nVISUALISE amount AS x, revenue AS y\nDRAW histogram\n",
+            "order_size",
+            None,
+        )
+        .unwrap_err();
+
+        assert!(error.to_string().contains("takes no y mapping"));
+    }
+
+    #[test]
+    fn parses_boxplot() {
+        let chart = parse_ggsql_text(
+            "SELECT region, amount FROM fct_orders\n\nVISUALISE region AS x, amount AS y\nDRAW boxplot\nINTERACT tooltip\n",
+            "order_spread",
+            None,
+        )
+        .unwrap();
+
+        assert_eq!(chart.draw_type, "boxplot");
+    }
+
+    #[test]
+    fn parses_heatmap_and_its_tile_alias() {
+        for draw in ["heatmap", "tile"] {
+            let chart = parse_ggsql_text(
+                &format!(
+                    "SELECT weekday, hour, orders FROM fct_orders\n\nVISUALISE hour AS x, weekday AS y, orders AS color\nDRAW {draw}\n"
+                ),
+                "order_heatmap",
+                None,
+            )
+            .unwrap();
+
+            assert_eq!(chart.draw_type, "heatmap");
+        }
+    }
+
+    #[test]
+    fn rejects_heatmap_without_color_mapping() {
+        let error = parse_ggsql_text(
+            "SELECT weekday, hour FROM fct_orders\n\nVISUALISE hour AS x, weekday AS y\nDRAW heatmap\n",
+            "order_heatmap",
+            None,
+        )
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("heatmap requires x, y and color mappings"));
+    }
+
+    #[test]
+    fn rejects_legend_filter_on_boxplot_and_heatmap() {
+        let boxplot = parse_ggsql_text(
+            "SELECT region, amount FROM fct_orders\n\nVISUALISE region AS x, amount AS y, region AS color\nDRAW boxplot\nINTERACT legend_filter\n",
+            "order_spread",
+            None,
+        )
+        .unwrap_err();
+        assert!(boxplot
+            .to_string()
+            .contains("legend_filter interaction is not supported for boxplot charts"));
+
+        let heatmap = parse_ggsql_text(
+            "SELECT weekday, hour, orders FROM fct_orders\n\nVISUALISE hour AS x, weekday AS y, orders AS color\nDRAW heatmap\nINTERACT legend_filter\n",
+            "order_heatmap",
+            None,
+        )
+        .unwrap_err();
+        assert!(heatmap
+            .to_string()
+            .contains("legend_filter interaction is not supported for heatmap charts"));
+    }
+
+    #[test]
+    fn still_requires_x_and_y_for_other_chart_types() {
+        let error = parse_ggsql_text(
+            "SELECT month FROM fct_orders\n\nVISUALISE month AS x\nDRAW bar\n",
+            "revenue",
+            None,
+        )
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("VISUALISE requires x and y mappings"));
     }
 }

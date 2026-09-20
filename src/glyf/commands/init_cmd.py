@@ -10,7 +10,6 @@ from glyf.config import (
     load_config,
     resolve_project_path,
 )
-from glyf.ggsql.parser import SUPPORTED_CHART_TYPES
 
 DEFAULT_CONFIG = """visualisations_path: visualisations
 dashboards_path: dashboards
@@ -35,6 +34,11 @@ dashboard:
 """
 
 NAME_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+
+# The starter chart maps a date to a value, which is the shape these types
+# draw. A histogram, boxplot or heatmap needs a different query, so the
+# scaffold does not offer them.
+STARTER_CHART_TYPES = {"line", "bar", "scatter", "area", "pie"}
 
 
 def run_init(
@@ -66,8 +70,8 @@ def run_init(
     model_name = _normalize_name(model_name, "model name")
     chart_title = chart_title.strip() or _title_from_name(chart_name)
     chart_type = chart_type.strip().lower()
-    if chart_type not in SUPPORTED_CHART_TYPES:
-        supported = ", ".join(sorted(SUPPORTED_CHART_TYPES))
+    if chart_type not in STARTER_CHART_TYPES:
+        supported = ", ".join(sorted(STARTER_CHART_TYPES))
         typer.echo("Init failed")
         typer.echo(f"  - Unsupported chart type '{chart_type}'. Supported: {supported}")
         raise typer.Exit(1)

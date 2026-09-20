@@ -166,6 +166,10 @@ abort and a stack trace from inside the renderer, with no chart named, no build
 output, and in a multi-chart build no way to tell which query was responsible.
 The budget turns that into a normal build failure that names the chart.
 
+The count is the number of rows the query returns. For a `histogram` or a
+`boxplot` that is more than the marks on the picture, and it is still the number
+that matters: the renderer receives every row to bin or summarise.
+
 `500000` is the largest single-series chart observed to render, on one machine.
 The real limit belongs to the renderer's memory rather than to glyf, so it
 moves with the platform and the chart. Raise it if your builds are fine above
@@ -222,6 +226,7 @@ vertical extent of every column exactly.
 | `line`, `area` over `downsample_over` rows | yes |
 | `scatter` | no; binning snaps its marks to a lattice and drops the density it exists to show |
 | `bar`, `pie` | no; one mark per category rather than one per pixel column |
+| `histogram`, `boxplot`, `heatmap` | no; a histogram and a boxplot are computed from every row, and a heatmap has one mark per cell |
 | a non-numeric x axis | no; bins over a string axis would be bins over the warehouse's row order |
 
 A build says which charts it downsampled, and says when it could not:

@@ -321,7 +321,7 @@ def test_render_command_reports_pipeline_errors(tmp_path: Path) -> None:
     (project / "visualisations" / "revenue.ggsql").write_text(
         "select month, revenue from {{ ref('fct_orders') }}\n\n"
         "VISUALISE month AS x, revenue AS y\n"
-        "DRAW heatmap\n",
+        "DRAW violin\n",
         encoding="utf-8",
     )
 
@@ -329,7 +329,7 @@ def test_render_command_reports_pipeline_errors(tmp_path: Path) -> None:
 
     assert result.exit_code == 1
     assert "Render failed" in result.output
-    assert "unsupported chart type 'heatmap'" in result.output
+    assert "unsupported chart type 'violin'" in result.output
 
 
 def test_dashboard_command_reports_missing_chart_artifacts(tmp_path: Path) -> None:

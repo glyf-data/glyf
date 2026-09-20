@@ -6,7 +6,7 @@ import re
 import pytest
 
 from glyf.dashboard.assets import AssetManager
-from glyf.dashboard.artifacts import load_chart_artifact
+from glyf.dashboard.artifacts import ChartArtifactError, load_chart_artifact
 from glyf.dashboard.generator import DashboardGenerationError, generate_dashboards
 from glyf.dashboard.loader import load_dashboard
 from glyf.pipeline import render_project
@@ -284,6 +284,50 @@ def test_chart_metadata_loading(tmp_path: Path) -> None:
     assert artifact.data.rows[-1]["revenue"] == 2400
     assert artifact.svg is not None
     assert artifact.compiled_sql == "SELECT month, revenue\nFROM main.fct_orders\n"
+
+
+def test_histogram_reaches_the_dashboard_without_a_y_field(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "visualisations" / "order_size.ggsql").write_text(
+        "SELECT revenue\nFROM {{ ref('fct_orders') }}\n\n"
+        "VISUALISE revenue AS x\nDRAW histogram\nLABEL title => 'Order Size'\n",
+        encoding="utf-8",
+    )
+    dashboard_path = project / "dashboards" / "executive.yml"
+    dashboard_path.write_text(
+        dashboard_path.read_text(encoding="utf-8") + "  - order_size\n",
+        encoding="utf-8",
+    )
+    render_project(project)
+
+    artifact = load_chart_artifact(project, "order_size")
+    generate_dashboards(project)
+
+    assert artifact.metadata.chart_type == "histogram"
+    assert artifact.metadata.x == "revenue"
+    assert artifact.metadata.y is None
+    html = (project / "target" / "glyf" / "dashboards" / "executive.html").read_text(
+        encoding="utf-8"
+    )
+    assert "Order Size" in html
+    assert "revenue -> " not in html
+    bundle = json.loads(
+        (project / "target" / "glyf" / "bundle.json").read_text(encoding="utf-8")
+    )
+    assert bundle["charts"]["order_size"]["chart_type"] == "histogram"
+    assert bundle["charts"]["order_size"]["fields"] == {"x": "revenue", "y": None}
+
+
+def test_chart_metadata_requires_y_outside_a_histogram(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    metadata_path = project / "target" / "glyf" / "charts" / "revenue.json"
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    metadata["y"] = None
+    metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
+
+    with pytest.raises(ChartArtifactError, match="chart metadata for 'revenue' missing y"):
+        load_chart_artifact(project, "revenue")
 
 
 def test_dashboard_generation_writes_dashboard_and_index(tmp_path: Path) -> None:

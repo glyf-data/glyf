@@ -69,6 +69,10 @@ in a `datasets` block:
 "datasets": {"data-eee936f3": [{"bookings": 79000, "month": "2026-03"}, ...]}
 ```
 
+A `histogram` or `boxplot` is no exception. The picture shows bins or quartiles,
+but the browser computes them, so the `datasets` block carries every row the
+query returned.
+
 **A static chart publishes its rows too.** An SVG describes every mark, and each
 mark carries an accessibility label containing the values it was drawn from:
 
