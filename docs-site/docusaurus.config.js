@@ -46,6 +46,7 @@ const config = {
             require.resolve('./src/css/custom.css'),
             require.resolve('./src/css/docs.css'),
             require.resolve('./src/css/sidebar-icons.css'),
+            require.resolve('./src/css/landing-light.css'),
           ],
         },
       }),
@@ -67,7 +68,7 @@ const config = {
       ],
       colorMode: {
         defaultMode: 'light',
-        disableSwitch: true,
+        disableSwitch: false,
         respectPrefersColorScheme: false,
       },
       navbar: {

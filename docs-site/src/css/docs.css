@@ -24,6 +24,177 @@ html.plugin-docs {
   --doc-measure: 46rem;
 }
 
+/* ---------- Dark theme ---------- */
+
+/* The same tokens, a second set of values. Everything below this block reads
+   the tokens, so this is nearly the whole theme. The accent is lightened: the
+   light theme's blue is 3.4:1 against this page, and #8ab0ff is 8:1. */
+html.plugin-docs[data-theme='dark'] {
+  --doc-ink: #f1f5f9;
+  --doc-body: #c3cede;
+  --doc-quiet: #8b9ab3;
+  --doc-faint: #64748b;
+  --doc-rule: #1f2c44;
+  --doc-rule-soft: #1a2539;
+  --doc-page: #0b1222;
+  --doc-surface: #101a2e;
+  --doc-sidebar: #090f1d;
+  --doc-hover: #16223a;
+  --doc-wash: #0f1b33;
+  --doc-row-hover: #13203a;
+  --doc-code-bg: #1a2742;
+  --doc-code-ink: #e2e8f0;
+  --doc-accent: #8ab0ff;
+  --doc-accent-wash: #15254a;
+
+  /* What Docusaurus's own components read. */
+  --ifm-background-color: var(--doc-page);
+  --ifm-background-surface-color: var(--doc-surface);
+  --ifm-font-color-base: var(--doc-body);
+  --ifm-heading-color: var(--doc-ink);
+  --ifm-color-primary: var(--doc-accent);
+  --ifm-link-color: var(--doc-accent);
+  --ifm-toc-border-color: var(--doc-rule);
+  --ifm-color-emphasis-300: var(--doc-rule);
+  --ifm-hr-border-color: var(--doc-rule);
+  --ifm-table-stripe-background: transparent;
+  color-scheme: dark;
+}
+
+/* custom.css sets `html, body, #__docusaurus, .main-wrapper` to white with
+   !important. Each is named here with more specificity than it has there. */
+html.plugin-docs[data-theme='dark'],
+html.plugin-docs[data-theme='dark'] body,
+html.plugin-docs[data-theme='dark'] #__docusaurus,
+html.plugin-docs[data-theme='dark'] .main-wrapper {
+  background: var(--doc-page) !important;
+  color: var(--doc-body) !important;
+}
+
+/* custom.css paints the bar white with !important; these outrank it by
+   specificity rather than by coming later. */
+html.plugin-docs[data-theme='dark'] nav.navbar {
+  border-bottom-color: var(--doc-rule) !important;
+  background: rgba(9, 15, 29, 0.9) !important;
+}
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar__title,
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar__items .navbar__link,
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar__toggle {
+  color: var(--doc-body) !important;
+}
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar__items .navbar__link:hover,
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar__items .navbar__link--active {
+  color: var(--doc-accent) !important;
+}
+html.plugin-docs[data-theme='dark'] nav.navbar .navbarGithubLink {
+  border-color: var(--doc-rule) !important;
+  background: var(--doc-surface) !important;
+  color: var(--doc-ink) !important;
+}
+html.plugin-docs[data-theme='dark'] nav.navbar .navbarGithubLink:hover {
+  border-color: var(--doc-accent) !important;
+  color: var(--doc-ink) !important;
+}
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar-sidebar {
+  background: var(--doc-sidebar);
+}
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar-sidebar__brand {
+  border-bottom-color: var(--doc-rule);
+}
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar-sidebar__items .menu__link {
+  color: var(--doc-ink);
+}
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar-sidebar__items .menu__link:hover,
+html.plugin-docs[data-theme='dark'] nav.navbar .navbar-sidebar__items .menu__link--active {
+  background: var(--doc-accent-wash);
+  color: var(--doc-accent);
+}
+/* The theme switch, on docs pages only: a round control the height of the
+   buttons beside it. landing-light.css hides it where there is one theme. */
+html.plugin-docs .navbar__items--right [class*='colorModeToggle'] {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.6rem;
+  border: 1px solid var(--doc-rule);
+  border-radius: 999px;
+  background: var(--doc-surface);
+  color: var(--doc-body);
+}
+html.plugin-docs .navbar__items--right [class*='colorModeToggle'] button {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  color: inherit;
+}
+html.plugin-docs .navbar__items--right [class*='colorModeToggle']:hover {
+  border-color: var(--doc-accent);
+  color: var(--doc-ink);
+}
+html.plugin-docs[data-theme='dark'] .navbar-sidebar__brand [class*='colorModeToggle'] button,
+html.plugin-docs[data-theme='dark'] .navbar-sidebar__brand [class*='colorModeToggle'] svg,
+html.plugin-docs[data-theme='dark'] .navbar-sidebar__back {
+  color: var(--doc-ink) !important;
+}
+/* The GitHub mark is filled with currentColor, and custom.css pins that colour
+   on the icon itself. */
+html.plugin-docs[data-theme='dark'] nav.navbar .navbarGithubMark,
+html.plugin-docs[data-theme='dark'] nav.navbar .navbarGithubMark path {
+  color: var(--doc-ink) !important;
+  fill: var(--doc-ink) !important;
+}
+html.plugin-docs[data-theme='dark'] .navbar-sidebar__back {
+  background: var(--doc-hover);
+}
+
+/* A code block is dark in both themes; here it needs an edge to sit on. */
+html.plugin-docs[data-theme='dark'] .theme-code-block {
+  border-color: var(--doc-rule);
+  box-shadow: none;
+}
+
+html.plugin-docs[data-theme='dark'] .theme-admonition-warning,
+html.plugin-docs[data-theme='dark'] .theme-admonition-caution {
+  border-color: #4a3410;
+  border-left-color: #f59e0b;
+  background: #1f1706;
+  color: #fde7b8;
+}
+html.plugin-docs[data-theme='dark'] .theme-admonition-note,
+html.plugin-docs[data-theme='dark'] .theme-admonition-info,
+html.plugin-docs[data-theme='dark'] .theme-admonition-tip {
+  border-color: #24376a;
+  background: var(--doc-wash);
+  color: var(--doc-body);
+}
+html.plugin-docs[data-theme='dark'] .theme-admonition-danger {
+  border-color: #5a1d1d;
+  border-left-color: #f87171;
+  background: #220e0e;
+  color: #fecaca;
+}
+
+/* The two dark cards on the intro page need an edge against a dark page. */
+html.plugin-docs[data-theme='dark'] .theme-doc-markdown .docMap a.docMap__start {
+  border-color: var(--doc-rule);
+  background: var(--doc-surface);
+}
+html.plugin-docs[data-theme='dark'] .buildSteps li > code {
+  border: 1px solid var(--doc-rule);
+}
+html.plugin-docs[data-theme='dark'] .buildSteps li + li::after {
+  background-color: var(--doc-surface);
+}
+html.plugin-docs[data-theme='dark'] .roadmapStatus--merged {
+  color: #0b1222;
+}
+
+/* Screenshots of light dashboards are what they are; a hairline keeps them from
+   glaring against the page. */
+html.plugin-docs[data-theme='dark'] .theme-doc-markdown img {
+  border: 1px solid var(--doc-rule);
+  border-radius: 8px;
+}
+
 /* ---------- Page frame ---------- */
 
 html.plugin-docs .theme-doc-sidebar-container {

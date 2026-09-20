@@ -174,56 +174,6 @@ select {
   margin-right: 0.55rem;
 }
 
-.navbar__items--right [class*='colorModeToggle'] {
-  order: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  min-height: 3rem;
-  padding: 0;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 14px;
-  background: #ffffff;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-}
-
-.navbar__items--right [class*='toggleButton'] {
-  position: relative;
-  width: 2.25rem;
-  height: 2.25rem;
-  color: #0f172a;
-}
-
-.navbar__items--right [class*='toggleButton']::before {
-  content: "";
-  width: 1.35rem;
-  height: 1.35rem;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at center, transparent 0 34%, currentColor 36% 49%, transparent 51%),
-    conic-gradient(
-      from 0deg,
-      currentColor 0 5deg,
-      transparent 5deg 40deg,
-      currentColor 40deg 50deg,
-      transparent 50deg 85deg,
-      currentColor 85deg 95deg,
-      transparent 95deg 130deg,
-      currentColor 130deg 140deg,
-      transparent 140deg 175deg,
-      currentColor 175deg 185deg,
-      transparent 185deg 220deg,
-      currentColor 220deg 230deg,
-      transparent 230deg 265deg,
-      currentColor 265deg 275deg,
-      transparent 275deg 310deg,
-      currentColor 310deg 320deg,
-      transparent 320deg 360deg
-    );
-}
-
 .navbarGetStarted {
   order: 3;
   display: inline-flex;
@@ -791,14 +741,6 @@ pre,
   font-weight: 700 !important;
 }
 
-.navbar__items--right [class*='colorModeToggle'] {
-  width: 2.45rem !important;
-  height: 2.45rem !important;
-  min-height: 2.45rem !important;
-  border-radius: 8px !important;
-  box-shadow: none !important;
-}
-
 .buttonRow {
   gap: 0.9rem !important;
   margin-top: 1.9rem !important;
@@ -1065,10 +1007,6 @@ pre,
 /* Final hero stabilization: 3-stage pipeline (dbt -> glyf -> outputs), no overlap */
 
 /* Final landing repair pass: dark code surfaces, softer hero, readable roadmap, dark mode. */
-.navbar__items--right [class*='colorModeToggle'] {
-  display: inline-flex !important;
-  order: 2;
-}
 
 .codeKw {
   color: #b78cff !important;
@@ -1155,47 +1093,15 @@ pre,
   margin-right: 0.4rem !important;
 }
 
-.navbar__items--right [class*='colorModeToggle'] {
-  width: 2.65rem !important;
-  height: 2.65rem !important;
-  min-height: 2.65rem !important;
-  border-radius: 10px !important;
-  padding: 0 !important;
-}
-
-.navbar__items--right [class*='toggleButton'] {
-  width: 2.1rem !important;
-  height: 2.1rem !important;
-  color: currentColor !important;
-}
-
-.navbar__items--right [class*='toggleButton']::before {
-  display: none !important;
-}
-
-.navbar__items--right [class*='toggleButton'] svg {
-  display: block !important;
-  width: 1.2rem !important;
-  height: 1.2rem !important;
-}
-
 @media (max-width: 640px) {
   .navbarStarGroup {
     display: none !important;
   }
 
-  .navbar__items--right [class*='colorModeToggle'] {
-    width: 2.35rem !important;
-    height: 2.35rem !important;
-    min-height: 2.35rem !important;
-  }
+  
 }
 
 /* Warm light palette inspired by the reference chart card. */
-
-.navbar__items--right [class*='colorModeToggle'] {
-  display: none !important;
-}
 
 .navbar__items:not(.navbar__items--right) .navbar__link {
   color: var(--glyf-ink-light) !important;
