@@ -5,6 +5,7 @@ import pytest
 from typer.testing import CliRunner
 
 from glyf.cli import app
+from glyf.ggsql.parser import parse_ggsql_file
 from tests.helpers import copy_basic_project, copy_simple_dbt_project
 
 
@@ -51,6 +52,10 @@ def test_init_command_creates_starter_files(tmp_path: Path) -> None:
     assert "monthly_revenue" in (project / "dashboards" / "executive.yml").read_text(
         encoding="utf-8"
     )
+    # The scaffold is the first chart a new user validates.
+    starter = parse_ggsql_file(project / "visualisations" / "monthly_revenue.ggsql")
+    assert starter.title == "Monthly Revenue"
+    assert starter.draw_type == "line"
 
 
 def test_init_command_prompts_for_starter_values(tmp_path: Path) -> None:

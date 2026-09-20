@@ -147,7 +147,7 @@ fn normalize_for_ggsql(text: &str) -> String {
             continue;
         }
         if strip_keyword(line, "LABEL").is_some() {
-            normalized_visual.push(line.to_string());
+            normalized_visual.push(normalize_label_for_ggsql(line));
             continue;
         }
         if strip_keyword(line, "CONFIG").is_some() || strip_keyword(line, "INTERACT").is_some() {
@@ -215,6 +215,23 @@ fn normalize_draw_for_ggsql(line: &str, draw: &str, mapping: &str) -> String {
         normalized.push_str(mapping);
     }
     normalized
+}
+
+/// ggsql reads single-quoted strings only, while glyf has always unquoted
+/// either kind, and `glyf init` writes double quotes. Hand ggsql the label it
+/// can read; the value glyf keeps is still taken from the original line.
+fn normalize_label_for_ggsql(line: &str) -> String {
+    let Some((key, value)) = parse_key_value_directive(line, "LABEL") else {
+        return line.to_string();
+    };
+    let value = value.trim();
+    if value.len() < 2 || !value.starts_with('"') || !value.ends_with('"') {
+        return line.to_string();
+    }
+    let escaped = value[1..value.len() - 1]
+        .replace('\\', "\\\\")
+        .replace('\'', "\\'");
+    format!("LABEL {key} => '{escaped}'")
 }
 
 fn contains_mapping_clause(line: &str) -> bool {
@@ -376,5 +393,18 @@ mod tests {
             chart.sql,
             "SELECT region, sum(revenue) AS revenue FROM {{ ref('fct_orders') }} GROUP BY 1"
         );
+    }
+
+    #[test]
+    fn accepts_double_quoted_labels() {
+        let chart = parse_ggsql_text(
+            "SELECT month, revenue FROM fct_orders\n\nVISUALISE month AS x, revenue AS y\nDRAW line\nLABEL title => \"This month's revenue\"\nLABEL x_title => \"Month\"\n",
+            "revenue",
+            None,
+        )
+        .unwrap();
+
+        assert_eq!(chart.labels.get("title").unwrap(), "This month's revenue");
+        assert_eq!(chart.labels.get("x_title").unwrap(), "Month");
     }
 }

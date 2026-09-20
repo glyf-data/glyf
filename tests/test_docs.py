@@ -9,6 +9,7 @@ the documented examples executable:
 2. every macro expression in those blocks resolves against the real macros
 3. blocks a page presents as a shipped example file are identical to that file
 4. every documented `glyf.yml` loads through `glyf.config`
+5. every documented chart parses through `glyf.ggsql.parser`
 
 Blocks are routed by shape, so nothing in the docs needs an annotation: a block
 whose top-level keys are dashboard keys is checked, and one whose keys are not
@@ -27,6 +28,7 @@ import yaml
 
 from glyf.config import GlyfConfig, load_config
 from glyf.dashboard.loader import load_dashboard
+from glyf.ggsql.parser import parse_ggsql
 from glyf.dashboard.macros.context import MacroContext
 from glyf.dashboard.macros.registry import (
     DashboardMacroRegistry,
@@ -122,6 +124,7 @@ SHIPPED_BLOCKS = {
 MINIMUM_DASHBOARD_BLOCKS = 20
 MINIMUM_MACRO_BLOCKS = 8
 MINIMUM_CONFIG_BLOCKS = 2
+MINIMUM_CHART_BLOCKS = 5
 
 
 @dataclass(frozen=True)
@@ -193,6 +196,20 @@ def _dashboard_blocks() -> list[Block]:
 def _config_blocks() -> list[Block]:
     """YAML blocks documenting a `glyf.yml`, wherever they appear."""
     return [block for block in _yaml_blocks() if _shape(block) == "config"]
+
+
+def _chart_blocks() -> list[Block]:
+    """SQL blocks documenting a whole `.ggsql` file: a query and a chart block.
+
+    A block showing a directive on its own -- `INTERACT tooltip, zoom` -- has no
+    query to parse and is not a chart.
+    """
+    return [
+        block
+        for path in sorted(DOCS.rglob("*.md"))
+        for block in _blocks(path)
+        if block.lang == "sql" and "VISUALISE" in block.text and "DRAW" in block.text
+    ]
 
 
 def _macro_blocks() -> list[Block]:
@@ -314,11 +331,18 @@ def test_every_yaml_block_is_accounted_for(block: Block) -> None:
     )
 
 
+@pytest.mark.parametrize("block", _chart_blocks(), ids=lambda block: block.id)
+def test_documented_charts_parse(block: Block) -> None:
+    """A chart a reader copies from the docs has to pass `glyf validate`."""
+    parse_ggsql(block.text, name="docs_probe")
+
+
 def test_the_docs_are_actually_being_checked() -> None:
     """Without floors, a moved docs tree would make every test above vacuous."""
     assert DOCS.is_dir(), "docs-site/docs is missing"
     assert len(_dashboard_blocks()) >= MINIMUM_DASHBOARD_BLOCKS
     assert len(_macro_blocks()) >= MINIMUM_MACRO_BLOCKS
     assert len(_config_blocks()) >= MINIMUM_CONFIG_BLOCKS
+    assert len(_chart_blocks()) >= MINIMUM_CHART_BLOCKS
     for shipped in SHIPPED_BLOCKS.values():
         assert Path(shipped).exists(), f"{shipped} is gone"
