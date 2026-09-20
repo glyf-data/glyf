@@ -43,13 +43,19 @@ uv run glyf serve
 ## Example chart
 
 ```sql
-SELECT month, revenue
+SELECT month, sum(revenue) AS revenue
 FROM {{ ref('fct_orders') }}
+GROUP BY 1
+ORDER BY 1
 
 VISUALISE month AS x, revenue AS y
 DRAW line
-LABEL title => 'Revenue'
+LABEL title => 'Monthly Revenue'
 ```
+
+`fct_orders` has one row per month and region. A line chart draws one point per
+row, so the query sums the regions first. Without the `GROUP BY` the line would
+visit two points in every month.
 
 ## Expected output
 

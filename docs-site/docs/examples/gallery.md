@@ -9,7 +9,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
 <div className="exampleGallery">
   <article className="exampleCard">
     <Link to="pathname:///dashboards/simple-dbt/dashboards/executive.html">
-      <img src="/img/examples/simple-dbt-banner.svg" alt="Simple dbt dashboard preview banner" />
+      <img src="/img/examples/simple-dbt-banner.png" alt="The Simple dbt executive dashboard: revenue tiles and a monthly revenue chart" width="1200" height="675" loading="lazy" />
     </Link>
     <div className="exampleCard__body">
       <h3><a href="https://github.com/glyf-data/glyf/tree/main/examples/simple_dbt">Simple dbt</a></h3>
@@ -25,7 +25,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
 
   <article className="exampleCard">
     <Link to="pathname:///dashboards/sales-dashboard/dashboards/sales.html">
-      <img src="/img/examples/sales-dashboard-banner.svg" alt="Sales dashboard preview banner" />
+      <img src="/img/examples/sales-dashboard-banner.png" alt="The Sales dashboard: monthly revenue and revenue by channel" width="1200" height="675" loading="lazy" />
     </Link>
     <div className="exampleCard__body">
       <h3><a href="https://github.com/glyf-data/glyf/tree/main/examples/sales_dashboard">Sales Dashboard</a></h3>
@@ -41,7 +41,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
 
   <article className="exampleCard">
     <Link to="pathname:///dashboards/product-analytics/dashboards/product.html">
-      <img src="/img/examples/product-analytics-banner.svg" alt="Product analytics dashboard preview banner" />
+      <img src="/img/examples/product-analytics-banner.png" alt="The Product Analytics dashboard: weekly active users and sessions" width="1200" height="675" loading="lazy" />
     </Link>
     <div className="exampleCard__body">
       <h3><a href="https://github.com/glyf-data/glyf/tree/main/examples/product_analytics">Product Analytics</a></h3>
@@ -57,7 +57,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
 
   <article className="exampleCard">
     <Link to="pathname:///dashboards/finance-metrics/dashboards/finance.html">
-      <img src="/img/examples/finance-metrics-banner.svg" alt="Finance metrics dashboard preview banner" />
+      <img src="/img/examples/finance-metrics-banner.png" alt="The Finance Metrics dashboard: headline tiles, bookings trend and margin share" width="1200" height="675" loading="lazy" />
     </Link>
     <div className="exampleCard__body">
       <h3><a href="https://github.com/glyf-data/glyf/tree/main/examples/finance_metrics">Finance Metrics</a></h3>
