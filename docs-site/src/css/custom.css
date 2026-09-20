@@ -102,7 +102,6 @@ select {
   box-shadow: none;
   border-bottom: 0;
   background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(18px);
 }
 
 .navbar__inner {
@@ -4650,7 +4649,6 @@ samp,
 [data-theme='dark'] .navbar {
   background: rgba(8, 12, 18, 0.88) !important;
   border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
-  backdrop-filter: blur(16px) !important;
 }
 
 [data-theme='dark'] .navbar__title,
@@ -11111,8 +11109,49 @@ nav.navbar,
 [data-theme='dark'] nav.navbar {
   border-bottom: 1px solid #dbe3ef !important;
   background: rgba(255, 255, 255, 0.94) !important;
-  backdrop-filter: blur(12px);
   box-shadow: none !important;
+}
+/* The blur lives on a pseudo-element, never on the navbar itself. The mobile
+   menu (.navbar-sidebar) is a position: fixed child of the navbar, and a
+   backdrop-filter on an ancestor becomes that child's containing block: the
+   menu then opens inside the bar's own height, where it cannot be seen. The
+   same goes for transform, filter, contain and will-change on .navbar. */
+nav.navbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+/* The navbar is translucent so the page shows through the blur. The mobile menu
+   inherits that colour and must not: text behind a menu is unreadable. */
+nav.navbar .navbar-sidebar {
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+}
+nav.navbar .navbar-sidebar__brand {
+  border-bottom: 1px solid #dbe3ef;
+  box-shadow: none;
+}
+nav.navbar .navbar-sidebar__items .menu__link {
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: #0f172a;
+}
+nav.navbar .navbar-sidebar__items .menu__link:hover,
+nav.navbar .navbar-sidebar__items .menu__link--active {
+  background: #eef3ff;
+  color: #1d4ed8;
+}
+nav.navbar .navbar-sidebar__items .navbarGithubLink {
+  margin: 0.9rem 0.9rem 0;
+}
+nav.navbar .navbar-sidebar__backdrop {
+  background: rgba(15, 23, 42, 0.45);
 }
 nav.navbar .navbar__brand,
 [data-theme='dark'] nav.navbar .navbar__brand {

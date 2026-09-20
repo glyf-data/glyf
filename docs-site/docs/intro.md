@@ -1,3 +1,5 @@
+import Link from '@docusaurus/Link';
+
 # glyf
 
 `glyf` is an open-source visualisation build tool for data pipelines.
@@ -16,16 +18,52 @@ Use it when you want visualisations to live beside analytical code, move through
 
 ## How it runs
 
-`glyf` runs beside dbt rather than inside it. dbt builds the tables; glyf reads `target/manifest.json`, executes each chart's query, and renders artifacts from the results. Nothing runs between builds:
+`glyf` runs beside dbt rather than inside it. Nothing runs between builds, and each command hands its output to the next:
 
-```bash
-dbt build
-glyf build
-glyf serve
-```
+<ol className="buildSteps">
+  <li>
+    <code>dbt build</code>
+    <p>dbt builds the tables and writes <code>target/manifest.json</code>.</p>
+  </li>
+  <li>
+    <code>glyf build</code>
+    <p>glyf reads the manifest, resolves each <code>ref()</code> and <code>source()</code>, runs each chart's query, and writes charts, dashboards and a static site under <code>target/glyf/</code>.</p>
+  </li>
+  <li>
+    <code>glyf serve</code>
+    <p>Previews the exported site locally. Publishing it is copying a folder.</p>
+  </li>
+</ol>
 
-## Documentation map
+## Where to go next
 
-- Start with [Quickstart](get-started/quickstart.md) to install the CLI, scaffold starter files, and generate your first dashboard.
-- Browse [Examples gallery](examples/gallery.md) for project patterns.
-- Keep [CLI reference](reference/cli.md) open when wiring scripts or CI.
+<div className="docMap">
+  <Link className="docMap__start" to="/docs/get-started/quickstart">
+    <strong>Quickstart</strong>
+    <span>Install the CLI, scaffold a starter chart in a dbt project, and build your first dashboard.</span>
+  </Link>
+  <Link to="/docs/guides/visualisation-syntax">
+    <strong>Visualisation syntax</strong>
+    <span>The chart block of a <code>.ggsql</code> file and the eight chart types.</span>
+  </Link>
+  <Link to="/docs/guides/dashboard-yaml">
+    <strong>Dashboard YAML</strong>
+    <span>Sections, column tracks, metric tiles and filters.</span>
+  </Link>
+  <Link to="/docs/examples/gallery">
+    <strong>Examples</strong>
+    <span>Four dbt projects with their rendered dashboards.</span>
+  </Link>
+  <Link to="/docs/reference/cli">
+    <strong>CLI reference</strong>
+    <span>Every command and flag, for scripts and CI.</span>
+  </Link>
+  <Link to="/docs/reference/configuration">
+    <strong>Configuration</strong>
+    <span>Every key of <code>glyf.yml</code> and its default.</span>
+  </Link>
+  <Link to="/docs/guides/data-exposure">
+    <strong>What a published site exposes</strong>
+    <span>Which rows a dashboard ships, and how to ship fewer.</span>
+  </Link>
+</div>

@@ -1,0 +1,672 @@
+/* The reading experience of the documentation pages.
+
+   custom.css carries the landing page and the site chrome. Everything here is
+   scoped to `html.plugin-docs`, the class Docusaurus puts on a docs route, so
+   none of it can reach the landing page. Loaded after custom.css. */
+
+html.plugin-docs {
+  --doc-ink: #0f172a;
+  --doc-body: #334155;
+  --doc-quiet: #64748b;
+  --doc-rule: #dbe3ef;
+  --doc-wash: #f5f8ff;
+  --doc-accent: #1d4ed8;
+  --doc-accent-wash: #eaf0ff;
+  --doc-measure: 46rem;
+}
+
+/* ---------- Page frame ---------- */
+
+html.plugin-docs .theme-doc-sidebar-container {
+  border-right: 1px solid var(--doc-rule) !important;
+  background: #fbfcfe;
+}
+
+html.plugin-docs main [class*='docItemContainer'] {
+  padding: 0.5rem 0 3rem;
+}
+
+html.plugin-docs main .container {
+  padding-left: clamp(1.25rem, 4vw, 3.5rem);
+  padding-right: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+/* ---------- Sidebar ---------- */
+
+html.plugin-docs .theme-doc-sidebar-menu {
+  padding: 1.25rem 0.75rem 2rem;
+  font-size: 0.95rem;
+}
+
+html.plugin-docs .theme-doc-sidebar-menu .menu__link,
+html.plugin-docs .theme-doc-sidebar-menu .menu__caret {
+  border-radius: 8px;
+  background: transparent;
+}
+
+html.plugin-docs .theme-doc-sidebar-menu .menu__link {
+  padding: 0.42rem 0.75rem;
+  color: var(--doc-body);
+  font-weight: 450;
+  line-height: 1.35;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+
+html.plugin-docs .theme-doc-sidebar-menu .menu__link:hover {
+  background: #eef2f9;
+  color: var(--doc-ink);
+}
+
+/* A category names a group; it reads as a heading, not as one more link. */
+html.plugin-docs .theme-doc-sidebar-item-category-level-1 {
+  margin-top: 1.1rem;
+}
+html.plugin-docs
+  .theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link {
+  color: var(--doc-ink);
+  font-weight: 650;
+  letter-spacing: -0.005em;
+}
+html.plugin-docs
+  .theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible:hover {
+  background: transparent;
+}
+
+/* The pages of a group hang off one rule, and the current page marks its place
+   on that rule. */
+html.plugin-docs .theme-doc-sidebar-item-category-level-1 > .menu__list {
+  margin: 0.15rem 0 0 0.75rem;
+  padding-left: 0;
+  border-left: 1px solid var(--doc-rule);
+}
+html.plugin-docs .theme-doc-sidebar-item-category-level-1 > .menu__list .menu__link {
+  margin-left: -1px;
+  padding-left: 0.95rem;
+  border-left: 2px solid transparent;
+  border-radius: 0 8px 8px 0;
+}
+html.plugin-docs .theme-doc-sidebar-menu .menu__link--active:not(.menu__link--sublist) {
+  background: var(--doc-accent-wash);
+  color: var(--doc-accent);
+  font-weight: 600;
+}
+html.plugin-docs
+  .theme-doc-sidebar-item-category-level-1
+  > .menu__list
+  .menu__link--active {
+  border-left-color: var(--doc-accent);
+}
+
+html.plugin-docs .menu__caret::before,
+html.plugin-docs .menu__link--sublist-caret::after {
+  opacity: 0.45;
+  background-size: 1.35rem 1.35rem;
+}
+
+/* ---------- Breadcrumbs ---------- */
+
+html.plugin-docs .theme-doc-breadcrumbs {
+  margin-bottom: 1.4rem;
+}
+html.plugin-docs .breadcrumbs__link {
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  background: transparent !important;
+  color: var(--doc-quiet);
+  font-size: 0.85rem;
+}
+html.plugin-docs .breadcrumbs__item--active .breadcrumbs__link {
+  color: var(--doc-ink);
+  font-weight: 600;
+}
+html.plugin-docs a.breadcrumbs__link:hover {
+  background: #eef2f9 !important;
+  color: var(--doc-ink);
+}
+
+/* ---------- Prose ---------- */
+
+html.plugin-docs .theme-doc-markdown {
+  max-width: var(--doc-measure);
+  color: var(--doc-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+html.plugin-docs .theme-doc-markdown h1 {
+  margin-bottom: 1.4rem;
+  color: var(--doc-ink);
+  font-size: clamp(2.2rem, 4.2vw, 3rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+/* The paragraph under the title says what the page is for. */
+html.plugin-docs .theme-doc-markdown header + p,
+html.plugin-docs .theme-doc-markdown h1 + p {
+  color: var(--doc-ink);
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+html.plugin-docs .theme-doc-markdown h2 {
+  margin-top: 3.2rem;
+  margin-bottom: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--doc-rule);
+  color: var(--doc-ink);
+  font-size: 1.85rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+/* custom.css sets every heading in the serif with !important. Below h2 the
+   serif stops reading as a title and starts reading as body text. */
+html.plugin-docs .theme-doc-markdown h3 {
+  margin-top: 2.2rem;
+  margin-bottom: 0.7rem;
+  color: var(--doc-ink);
+  font-family: var(--ifm-font-family-base) !important;
+  font-size: 1.18rem;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+}
+
+html.plugin-docs .theme-doc-markdown h4 {
+  margin-top: 1.8rem;
+  color: var(--doc-ink);
+  font-family: var(--ifm-font-family-base) !important;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+html.plugin-docs .theme-doc-markdown a:not([class]) {
+  color: var(--doc-accent) !important;
+  text-decoration: underline;
+  text-decoration-color: rgba(29, 78, 216, 0.3);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 120ms ease;
+}
+html.plugin-docs .theme-doc-markdown a:not([class]):hover {
+  text-decoration-color: currentColor;
+}
+
+html.plugin-docs .theme-doc-markdown strong {
+  color: var(--doc-ink);
+  font-weight: 650;
+}
+
+html.plugin-docs .theme-doc-markdown ul,
+html.plugin-docs .theme-doc-markdown ol {
+  padding-left: 1.3rem;
+}
+html.plugin-docs .theme-doc-markdown li {
+  margin: 0.4rem 0;
+  padding-left: 0.2rem;
+}
+html.plugin-docs .theme-doc-markdown li::marker {
+  color: #94a3b8;
+}
+
+html.plugin-docs .hash-link {
+  color: #94a3b8;
+  text-decoration: none;
+}
+
+/* ---------- Code ---------- */
+
+html.plugin-docs .theme-doc-markdown :not(pre) > code {
+  padding: 0.12em 0.4em;
+  border: 0;
+  border-radius: 5px;
+  background: #edf1f8;
+  color: #1e293b;
+  font-size: 0.875em;
+  vertical-align: baseline;
+}
+html.plugin-docs .theme-doc-markdown a > code {
+  color: inherit;
+}
+
+html.plugin-docs .theme-code-block {
+  margin: 1.5rem 0;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  box-shadow: 0 14px 34px -18px rgba(15, 23, 42, 0.55);
+  overflow: hidden;
+}
+html.plugin-docs .theme-code-block pre {
+  border-radius: 0;
+}
+html.plugin-docs .theme-code-block pre code {
+  padding: 1.05rem 1.2rem;
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+
+/* An untitled block says what language it is in. A titled one already has a
+   header, and the title usually ends in the file's extension. */
+html.plugin-docs .theme-code-block[class*='language-']::before {
+  display: block;
+  padding: 0.5rem 1.2rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(148, 163, 184, 0.07);
+  color: #94a3b8;
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+html.plugin-docs .theme-code-block:has([class*='codeBlockTitle'])::before {
+  display: none;
+}
+html.plugin-docs .theme-code-block.language-bash::before { content: 'Shell'; }
+html.plugin-docs .theme-code-block.language-console::before { content: 'Shell session'; }
+html.plugin-docs .theme-code-block.language-sql::before { content: 'ggsql'; }
+html.plugin-docs .theme-code-block.language-yaml::before,
+html.plugin-docs .theme-code-block.language-yml::before { content: 'YAML'; }
+html.plugin-docs .theme-code-block.language-python::before { content: 'Python'; }
+html.plugin-docs .theme-code-block.language-json::before { content: 'JSON'; }
+html.plugin-docs .theme-code-block.language-html::before { content: 'HTML'; }
+html.plugin-docs .theme-code-block.language-text::before { content: 'Output'; }
+html.plugin-docs .theme-code-block.language-toml::before { content: 'TOML'; }
+html.plugin-docs .theme-code-block.language-jsx::before,
+html.plugin-docs .theme-code-block.language-tsx::before { content: 'React'; }
+
+html.plugin-docs [class*='codeBlockTitle'] {
+  padding: 0.55rem 1.2rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16) !important;
+  background: rgba(148, 163, 184, 0.07);
+  color: #cbd5e1;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+/* ---------- Tables ---------- */
+
+html.plugin-docs .theme-doc-markdown table {
+  display: table;
+  width: 100%;
+  margin: 1.6rem 0;
+  border: 1px solid var(--doc-rule);
+  border-radius: 12px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  overflow: hidden;
+}
+html.plugin-docs .theme-doc-markdown table thead tr {
+  border: 0;
+  background: var(--doc-wash);
+}
+html.plugin-docs .theme-doc-markdown table th {
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--doc-rule);
+  color: var(--doc-ink);
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-align: left;
+}
+html.plugin-docs .theme-doc-markdown table td {
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-bottom: 1px solid #e8edf5;
+  vertical-align: top;
+}
+html.plugin-docs .theme-doc-markdown table tr {
+  border: 0;
+  background: #ffffff !important;
+}
+html.plugin-docs .theme-doc-markdown table tbody tr:last-child td {
+  border-bottom: 0;
+}
+html.plugin-docs .theme-doc-markdown table tbody tr:hover td {
+  background: #fafcff;
+}
+/* The first column of a reference table is the thing being looked up. */
+html.plugin-docs .theme-doc-markdown table td:first-child {
+  white-space: nowrap;
+}
+
+/* ---------- Admonitions ---------- */
+
+html.plugin-docs .theme-admonition {
+  margin: 1.8rem 0;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--doc-rule);
+  border-left-width: 3px;
+  border-radius: 10px;
+  box-shadow: none;
+  font-size: 0.98rem;
+}
+html.plugin-docs .theme-admonition [class*='admonitionHeading'] {
+  margin-bottom: 0.4rem;
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.95rem;
+  font-weight: 650;
+  text-transform: none;
+  letter-spacing: 0;
+}
+html.plugin-docs .theme-admonition-warning,
+html.plugin-docs .theme-admonition-caution {
+  border-color: #f3d9a4;
+  border-left-color: #d97706;
+  background: #fffaf0;
+  color: #5b3a06;
+}
+html.plugin-docs .theme-admonition-note,
+html.plugin-docs .theme-admonition-info,
+html.plugin-docs .theme-admonition-tip {
+  border-color: #cdd9f7;
+  border-left-color: var(--doc-accent);
+  background: var(--doc-wash);
+  color: #1e2a4a;
+}
+html.plugin-docs .theme-admonition-danger {
+  border-color: #f5c6c6;
+  border-left-color: #dc2626;
+  background: #fff5f5;
+  color: #5f1414;
+}
+
+/* ---------- Table of contents ---------- */
+
+html.plugin-docs .theme-doc-toc-desktop {
+  top: calc(var(--ifm-navbar-height) + 2rem);
+}
+html.plugin-docs .table-of-contents {
+  padding: 0 0 0 0 !important;
+  border-left: 1px solid var(--doc-rule) !important;
+  font-size: 0.84rem;
+}
+html.plugin-docs .theme-doc-toc-desktop .table-of-contents::before {
+  display: block;
+  margin: 0 0 0.6rem;
+  padding-left: 1rem;
+  color: var(--doc-ink);
+  content: 'On this page';
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+html.plugin-docs .table-of-contents li {
+  margin: 0;
+}
+html.plugin-docs .table-of-contents ul {
+  padding-left: 0;
+}
+html.plugin-docs .table-of-contents__link {
+  display: block;
+  margin-left: -1px;
+  padding: 0.3rem 0 0.3rem 1rem;
+  border-left: 2px solid transparent;
+  color: var(--doc-quiet);
+  line-height: 1.4;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+html.plugin-docs .table-of-contents ul ul .table-of-contents__link {
+  padding-left: 1.8rem;
+  font-size: 0.8rem;
+}
+html.plugin-docs .table-of-contents__link:hover {
+  color: var(--doc-ink);
+}
+html.plugin-docs .table-of-contents__link--active {
+  border-left-color: var(--doc-accent);
+  color: var(--doc-accent);
+  font-weight: 600;
+}
+html.plugin-docs .table-of-contents__link code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 0.95em;
+}
+
+/* ---------- Previous and next ---------- */
+
+html.plugin-docs .pagination-nav {
+  max-width: var(--doc-measure);
+  margin-top: 4rem;
+  gap: 1rem;
+}
+html.plugin-docs .pagination-nav__link {
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--doc-rule);
+  border-radius: 12px;
+  background: #ffffff;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+html.plugin-docs .pagination-nav__link:hover {
+  border-color: var(--doc-accent);
+  background: var(--doc-wash);
+}
+html.plugin-docs .pagination-nav__sublabel {
+  margin-bottom: 0.2rem;
+  color: var(--doc-quiet);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+html.plugin-docs .pagination-nav__label {
+  color: var(--doc-ink);
+  font-size: 1.02rem;
+  font-weight: 650;
+}
+html.plugin-docs .pagination-nav__link:hover .pagination-nav__label {
+  color: var(--doc-accent);
+}
+
+/* ---------- Keyboard focus ---------- */
+
+html.plugin-docs .menu__link:focus-visible,
+html.plugin-docs .table-of-contents__link:focus-visible,
+html.plugin-docs .pagination-nav__link:focus-visible,
+html.plugin-docs .docMap a:focus-visible,
+html.plugin-docs .theme-doc-markdown a:focus-visible {
+  outline: 2px solid var(--doc-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- The build, as a figure (intro page) ---------- */
+
+html.plugin-docs .buildSteps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 1.8rem 0 0.6rem;
+  padding: 0;
+  border: 1px solid var(--doc-rule);
+  border-radius: 14px;
+  background: #ffffff;
+  list-style: none;
+  overflow: hidden;
+  counter-reset: build-step;
+}
+html.plugin-docs .theme-doc-markdown .buildSteps li {
+  position: relative;
+  margin: 0;
+  padding: 1.3rem 1.3rem 1.4rem;
+  border-left: 1px solid var(--doc-rule);
+  counter-increment: build-step;
+}
+html.plugin-docs .buildSteps li:first-child {
+  border-left: 0;
+}
+html.plugin-docs .buildSteps li::before {
+  display: block;
+  margin-bottom: 0.7rem;
+  color: var(--doc-quiet);
+  content: 'Step ' counter(build-step);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+/* Each step hands its output to the next one. */
+html.plugin-docs .buildSteps li + li::after {
+  position: absolute;
+  top: 1.25rem;
+  left: -0.62rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid var(--doc-rule);
+  border-radius: 50%;
+  background: #ffffff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d4ed8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E")
+    center / 0.7rem no-repeat;
+  content: '';
+}
+/* The command, not the inline code in the sentence under it. */
+html.plugin-docs .buildSteps li > code {
+  display: inline-block;
+  padding: 0.3rem 0.6rem !important;
+  border-radius: 7px !important;
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+  font-size: 0.88rem !important;
+}
+html.plugin-docs .buildSteps p {
+  margin: 0.75rem 0 0;
+  color: var(--doc-body);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+html.plugin-docs .buildSteps li:nth-child(2) {
+  background: var(--doc-wash);
+}
+
+/* ---------- Where to go next (intro page) ---------- */
+
+html.plugin-docs .docMap {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin: 1.6rem 0 0;
+}
+html.plugin-docs .theme-doc-markdown .docMap a {
+  display: block;
+  grid-column: span 2;
+  padding: 1.15rem 1.25rem 1.25rem;
+  border: 1px solid var(--doc-rule);
+  border-radius: 12px;
+  background: #ffffff;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+html.plugin-docs .theme-doc-markdown .docMap a:hover {
+  border-color: var(--doc-accent);
+  background: var(--doc-wash);
+  text-decoration: none;
+}
+html.plugin-docs .docMap strong {
+  display: block;
+  color: var(--doc-ink);
+  font-size: 1.02rem;
+}
+html.plugin-docs .docMap a:hover strong {
+  color: var(--doc-accent);
+}
+html.plugin-docs .docMap span {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--doc-body);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+/* The quickstart is where a new reader should go, so it is not one of six. */
+html.plugin-docs .theme-doc-markdown .docMap a.docMap__start {
+  grid-column: span 6;
+  padding: 1.5rem 1.6rem;
+  border-color: #0b1220;
+  background: #0b1220;
+}
+html.plugin-docs .docMap a.docMap__start strong {
+  color: #ffffff;
+  font-family: var(--ifm-heading-font-family);
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+html.plugin-docs .docMap a.docMap__start span {
+  max-width: 34rem;
+  color: #cbd5e1;
+  font-size: 1rem;
+}
+html.plugin-docs .theme-doc-markdown .docMap a.docMap__start:hover {
+  border-color: var(--doc-accent);
+  background: #111c33;
+}
+html.plugin-docs .docMap a.docMap__start:hover strong {
+  color: #ffffff;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 996px) {
+  html.plugin-docs .theme-doc-markdown {
+    font-size: 1rem;
+  }
+  html.plugin-docs .theme-doc-markdown h2 {
+    margin-top: 2.6rem;
+    padding-top: 1.6rem;
+    font-size: 1.55rem;
+  }
+  html.plugin-docs .theme-doc-markdown header + p,
+  html.plugin-docs .theme-doc-markdown h1 + p {
+    font-size: 1.1rem;
+  }
+  /* A reference table is wider than a phone. It scrolls inside its own box
+     instead of pushing the page sideways. */
+  html.plugin-docs .theme-doc-markdown table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  html.plugin-docs .theme-doc-markdown table td:first-child {
+    white-space: normal;
+  }
+  html.plugin-docs .theme-code-block {
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+    border-radius: 10px;
+  }
+  html.plugin-docs .theme-doc-toc-mobile {
+    margin-bottom: 1.6rem;
+    border: 1px solid var(--doc-rule);
+    border-radius: 10px;
+    background: var(--doc-wash);
+  }
+}
+
+@media (max-width: 760px) {
+  html.plugin-docs .buildSteps {
+    grid-template-columns: 1fr;
+  }
+  html.plugin-docs .theme-doc-markdown .buildSteps li {
+    border-top: 1px solid var(--doc-rule);
+    border-left: 0;
+  }
+  html.plugin-docs .buildSteps li:first-child {
+    border-top: 0;
+  }
+  html.plugin-docs .buildSteps li + li::after {
+    top: -0.62rem;
+    left: 1.3rem;
+    transform: rotate(90deg);
+  }
+  html.plugin-docs .theme-doc-markdown .docMap a {
+    grid-column: span 6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.plugin-docs * {
+    transition: none !important;
+  }
+}
