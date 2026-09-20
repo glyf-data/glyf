@@ -6,6 +6,7 @@
     "tooltip",
     "legend_filter"
   ],
+  "metadata_path": "target/glyf/charts/expenses_by_department.json",
   "name": "expenses_by_department",
   "png_path": "target/glyf/charts/expenses_by_department.png",
   "svg_path": "target/glyf/charts/expenses_by_department.svg",

@@ -1,0 +1,16 @@
+{
+  "chart_type": "boxplot",
+  "compiled_sql_path": "target/glyf/compiled/discount_by_segment.sql",
+  "data_json_path": "target/glyf/data/normalized/discount_by_segment.data.json",
+  "interactions": [
+    "tooltip"
+  ],
+  "metadata_path": "target/glyf/charts/discount_by_segment.json",
+  "name": "discount_by_segment",
+  "png_path": "target/glyf/charts/discount_by_segment.png",
+  "svg_path": "target/glyf/charts/discount_by_segment.svg",
+  "title": "Discount by Segment",
+  "vega_json_path": "target/glyf/data/vega/discount_by_segment.vega.json",
+  "x": "segment",
+  "y": "discount_pct"
+}

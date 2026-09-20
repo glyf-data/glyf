@@ -1,0 +1,12 @@
+SELECT
+  avg_session_minutes,
+  plan
+FROM {{ ref('fct_account_sessions') }}
+
+VISUALISE avg_session_minutes AS x, plan AS color
+DRAW histogram
+LABEL title => 'Session Length by Account'
+LABEL subtitle => 'One row per account, binned by average session length'
+LABEL x_title => 'Average session (minutes)'
+LABEL y_title => 'Accounts'
+INTERACT tooltip, legend_filter

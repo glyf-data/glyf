@@ -26,6 +26,14 @@ All notable changes to `glyf` will be documented in this file.
   `pie`. The starter query maps a date to a value, which is not the shape the
   new types draw.
 
+### Examples
+
+- `finance_metrics` and `product_analytics` run on twelve periods of synthetic
+  data in place of six seed rows, and each adds a histogram, a boxplot and a
+  heatmap. `finance_metrics` now uses all eight chart types. The seeds are
+  written by `examples/seed_data.py`, which is seeded and reproducible, and a
+  test fails if the committed CSVs drift from it.
+
 ### Fixed
 
 - `export.row_data: minimal` left row values in a chart's SVG when the chart

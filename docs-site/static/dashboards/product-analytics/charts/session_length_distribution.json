@@ -1,0 +1,17 @@
+{
+  "chart_type": "histogram",
+  "compiled_sql_path": "target/glyf/compiled/session_length_distribution.sql",
+  "data_json_path": "target/glyf/data/normalized/session_length_distribution.data.json",
+  "interactions": [
+    "tooltip",
+    "legend_filter"
+  ],
+  "metadata_path": "target/glyf/charts/session_length_distribution.json",
+  "name": "session_length_distribution",
+  "png_path": "target/glyf/charts/session_length_distribution.png",
+  "svg_path": "target/glyf/charts/session_length_distribution.svg",
+  "title": "Session Length by Account",
+  "vega_json_path": "target/glyf/data/vega/session_length_distribution.vega.json",
+  "x": "avg_session_minutes",
+  "y": null
+}

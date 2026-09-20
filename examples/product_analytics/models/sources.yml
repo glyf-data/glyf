@@ -6,3 +6,7 @@ sources:
     tables:
       - name: product_usage
         identifier: raw_product_usage
+      - name: account_sessions
+        identifier: raw_account_sessions
+      - name: hourly_activity
+        identifier: raw_hourly_activity

@@ -1,0 +1,12 @@
+SELECT
+  segment,
+  discount_pct
+FROM {{ ref('fct_invoices') }}
+
+VISUALISE segment AS x, discount_pct AS y
+DRAW boxplot
+LABEL title => 'Discount by Segment'
+LABEL subtitle => 'Median, quartiles and outlying invoices'
+LABEL x_title => 'Segment'
+LABEL y_title => 'Discount (%)'
+INTERACT tooltip

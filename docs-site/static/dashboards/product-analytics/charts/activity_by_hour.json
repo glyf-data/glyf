@@ -1,0 +1,16 @@
+{
+  "chart_type": "heatmap",
+  "compiled_sql_path": "target/glyf/compiled/activity_by_hour.sql",
+  "data_json_path": "target/glyf/data/normalized/activity_by_hour.data.json",
+  "interactions": [
+    "tooltip"
+  ],
+  "metadata_path": "target/glyf/charts/activity_by_hour.json",
+  "name": "activity_by_hour",
+  "png_path": "target/glyf/charts/activity_by_hour.png",
+  "svg_path": "target/glyf/charts/activity_by_hour.svg",
+  "title": "Sessions by Hour",
+  "vega_json_path": "target/glyf/data/vega/activity_by_hour.vega.json",
+  "x": "hour",
+  "y": "weekday"
+}

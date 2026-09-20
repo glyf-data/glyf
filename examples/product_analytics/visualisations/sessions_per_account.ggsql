@@ -1,0 +1,12 @@
+SELECT
+  plan,
+  sessions
+FROM {{ ref('fct_account_sessions') }}
+
+VISUALISE plan AS x, sessions AS y
+DRAW boxplot
+LABEL title => 'Sessions per Account'
+LABEL subtitle => 'Median, quartiles and outlying accounts for each plan'
+LABEL x_title => 'Plan'
+LABEL y_title => 'Sessions'
+INTERACT tooltip

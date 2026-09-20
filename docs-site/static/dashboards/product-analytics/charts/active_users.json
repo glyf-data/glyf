@@ -5,6 +5,7 @@
   "interactions": [
     "tooltip"
   ],
+  "metadata_path": "target/glyf/charts/active_users.json",
   "name": "active_users",
   "png_path": "target/glyf/charts/active_users.png",
   "svg_path": "target/glyf/charts/active_users.svg",

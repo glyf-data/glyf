@@ -6,6 +6,7 @@
     "tooltip",
     "legend_filter"
   ],
+  "metadata_path": "target/glyf/charts/activation_rate_by_plan.json",
   "name": "activation_rate_by_plan",
   "png_path": "target/glyf/charts/activation_rate_by_plan.png",
   "svg_path": "target/glyf/charts/activation_rate_by_plan.svg",
