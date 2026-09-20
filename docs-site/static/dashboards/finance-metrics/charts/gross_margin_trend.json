@@ -5,6 +5,7 @@
   "interactions": [
     "tooltip"
   ],
+  "metadata_path": "target/glyf/charts/gross_margin_trend.json",
   "name": "gross_margin_trend",
   "png_path": "target/glyf/charts/gross_margin_trend.png",
   "svg_path": "target/glyf/charts/gross_margin_trend.svg",

@@ -1,0 +1,16 @@
+SELECT
+  weekday,
+  hour,
+  sessions
+FROM {{ ref('fct_hourly_activity') }}
+ORDER BY weekday_number, hour
+
+VISUALISE hour AS x, weekday AS y, sessions AS color
+DRAW heatmap
+LABEL title => 'Sessions by Hour'
+LABEL subtitle => 'Two working-day peaks; weekends run at a fifth of the volume'
+LABEL x_title => 'Hour of day (UTC)'
+LABEL y_title => 'Weekday'
+CONFIG width => 1100
+CONFIG height => 320
+INTERACT tooltip

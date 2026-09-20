@@ -5,6 +5,7 @@
   "interactions": [
     "tooltip"
   ],
+  "metadata_path": "target/glyf/charts/margin_share.json",
   "name": "margin_share",
   "png_path": "target/glyf/charts/margin_share.png",
   "svg_path": "target/glyf/charts/margin_share.svg",

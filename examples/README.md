@@ -7,8 +7,10 @@ dashboard YAML.
 
 - `simple_dbt`: minimal revenue dashboard and chart syntax sampler.
 - `sales_dashboard`: sales performance by month, channel, and region.
-- `product_analytics`: product usage and conversion metrics.
-- `finance_metrics`: finance KPIs for bookings, expenses, and margin.
+- `product_analytics`: product usage and activation by plan, with a histogram and
+  a boxplot over per-account rows and a weekday-by-hour heatmap.
+- `finance_metrics`: bookings, expenses, margin and collections over twelve
+  months. Uses all eight chart types.
 
 ## Run an example
 
@@ -26,3 +28,17 @@ Each example keeps its local DuckDB file under that example's `target/`
 directory.
 
 Open `target/glyf/site/index.html`.
+
+## Seed data
+
+The seeds of `finance_metrics` and `product_analytics` are synthetic and are
+written by `seed_data.py`. The generator is seeded, so it rewrites the same
+files byte for byte:
+
+```bash
+uv run python examples/seed_data.py
+```
+
+Change the shapes at the top of that file, run it, and commit the CSVs to
+change what the examples show. The metric tiles in the dashboards quote figures
+from the data, so check them after regenerating.

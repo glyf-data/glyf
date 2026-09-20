@@ -6,6 +6,7 @@
     "tooltip",
     "zoom"
   ],
+  "metadata_path": "target/glyf/charts/sessions_scatter.json",
   "name": "sessions_scatter",
   "png_path": "target/glyf/charts/sessions_scatter.png",
   "svg_path": "target/glyf/charts/sessions_scatter.svg",

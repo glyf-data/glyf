@@ -6,3 +6,5 @@ sources:
     tables:
       - name: finance
         identifier: raw_finance
+      - name: invoices
+        identifier: raw_invoices

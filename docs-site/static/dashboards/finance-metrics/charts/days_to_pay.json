@@ -1,0 +1,17 @@
+{
+  "chart_type": "histogram",
+  "compiled_sql_path": "target/glyf/compiled/days_to_pay.sql",
+  "data_json_path": "target/glyf/data/normalized/days_to_pay.data.json",
+  "interactions": [
+    "tooltip",
+    "legend_filter"
+  ],
+  "metadata_path": "target/glyf/charts/days_to_pay.json",
+  "name": "days_to_pay",
+  "png_path": "target/glyf/charts/days_to_pay.png",
+  "svg_path": "target/glyf/charts/days_to_pay.svg",
+  "title": "Days to Pay",
+  "vega_json_path": "target/glyf/data/vega/days_to_pay.vega.json",
+  "x": "days_to_pay",
+  "y": null
+}

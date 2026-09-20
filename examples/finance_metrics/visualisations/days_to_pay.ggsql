@@ -1,0 +1,12 @@
+SELECT
+  days_to_pay,
+  segment
+FROM {{ ref('fct_invoices') }}
+
+VISUALISE days_to_pay AS x, segment AS color
+DRAW histogram
+LABEL title => 'Days to Pay'
+LABEL subtitle => 'One row per invoice; the tail past 60 days is the overdue book'
+LABEL x_title => 'Days from invoice to payment'
+LABEL y_title => 'Invoices'
+INTERACT tooltip, legend_filter

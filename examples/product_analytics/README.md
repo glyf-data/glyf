@@ -1,7 +1,8 @@
 # product_analytics
 
 Product analytics example with active users, activation, engagement mix,
-dashboard macro components, and asymmetric dashboard sections.
+per-account distributions, a weekday-by-hour heatmap, dashboard macro
+components, and asymmetric dashboard sections.
 
 ```bash
 cd examples/product_analytics

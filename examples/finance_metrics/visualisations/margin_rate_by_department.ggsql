@@ -1,0 +1,16 @@
+SELECT
+  month,
+  department,
+  round(gross_margin * 100.0 / nullif(bookings, 0), 1) as margin_rate
+FROM {{ ref('fct_finance') }}
+ORDER BY month, department
+
+VISUALISE month AS x, department AS y, margin_rate AS color
+DRAW heatmap
+LABEL title => 'Margin Rate by Department'
+LABEL subtitle => 'Gross margin as a percentage of bookings'
+LABEL x_title => 'Month'
+LABEL y_title => 'Department'
+CONFIG width => 1100
+CONFIG height => 300
+INTERACT tooltip

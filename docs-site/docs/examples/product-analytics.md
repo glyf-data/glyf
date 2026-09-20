@@ -25,6 +25,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/product-analytics/dashboard
 - Sections with asymmetric `30% 70%` and `65% 35%` column tracks, metric tiles, and titled charts.
 - Dashboard filters whose values come from a rendered chart artifact (`source(activation_by_plan, plan)`).
 - Built-in macros in `summary` and a project-local macro, `activation_health`, that reads the latest activation rate through `MacroContext`.
+- A histogram and a boxplot over `fct_account_sessions`, which has one row per account, and a weekday-by-hour heatmap over `fct_hourly_activity` ordered by `weekday_number, hour` so the week starts on Monday.
 - Interactive ggsql charts with `tooltip`, `legend_filter`, and `zoom`.
 
 ## Run it
@@ -69,19 +70,19 @@ layout:
 
 sections:
   - title: Usage Overview
-    description: Active user growth and engagement for the sample period.
+    description: Active user growth and engagement across twelve weeks.
     columns: "30% 70%"
     items:
       - metric:
-          label: Active users
-          value: "4.3k"
-          note: Sum of weekly active users across plans
+          label: Weekly active users
+          value: "2.3k"
+          note: Week 12, up from 1.5k in week 1
       - chart: active_users
         title: Active Users Trend
       - metric:
           label: Sessions
-          value: "14.9k"
-          note: Total product sessions
+          value: "86.7k"
+          note: Total product sessions across all plans
       - chart: sessions_scatter
         title: Sessions vs Active Users
 
@@ -100,6 +101,33 @@ sections:
     charts:
       - sessions_per_user
       - sessions_by_plan
+
+  - title: Distribution
+    description: What the weekly totals average away, one row per account.
+    columns: 2
+    items:
+      - chart: session_length_distribution
+      - chart: sessions_per_account
+      - markdown:
+          title: Reading these two
+          text: |
+            Both charts query `fct_account_sessions`, which has one row per
+            account. The histogram bins and counts those rows, and the boxplot
+            takes their quartiles, so neither query aggregates anything itself.
+      - metric:
+          label: Median sessions per account
+          value: "9 / 24 / 59"
+          note: Free, Pro and Team
+
+  - title: Rhythm
+    description: When the product is in use, by weekday and hour.
+    columns: "75% 25%"
+    items:
+      - chart: activity_by_hour
+      - metric:
+          label: Busiest hour
+          value: "Tue 11:00"
+          note: 694 sessions, about five times a weekend peak
 ```
 
 ## Example chart

@@ -6,6 +6,7 @@
     "tooltip",
     "legend_filter"
   ],
+  "metadata_path": "target/glyf/charts/margin_vs_expenses.json",
   "name": "margin_vs_expenses",
   "png_path": "target/glyf/charts/margin_vs_expenses.png",
   "svg_path": "target/glyf/charts/margin_vs_expenses.svg",

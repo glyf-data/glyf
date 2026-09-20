@@ -5,6 +5,7 @@
   "interactions": [
     "tooltip"
   ],
+  "metadata_path": "target/glyf/charts/bookings_trend.json",
   "name": "bookings_trend",
   "png_path": "target/glyf/charts/bookings_trend.png",
   "svg_path": "target/glyf/charts/bookings_trend.svg",

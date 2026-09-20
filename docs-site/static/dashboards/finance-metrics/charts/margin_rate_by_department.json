@@ -1,0 +1,16 @@
+{
+  "chart_type": "heatmap",
+  "compiled_sql_path": "target/glyf/compiled/margin_rate_by_department.sql",
+  "data_json_path": "target/glyf/data/normalized/margin_rate_by_department.data.json",
+  "interactions": [
+    "tooltip"
+  ],
+  "metadata_path": "target/glyf/charts/margin_rate_by_department.json",
+  "name": "margin_rate_by_department",
+  "png_path": "target/glyf/charts/margin_rate_by_department.png",
+  "svg_path": "target/glyf/charts/margin_rate_by_department.svg",
+  "title": "Margin Rate by Department",
+  "vega_json_path": "target/glyf/data/vega/margin_rate_by_department.vega.json",
+  "x": "month",
+  "y": "department"
+}

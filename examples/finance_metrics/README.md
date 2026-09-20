@@ -1,7 +1,7 @@
 # finance_metrics
 
-Finance metrics example with bookings, spend, gross margin, and mixed ggsql
-chart types.
+Finance metrics example with twelve months of bookings, spend, gross margin
+and invoice collections. It uses all eight ggsql chart types glyf draws.
 
 ```bash
 cd examples/finance_metrics
