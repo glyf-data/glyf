@@ -2,7 +2,11 @@
 
 All notable changes to `glyf` will be documented in this file.
 
-## Unreleased
+## 0.8.0 - 2026-09-20
+
+A chart drew a different picture on every build when its query left the row
+order undefined. It no longer does.
+
 
 ### Fixed
 
