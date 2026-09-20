@@ -1267,8 +1267,10 @@ div[class*='codeBlockContent'] pre code,
 
 .theme-doc-markdown .token.keyword,
 .theme-doc-markdown .token.function,
+.theme-doc-markdown .token.tag,
 .theme-code-block .token.keyword,
-.theme-code-block .token.function {
+.theme-code-block .token.function,
+.theme-code-block .token.tag {
   color: #ff9bc2 !important;
 }
 
@@ -1486,13 +1488,6 @@ div[class*='codeBlockContent'] pre code,
   margin-top: 1.8rem;
 }
 
-.exampleCard {
-  border: 1px solid var(--glyf-border-warm);
-  border-radius: 8px;
-  background: var(--glyf-card-solid);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
-}
-
 .exampleCard__body {
   padding: 1.1rem;
 }
@@ -1707,45 +1702,27 @@ body,
   background: #000000 !important;
   color: #ffffff !important;
   box-shadow: none !important;
-}
-
-.problemCard,
+}.problemCard,
 .personaCard,
 .docTile,
-.exampleCard,
 .problemQuote {
   border-color: rgba(0, 0, 0, 0.14) !important;
   color: #000000 !important;
   box-shadow: none !important;
-}
-
-.personaCard:nth-child(5n + 1),
-.docTile:nth-child(5n + 1),
-.exampleCard:nth-child(5n + 1) {
+}.personaCard:nth-child(5n + 1),
+.docTile:nth-child(5n + 1) {
   background: var(--glyf-tint-indigo) !important;
-}
-
-.personaCard:nth-child(5n + 2),
-.docTile:nth-child(5n + 2),
-.exampleCard:nth-child(5n + 2) {
+}.personaCard:nth-child(5n + 2),
+.docTile:nth-child(5n + 2) {
   background: var(--glyf-tint-green) !important;
-}
-
-.personaCard:nth-child(5n + 3),
-.docTile:nth-child(5n + 3),
-.exampleCard:nth-child(5n + 3) {
+}.personaCard:nth-child(5n + 3),
+.docTile:nth-child(5n + 3) {
   background: var(--glyf-tint-amber) !important;
-}
-
-.personaCard:nth-child(5n + 4),
-.docTile:nth-child(5n + 4),
-.exampleCard:nth-child(5n + 4) {
+}.personaCard:nth-child(5n + 4),
+.docTile:nth-child(5n + 4) {
   background: var(--glyf-tint-blue) !important;
-}
-
-.personaCard:nth-child(5n),
-.docTile:nth-child(5n),
-.exampleCard:nth-child(5n) {
+}.personaCard:nth-child(5n),
+.docTile:nth-child(5n) {
   background: var(--glyf-tint-grey) !important;
 }
 
@@ -1827,16 +1804,12 @@ body,
 .problemCard,
 .personaCard,
 .docTile,
-.exampleCard,
 .problemQuote {
   border-color: rgba(0, 0, 0, 0.14) !important;
   background: #ffffff !important;
   color: #000000 !important;
-}
-
-.personaCard:nth-child(n),
-.docTile:nth-child(n),
-.exampleCard:nth-child(n) {
+}.personaCard:nth-child(n),
+.docTile:nth-child(n) {
   background: #ffffff !important;
 }
 

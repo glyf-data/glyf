@@ -790,6 +790,28 @@ html.plugin-docs .docMap a.docMap__start:hover strong {
   color: #ffffff;
 }
 
+/* ---------- Examples gallery ---------- */
+
+/* These cards exist only here, so this is where they are styled. They take the
+   theme's surface: a dark page with white cards had near-white titles on them. */
+html.plugin-docs .exampleCard {
+  border: 1px solid var(--doc-rule);
+  border-radius: 12px;
+  background: var(--doc-surface);
+  box-shadow: none;
+  color: var(--doc-body);
+  overflow: hidden;
+}
+html.plugin-docs .exampleCard img {
+  border: 0;
+  border-bottom: 1px solid var(--doc-rule);
+  border-radius: 0;
+}
+/* custom.css fixes this grey with !important. */
+html.plugin-docs .exampleCard .exampleCard__body p {
+  color: var(--doc-body) !important;
+}
+
 /* ---------- Roadmap page ---------- */
 
 html.plugin-docs .roadmapJump {
