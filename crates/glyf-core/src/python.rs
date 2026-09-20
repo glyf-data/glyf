@@ -1,11 +1,12 @@
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyList};
+use pyo3::types::{PyBytes, PyDict, PyList};
 use std::collections::BTreeMap;
 
 use crate::dashboard::validate_dashboard_json_text;
 use crate::error::CoreError;
 use crate::ggsql::parse_ggsql_text;
+use crate::imagediff::diff_png as diff_png_bytes;
 use crate::manifest::load_manifest_json_text;
 use crate::models::{DbtManifest, GgsqlChart, ManifestRelation, RefResolution};
 use crate::resolver::resolve_refs_text;
@@ -15,6 +16,7 @@ pub(crate) fn register(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_function(wrap_pyfunction!(load_manifest_json, module)?)?;
     module.add_function(wrap_pyfunction!(resolve_refs, module)?)?;
     module.add_function(wrap_pyfunction!(validate_dashboard_json, module)?)?;
+    module.add_function(wrap_pyfunction!(diff_png, module)?)?;
     Ok(())
 }
 
@@ -148,4 +150,17 @@ fn resolve_refs(py: Python<'_>, sql: &str, manifest: &Bound<'_, PyDict>) -> PyRe
 #[pyfunction]
 fn validate_dashboard_json(text: &str, path: &str) -> PyResult<()> {
     validate_dashboard_json_text(text, path).map_err(py_err)
+}
+
+#[pyfunction]
+#[pyo3(signature = (before, after, tolerance=0))]
+fn diff_png(py: Python<'_>, before: &[u8], after: &[u8], tolerance: u8) -> PyResult<Py<PyAny>> {
+    let diff = diff_png_bytes(before, after, tolerance).map_err(py_err)?;
+    let dict = PyDict::new(py);
+    dict.set_item("before_size", diff.before_size)?;
+    dict.set_item("after_size", diff.after_size)?;
+    dict.set_item("changed_pixels", diff.changed_pixels)?;
+    dict.set_item("total_pixels", diff.total_pixels)?;
+    dict.set_item("diff_png", PyBytes::new(py, &diff.diff_png))?;
+    Ok(dict.into_any().unbind())
 }

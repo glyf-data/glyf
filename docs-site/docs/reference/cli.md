@@ -23,6 +23,7 @@ options are covered in the [installation guide](../get-started/installation.md).
 | `glyf doctor` | Check whether a project is ready for glyf workflows. |
 | `glyf build` | Run the full glyf artifact pipeline and export a static site. |
 | `glyf serve` | Serve the exported static dashboard site locally. |
+| `glyf diff` | Compare this build's charts with an earlier build and report what changed. |
 
 ## Low-level commands
 
@@ -389,3 +390,18 @@ uv run glyf build --project-dir examples/simple_dbt
 uv run glyf serve --project-dir examples/simple_dbt
 uv run glyf serve --project-dir examples/simple_dbt --host 127.0.0.1 --port 8080
 ```
+
+## `diff` options
+
+| Option | Description |
+| --- | --- |
+| `--baseline` | **Required.** The build to compare against: a `target/glyf` directory, an exported site, or a project that contains one. |
+| `--threshold` | Percentage of a chart's pixels that may differ before it counts as changed. Defaults to `0`. |
+| `--tolerance` | How far a colour channel may move, out of 255, before a pixel counts as changed. Defaults to `0`. |
+| `--fail-on-change` | Exit 1 when any chart changed, was added or was removed. |
+
+```bash
+uv run glyf diff --baseline /tmp/baseline --project-dir examples/finance_metrics
+```
+
+The report is written to `target/glyf/diff/`. See [Visual Diff](../guides/visual-diff.md).

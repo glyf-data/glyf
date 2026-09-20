@@ -2,6 +2,32 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Visual diff
+
+- `glyf diff --baseline <build>` compares this build's charts with an earlier
+  build and reports what changed. A chart whose PNG has the same bytes is
+  unchanged. Otherwise the two images are compared pixel by pixel, in the Rust
+  core, and the chart is reported with the share of the picture that moved.
+
+  Each changed chart says why, as far as the two builds record it: the query
+  changed, the rows changed, the glyf version changed, or, when none of those
+  did, the chart definition changed. Row changes are spelled out: `rows 48 →
+  36`, `gone from department: Partners`, `sum of expenses 576,000 → 527,500
+  (-8.4%)`.
+
+  The report goes to `target/glyf/diff/`: `index.html` with each changed chart
+  before, after and marked up, `summary.md` for a pull request comment, and
+  `diff.json` for a script. `--fail-on-change` exits 1 when anything moved.
+  `--threshold` and `--tolerance` loosen the comparison for builds rendered on
+  different machines; both default to zero because glyf's renders are
+  byte-stable since 0.8.0.
+
+- `.github/workflows/visual-diff.yml` runs it on glyf's own example projects:
+  the base branch and the pull request are built in one job, compared, and the
+  summary is posted on the pull request.
+
 ## 0.8.0 - 2026-09-20
 
 A chart drew a different picture on every build when its query left the row

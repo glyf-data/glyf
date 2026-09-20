@@ -1,0 +1,238 @@
+"""`glyf diff`: which charts changed between two builds, how much, and why."""
+
+import json
+import shutil
+from pathlib import Path
+
+import pytest
+from typer.testing import CliRunner
+
+from glyf.cli import app
+from glyf.diff import DiffError, compare_builds, write_report
+from glyf.diff.compare import resolve_build_dir
+from glyf.pipeline import render_project
+from tests.helpers import copy_basic_project
+
+runner = CliRunner()
+
+SEEDS = "month,revenue\n2026-01,1200\n2026-02,1800\n2026-03,2400\n"
+
+
+def _build(project: Path) -> Path:
+    render_project(project)
+    return project / "target" / "glyf"
+
+
+def _baseline_and_project(tmp_path: Path) -> tuple[Path, Path]:
+    """A built project, and a copy of that build to compare later ones with."""
+    project = copy_basic_project(tmp_path)
+    (project / "seeds" / "fct_orders.csv").write_text(SEEDS, encoding="utf-8")
+    baseline = tmp_path / "baseline"
+    shutil.copytree(_build(project), baseline)
+    return baseline, project
+
+
+def test_a_rebuild_of_unchanged_data_changes_nothing(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+
+    diff = compare_builds(baseline, _build(project))
+
+    assert not diff.has_changes
+    assert [chart.status for chart in diff.charts] == ["unchanged"]
+
+
+def test_changed_rows_are_reported_with_what_moved(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        SEEDS.replace("2400", "3000"), encoding="utf-8"
+    )
+
+    diff = compare_builds(baseline, _build(project))
+
+    (chart,) = diff.with_status("changed")
+    assert chart.name == "revenue"
+    assert chart.title == "Monthly Revenue"
+    assert 0 < chart.changed_pixels < chart.total_pixels
+    assert chart.reasons == ("the rows changed",)
+    assert chart.data is not None
+    (revenue,) = chart.data.fields
+    assert (revenue.name, revenue.before_sum, revenue.after_sum) == ("revenue", 5400.0, 6000.0)
+    assert revenue.percent == pytest.approx(11.11, abs=0.01)
+
+
+def test_a_changed_query_is_named_as_the_reason(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    chart_file = project / "visualisations" / "revenue.ggsql"
+    chart_file.write_text(
+        chart_file.read_text(encoding="utf-8").replace(
+            "SELECT month, revenue", "SELECT month, revenue * 2 AS revenue"
+        ),
+        encoding="utf-8",
+    )
+
+    (chart,) = compare_builds(baseline, _build(project)).with_status("changed")
+
+    assert chart.reasons == ("the query changed", "the rows changed")
+
+
+def test_a_changed_label_is_the_chart_definition(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    chart_file = project / "visualisations" / "revenue.ggsql"
+    chart_file.write_text(
+        chart_file.read_text(encoding="utf-8").replace("Monthly Revenue", "Revenue"),
+        encoding="utf-8",
+    )
+
+    (chart,) = compare_builds(baseline, _build(project)).with_status("changed")
+
+    # Same query, same rows, same glyf: only the chart block is left.
+    assert chart.reasons == ("the chart definition changed",)
+
+
+def test_new_and_missing_categories_are_listed(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        SEEDS.replace("2026-01,1200\n", "") + "2026-04,2600\n", encoding="utf-8"
+    )
+
+    (chart,) = compare_builds(baseline, _build(project)).with_status("changed")
+
+    assert chart.data is not None
+    month = next(change for change in chart.data.fields if change.name == "month")
+    assert month.new_values == ("2026-04",)
+    assert month.gone_values == ("2026-01",)
+
+
+def test_added_and_removed_charts(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    visualisations = project / "visualisations"
+    original = (visualisations / "revenue.ggsql").read_text(encoding="utf-8")
+    (visualisations / "revenue.ggsql").unlink()
+    (visualisations / "revenue_bars.ggsql").write_text(
+        original.replace("DRAW line", "DRAW bar"), encoding="utf-8"
+    )
+    shutil.rmtree(project / "target" / "glyf")
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\ntitle: Executive\ncharts:\n  - revenue_bars\n", encoding="utf-8"
+    )
+
+    diff = compare_builds(baseline, _build(project))
+
+    assert [chart.name for chart in diff.with_status("added")] == ["revenue_bars"]
+    assert [chart.name for chart in diff.with_status("removed")] == ["revenue"]
+    assert diff.has_changes
+
+
+def test_threshold_forgives_a_small_change(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        SEEDS.replace("2400", "3000"), encoding="utf-8"
+    )
+    current = _build(project)
+
+    assert compare_builds(baseline, current).has_changes
+    assert not compare_builds(baseline, current, threshold=100.0).has_changes
+
+
+def test_report_is_self_contained(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        SEEDS.replace("2400", "3000"), encoding="utf-8"
+    )
+    diff = compare_builds(baseline, _build(project))
+
+    page = write_report(diff, tmp_path / "report")
+
+    report = page.parent
+    for view in ("before", "after", "diff"):
+        assert (report / "images" / f"revenue.{view}.png").read_bytes().startswith(b"\x89PNG")
+    document = json.loads((report / "diff.json").read_text(encoding="utf-8"))
+    assert document["diff_version"] == "1"
+    assert document["counts"] == {"added": 0, "changed": 1, "removed": 0, "unchanged": 0}
+    assert document["charts"]["revenue"]["reasons"] == ["the rows changed"]
+    summary = (report / "summary.md").read_text(encoding="utf-8")
+    assert "**1 changed, 0 unchanged**" in summary
+    assert "sum of revenue 5,400 → 6,000 (+11.1%)" in summary
+    html = page.read_text(encoding="utf-8")
+    assert "images/revenue.diff.png" in html
+    # A shared report does not publish the layout of the machine that built it.
+    assert str(tmp_path) not in html
+
+
+def test_build_dir_is_found_from_a_project_root(tmp_path: Path) -> None:
+    _, project = _baseline_and_project(tmp_path)
+
+    assert resolve_build_dir(project) == project / "target" / "glyf"
+    with pytest.raises(DiffError, match="does not hold a glyf build"):
+        resolve_build_dir(tmp_path / "nowhere")
+
+
+def test_diff_command_reports_and_can_fail_the_run(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        SEEDS.replace("2400", "3000"), encoding="utf-8"
+    )
+    _build(project)
+    arguments = ["diff", "--baseline", str(baseline), "--project", str(project)]
+
+    reported = runner.invoke(app, arguments)
+    failed = runner.invoke(app, [*arguments, "--fail-on-change"])
+
+    assert reported.exit_code == 0
+    assert "~ revenue:" in reported.output
+    assert "✓ 1 changed, 0 unchanged" in reported.output
+    assert "✓ wrote target/glyf/diff/index.html" in reported.output
+    assert failed.exit_code == 1
+
+
+def test_diff_command_explains_a_missing_baseline(tmp_path: Path) -> None:
+    _, project = _baseline_and_project(tmp_path)
+
+    result = runner.invoke(
+        app, ["diff", "--baseline", str(tmp_path / "nowhere"), "--project", str(project)]
+    )
+
+    assert result.exit_code == 1
+    assert "Diff failed" in result.output
+    assert "Run glyf build there first." in result.output
+
+
+def test_the_same_rows_in_a_different_order_are_named_as_such(tmp_path: Path) -> None:
+    """An ORDER BY that leaves ties: no value moved, but the picture can."""
+    baseline, project = _baseline_and_project(tmp_path)
+    current = _build(project)
+    rows_file = current / "data" / "normalized" / "revenue.data.json"
+    document = json.loads(rows_file.read_text(encoding="utf-8"))
+    document["rows"].reverse()
+    rows_file.write_text(json.dumps(document), encoding="utf-8")
+    # Stand-ins for a picture that moved; the rows are what is under test.
+    (baseline / "charts" / "revenue.png").write_bytes(_png(4, 4, (255, 255, 255, 255)))
+    (current / "charts" / "revenue.png").write_bytes(_png(4, 4, (0, 0, 0, 255)))
+
+    diff = compare_builds(baseline, current)
+
+    (chart,) = diff.with_status("changed")
+    assert chart.data is not None and chart.data.reordered
+    assert chart.reasons == ("the same rows came back in a different order",)
+    summary = write_report(diff, tmp_path / "report").parent / "summary.md"
+    assert "ORDER BY leaves ties" in summary.read_text(encoding="utf-8")
+
+
+def _png(width: int, height: int, colour: tuple[int, int, int, int]) -> bytes:
+    """A solid PNG, written by hand so the tests need no image library."""
+    import struct
+    import zlib
+
+    row = b"\x00" + bytes(colour) * width
+    body = zlib.compress(row * height)
+
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(data))
+            + kind
+            + data
+            + struct.pack(">I", zlib.crc32(kind + data))
+        )
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header) + chunk(b"IDAT", body) + chunk(b"IEND", b"")

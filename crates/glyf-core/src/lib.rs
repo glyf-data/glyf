@@ -1,6 +1,7 @@
 mod dashboard;
 mod error;
 mod ggsql;
+mod imagediff;
 mod manifest;
 mod models;
 mod python;
@@ -9,6 +10,7 @@ mod resolver;
 pub use dashboard::validate_dashboard_json_text;
 pub use error::CoreError;
 pub use ggsql::parse_ggsql_text;
+pub use imagediff::{diff_png, ImageDiff};
 pub use manifest::load_manifest_json_text;
 pub use models::{DbtManifest, GgsqlChart, ManifestRelation, RefResolution, VisualiseMapping};
 pub use resolver::resolve_refs_text;

@@ -24,6 +24,7 @@ const sidebars = {
         'guides/data-exposure',
         'guides/where-to-run-builds',
         'guides/ci-cd',
+        'guides/visual-diff',
       ],
     },
     {

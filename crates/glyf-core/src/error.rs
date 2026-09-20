@@ -6,4 +6,6 @@ pub enum CoreError {
     Manifest(String),
     #[error("{0}")]
     Dashboard(String),
+    #[error("{0}")]
+    Image(String),
 }

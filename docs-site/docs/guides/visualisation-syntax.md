@@ -128,6 +128,12 @@ Add an `ORDER BY` and glyf keeps that order exactly, untouched. An `ORDER BY`
 inside a CTE, a subquery or a window function orders that, not the rows the
 chart draws, so it does not count.
 
+An `ORDER BY` has to decide every pair of rows to settle the picture. `ORDER BY
+department, expenses` leaves two rows with the same department and the same
+expenses in either order, and a scatter then draws one point over the other
+differently from build to build. Add columns until no two rows tie.
+[`glyf diff`](visual-diff.md) names this case when it finds it.
+
 Only the chart types above are reported, because only they show the order.
 Every chart is ordered either way, so that a build can be compared against the
 last one.
