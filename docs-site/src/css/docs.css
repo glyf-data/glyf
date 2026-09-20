@@ -185,7 +185,10 @@ html.plugin-docs .theme-doc-markdown h4 {
   font-weight: 650;
 }
 
-html.plugin-docs .theme-doc-markdown a:not([class]) {
+/* Docusaurus gives an external link an empty class attribute, so "has no class"
+   has to be said both ways. */
+html.plugin-docs .theme-doc-markdown a:not([class]),
+html.plugin-docs .theme-doc-markdown a[class=''] {
   color: var(--doc-accent) !important;
   text-decoration: underline;
   text-decoration-color: rgba(29, 78, 216, 0.3);
@@ -193,8 +196,18 @@ html.plugin-docs .theme-doc-markdown a:not([class]) {
   text-underline-offset: 0.2em;
   transition: text-decoration-color 120ms ease;
 }
-html.plugin-docs .theme-doc-markdown a:not([class]):hover {
+html.plugin-docs .theme-doc-markdown a:not([class]):hover,
+html.plugin-docs .theme-doc-markdown a[class='']:hover {
   text-decoration-color: currentColor;
+}
+
+/* A heading that is a link is still a heading. */
+html.plugin-docs .theme-doc-markdown :is(h2, h3, h4) a:not(.hash-link) {
+  color: var(--doc-ink) !important;
+  text-decoration: none;
+}
+html.plugin-docs .theme-doc-markdown :is(h2, h3, h4) a:not(.hash-link):hover {
+  color: var(--doc-accent) !important;
 }
 
 html.plugin-docs .theme-doc-markdown strong {
