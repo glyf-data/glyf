@@ -94,6 +94,7 @@ def _chart_document(chart: ChartDiff) -> dict[str, object]:
             "after_rows": chart.data.after_rows,
             "added_fields": list(chart.data.added_fields),
             "removed_fields": list(chart.data.removed_fields),
+            "reordered": chart.data.reordered,
             "fields": [
                 {
                     "name": change.name,
@@ -128,7 +129,7 @@ def as_markdown(diff: BuildDiff) -> str:
         lines += ["| Chart | Picture | Why | Data |", "| --- | --- | --- | --- |"]
         for chart in changed:
             lines.append(
-                f"| {_label(chart)} | {_percent(chart.changed_percent)} of pixels "
+                f"| {_label(chart)} | {format_percent(chart.changed_percent)} of pixels "
                 f"| {'; '.join(chart.reasons)} "
                 f"| {'<br>'.join(describe_data(chart.data)) or 'n/a'} |"
             )
@@ -143,7 +144,14 @@ def as_markdown(diff: BuildDiff) -> str:
 
 def describe_data(data: DataChange | None) -> list[str]:
     """The changes to a chart's rows, one plain sentence each."""
-    if data is None or data.is_empty:
+    if data is None:
+        return []
+    if data.is_empty:
+        if data.reordered:
+            return [
+                "no value changed; the query's ORDER BY leaves ties, so add "
+                "columns to it until no two rows tie"
+            ]
         return []
     lines = []
     if data.before_rows != data.after_rows:
@@ -186,7 +194,8 @@ def _number(value: float) -> str:
     return f"{value:,.0f}" if value == int(value) else f"{value:,.2f}"
 
 
-def _percent(value: float) -> str:
+def format_percent(value: float) -> str:
+    """A share of the picture; a change too small to round up still shows."""
     return "<0.1%" if 0 < value < 0.1 else f"{value:.1f}%"
 
 
@@ -209,7 +218,7 @@ def _render_html(diff: BuildDiff) -> str:
         trim_blocks=True,
         lstrip_blocks=True,
     )
-    environment.filters["percent"] = _percent
+    environment.filters["percent"] = format_percent
     return environment.get_template("diff.html.j2").render(
         diff=diff,
         baseline_label=_display_path(diff.baseline),

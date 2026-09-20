@@ -195,3 +195,44 @@ def test_diff_command_explains_a_missing_baseline(tmp_path: Path) -> None:
     assert result.exit_code == 1
     assert "Diff failed" in result.output
     assert "Run glyf build there first." in result.output
+
+
+def test_the_same_rows_in_a_different_order_are_named_as_such(tmp_path: Path) -> None:
+    """An ORDER BY that leaves ties: no value moved, but the picture can."""
+    baseline, project = _baseline_and_project(tmp_path)
+    current = _build(project)
+    rows_file = current / "data" / "normalized" / "revenue.data.json"
+    document = json.loads(rows_file.read_text(encoding="utf-8"))
+    document["rows"].reverse()
+    rows_file.write_text(json.dumps(document), encoding="utf-8")
+    # Stand-ins for a picture that moved; the rows are what is under test.
+    (baseline / "charts" / "revenue.png").write_bytes(_png(4, 4, (255, 255, 255, 255)))
+    (current / "charts" / "revenue.png").write_bytes(_png(4, 4, (0, 0, 0, 255)))
+
+    diff = compare_builds(baseline, current)
+
+    (chart,) = diff.with_status("changed")
+    assert chart.data is not None and chart.data.reordered
+    assert chart.reasons == ("the same rows came back in a different order",)
+    summary = write_report(diff, tmp_path / "report").parent / "summary.md"
+    assert "ORDER BY leaves ties" in summary.read_text(encoding="utf-8")
+
+
+def _png(width: int, height: int, colour: tuple[int, int, int, int]) -> bytes:
+    """A solid PNG, written by hand so the tests need no image library."""
+    import struct
+    import zlib
+
+    row = b"\x00" + bytes(colour) * width
+    body = zlib.compress(row * height)
+
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(data))
+            + kind
+            + data
+            + struct.pack(">I", zlib.crc32(kind + data))
+        )
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header) + chunk(b"IDAT", body) + chunk(b"IEND", b"")

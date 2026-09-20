@@ -75,6 +75,7 @@ Each changed chart carries the reasons the two builds can account for, from
 | the query changed | The compiled SQL has a different hash. |
 | the rows changed | The row count, the columns, a column's sum, or a column's set of values differs. |
 | glyf `a` -> `b` | The two builds were made by different versions. |
+| the same rows came back in a different order | No value differs, only which row came first. The query's `ORDER BY` leaves ties; see [Row order](visualisation-syntax.md#row-order). |
 | the chart definition changed | None of the above: what is left is the `DRAW` type, a label, the size, or an interaction. |
 
 The row changes are listed in plain terms:

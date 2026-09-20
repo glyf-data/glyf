@@ -49,6 +49,8 @@ class DataChange:
     added_fields: tuple[str, ...] = ()
     removed_fields: tuple[str, ...] = ()
     fields: tuple[FieldChange, ...] = ()
+    # The same rows, returned in a different order.
+    reordered: bool = False
 
     @property
     def is_empty(self) -> bool:
@@ -224,6 +226,11 @@ def _reasons(
         reasons.append("the query changed")
     if data is not None and not data.is_empty:
         reasons.append("the rows changed")
+    elif data is not None and data.reordered:
+        # Nothing about the data moved except which row came first. A query
+        # whose ORDER BY leaves ties may return them either way round, and a
+        # scatter then draws one point over the other differently.
+        reasons.append("the same rows came back in a different order")
     elif (
         data is None
         and before_chart.get("row_count") is not None
@@ -267,6 +274,8 @@ def _data_change(baseline: Path, current: Path, name: str) -> DataChange | None:
         added_fields=tuple(f for f in after_fields if f not in before_fields),
         removed_fields=tuple(f for f in before_fields if f not in after_fields),
         fields=tuple(changes),
+        reordered=before_rows != after_rows
+        and _canonical(before_rows) == _canonical(after_rows),
     )
 
 
@@ -287,6 +296,11 @@ def _field_change(name: str, old: list[object], new: list[object]) -> FieldChang
         new_values=tuple(sorted(new_values - old_values)),
         gone_values=tuple(sorted(old_values - new_values)),
     )
+
+
+def _canonical(rows: list[dict[str, object]]) -> list[str]:
+    """The rows as a bag: equal for two results that differ only in order."""
+    return sorted(json.dumps(row, sort_keys=True, default=str) for row in rows)
 
 
 def _all_numbers(values: list[object]) -> bool:

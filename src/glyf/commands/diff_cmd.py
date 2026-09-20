@@ -4,6 +4,7 @@ import typer
 
 from glyf.config import ConfigError, load_config, resolve_project_path
 from glyf.diff import DiffError, compare_builds, headline, write_report
+from glyf.diff.report import format_percent
 
 
 def run_diff(
@@ -34,7 +35,7 @@ def run_diff(
     for chart in diff.charts:
         if chart.status == "changed":
             typer.echo(
-                f"~ {chart.name}: {chart.changed_percent:.1f}% of the picture moved "
+                f"~ {chart.name}: {format_percent(chart.changed_percent)} of the picture moved "
                 f"({'; '.join(chart.reasons)})"
             )
         elif chart.status == "added":
