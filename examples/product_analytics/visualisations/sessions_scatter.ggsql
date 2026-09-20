@@ -1,5 +1,6 @@
 SELECT active_users, sessions, plan
 FROM {{ ref('fct_product_usage') }}
+ORDER BY plan, active_users
 
 VISUALISE active_users AS x, sessions AS y, plan AS color
 DRAW scatter

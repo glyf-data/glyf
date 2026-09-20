@@ -3,6 +3,7 @@ SELECT
   sum(sessions) as sessions
 FROM {{ ref('fct_product_usage') }}
 GROUP BY 1
+ORDER BY sessions DESC
 
 VISUALISE plan AS x, sessions AS y
 DRAW pie

@@ -1,5 +1,6 @@
 SELECT month, revenue, region
 FROM {{ ref('fct_orders') }}
+ORDER BY month, region
 
 VISUALISE month AS x, revenue AS y, region AS color
 DRAW scatter

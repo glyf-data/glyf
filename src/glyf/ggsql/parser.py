@@ -58,6 +58,7 @@ def _chart_from_core(raw: dict[str, object]) -> GgsqlChart:
             for key, value in _required_dict(raw, "config").items()
         },
         interactions=tuple(str(value) for value in _required_list(raw, "interactions")),
+        has_order_by=bool(raw.get("has_order_by", False)),
     )
 
 

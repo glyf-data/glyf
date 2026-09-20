@@ -146,6 +146,18 @@ Both bounds are applied in SQL, so the warehouse sends less over the wire. They
 bound transfer and render time, **not** what the warehouse scans: an aggregate
 is computed in full whatever limit follows it.
 
+## Row order
+
+A chart whose query has no `ORDER BY` is drawn from whatever order the
+warehouse returned, which is not the same order next build. glyf orders those
+rows itself, by the columns the chart encodes and then by the rest to break
+ties, so a rebuild of unchanged data produces the same artifact.
+
+There is no setting. A query that orders itself is never reordered, and a query
+that does not expresses no order to override. See
+[Row order](../guides/visualisation-syntax.md#row-order) for which chart types
+report it.
+
 ## How many marks a chart may draw
 
 `render.max_marks` fails a chart that would draw more marks than the renderer
