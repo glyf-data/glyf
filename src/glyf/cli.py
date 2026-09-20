@@ -6,6 +6,7 @@ import typer
 from glyf import __version__
 from glyf.commands.build_cmd import run_build
 from glyf.commands.dashboard_cmd import run_dashboard
+from glyf.commands.diff_cmd import run_diff
 from glyf.commands.doctor_cmd import run_doctor
 from glyf.commands.export_cmd import run_export
 from glyf.commands.init_cmd import run_init
@@ -320,6 +321,60 @@ def serve_command(
 ) -> None:
     """Serve the generated static dashboard site locally."""
     run_serve(project, host=host, port=port, config_path=config)
+
+
+@app.command("diff")
+def diff_command(
+    baseline: Annotated[
+        Path,
+        typer.Option(
+            "--baseline",
+            help=(
+                "The build to compare against: a target/glyf directory, an "
+                "exported site, or a project that has one."
+            ),
+        ),
+    ],
+    project: ProjectOption = Path("."),
+    config: ConfigOption = None,
+    threshold: Annotated[
+        float,
+        typer.Option(
+            "--threshold",
+            min=0.0,
+            max=100.0,
+            help=(
+                "Percentage of a chart's pixels that may differ before it counts "
+                "as changed. Defaults to 0: glyf renders are byte-stable."
+            ),
+        ),
+    ] = 0.0,
+    tolerance: Annotated[
+        int,
+        typer.Option(
+            "--tolerance",
+            min=0,
+            max=255,
+            help="How far a colour channel may move before a pixel counts as changed.",
+        ),
+    ] = 0,
+    fail_on_change: Annotated[
+        bool,
+        typer.Option(
+            "--fail-on-change",
+            help="Exit 1 when any chart changed, was added or was removed.",
+        ),
+    ] = False,
+) -> None:
+    """Compare this build's charts with a previous build and report what changed."""
+    run_diff(
+        project,
+        baseline=baseline,
+        threshold=threshold,
+        tolerance=tolerance,
+        fail_on_change=fail_on_change,
+        config_path=config,
+    )
 
 
 @app.command("doctor")

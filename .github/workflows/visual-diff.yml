@@ -1,0 +1,126 @@
+name: visual diff
+
+# What a pull request does to the example dashboards, as pictures.
+#
+# The base branch and the pull request are each built with their own glyf, in
+# the same job on the same runner, and `glyf diff` compares the two. Building
+# both here rather than downloading an older build is what lets the comparison
+# be exact: the same machine draws the same fonts, so a chart that did not
+# change is the same bytes.
+
+on:
+  pull_request:
+    paths:
+      - "examples/**"
+      - "src/**"
+      - "crates/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - "Cargo.lock"
+      - ".github/workflows/visual-diff.yml"
+
+concurrency:
+  group: visual-diff-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  EXAMPLES: simple_dbt sales_dashboard product_analytics finance_metrics
+
+jobs:
+  visual-diff:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the pull request
+        uses: actions/checkout@v4
+        with:
+          path: head
+
+      - name: Check out the base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build the examples on both sides
+        run: |
+          for side in base head; do
+            (
+              cd "$side"
+              uv python install
+              uv sync --all-groups
+              for example in $EXAMPLES; do
+                # An example the pull request adds does not exist on the base.
+                [ -d "examples/$example" ] || continue
+                (
+                  cd "examples/$example"
+                  uv run dbt seed --profiles-dir . --full-refresh --no-partial-parse
+                  uv run dbt build --profiles-dir .
+                )
+                uv run glyf build --project-dir "examples/$example"
+              done
+            )
+          done
+
+      - name: Compare
+        id: compare
+        run: |
+          mkdir -p report
+          changed=false
+          {
+            echo "## glyf visual diff"
+            echo
+          } > report/summary.md
+          cd head
+          for example in $EXAMPLES; do
+            [ -d "../base/examples/$example/target/glyf/charts" ] || continue
+            uv run glyf diff \
+              --baseline "../base/examples/$example" \
+              --project-dir "examples/$example"
+            cp -R "examples/$example/target/glyf/diff" "../report/$example"
+            if [ "$(jq -r .has_changes "../report/$example/diff.json")" = "true" ]; then
+              changed=true
+            fi
+            {
+              echo "#### \`examples/$example\`"
+              echo
+              # The report's own heading is the page title above.
+              tail -n +3 "../report/$example/summary.md"
+              echo
+            } >> ../report/summary.md
+          done
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          cat ../report/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the report
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff
+          path: report
+          if-no-files-found: error
+
+      # A pull request from a fork gets a read-only token, so it cannot
+      # comment. Its summary is still on the run page, written above.
+      - name: Comment on the pull request
+        if: >-
+          steps.compare.outputs.changed == 'true' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPORT_URL: ${{ steps.upload.outputs.artifact-url }}
+        run: |
+          {
+            cat report/summary.md
+            echo "Before, after and marked-up images for every changed chart: [download the report]($REPORT_URL) and open \`<example>/index.html\`."
+          } > comment.md
+          gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --edit-last --body-file comment.md \
+            || gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file comment.md

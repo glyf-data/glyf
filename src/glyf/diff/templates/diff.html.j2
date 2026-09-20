@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>glyf visual diff</title>
+<style>
+  :root { --ink:#0f172a; --body:#334155; --quiet:#64748b; --rule:#dbe3ef; --wash:#f5f8ff; --accent:#1d4ed8; --mark:#e11d74; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#fbfcfe; color:var(--body); font:16px/1.6 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+  main { max-width:1280px; margin:0 auto; padding:2.5rem clamp(1rem,4vw,3rem) 4rem; }
+  h1 { margin:0 0 .4rem; color:var(--ink); font-size:1.9rem; font-weight:650; letter-spacing:-.015em; }
+  .lead { margin:0; color:var(--ink); font-size:1.15rem; }
+  .meta { margin:.4rem 0 0; color:var(--quiet); font-size:.9rem; }
+  .meta code, td code, .name { font:0.85em ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace; }
+  h2 { margin:2.8rem 0 1rem; padding-top:1.6rem; border-top:1px solid var(--rule); color:var(--ink); font-size:1.25rem; font-weight:650; }
+  .chart { margin:0 0 1.5rem; border:1px solid var(--rule); border-radius:14px; background:#fff; overflow:hidden; }
+  .chart header { display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem 1rem; padding:1.1rem 1.3rem; border-bottom:1px solid var(--rule); }
+  .chart h3 { margin:0; color:var(--ink); font-size:1.1rem; font-weight:650; }
+  .name { color:var(--quiet); }
+  .moved { margin-left:auto; padding:.15rem .6rem; border-radius:999px; background:#fdeaf2; color:#9d174d; font-size:.85rem; font-weight:600; white-space:nowrap; }
+  .why { margin:0; padding:.9rem 1.3rem; border-bottom:1px solid var(--rule); background:var(--wash); font-size:.95rem; }
+  .why ul { margin:.3rem 0 0; padding-left:1.2rem; }
+  .why strong { color:var(--ink); }
+  .views { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:var(--rule); }
+  figure { margin:0; padding:1rem; background:#fff; }
+  figcaption { margin:0 0 .6rem; color:var(--quiet); font-size:.82rem; font-weight:600; }
+  figcaption .swatch { display:inline-block; width:.7em; height:.7em; margin-right:.35em; border-radius:2px; background:var(--mark); vertical-align:baseline; }
+  img { display:block; width:100%; height:auto; border:1px solid #eef2f8; border-radius:6px; }
+  .pair { grid-template-columns:minmax(0,1fr); }
+  .pair figure { max-width:640px; }
+  .quiet-list { margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:.4rem; }
+  .quiet-list li { padding:.2rem .65rem; border:1px solid var(--rule); border-radius:999px; background:#fff; font-size:.88rem; }
+  .none { padding:1.4rem 1.6rem; border:1px solid var(--rule); border-radius:14px; background:#fff; color:var(--ink); }
+  a:focus-visible, summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  summary { cursor:pointer; color:var(--ink); font-weight:600; }
+  @media (max-width: 900px) { .views { grid-template-columns:minmax(0,1fr); } .moved { margin-left:0; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Visual diff</h1>
+  <p class="lead">{{ headline }}</p>
+  <p class="meta">
+    Baseline <code>{{ baseline_label }}</code>{% if diff.baseline_version %} (glyf {{ diff.baseline_version }}){% endif %}
+    compared with <code>{{ current_label }}</code>{% if diff.current_version %} (glyf {{ diff.current_version }}){% endif %}
+  </p>
+
+  {% if not diff.has_changes %}
+  <h2>Result</h2>
+  <p class="none">Every chart rendered to the same image as the baseline.</p>
+  {% endif %}
+
+  {% if changed %}
+  <h2>Changed</h2>
+  {% for chart in changed %}
+  <section class="chart" id="{{ chart.name }}">
+    <header>
+      <h3>{{ chart.title or chart.name }}</h3>
+      <span class="name">{{ chart.name }}</span>
+      <span class="moved">{{ chart.changed_percent | percent }} of the picture moved</span>
+    </header>
+    <div class="why">
+      <strong>Why:</strong> {{ chart.reasons | join('; ') }}.
+      {% set lines = describe_data(chart.data) %}
+      {% if lines %}
+      <ul>{% for line in lines %}<li>{{ line }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if chart.before_size != chart.after_size %}
+      <ul><li>size {{ chart.before_size[0] }}×{{ chart.before_size[1] }} → {{ chart.after_size[0] }}×{{ chart.after_size[1] }}</li></ul>
+      {% endif %}
+    </div>
+    <div class="views">
+      <figure><figcaption>Before</figcaption><img src="images/{{ chart.name }}.before.png" alt="{{ chart.title or chart.name }} in the baseline build" loading="lazy"></figure>
+      <figure><figcaption>After</figcaption><img src="images/{{ chart.name }}.after.png" alt="{{ chart.title or chart.name }} in this build" loading="lazy"></figure>
+      <figure><figcaption><span class="swatch"></span>What moved</figcaption><img src="images/{{ chart.name }}.diff.png" alt="This build's chart faded back, with every changed pixel marked" loading="lazy"></figure>
+    </div>
+  </section>
+  {% endfor %}
+  {% endif %}
+
+  {% if added %}
+  <h2>Added</h2>
+  {% for chart in added %}
+  <section class="chart" id="{{ chart.name }}">
+    <header><h3>{{ chart.title or chart.name }}</h3><span class="name">{{ chart.name }}</span></header>
+    <div class="views pair"><figure><figcaption>New in this build</figcaption><img src="images/{{ chart.name }}.after.png" alt="{{ chart.title or chart.name }}" loading="lazy"></figure></div>
+  </section>
+  {% endfor %}
+  {% endif %}
+
+  {% if removed %}
+  <h2>Removed</h2>
+  {% for chart in removed %}
+  <section class="chart" id="{{ chart.name }}">
+    <header><h3>{{ chart.title or chart.name }}</h3><span class="name">{{ chart.name }}</span></header>
+    <div class="views pair"><figure><figcaption>Was in the baseline</figcaption><img src="images/{{ chart.name }}.before.png" alt="{{ chart.title or chart.name }}" loading="lazy"></figure></div>
+  </section>
+  {% endfor %}
+  {% endif %}
+
+  {% if unchanged and diff.has_changes %}
+  <h2>Unchanged</h2>
+  <details>
+    <summary>{{ unchanged | length }} chart{{ '' if unchanged | length == 1 else 's' }} rendered to the same image</summary>
+    <ul class="quiet-list" style="margin-top:.8rem">{% for chart in unchanged %}<li>{{ chart.title or chart.name }}</li>{% endfor %}</ul>
+  </details>
+  {% endif %}
+</main>
+</body>
+</html>
