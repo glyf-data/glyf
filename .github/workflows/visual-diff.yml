@@ -109,18 +109,32 @@ jobs:
 
       # A pull request from a fork gets a read-only token, so it cannot
       # comment. Its summary is still on the run page, written above.
+      #
+      # A pull request that changes no chart gets no comment. But once a
+      # comment exists it is kept current: a push that clears the change must
+      # not leave "1 changed" standing under it.
       - name: Comment on the pull request
-        if: >-
-          steps.compare.outputs.changed == 'true' &&
-          github.event.pull_request.head.repo.full_name == github.repository
+        if: github.event.pull_request.head.repo.full_name == github.repository
         env:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.pull_request.number }}
+          CHANGED: ${{ steps.compare.outputs.changed }}
           REPORT_URL: ${{ steps.upload.outputs.artifact-url }}
         run: |
+          existing=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq '[.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("## glyf visual diff")))][-1].id // empty')
+          if [ "$CHANGED" != "true" ] && [ -z "$existing" ]; then
+            echo "No chart changed and no earlier comment to update."
+            exit 0
+          fi
           {
             cat report/summary.md
-            echo "Before, after and marked-up images for every changed chart: [download the report]($REPORT_URL) and open \`<example>/index.html\`."
+            if [ "$CHANGED" = "true" ]; then
+              echo "Before, after and marked-up images for every changed chart: [download the report]($REPORT_URL) and open \`<example>/index.html\`."
+            fi
           } > comment.md
-          gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --edit-last --body-file comment.md \
-            || gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file comment.md
+          if [ -n "$existing" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$existing" -F body=@comment.md > /dev/null
+          else
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file comment.md
+          fi
