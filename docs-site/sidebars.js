@@ -72,7 +72,12 @@ const sidebars = {
       type: 'category',
       label: 'Resources',
       collapsed: false,
-      items: ['resources/community', 'resources/roadmap', 'resources/troubleshooting'],
+      items: [
+        'resources/support',
+        'resources/troubleshooting',
+        'resources/community',
+        'resources/roadmap',
+      ],
     },
   ],
 };

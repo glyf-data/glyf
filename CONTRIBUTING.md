@@ -14,7 +14,7 @@ you write code? Ask. Nobody expects you to work it out alone.
 
 | | |
 | --- | --- |
-| **[Slack](https://glyf.pages.dev/slack)** | The quickest answer. Ask in the help channel; say what you ran and what happened. |
+| **[Slack](https://glyfdata.com/slack)** | The quickest answer. Ask in the help channel; say what you ran and what happened. |
 | **[Discussions](https://github.com/glyf-data/glyf/discussions)** | Questions and ideas that others will want to find later. |
 | **[Issues](https://github.com/glyf-data/glyf/issues)** | Bugs and concrete feature requests. |
 
@@ -265,6 +265,10 @@ it or to keep that implementation direction. If yours has gone quiet for a
 week, a nudge in Slack is welcome.
 
 ## Reporting bugs
+
+A security problem is not a bug report: report it privately, as
+[SECURITY.md](./SECURITY.md) describes.
+
 
 Include:
 

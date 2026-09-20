@@ -7,8 +7,8 @@ it should do next. Come and ask, show what you made, or help someone else.
 
 <div className="docMap">
   <Link className="docMap__start" href="pathname:///slack">
-    <strong>Join the glyf Slack</strong>
-    <span>The quickest way to get help. Ask in the help channel, and say what you ran and what happened.</span>
+    <strong>Join the Slack community</strong>
+    <span>Where glyf gets built in the open. Ask a question, show what you made, or help decide what comes next.</span>
   </Link>
   <Link href="https://github.com/glyf-data/glyf/discussions">
     <strong>Discussions</strong>
@@ -24,29 +24,8 @@ it should do next. Come and ask, show what you made, or help someone else.
   </Link>
 </div>
 
-## Where to ask what
-
-| You want to | Go to |
-| --- | --- |
-| Get unstuck, or talk through how to do something | [Slack](pathname:///slack), in the help channel |
-| Ask something others will search for later | [Discussions](https://github.com/glyf-data/glyf/discussions) |
-| Report a bug | [Issues](https://github.com/glyf-data/glyf/issues/new/choose) |
-| Propose a feature | [Issues](https://github.com/glyf-data/glyf/issues/new/choose), or Discussions while it is still an idea |
-| See what is planned | [Roadmap](roadmap.md) |
-
-Slack is quick, and its history is neither public nor permanent. When a
-conversation there finds a bug or settles a decision, it still goes into an
-issue or a discussion afterwards.
-
-Already a member? The help channel is
-[here](https://glyfdata.slack.com/archives/C0C30CX7ZDZ).
-
-## Before you ask
-
-Run `glyf doctor` in your project and include its output. It checks the
-manifest, the execution backend and the connection, and answers a good share of
-questions by itself. [Troubleshooting](troubleshooting.md) covers the common
-failures.
+Looking for help with a problem? [Support](support.md) says where to ask what,
+and what to check first.
 
 ## Contributing
 
