@@ -1361,8 +1361,10 @@ div[class*='codeBlockContent'] pre code,
 
 .theme-doc-markdown .token.keyword,
 .theme-doc-markdown .token.function,
+.theme-doc-markdown .token.tag,
 .theme-code-block .token.keyword,
-.theme-code-block .token.function {
+.theme-code-block .token.function,
+.theme-code-block .token.tag {
   color: #ff9bc2 !important;
 }
 
