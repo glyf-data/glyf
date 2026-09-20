@@ -1,0 +1,81 @@
+/* The landing page has one theme: light.
+
+   The documentation is dark by default, so a visitor usually arrives here with
+   the dark theme set. custom.css styles this page in fixed light colours, which
+   leaves Infima's variables as the only thing a theme can reach. This pins
+   each variable that differs between the two themes to its light value, and
+   hides the switch where it would do nothing.
+
+   The values are measured from the built landing page in both themes, not
+   written by hand. Regenerate them if Docusaurus is upgraded.
+
+   A dark theme for this page exists in landing-dark.css, which is not loaded:
+   see the note at the top of that file. */
+
+html[data-theme='dark']:not(.plugin-docs) {
+  --ifm-background-color: #fff;
+  --ifm-background-surface-color: #fff;
+  --ifm-blockquote-border-color: #dadde1;
+  --ifm-blockquote-color: #444950;
+  --ifm-breadcrumb-item-background-active: rgba(0,0,0,.05);
+  --ifm-breadcrumb-separator-filter: none;
+  --ifm-button-color: #fff;
+  --ifm-card-background-color: #fff;
+  --ifm-code-background: #f6f7f8;
+  --ifm-color-content: #1c1e21;
+  --ifm-color-content-inverse: #fff;
+  --ifm-color-content-secondary: #525860;
+  --ifm-color-danger-contrast-background: #ffebec;
+  --ifm-color-danger-contrast-foreground: #4b1113;
+  --ifm-color-emphasis-0: #fff;
+  --ifm-color-emphasis-100: #f5f6f7;
+  --ifm-color-emphasis-1000: #000;
+  --ifm-color-emphasis-200: #ebedf0;
+  --ifm-color-emphasis-300: #dadde1;
+  --ifm-color-emphasis-400: #ccd0d5;
+  --ifm-color-emphasis-600: #8d949e;
+  --ifm-color-emphasis-700: #606770;
+  --ifm-color-emphasis-800: #444950;
+  --ifm-color-emphasis-900: #1c1e21;
+  --ifm-color-info-contrast-background: #eef9fd;
+  --ifm-color-info-contrast-foreground: #193c47;
+  --ifm-color-primary-contrast-background: #ebf2fc;
+  --ifm-color-primary-contrast-foreground: #102445;
+  --ifm-color-scheme: light;
+  --ifm-color-secondary-contrast-background: #fdfdfe;
+  --ifm-color-secondary-contrast-foreground: #474748;
+  --ifm-color-success-contrast-background: #e6f6e6;
+  --ifm-color-success-contrast-foreground: #003100;
+  --ifm-color-warning-contrast-background: #fff8e6;
+  --ifm-color-warning-contrast-foreground: #4d3800;
+  --ifm-dropdown-background-color: #fff;
+  --ifm-dropdown-hover-background-color: rgba(0,0,0,.05);
+  --ifm-font-color-base-inverse: #fff;
+  --ifm-font-color-secondary: #525860;
+  --ifm-footer-link-color: #606770;
+  --ifm-hero-background-color: #fff;
+  --ifm-hero-text-color: #444950;
+  --ifm-hover-overlay: rgba(0,0,0,.05);
+  --ifm-menu-color: #606770;
+  --ifm-menu-color-background-active: rgba(0,0,0,.05);
+  --ifm-menu-color-background-hover: rgba(0,0,0,.05);
+  --ifm-menu-link-sublist-icon-filter: none;
+  --ifm-navbar-search-input-background-color: #ebedf0;
+  --ifm-navbar-search-input-color: #444950;
+  --ifm-pagination-item-active-background: rgba(0,0,0,.05);
+  --ifm-pills-color-background-active: rgba(0,0,0,.05);
+  --ifm-pre-background: #f6f7f8;
+  --ifm-scrollbar-thumb-background-color: silver;
+  --ifm-scrollbar-thumb-hover-background-color: #a7a7a7;
+  --ifm-scrollbar-track-background-color: #f1f1f1;
+  --ifm-table-border-color: #dadde1;
+  --ifm-table-stripe-background: rgba(0,0,0,.03);
+  --ifm-tabs-color: #525860;
+  --ifm-toc-border-color: #dadde1;
+  --ifm-toc-link-color: #525860;
+  color-scheme: light;
+}
+
+html:not(.plugin-docs) [class*='colorModeToggle'] {
+  display: none;
+}

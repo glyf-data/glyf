@@ -1,0 +1,274 @@
+/* The landing page in the dark theme. NOT LOADED.
+
+   This sheet is kept for the work to continue, and is deliberately absent from
+   `customCss` in docusaurus.config.js. The landing page ships light-only, held
+   there by landing-light.css, because this theme still has visual bugs to fix.
+
+   To work on it: in docusaurus.config.js, replace `landing-light.css` with
+   `landing-dark.css`. The two are alternatives; loading both makes the pins in
+   landing-light.css fight the variables set here.
+
+   custom.css styles the landing page in fixed light colours, many with
+   !important. This sheet does not edit them: every rule here is scoped to
+   `html[data-theme='dark']:not(.plugin-docs)`, which outranks them, so the
+   light page is untouched by anything in this file.
+
+   Built from an inventory of what the page actually renders -- 29 light
+   surfaces, 12 dark text colours -- and checked by auditing the contrast of
+   every piece of text against the colour behind it. Contrast passing is not
+   the same as the page looking right; that review is what is outstanding. */
+
+html[data-theme='dark']:not(.plugin-docs) {
+  --land-page: #0b1222;
+  --land-alt: #0e172b;
+  --land-surface: #101a2e;
+  --land-raised: #14203a;
+  --land-rule: #1f2c44;
+  --land-ink: #f1f5f9;
+  --land-body: #c3cede;
+  --land-quiet: #8b9ab3;
+  --land-accent: #8ab0ff;
+  --land-accent-wash: #15254a;
+  --ifm-background-color: var(--land-page);
+  --ifm-font-color-base: var(--land-body);
+  --ifm-heading-color: var(--land-ink);
+  color-scheme: dark;
+}
+
+/* ---------- Page and chrome ---------- */
+
+html[data-theme='dark']:not(.plugin-docs),
+html[data-theme='dark']:not(.plugin-docs) body,
+html[data-theme='dark']:not(.plugin-docs) #__docusaurus,
+html[data-theme='dark']:not(.plugin-docs) .main-wrapper {
+  background: var(--land-page) !important;
+  color: var(--land-body) !important;
+}
+
+html[data-theme='dark']:not(.plugin-docs) nav.navbar {
+  border-bottom-color: var(--land-rule) !important;
+  background: rgba(9, 15, 29, 0.9) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbar__title,
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbar__items .navbar__link,
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbar__toggle {
+  color: var(--land-body) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbar__items .navbar__link:hover {
+  color: var(--land-accent) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbarGithubLink {
+  border-color: var(--land-rule) !important;
+  background: var(--land-surface) !important;
+  color: var(--land-ink) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbarGithubMark,
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbarGithubMark path {
+  color: var(--land-ink) !important;
+  fill: var(--land-ink) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbar-sidebar {
+  background: var(--land-page);
+}
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbar-sidebar__brand {
+  border-bottom-color: var(--land-rule);
+}
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbar-sidebar__items .menu__link,
+html[data-theme='dark']:not(.plugin-docs) nav.navbar .navbar-sidebar__brand svg {
+  color: var(--land-ink) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .navbar__items--right [class*='colorModeToggle'] {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.6rem;
+  border: 1px solid var(--land-rule);
+  border-radius: 999px;
+  background: var(--land-surface);
+  color: var(--land-body);
+}
+
+/* ---------- Type ---------- */
+
+html[data-theme='dark']:not(.plugin-docs) .glyfHero h1,
+html[data-theme='dark']:not(.plugin-docs) .landingSections h1,
+html[data-theme='dark']:not(.plugin-docs) .landingSections h2,
+html[data-theme='dark']:not(.plugin-docs) .landingSections h3,
+html[data-theme='dark']:not(.plugin-docs) .landingSections h4,
+html[data-theme='dark']:not(.plugin-docs) .landingSections strong {
+  color: var(--land-ink) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .glyfHero p,
+html[data-theme='dark']:not(.plugin-docs) .landingSections p,
+html[data-theme='dark']:not(.plugin-docs) .landingSections li,
+html[data-theme='dark']:not(.plugin-docs) .landingSections figcaption {
+  color: var(--land-body) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .landingSections .eyebrow,
+html[data-theme='dark']:not(.plugin-docs) .featureStoryTag {
+  color: var(--land-quiet) !important;
+}
+/* The second line of the headline is the accent in both themes. */
+html[data-theme='dark']:not(.plugin-docs) .glyfHero h1 span,
+html[data-theme='dark']:not(.plugin-docs) .glyfHero h1 em {
+  color: var(--land-accent) !important;
+}
+
+/* ---------- Hero ---------- */
+
+html[data-theme='dark']:not(.plugin-docs) .glyfHero {
+  border-bottom-color: var(--land-rule) !important;
+  background-color: var(--land-page) !important;
+  background-image:
+    radial-gradient(60% 70% at 78% 45%, rgba(138, 176, 255, 0.12), rgba(0, 0, 0, 0) 70%),
+    linear-gradient(rgba(148, 163, 184, 0.07) 1px, rgba(0, 0, 0, 0) 0),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, rgba(0, 0, 0, 0) 0) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .glyfHero__badge,
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroTag,
+html[data-theme='dark']:not(.plugin-docs) .featureStatus,
+html[data-theme='dark']:not(.plugin-docs) .personaIcon,
+html[data-theme='dark']:not(.plugin-docs) .featureRoadmapAskIcon {
+  border-color: #24376a !important;
+  background: var(--land-accent-wash) !important;
+  color: var(--land-accent) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroCard,
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroMini {
+  border-color: var(--land-rule) !important;
+  background: var(--land-surface) !important;
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.8) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroMini {
+  background: var(--land-raised) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroCard strong,
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroMini strong {
+  color: var(--land-ink) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroCard span,
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroCard small,
+html[data-theme='dark']:not(.plugin-docs) .glyfHero__signals,
+html[data-theme='dark']:not(.plugin-docs) .glyfHero__signals span {
+  color: var(--land-quiet) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroMiniBadge {
+  background: #0f2a1d !important;
+  color: #6ee7a8 !important;
+}
+/* Brand marks are drawn for a light ground; they keep one. */
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroDestinations {
+  border-color: #cbd5e1 !important;
+  background: #e8edf5 !important;
+}
+
+/* ---------- Sections ---------- */
+
+html[data-theme='dark']:not(.plugin-docs) .howSection,
+html[data-theme='dark']:not(.plugin-docs) .personasSection,
+html[data-theme='dark']:not(.plugin-docs) .communitySection {
+  border-color: var(--land-rule) !important;
+  background: var(--land-page) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .featuresSection,
+html[data-theme='dark']:not(.plugin-docs) .featureStoryNavBand {
+  border-color: var(--land-rule) !important;
+  background: var(--land-alt) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .band {
+  border-color: var(--land-rule) !important;
+  background-color: var(--land-alt) !important;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.06) 1px, rgba(0, 0, 0, 0) 0),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, rgba(0, 0, 0, 0) 0) !important;
+}
+
+html[data-theme='dark']:not(.plugin-docs) .featureStoryBlock,
+html[data-theme='dark']:not(.plugin-docs) .personaCard,
+html[data-theme='dark']:not(.plugin-docs) .featureRoadmap,
+html[data-theme='dark']:not(.plugin-docs) .featureStoryNav {
+  border-color: var(--land-rule) !important;
+  background: var(--land-surface) !important;
+  box-shadow: none !important;
+  color: var(--land-body) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .featureRoadmapAsk {
+  border-color: var(--land-rule) !important;
+  background: var(--land-raised) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .featureRoadmapButton,
+html[data-theme='dark']:not(.plugin-docs) .visualDiffSection__secondary {
+  border-color: var(--land-rule) !important;
+  background: var(--land-raised) !important;
+  color: var(--land-ink) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .featureStoryNavLink {
+  color: var(--land-body) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .featureStoryNavLink.is-active {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .featureStoryLinks a,
+html[data-theme='dark']:not(.plugin-docs) .featureRoadmapLink,
+html[data-theme='dark']:not(.plugin-docs) .landingSections a:not([class]) {
+  color: var(--land-accent) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .featureIntroSignal,
+html[data-theme='dark']:not(.plugin-docs) .featureIntroSignal span {
+  color: var(--land-body) !important;
+}
+
+/* Rules between rows. */
+html[data-theme='dark']:not(.plugin-docs) .communitySection__links,
+html[data-theme='dark']:not(.plugin-docs) .communitySection__links li,
+html[data-theme='dark']:not(.plugin-docs) .featureRoadmapList li,
+html[data-theme='dark']:not(.plugin-docs) .featureStoryNote,
+html[data-theme='dark']:not(.plugin-docs) .howChapter {
+  border-color: var(--land-rule) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .communitySection__links a:hover {
+  background: var(--land-surface) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .communitySection__links a:hover strong {
+  color: var(--land-accent) !important;
+}
+
+/* The closing band is blue in both themes; its outlined button sits on it. */
+html[data-theme='dark']:not(.plugin-docs) .ctaBand h2,
+html[data-theme='dark']:not(.plugin-docs) .ctaBand p {
+  color: #ffffff !important;
+}
+
+/* ---------- Found by the contrast audit ---------- */
+
+html[data-theme='dark']:not(.plugin-docs) .featureStoryName,
+html[data-theme='dark']:not(.plugin-docs) .featureStoryName > span:first-child {
+  color: var(--land-ink) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .communitySection__links span,
+html[data-theme='dark']:not(.plugin-docs) .personaCard p,
+html[data-theme='dark']:not(.plugin-docs) .featureStoryDesc {
+  color: var(--land-body) !important;
+}
+/* Labels that are the light theme's blue, which is 2.8:1 on these surfaces. */
+html[data-theme='dark']:not(.plugin-docs) .personaCard span,
+html[data-theme='dark']:not(.plugin-docs) .howCodeStep > span,
+html[data-theme='dark']:not(.plugin-docs) .howChapter span {
+  color: var(--land-accent) !important;
+}
+html[data-theme='dark']:not(.plugin-docs) .glyfHero__traits li {
+  color: #a9b6cb !important;
+}
+
+/* Icons drawn in the light theme's blue. */
+html[data-theme='dark']:not(.plugin-docs) .personaIcon svg,
+html[data-theme='dark']:not(.plugin-docs) .featureRoadmapAskIcon svg,
+html[data-theme='dark']:not(.plugin-docs) .glyfHeroCard > svg,
+html[data-theme='dark']:not(.plugin-docs) .glyfHero__traits svg {
+  color: var(--land-accent) !important;
+  stroke: currentColor;
+}
+html[data-theme='dark']:not(.plugin-docs) .navbar__items--right [class*='colorModeToggle']:hover {
+  border-color: var(--land-accent);
+  color: var(--land-ink);
+}
