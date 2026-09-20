@@ -18,6 +18,7 @@ from glyf.ggsql.renderer import (
 )
 from glyf.manifest.loader import ManifestError, load_manifest
 from glyf.manifest.resolver import resolve_refs
+from glyf.ordering import is_order_sensitive, order_rows
 from glyf.output.paths import artifact_paths
 from glyf.output.writer import (
     ChartArtifacts,
@@ -198,6 +199,16 @@ def render_project(
                 "Aggregate the query or raise execution.max_rows; glyf will not "
                 "draw a chart from part of a result."
             )
+
+        # Before anything that draws or publishes these rows: a chart whose
+        # query chose no order is rendered from whatever order the warehouse
+        # happened to return, which is not the same order next build.
+        data, row_order = order_rows(chart, data)
+        if row_order.applied:
+            if is_order_sensitive(chart):
+                warnings.append(row_order.describe(rel_path))
+        elif row_order.reason:
+            warnings.append(row_order.describe(rel_path))
 
         # Downsampling comes first: the budget below bounds what is drawn, and
         # what is drawn is what survives this.

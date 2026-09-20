@@ -16,6 +16,10 @@ pub struct GgsqlChart {
     pub labels: BTreeMap<String, String>,
     pub config: BTreeMap<String, i64>,
     pub interactions: Vec<String>,
+    /// Whether the query orders its own rows. A chart whose query does not is
+    /// rendered from whatever order the warehouse returned, which is not
+    /// stable between builds.
+    pub has_order_by: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

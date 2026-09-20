@@ -1,6 +1,7 @@
 SELECT month, department, sum(expenses) as expenses
 FROM {{ ref('fct_finance') }}
 GROUP BY 1, 2
+ORDER BY month, department
 
 VISUALISE month AS x, expenses AS y, department AS color
 DRAW bar

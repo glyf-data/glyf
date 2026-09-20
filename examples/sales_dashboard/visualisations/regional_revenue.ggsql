@@ -1,6 +1,7 @@
 SELECT region, sum(revenue) as revenue
 FROM {{ ref('fct_sales') }}
 GROUP BY 1
+ORDER BY revenue DESC
 
 VISUALISE region AS x, revenue AS y
 DRAW pie

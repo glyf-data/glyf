@@ -110,6 +110,8 @@ def test_svg_mark_labels_drop_values_when_the_axes_are_titled(tmp_path: Path) ->
     (project / "visualisations" / "revenue.ggsql").write_text(
         "SELECT month, region, revenue, secret_col\n"
         "FROM {{ ref('fct_orders') }}\n"
+        # Ordered, so the only warnings this file can see are its own.
+        "ORDER BY month, region\n"
         "\n"
         "VISUALISE month AS x, revenue AS y, region AS color\n"
         "DRAW bar\n"
@@ -220,6 +222,7 @@ def _write_chart(project: Path) -> None:
     (project / "visualisations" / "revenue.ggsql").write_text(
         "SELECT month, region, revenue, secret_col\n"
         "FROM {{ ref('fct_orders') }}\n"
+        "ORDER BY month, region\n"
         "\n"
         "VISUALISE month AS x, revenue AS y, region AS color\n"
         "DRAW bar\n"

@@ -2,6 +2,7 @@
   "chart_type": "pie",
   "compiled_sql_path": "target/glyf/compiled/regional_revenue.sql",
   "data_json_path": "target/glyf/data/normalized/regional_revenue.data.json",
+  "metadata_path": "target/glyf/charts/regional_revenue.json",
   "name": "regional_revenue",
   "png_path": "target/glyf/charts/regional_revenue.png",
   "svg_path": "target/glyf/charts/regional_revenue.svg",

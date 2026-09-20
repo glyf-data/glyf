@@ -106,6 +106,32 @@ floating-point columns. A text column fails the render:
 histogram needs a numeric x column and 'region' is string
 ```
 
+### Row order
+
+A chart is drawn from the rows the query returned, in the order it returned
+them. For some chart types that order is the picture: it sets a stacked bar's
+segment order, a pie's slice order, which points a scatter draws on top, and a
+heatmap's axes.
+
+SQL only promises an order when the query asks for one. A query with no
+`ORDER BY` can come back in a different order on the next build and draw a
+different chart from the same data, so glyf orders the rows itself when the
+query does not, and says which columns it used:
+
+```text
+! visualisations/margin_share.ggsql: the query has no ORDER BY, so glyf ordered
+  the rows by department, gross_margin to keep the chart reproducible. Add an
+  ORDER BY to choose the order yourself.
+```
+
+Add an `ORDER BY` and glyf keeps that order exactly, untouched. An `ORDER BY`
+inside a CTE, a subquery or a window function orders that, not the rows the
+chart draws, so it does not count.
+
+Only the chart types above are reported, because only they show the order.
+Every chart is ordered either way, so that a build can be compared against the
+last one.
+
 ## Labels
 
 - `title`

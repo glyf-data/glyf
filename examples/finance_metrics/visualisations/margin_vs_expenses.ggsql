@@ -3,6 +3,7 @@ SELECT
   expenses,
   gross_margin
 FROM {{ ref('fct_finance') }}
+ORDER BY department, expenses
 
 VISUALISE expenses AS x, gross_margin AS y, department AS color
 DRAW scatter

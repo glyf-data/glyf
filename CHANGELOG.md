@@ -2,6 +2,31 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- A chart whose query has no `ORDER BY` could draw a different picture on every
+  build from the same data. SQL returns rows in an undefined order unless the
+  query asks for one, and for a stacked bar, a pie, a coloured scatter and a
+  heatmap that order is part of the picture: the segment order, the slice
+  order, which points are drawn on top, and the axes. Four of the seventeen
+  charts in the example projects rendered a different image on each of four
+  runs.
+
+  glyf now orders the rows itself when the query does not, by the columns the
+  chart encodes and then by the rest to break ties, and the build says which
+  chart and which columns. A query that orders itself is never reordered, so a
+  heatmap whose `ORDER BY weekday_number` puts Monday first still does. An
+  `ORDER BY` inside a CTE, a subquery or a window function orders that rather
+  than the chart's rows, and does not count.
+
+  Chart artifacts are now byte-identical between independent builds of
+  unchanged data, which is what lets a build be compared against the last one.
+
+  The example projects now order the charts whose picture depends on it, so
+  they show the practice and build without the warning.
+
 ## 0.7.0 - 2026-09-20
 
 Three more chart types, two example projects rebuilt around them, and two

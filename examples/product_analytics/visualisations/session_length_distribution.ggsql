@@ -2,6 +2,7 @@ SELECT
   avg_session_minutes,
   plan
 FROM {{ ref('fct_account_sessions') }}
+ORDER BY avg_session_minutes, plan
 
 VISUALISE avg_session_minutes AS x, plan AS color
 DRAW histogram

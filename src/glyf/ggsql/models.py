@@ -18,6 +18,7 @@ class GgsqlChart:
     labels: dict[str, str]
     config: dict[str, int]
     interactions: tuple[str, ...] = ()
+    has_order_by: bool = False
 
     @property
     def title(self) -> str | None:

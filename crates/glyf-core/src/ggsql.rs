@@ -114,6 +114,11 @@ pub fn parse_ggsql_text(
     validate_required_roles(&draw_type, &visualise)?;
     validate_interactions(&draw_type, &interactions)?;
 
+    let has_order_by = validated
+        .tree()
+        .map(|tree| statement_has_order_by(tree, &normalized))
+        .unwrap_or(false);
+
     Ok(GgsqlChart {
         path: path.unwrap_or(name).to_string(),
         name: name.to_string(),
@@ -123,7 +128,43 @@ pub fn parse_ggsql_text(
         labels,
         config,
         interactions,
+        has_order_by,
     })
+}
+
+/// Whether the statement orders its own rows.
+///
+/// ggsql's grammar keeps SQL keywords as `sql_keyword` tokens inside a
+/// `select_body` rather than giving `ORDER BY` a node of its own, so this looks
+/// for the keyword among a body's own children. Descending into a subquery, a
+/// CTE, a window function or a function call would find an `ORDER BY` that
+/// orders something other than the rows the chart draws.
+fn statement_has_order_by(tree: &tree_sitter::Tree, source: &str) -> bool {
+    fn walk(node: tree_sitter::Node<'_>, source: &str, in_body: bool) -> bool {
+        let mut cursor = node.walk();
+        for child in node.children(&mut cursor) {
+            match child.kind() {
+                // A nested query orders its own rows, not the chart's.
+                "subquery" | "cte_definition" | "window_function" | "function_call"
+                | "scalar_subquery" | "cast_expression" => continue,
+                "sql_keyword"
+                    if in_body
+                        && child
+                            .utf8_text(source.as_bytes())
+                            .is_ok_and(|text| text.eq_ignore_ascii_case("order")) =>
+                {
+                    return true;
+                }
+                _ => {}
+            }
+            if walk(child, source, in_body || child.kind() == "select_body") {
+                return true;
+            }
+        }
+        false
+    }
+
+    walk(tree.root_node(), source, false)
 }
 
 fn normalize_for_ggsql(text: &str) -> String {
@@ -564,5 +605,54 @@ mod tests {
         assert!(error
             .to_string()
             .contains("VISUALISE requires x and y mappings"));
+    }
+
+    #[test]
+    fn records_whether_the_query_orders_its_own_rows() {
+        let ordered = parse_ggsql_text(
+            "SELECT month, revenue FROM fct_orders ORDER BY month\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n",
+            "revenue",
+            None,
+        )
+        .unwrap();
+        assert!(ordered.has_order_by);
+
+        let unordered = parse_ggsql_text(
+            "SELECT month, revenue FROM fct_orders\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n",
+            "revenue",
+            None,
+        )
+        .unwrap();
+        assert!(!unordered.has_order_by);
+    }
+
+    #[test]
+    fn a_nested_order_by_does_not_order_the_chart() {
+        // Each of these orders something other than the rows the chart draws.
+        for sql in [
+            "SELECT month, revenue FROM (SELECT month, revenue FROM fct_orders ORDER BY month) t",
+            "WITH ranked AS (SELECT month, revenue FROM fct_orders ORDER BY revenue) SELECT month, revenue FROM ranked",
+            "SELECT month, row_number() OVER (ORDER BY month) AS revenue FROM fct_orders",
+        ] {
+            let chart = parse_ggsql_text(
+                &format!("{sql}\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n"),
+                "revenue",
+                None,
+            )
+            .unwrap();
+            assert!(!chart.has_order_by, "{sql}");
+        }
+    }
+
+    #[test]
+    fn an_outer_order_by_counts_even_with_a_nested_query() {
+        let chart = parse_ggsql_text(
+            "WITH ranked AS (SELECT month, revenue FROM fct_orders) SELECT month, revenue FROM ranked ORDER BY month DESC\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n",
+            "revenue",
+            None,
+        )
+        .unwrap();
+
+        assert!(chart.has_order_by);
     }
 }

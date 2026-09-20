@@ -35,6 +35,7 @@ fn chart_to_python(py: Python<'_>, chart: GgsqlChart) -> PyResult<Py<PyAny>> {
     dict.set_item("labels", chart.labels)?;
     dict.set_item("config", chart.config)?;
     dict.set_item("interactions", chart.interactions)?;
+    dict.set_item("has_order_by", chart.has_order_by)?;
     Ok(dict.into_any().unbind())
 }
 
