@@ -46,7 +46,7 @@ const config = {
             require.resolve('./src/css/custom.css'),
             require.resolve('./src/css/docs.css'),
             require.resolve('./src/css/sidebar-icons.css'),
-            require.resolve('./src/css/landing-dark.css'),
+            require.resolve('./src/css/landing-light.css'),
           ],
         },
       }),

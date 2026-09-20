@@ -1,13 +1,22 @@
-/* The landing page in the dark theme.
+/* The landing page in the dark theme. NOT LOADED.
+
+   This sheet is kept for the work to continue, and is deliberately absent from
+   `customCss` in docusaurus.config.js. The landing page ships light-only, held
+   there by landing-light.css, because this theme still has visual bugs to fix.
+
+   To work on it: in docusaurus.config.js, replace `landing-light.css` with
+   `landing-dark.css`. The two are alternatives; loading both makes the pins in
+   landing-light.css fight the variables set here.
 
    custom.css styles the landing page in fixed light colours, many with
    !important. This sheet does not edit them: every rule here is scoped to
    `html[data-theme='dark']:not(.plugin-docs)`, which outranks them, so the
-   light page is untouched and this whole theme is one file to remove.
+   light page is untouched by anything in this file.
 
    Built from an inventory of what the page actually renders -- 29 light
    surfaces, 12 dark text colours -- and checked by auditing the contrast of
-   every piece of text against the colour behind it. */
+   every piece of text against the colour behind it. Contrast passing is not
+   the same as the page looking right; that review is what is outstanding. */
 
 html[data-theme='dark']:not(.plugin-docs) {
   --land-page: #0b1222;
