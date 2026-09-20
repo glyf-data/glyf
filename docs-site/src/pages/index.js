@@ -1158,6 +1158,47 @@ function FeatureLinks() {
   );
 }
 
+const communityLinks = [
+  ['Discussions', 'Questions and ideas that others will want to find later.', 'https://github.com/glyf-data/glyf/discussions'],
+  ['Contribute', 'From a fresh clone to a merged pull request, in five steps.', 'https://github.com/glyf-data/glyf/blob/main/CONTRIBUTING.md'],
+  ['Roadmap', 'What shipped recently, and what is planned.', '/docs/resources/roadmap'],
+];
+
+function CommunitySection() {
+  return (
+    <section className="communitySection" aria-labelledby="community-heading">
+      <div className="container communitySection__inner">
+        <div className="communitySection__lead">
+          <h2 id="community-heading">Build with the glyf community</h2>
+          <p>
+            Ask a question, show what you made, or help decide what glyf does next. The help
+            channel is the quickest way to get unstuck.
+          </p>
+          <a className="communitySection__join" href="/slack">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M5.04 15.16a2.52 2.52 0 1 1-2.52-2.52h2.52v2.52Zm1.27 0a2.52 2.52 0 0 1 5.04 0v6.32a2.52 2.52 0 1 1-5.04 0v-6.32ZM8.83 5.04a2.52 2.52 0 1 1 2.52-2.52v2.52H8.83Zm0 1.27a2.52 2.52 0 0 1 0 5.04H2.52a2.52 2.52 0 1 1 0-5.04h6.31Zm10.13 2.52a2.52 2.52 0 1 1 2.52 2.52h-2.52V8.83Zm-1.27 0a2.52 2.52 0 0 1-5.04 0V2.52a2.52 2.52 0 1 1 5.04 0v6.31Zm-2.52 10.13a2.52 2.52 0 1 1-2.52 2.52v-2.52h2.52Zm0-1.27a2.52 2.52 0 0 1 0-5.04h6.32a2.52 2.52 0 1 1 0 5.04h-6.32Z"
+              />
+            </svg>
+            Join the Slack
+          </a>
+        </div>
+        <ul className="communitySection__links">
+          {communityLinks.map(([title, description, href]) => (
+            <li key={title}>
+              <Link to={href}>
+                <strong>{title}</strong>
+                <span>{description}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 function CtaSection() {
   return (
     <section className="ctaBand">
@@ -1193,6 +1234,7 @@ export default function Home() {
         <FeaturesSection />
         <PersonasSection />
         <GgsqlSection />
+        <CommunitySection />
         <CtaSection />
       </main>
     </Layout>

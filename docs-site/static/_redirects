@@ -1,0 +1,5 @@
+# Short links that outlive what they point at.
+#
+# A Slack invite expires. Everything that links to the community links here, so
+# a new invite is a change to this one line and a docs deploy.
+/slack  https://join.slack.com/t/glyfdata/shared_invite/zt-4akb60nzo-pBJEeDFpsR3A3nT~BWpG4w  302

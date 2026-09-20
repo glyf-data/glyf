@@ -79,18 +79,13 @@ const config = {
           {to: '/docs/intro', label: 'Docs', position: 'left'},
           {to: '/docs/examples/gallery', label: 'Examples', position: 'left'},
           {to: '/docs/integrations/overview', label: 'Integrations', position: 'left'},
+          {to: '/docs/resources/roadmap', label: 'Roadmap', position: 'left'},
+          {to: '/docs/resources/community', label: 'Community', position: 'left'},
           {
-            type: 'dropdown',
-            label: 'Resources',
-            position: 'left',
-            items: [
-              {to: '/docs/resources/roadmap', label: 'Roadmap'},
-              {to: '/docs/resources/community', label: 'Community'},
-              {
-                href: 'https://github.com/glyf-data/glyf/blob/main/CONTRIBUTING.md',
-                label: 'Contributing',
-              },
-            ],
+            type: 'html',
+            position: 'right',
+            value:
+              '<a class="navbarSlackLink" href="/slack" aria-label="Join the glyf community on Slack"><svg class="navbarSlackMark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5.04 15.16a2.52 2.52 0 1 1-2.52-2.52h2.52v2.52Zm1.27 0a2.52 2.52 0 0 1 5.04 0v6.32a2.52 2.52 0 1 1-5.04 0v-6.32ZM8.83 5.04a2.52 2.52 0 1 1 2.52-2.52v2.52H8.83Zm0 1.27a2.52 2.52 0 0 1 0 5.04H2.52a2.52 2.52 0 1 1 0-5.04h6.31Zm10.13 2.52a2.52 2.52 0 1 1 2.52 2.52h-2.52V8.83Zm-1.27 0a2.52 2.52 0 0 1-5.04 0V2.52a2.52 2.52 0 1 1 5.04 0v6.31Zm-2.52 10.13a2.52 2.52 0 1 1-2.52 2.52v-2.52h2.52Zm0-1.27a2.52 2.52 0 0 1 0-5.04h6.32a2.52 2.52 0 1 1 0 5.04h-6.32Z"/></svg><span>Join Slack</span></a>',
           },
           {
             type: 'html',
@@ -106,6 +101,8 @@ const config = {
           {label: 'Docs', to: '/docs/intro'},
           {label: 'GitHub', href: 'https://github.com/glyf-data/glyf'},
           {label: 'Community', to: '/docs/resources/community'},
+          {label: 'Slack', href: 'https://glyf.pages.dev/slack'},
+          {label: 'Contributing', href: 'https://github.com/glyf-data/glyf/blob/main/CONTRIBUTING.md'},
           {label: 'Apache License', href: 'https://github.com/glyf-data/glyf/blob/main/LICENSE'},
         ],
         copyright: '<strong class="footerBrand">Glyf<span>.</span></strong><span class="footerTagline">Visualization is a build step. Treat it like one.</span>',
