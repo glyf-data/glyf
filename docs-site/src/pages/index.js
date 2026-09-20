@@ -111,7 +111,6 @@ const featureSections = [
 ];
 
 const roadmapItems = [
-  ['Visual diffs', 'Every build compares each chart with the previous build and flags metric shifts, new categories, and trend reversals.', 'https://github.com/glyf-data/glyf/issues/136'],
   ['Pipeline alerts', 'Alert conditions declared in dashboard YAML, evaluated against query results at build time and routed by severity.', 'https://github.com/glyf-data/glyf/issues/137'],
 ];
 
@@ -1158,6 +1157,87 @@ function FeatureLinks() {
   );
 }
 
+const visualDiffPr = 'https://github.com/glyf-data/glyf/pull/155';
+
+function VisualDiffSection() {
+  return (
+    <section className="visualDiffSection" aria-labelledby="visual-diff-heading">
+      <div className="container">
+        <div className="visualDiffSection__lead">
+          <h2 id="visual-diff-heading">One line of SQL. Six charts moved.</h2>
+          <p>
+            A pull request added <code>where department != 'Partners'</code> to a dbt model. The
+            code review shows a filter. <code>glyf diff</code> builds both branches, compares every
+            chart, and says what the filter did: a department gone from four charts, and bookings
+            down 9.8%.
+          </p>
+          <div className="visualDiffSection__actions">
+            <Link className="visualDiffSection__primary" to="/docs/guides/visual-diff">
+              Add it to your pull requests
+            </Link>
+            <a className="visualDiffSection__secondary" href={visualDiffPr}>
+              See the real pull request
+            </a>
+          </div>
+        </div>
+
+        <figure className="visualDiffSection__report">
+          <img
+            src="/img/visual-diff/report-card.png"
+            alt="The visual diff report for the Expenses by Department chart: before, after, and the changed pixels marked. It lists rows 48 to 36, Partners gone from department, and the sum of expenses down 8.4 percent."
+            width="2368"
+            height="884"
+            loading="lazy"
+          />
+          <figcaption>
+            From the report the workflow uploads. Each changed chart before, after, and with every
+            pixel that moved marked.
+          </figcaption>
+        </figure>
+
+        <div className="visualDiffSection__pair">
+          <figure className="visualDiffSection__comment">
+            <img
+              src="/img/visual-diff/pull-request-comment.png"
+              alt="A GitHub pull request comment from the visual diff workflow. Six charts changed and two did not. Each row names the chart, the share of pixels that moved, and the change in its rows."
+              width="954"
+              height="1451"
+              loading="lazy"
+            />
+            <figcaption>
+              The workflow's comment on <a href={visualDiffPr}>pull request #155</a>, cropped to the
+              example that changed.
+            </figcaption>
+          </figure>
+          <ul className="visualDiffSection__points">
+            <li>
+              <strong>It says why.</strong>
+              <span>
+                The query changed, the rows changed, or only the chart definition did. Read from
+                what the two builds recorded.
+              </span>
+            </li>
+            <li>
+              <strong>It is exact.</strong>
+              <span>
+                The same data renders to the same bytes, so an unchanged chart is never reported.
+                The threshold is zero.
+              </span>
+            </li>
+            <li>
+              <strong>It runs where you review.</strong>
+              <span>
+                One workflow file. A comment for the reviewer, an HTML report to download, and JSON
+                for a script. <code>--fail-on-change</code> guards a refactor.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const communityLinks = [
   ['Discussions', 'Questions and ideas that others will want to find later.', 'https://github.com/glyf-data/glyf/discussions'],
   ['Contribute', 'From a fresh clone to a merged pull request, in five steps.', 'https://github.com/glyf-data/glyf/blob/main/CONTRIBUTING.md'],
@@ -1232,6 +1312,7 @@ export default function Home() {
       <main className="landingSections">
         <HowItWorks />
         <FeaturesSection />
+        <VisualDiffSection />
         <PersonasSection />
         <GgsqlSection />
         <CommunitySection />
