@@ -7,8 +7,8 @@ import polars as pl
 import pytest
 
 from glyf.config import RenderConfig
-from glyf.ggsql.parser import GgsqlParseError, parse_ggsql
-from glyf.ggsql.renderer import ChartRenderError, render_chart
+from glyf.ggsql.parser import SUPPORTED_CHART_TYPES, GgsqlParseError, parse_ggsql
+from glyf.ggsql.renderer import CHART_TYPES, ChartRenderError, render_chart
 from glyf.renderers import chart_renderer
 
 
@@ -300,3 +300,12 @@ def test_render_chart_reports_a_text_column_where_a_number_is_computed(
 
     with pytest.raises(ChartRenderError, match=message):
         render_chart(chart, data, tmp_path / "chart.png", tmp_path / "chart.svg")
+
+
+def test_every_chart_type_the_parser_accepts_can_be_drawn() -> None:
+    """The parser's list and the renderer's table are two statements of one fact.
+
+    A type added to one and not the other parses and then fails to render, or
+    is drawable and never reachable.
+    """
+    assert set(CHART_TYPES) == SUPPORTED_CHART_TYPES
