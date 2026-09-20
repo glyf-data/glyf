@@ -108,6 +108,34 @@ const featureSections = [
       },
     ],
   },
+  {
+    id: 'visual-diff',
+    tag: 'review',
+    label: 'Visual diff',
+    title: 'Review the pictures, not just the SQL.',
+    description:
+      'A change to a model or a chart can move a number on a dashboard without touching any file a reviewer would open. Glyf compares every chart in a pull request with the base branch and reports which changed, how much of each picture moved, and why.',
+    items: [
+      {
+        name: 'A diff that says what moved, and why',
+        desc: 'The query changed, the rows changed, or only the chart definition did. Row changes are spelled out: a missing category, a column total, the row count. The same data renders to the same bytes, so an unchanged chart is never reported.',
+        status: 'live',
+        reverse: false,
+        visual: 'visualDiffTerminal',
+        filename: 'terminal — glyf diff',
+        links: [['Add it to your pull requests', '/docs/guides/visual-diff']],
+      },
+      {
+        name: 'Before, after, and what moved',
+        desc: 'Every changed chart is drawn three times: as it was, as it is, and with each pixel that differs marked, so you can see where it moved and not only that it did. One workflow file puts a summary on the pull request and the full report in its artifacts.',
+        status: 'live',
+        reverse: true,
+        visual: 'visualDiffReport',
+        filename: 'target/glyf/diff/index.html',
+        links: [['See it on a real pull request', 'https://github.com/glyf-data/glyf/pull/155']],
+      },
+    ],
+  },
 ];
 
 const roadmapItems = [
@@ -592,6 +620,21 @@ function FeatureVisual({item}) {
 <span className="codeOk">✓</span> query valid — 0 errors</code></pre>
         </FeatureMacWindow>
       );
+    case 'visualDiffTerminal':
+      return <VisualDiffTerminal filename={item.filename} />;
+    case 'visualDiffReport':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <img
+            src="/img/visual-diff/report-card.png"
+            alt="One chart from the visual diff report, shown three times: before, after, and what moved, where every pixel that differs is marked in magenta. Above them it lists the row changes: rows 48 to 36, Partners gone from department, and the sum of expenses down 8.4 percent."
+            className="visualDiffReport"
+            width="1768"
+            height="784"
+            loading="lazy"
+          />
+        </FeatureMacWindow>
+      );
     case 'gitDiff':
       return (
         <FeatureMacWindow filename={item.filename}>
@@ -867,6 +910,15 @@ function FeaturesSection() {
                         ) : null}
                       </div>
                       <p className="featureStoryDesc">{item.desc}</p>
+                      {item.links ? (
+                        <p className="featureStoryLinks">
+                          {item.links.map(([label, href]) => (
+                            <Link key={href} to={href}>
+                              {label}
+                            </Link>
+                          ))}
+                        </p>
+                      ) : null}
                     </div>
                   </div>
                 ))}
@@ -1157,90 +1209,135 @@ function FeatureLinks() {
   );
 }
 
-const visualDiffPr = 'https://github.com/glyf-data/glyf/pull/155';
+// Real output. One filter was added to a model of examples/finance_metrics, both
+// branches were built, and this is what `glyf diff` printed. [kind, text, pause in ms]
+const visualDiffSession = [
+  ['cmd', 'git diff main -- models/fct_finance.sql', 500],
+  ['ctx', " from {{ source('raw', 'finance') }}", 60],
+  ['add', "+where department != 'Partners'", 60],
+  ['ctx', ' group by 1, 2', 700],
+  ['cmd', 'glyf diff --baseline ../base', 600],
+  ['chart', '~ bookings_trend: 6.1% of the picture moved (the rows changed)', 130],
+  ['row', '    sum of bookings 1,079,700 → 974,000 (-9.8%)', 130],
+  ['chart', '~ expenses_by_department: 50.8% of the picture moved (the rows changed)', 130],
+  ['row', '    rows 48 → 36', 90],
+  ['row', '    gone from department: Partners', 90],
+  ['row', '    sum of expenses 576,000 → 527,500 (-8.4%)', 130],
+  ['chart', '~ gross_margin_trend: 7.4% of the picture moved (the rows changed)', 130],
+  ['row', '    sum of gross_margin 503,700 → 446,500 (-11.4%)', 130],
+  ['chart', '~ margin_rate_by_department: 35.0% of the picture moved (the rows changed)', 130],
+  ['row', '    rows 48 → 36', 90],
+  ['row', '    gone from department: Partners', 130],
+  ['chart', '~ margin_share: 31.3% of the picture moved (the rows changed)', 130],
+  ['row', '    rows 4 → 3', 90],
+  ['row', '    gone from department: Partners', 90],
+  ['row', '    sum of gross_margin 503,700 → 446,500 (-11.4%)', 130],
+  ['chart', '~ margin_vs_expenses: 0.9% of the picture moved (the rows changed)', 130],
+  ['row', '    rows 48 → 36', 90],
+  ['row', '    gone from department: Partners', 300],
+  ['ok', '✓ 6 changed, 2 unchanged', 200],
+  ['ok', '✓ wrote target/glyf/diff/index.html', 0],
+];
 
-function VisualDiffSection() {
+function VisualDiffTerminal({filename}) {
+  const total = visualDiffSession.length;
+  // Everything is shown until the script runs, so the page reads the same
+  // without JavaScript and for anyone who has asked for less motion.
+  const [shown, setShown] = React.useState(total);
+  const [playing, setPlaying] = React.useState(false);
+  const rootRef = React.useRef(null);
+  const bodyRef = React.useRef(null);
+  const startedRef = React.useRef(false);
+
+  const play = () => {
+    setShown(0);
+    setPlaying(true);
+  };
+
+  React.useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return undefined;
+    }
+    setShown(0);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !startedRef.current) {
+          startedRef.current = true;
+          setPlaying(true);
+        }
+      },
+      {threshold: 0.35},
+    );
+    observer.observe(rootRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  React.useEffect(() => {
+    if (!playing) {
+      return undefined;
+    }
+    if (shown >= total) {
+      setPlaying(false);
+      return undefined;
+    }
+    const pause = shown === 0 ? 300 : visualDiffSession[shown - 1][2];
+    const timer = window.setTimeout(() => setShown((count) => count + 1), pause);
+    return () => window.clearTimeout(timer);
+  }, [playing, shown, total]);
+
+  React.useEffect(() => {
+    // Follow the output the way a terminal does.
+    const body = bodyRef.current;
+    if (body) {
+      body.scrollTop = body.scrollHeight;
+    }
+  }, [shown]);
+
   return (
-    <section className="visualDiffSection" aria-labelledby="visual-diff-heading">
-      <div className="container">
-        <div className="visualDiffSection__lead">
-          <h2 id="visual-diff-heading">One line of SQL. Six charts moved.</h2>
-          <p>
-            A pull request added <code>where department != 'Partners'</code> to a dbt model. The
-            code review shows a filter. <code>glyf diff</code> builds both branches, compares every
-            chart, and says what the filter did: a department gone from four charts, and bookings
-            down 9.8%.
-          </p>
-          <div className="visualDiffSection__actions">
-            <Link className="visualDiffSection__primary" to="/docs/guides/visual-diff">
-              Add it to your pull requests
-            </Link>
-            <a className="visualDiffSection__secondary" href={visualDiffPr}>
-              See the real pull request
-            </a>
-          </div>
+    <div className="visualDiffTerminal" ref={rootRef}>
+      <div className="featureMacWindow">
+        <div className="featureMacTitlebar">
+          <span className="featureMacDot featureMacDot--red" />
+          <span className="featureMacDot featureMacDot--yellow" />
+          <span className="featureMacDot featureMacDot--green" />
+          <span className="featureMacFilename">{filename}</span>
         </div>
-
-        <figure className="visualDiffSection__report">
-          <img
-            src="/img/visual-diff/report-card.png"
-            alt="The visual diff report for the Expenses by Department chart: before, after, and the changed pixels marked. It lists rows 48 to 36, Partners gone from department, and the sum of expenses down 8.4 percent."
-            width="2368"
-            height="884"
-            loading="lazy"
-          />
-          <figcaption>
-            From the report the workflow uploads. Each changed chart before, after, and with every
-            pixel that moved marked.
-          </figcaption>
-        </figure>
-
-        <div className="visualDiffSection__pair">
-          <figure className="visualDiffSection__comment">
-            <img
-              src="/img/visual-diff/pull-request-comment.png"
-              alt="A GitHub pull request comment from the visual diff workflow. Six charts changed and two did not. Each row names the chart, the share of pixels that moved, and the change in its rows."
-              width="954"
-              height="1451"
-              loading="lazy"
-            />
-            <figcaption>
-              The workflow's comment on <a href={visualDiffPr}>pull request #155</a>, cropped to the
-              example that changed.
-            </figcaption>
-          </figure>
-          <ul className="visualDiffSection__points">
-            <li>
-              <strong>It says why.</strong>
-              <span>
-                The query changed, the rows changed, or only the chart definition did. Read from
-                what the two builds recorded.
-              </span>
-            </li>
-            <li>
-              <strong>It is exact.</strong>
-              <span>
-                The same data renders to the same bytes, so an unchanged chart is never reported.
-                The threshold is zero.
-              </span>
-            </li>
-            <li>
-              <strong>It runs where you review.</strong>
-              <span>
-                One workflow file. A comment for the reviewer, an HTML report to download, and JSON
-                for a script. <code>--fail-on-change</code> guards a refactor.
-              </span>
-            </li>
-          </ul>
+        <div className="visualDiffTerminal__body" ref={bodyRef} aria-hidden="true">
+          <pre>
+            <code>
+              {visualDiffSession.slice(0, shown).map(([kind, text], index) => (
+                <span className={`visualDiffLine visualDiffLine--${kind}`} key={index}>
+                  {kind === 'cmd' ? <span className="codeFn">$ </span> : null}
+                  {text}
+                  {'\n'}
+                </span>
+              ))}
+              {shown < total ? <span className="visualDiffCursor" /> : null}
+            </code>
+          </pre>
         </div>
+        {/* The same session for a screen reader, which should not be read a
+            terminal one line at a time. */}
+        <pre className="visualDiffTerminal__transcript">
+          {visualDiffSession.map(([kind, text]) => `${kind === 'cmd' ? '$ ' : ''}${text}`).join('\n')}
+        </pre>
       </div>
-    </section>
+      <button
+        type="button"
+        className="visualDiffTerminal__replay"
+        onClick={play}
+        disabled={playing}
+      >
+        Replay
+      </button>
+    </div>
   );
 }
 
 const communityLinks = [
   ['Discussions', 'Questions and ideas that others will want to find later.', 'https://github.com/glyf-data/glyf/discussions'],
   ['Contribute', 'From a fresh clone to a merged pull request, in five steps.', 'https://github.com/glyf-data/glyf/blob/main/CONTRIBUTING.md'],
+  ['Support', 'Where to ask what, and what to check first.', '/docs/resources/support'],
   ['Roadmap', 'What shipped recently, and what is planned.', '/docs/resources/roadmap'],
 ];
 
@@ -1261,7 +1358,7 @@ function CommunitySection() {
                 d="M5.04 15.16a2.52 2.52 0 1 1-2.52-2.52h2.52v2.52Zm1.27 0a2.52 2.52 0 0 1 5.04 0v6.32a2.52 2.52 0 1 1-5.04 0v-6.32ZM8.83 5.04a2.52 2.52 0 1 1 2.52-2.52v2.52H8.83Zm0 1.27a2.52 2.52 0 0 1 0 5.04H2.52a2.52 2.52 0 1 1 0-5.04h6.31Zm10.13 2.52a2.52 2.52 0 1 1 2.52 2.52h-2.52V8.83Zm-1.27 0a2.52 2.52 0 0 1-5.04 0V2.52a2.52 2.52 0 1 1 5.04 0v6.31Zm-2.52 10.13a2.52 2.52 0 1 1-2.52 2.52v-2.52h2.52Zm0-1.27a2.52 2.52 0 0 1 0-5.04h6.32a2.52 2.52 0 1 1 0 5.04h-6.32Z"
               />
             </svg>
-            Join the Slack
+            Join Slack Community
           </a>
         </div>
         <ul className="communitySection__links">
@@ -1312,7 +1409,6 @@ export default function Home() {
       <main className="landingSections">
         <HowItWorks />
         <FeaturesSection />
-        <VisualDiffSection />
         <PersonasSection />
         <GgsqlSection />
         <CommunitySection />

@@ -3292,8 +3292,9 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   margin: 1rem 0.9rem 0;
 }
 /* Between the desktop bar and the burger there is no room for two labelled
-   buttons and five links; the Slack mark alone still says what it is. */
-@media (min-width: 997px) and (max-width: 1180px) {
+   buttons and five links; the Slack mark alone still says what it is. The
+   breakpoint is where "Join Slack Community" stops fitting beside them. */
+@media (min-width: 997px) and (max-width: 1320px) {
   nav.navbar .navbarSlackLink span {
     display: none;
   }
@@ -3844,131 +3845,149 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
 }
 
 /* ---------- Landing: visual diff ---------- */
-.visualDiffSection {
-  padding: clamp(3.5rem, 7vw, 6.5rem) 0;
-  border-top: 1px solid #dbe3ef;
-  background: #fbfcfe;
+/* The terminal has a fixed height and follows its own output, the way a
+   terminal does; the page around it does not jump as lines arrive. */
+.visualDiffTerminal {
+  position: relative;
 }
-.visualDiffSection__lead {
-  max-width: 46rem;
-  margin-bottom: clamp(2rem, 4vw, 3rem);
+.visualDiffTerminal .featureMacWindow {
+  position: relative;
 }
-.landingSections .visualDiffSection h2 {
-  margin: 0 0 1.1rem;
-  color: #0f172a;
-  font-size: clamp(2.1rem, 3.8vw, 3.1rem);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+.visualDiffTerminal__body {
+  height: 23rem;
+  overflow-y: auto;
+  padding: 1.1rem 1.25rem 1.3rem;
+  background: #0b1220;
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
 }
-.visualDiffSection__lead p {
-  margin: 0 0 1.75rem;
-  color: #475569;
-  font-size: 1.12rem;
-  line-height: 1.7;
-}
-.visualDiffSection code {
-  padding: 0.12em 0.4em;
-  border-radius: 5px;
-  background: #e9eef8;
-  color: #1e293b;
-  font-size: 0.88em;
-}
-.visualDiffSection__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-.visualDiffSection__primary,
-.visualDiffSection__secondary {
-  display: inline-flex;
-  align-items: center;
-  min-height: 3rem;
-  padding: 0 1.4rem;
-  border: 1px solid #1d4ed8;
-  border-radius: 999px;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
-}
-.visualDiffSection__primary {
-  background: #1d4ed8;
-  color: #ffffff;
-}
-.visualDiffSection__primary:hover {
-  border-color: #1740c4;
-  background: #1740c4;
-  color: #ffffff;
-  text-decoration: none;
-}
-.visualDiffSection__secondary {
-  border-color: #cbd5e1;
-  background: #ffffff;
-  color: #0f172a;
-}
-.visualDiffSection__secondary:hover {
-  border-color: #1d4ed8;
-  color: #1d4ed8;
-  text-decoration: none;
-}
-.visualDiffSection__primary:focus-visible,
-.visualDiffSection__secondary:focus-visible {
-  outline: 2px solid #1d4ed8;
-  outline-offset: 3px;
-}
-.visualDiffSection figure {
+.visualDiffTerminal__body pre {
   margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow: visible;
 }
-.visualDiffSection img {
+.featureStoryVisual .visualDiffTerminal__body code {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #cbd5e1;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.visualDiffLine--cmd {
+  color: #f8fafc;
+}
+.visualDiffLine--ctx {
+  color: #64748b;
+}
+.visualDiffLine--add {
+  color: #86efac;
+}
+.visualDiffLine--chart {
+  color: #f9a8d4;
+}
+.visualDiffLine--row {
+  color: #94a3b8;
+}
+.visualDiffLine--ok {
+  color: #86efac;
+}
+.visualDiffCursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  background: #cbd5e1;
+  vertical-align: text-bottom;
+  animation: visualDiffBlink 1s steps(2, start) infinite;
+}
+@keyframes visualDiffBlink {
+  to {
+    visibility: hidden;
+  }
+}
+/* Read by a screen reader in one piece, in place of the animated copy. */
+.visualDiffTerminal__transcript {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: pre;
+}
+.visualDiffTerminal__replay {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid #334155;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #cbd5e1;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 120ms ease, color 120ms ease, opacity 120ms ease;
+}
+.visualDiffTerminal__replay:hover:not(:disabled) {
+  border-color: #94a3b8;
+  color: #ffffff;
+}
+.visualDiffTerminal__replay:disabled {
+  opacity: 0;
+  cursor: default;
+}
+.visualDiffTerminal__replay:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .visualDiffCursor {
+    animation: none;
+  }
+  .visualDiffTerminal__replay {
+    display: none;
+  }
+}
+
+/* The report is a light page in a dark window. Its height follows its width:
+   the width and height attributes reserve the space, and would otherwise pin
+   the height while the width shrinks. */
+/* Centred in the window, which is as tall as its neighbour's terminal. */
+.featureMacBody:has(> img.visualDiffReport) {
+  display: flex;
+  align-items: center;
+}
+.featureMacBody > img.visualDiffReport {
   display: block;
   width: 100%;
   height: auto;
-  border: 1px solid #dbe3ef;
-  border-radius: 14px;
-  background: #ffffff;
-  box-shadow: 0 24px 60px -32px rgba(15, 23, 42, 0.35);
+  background: #ffffff !important;
 }
-.visualDiffSection figcaption {
-  margin-top: 0.8rem;
-  color: #64748b;
-  font-size: 0.92rem;
-  line-height: 1.5;
+
+/* Links under a feature's description. */
+.featureStoryLinks {
+  margin: 0.9rem 0 0;
 }
-.visualDiffSection figcaption a {
+.featureStoryLinks a {
   color: #1d4ed8;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(29, 78, 216, 0.3);
+  text-underline-offset: 0.2em;
 }
-.visualDiffSection__pair {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
-  gap: clamp(2rem, 5vw, 4.5rem);
-  align-items: start;
-  margin-top: clamp(2.5rem, 5vw, 4rem);
+.featureStoryLinks a:hover {
+  text-decoration-color: currentColor;
 }
-.visualDiffSection__points {
-  margin: 0;
-  padding: 0;
-  border-top: 1px solid #dbe3ef;
-  list-style: none;
-}
-.visualDiffSection__points li {
-  padding: 1.4rem 0;
-  border-bottom: 1px solid #dbe3ef;
-}
-.visualDiffSection__points strong {
-  display: block;
-  margin-bottom: 0.35rem;
-  color: #0f172a;
-  font-size: 1.15rem;
-  font-weight: 650;
-}
-.visualDiffSection__points span {
-  color: #475569;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-@media (max-width: 900px) {
-  .visualDiffSection__pair {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.featureStoryLinks a:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
 }
 

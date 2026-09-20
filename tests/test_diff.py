@@ -180,6 +180,8 @@ def test_diff_command_reports_and_can_fail_the_run(tmp_path: Path) -> None:
 
     assert reported.exit_code == 0
     assert "~ revenue:" in reported.output
+    # The row changes sit under the chart they belong to.
+    assert "    sum of revenue 5,400 → 6,000 (+11.1%)" in reported.output
     assert "✓ 1 changed, 0 unchanged" in reported.output
     assert "✓ wrote target/glyf/diff/index.html" in reported.output
     assert failed.exit_code == 1
