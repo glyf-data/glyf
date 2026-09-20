@@ -1,6 +1,8 @@
 import html
 import json
 import re
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 
 import altair as alt
@@ -10,11 +12,11 @@ import pyarrow.compute as pc
 from glyf.config import RenderConfig
 from glyf.execution.result import ArrowStreamExportable, QueryResult
 from glyf.ggsql.models import GgsqlChart
-from glyf.ggsql.parser import SUPPORTED_CHART_TYPES
 from glyf.renderers import chart_renderer, get_chart_renderer
 
 
 HISTOGRAM_MAX_BINS = 30
+_HISTOGRAM_BINS = alt.Bin(maxbins=HISTOGRAM_MAX_BINS)
 BOXPLOT_MIN_SIZE = 6
 BOXPLOT_MAX_SIZE = 80
 
@@ -103,6 +105,135 @@ def missing_columns(chart: GgsqlChart, columns: tuple[str, ...]) -> tuple[str, .
     )
 
 
+@dataclass(frozen=True)
+class _Drawing:
+    """What a chart type draws from: the chart, its rows and its bound columns."""
+
+    chart: GgsqlChart
+    frame: pa.Table
+    x: str
+    # None only for a histogram, which counts rows instead of binding a column.
+    y: str | None
+    color: str | None
+    width: int
+
+
+@dataclass(frozen=True)
+class _ChartType:
+    """Everything that makes one `DRAW` type different from the others.
+
+    A chart type is defined here and nowhere else in this module: adding one is
+    adding an entry to `CHART_TYPES`, not another branch in `build_chart`.
+    """
+
+    encode: Callable[[_Drawing], dict[str, object]]
+    mark: Callable[[alt.Chart, _Drawing], alt.Chart]
+    # The role whose column the type computes from rather than plots. The
+    # renderer answers a text column there with an empty chart, not an error.
+    numeric_role: str | None = None
+    # What a tooltip lists; by default, the columns the chart binds.
+    tooltips: Callable[[_Drawing], list[alt.Tooltip]] | None = None
+    # A boxplot keeps the renderer's own tooltip -- the quartiles of the box
+    # under the pointer -- which a list of row fields would replace.
+    keeps_own_tooltip: bool = False
+
+
+def _encode_xy(drawing: _Drawing) -> dict[str, object]:
+    chart = drawing.chart
+    encoding: dict[str, object] = {
+        "x": alt.X(drawing.x, axis=alt.Axis(labelAngle=0), title=chart.x_title),
+        "y": alt.Y(drawing.y, title=chart.y_title),
+    }
+    if drawing.color is not None:
+        encoding["color"] = alt.Color(drawing.color)
+    return encoding
+
+
+def _encode_pie(drawing: _Drawing) -> dict[str, object]:
+    chart = drawing.chart
+    return {
+        "theta": alt.Theta(drawing.y, title=chart.y_title),
+        "color": alt.Color(
+            drawing.color or drawing.x,
+            title=chart.x_title if drawing.color is None else drawing.color,
+        ),
+    }
+
+
+def _encode_histogram(drawing: _Drawing) -> dict[str, object]:
+    # The rows are binned and counted by the renderer, so the y axis describes
+    # a bin rather than any column of the query.
+    chart = drawing.chart
+    encoding: dict[str, object] = {
+        "x": alt.X(drawing.x, bin=_HISTOGRAM_BINS, title=chart.x_title),
+        "y": alt.Y("count()", title=chart.y_title),
+    }
+    if drawing.color is not None:
+        encoding["color"] = alt.Color(drawing.color)
+    return encoding
+
+
+def _histogram_tooltips(drawing: _Drawing) -> list[alt.Tooltip]:
+    """A bar of a histogram is a bin and its count, not a row."""
+    tooltips = [alt.Tooltip(drawing.x, bin=_HISTOGRAM_BINS), alt.Tooltip("count()")]
+    if drawing.color is not None:
+        tooltips.append(alt.Tooltip(drawing.color))
+    return tooltips
+
+
+def _encode_heatmap(drawing: _Drawing) -> dict[str, object]:
+    # Both axes are discrete cells, and `sort=None` keeps the order the query
+    # returned them in: an ORDER BY is how a heatmap puts Monday before Tuesday.
+    chart = drawing.chart
+    if drawing.color is None:
+        raise ChartRenderError("heatmap requires x, y and color mappings")
+    return {
+        "x": alt.X(drawing.x, type="ordinal", sort=None, title=chart.x_title),
+        "y": alt.Y(drawing.y, type="ordinal", sort=None, title=chart.y_title),
+        "color": alt.Color(drawing.color, type="quantitative"),
+    }
+
+
+def _encode_boxplot(drawing: _Drawing) -> dict[str, object]:
+    # The mark names its tooltip rows after the y title -- "Median of revenue"
+    # -- so an absent title falls back to the column rather than to None, which
+    # it would print as "Median of null".
+    chart = drawing.chart
+    encoding: dict[str, object] = {
+        "x": alt.X(drawing.x, axis=alt.Axis(labelAngle=0), title=chart.x_title),
+        "y": alt.Y(drawing.y, title=chart.y_title or drawing.y),
+    }
+    if drawing.color is not None:
+        encoding["color"] = alt.Color(drawing.color)
+    return encoding
+
+
+CHART_TYPES: dict[str, _ChartType] = {
+    "line": _ChartType(_encode_xy, lambda base, _: base.mark_line(point=True)),
+    "bar": _ChartType(_encode_xy, lambda base, _: base.mark_bar()),
+    "scatter": _ChartType(_encode_xy, lambda base, _: base.mark_circle(size=80)),
+    "area": _ChartType(_encode_xy, lambda base, _: base.mark_area(opacity=0.7)),
+    "pie": _ChartType(_encode_pie, lambda base, _: base.mark_arc()),
+    "histogram": _ChartType(
+        _encode_histogram,
+        lambda base, _: base.mark_bar(),
+        numeric_role="x",
+        tooltips=_histogram_tooltips,
+    ),
+    "boxplot": _ChartType(
+        _encode_boxplot,
+        lambda base, drawing: base.mark_boxplot(
+            size=_boxplot_size(drawing.frame, drawing.x, drawing.width)
+        ),
+        numeric_role="y",
+        keeps_own_tooltip=True,
+    ),
+    "heatmap": _ChartType(
+        _encode_heatmap, lambda base, _: base.mark_rect(), numeric_role="color"
+    ),
+}
+
+
 def build_chart(
     chart: GgsqlChart,
     data: QueryResult | ArrowStreamExportable,
@@ -110,9 +241,25 @@ def build_chart(
 ) -> alt.Chart:
     config = config or RenderConfig()
     frame = _coerce_query_result(data).to_arrow()
-    if chart.draw_type not in SUPPORTED_CHART_TYPES:
+    chart_type = CHART_TYPES.get(chart.draw_type)
+    if chart_type is None:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
 
+    drawing = _drawing(chart, frame, config)
+    encoding = chart_type.encode(drawing)
+    if "tooltip" in chart.interactions and not chart_type.keeps_own_tooltip:
+        encoding["tooltip"] = (
+            chart_type.tooltips(drawing)
+            if chart_type.tooltips is not None
+            else [alt.Tooltip(field) for field in required_columns(chart)]
+        )
+
+    base = _styled(alt.Chart(frame).encode(**encoding), chart, config)
+    return _with_interactions(chart_type.mark(base, drawing), drawing)
+
+
+def _drawing(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> _Drawing:
+    """Check the chart's bindings against its rows, and gather them."""
     x_field = chart.field_for_role("x")
     y_field = chart.field_for_role("y")
     if x_field is None:
@@ -120,96 +267,41 @@ def build_chart(
     if y_field is None and chart.draw_type != "histogram":
         raise ChartRenderError("VISUALISE requires x and y mappings")
 
-    color_field = chart.field_for_role("color")
-    required_fields = list(required_columns(chart))
-
     missing = missing_columns(chart, tuple(frame.column_names))
     if missing:
         joined = ", ".join(f"'{field}'" for field in missing)
         raise ChartRenderError(f"query result missing chart column {joined}")
 
-    # These three compute from the column rather than plot it, and the renderer
-    # answers a text column with an empty chart instead of an error.
-    numeric_role = {"histogram": "x", "boxplot": "y", "heatmap": "color"}.get(
-        chart.draw_type
-    )
+    numeric_role = CHART_TYPES[chart.draw_type].numeric_role
     if numeric_role is not None:
         numeric_field = chart.field_for_role(numeric_role)
         if numeric_field is not None:
             _require_numeric(frame, numeric_field, numeric_role, chart.draw_type)
 
-    width = chart.width or config.default_width
-    height = chart.height or config.default_height
+    return _Drawing(
+        chart=chart,
+        frame=frame,
+        x=x_field,
+        y=y_field,
+        color=chart.field_for_role("color"),
+        width=chart.width or config.default_width,
+    )
+
+
+def _styled(base: alt.Chart, chart: GgsqlChart, config: RenderConfig) -> alt.Chart:
+    """Size, title and the type treatment every glyf chart shares."""
     title: str | alt.TitleParams | None = chart.title
     if chart.title and chart.subtitle:
         title = alt.TitleParams(text=chart.title, subtitle=chart.subtitle)
-
-    encoding: dict[str, object]
-    tooltips = [alt.Tooltip(field) for field in dict.fromkeys(required_fields)]
-    if chart.draw_type == "pie":
-        encoding = {
-            "theta": alt.Theta(y_field, title=chart.y_title),
-            "color": alt.Color(
-                color_field or x_field,
-                title=chart.x_title if color_field is None else color_field,
-            ),
-        }
-    elif chart.draw_type == "histogram":
-        # The rows are binned and counted by the renderer, so the y axis and
-        # the tooltip describe a bin rather than any column of the query.
-        bins = alt.Bin(maxbins=HISTOGRAM_MAX_BINS)
-        encoding = {
-            "x": alt.X(x_field, bin=bins, title=chart.x_title),
-            "y": alt.Y("count()", title=chart.y_title),
-        }
-        tooltips = [alt.Tooltip(x_field, bin=bins), alt.Tooltip("count()")]
-        if color_field is not None:
-            encoding["color"] = alt.Color(color_field)
-            tooltips.append(alt.Tooltip(color_field))
-    elif chart.draw_type == "heatmap":
-        # Both axes are discrete cells, and `sort=None` keeps the order the
-        # query returned them in: an ORDER BY is how a heatmap puts Monday
-        # before Tuesday.
-        if color_field is None:
-            raise ChartRenderError("heatmap requires x, y and color mappings")
-        encoding = {
-            "x": alt.X(x_field, type="ordinal", sort=None, title=chart.x_title),
-            "y": alt.Y(y_field, type="ordinal", sort=None, title=chart.y_title),
-            "color": alt.Color(color_field, type="quantitative"),
-        }
-    elif chart.draw_type == "boxplot":
-        # The mark names its tooltip rows after the y title -- "Median of
-        # revenue" -- so an absent title falls back to the column rather than
-        # to None, which it would print as "Median of null".
-        encoding = {
-            "x": alt.X(x_field, axis=alt.Axis(labelAngle=0), title=chart.x_title),
-            "y": alt.Y(y_field, title=chart.y_title or y_field),
-        }
-        if color_field is not None:
-            encoding["color"] = alt.Color(color_field)
-    else:
-        encoding = {
-            "x": alt.X(x_field, axis=alt.Axis(labelAngle=0), title=chart.x_title),
-            "y": alt.Y(y_field, title=chart.y_title),
-        }
-        if color_field is not None:
-            encoding["color"] = alt.Color(color_field)
-    # A boxplot keeps the renderer's own tooltip -- the quartiles of the box
-    # under the pointer -- which a list of row fields would replace.
-    if "tooltip" in chart.interactions and chart.draw_type != "boxplot":
-        encoding["tooltip"] = tooltips
-
     properties: dict[str, object] = {
-        "width": width,
-        "height": height,
+        "width": chart.width or config.default_width,
+        "height": chart.height or config.default_height,
     }
     if title is not None:
         properties["title"] = title
 
-    base = (
-        alt.Chart(frame)
-        .encode(**encoding)
-        .properties(**properties)
+    return (
+        base.properties(**properties)
         .configure_view(stroke="#d9e2ec")
         .configure_axis(
             labelAngle=0,
@@ -229,31 +321,18 @@ def build_chart(
             subtitleFontWeight=400,
         )
     )
-    if chart.draw_type == "line":
-        rendered = base.mark_line(point=True)
-    elif chart.draw_type == "bar":
-        rendered = base.mark_bar()
-    elif chart.draw_type == "scatter":
-        rendered = base.mark_circle(size=80)
-    elif chart.draw_type == "area":
-        rendered = base.mark_area(opacity=0.7)
-    elif chart.draw_type == "histogram":
-        rendered = base.mark_bar()
-    elif chart.draw_type == "boxplot":
-        rendered = base.mark_boxplot(size=_boxplot_size(frame, x_field, width))
-    elif chart.draw_type == "heatmap":
-        rendered = base.mark_rect()
-    else:
-        rendered = base.mark_arc()
 
-    if "legend_filter" in chart.interactions:
-        if color_field is None:
+
+def _with_interactions(rendered: alt.Chart, drawing: _Drawing) -> alt.Chart:
+    interactions = drawing.chart.interactions
+    if "legend_filter" in interactions:
+        if drawing.color is None:
             raise ChartRenderError("legend_filter interaction requires a color mapping")
-        legend_selection = alt.selection_point(fields=[color_field], bind="legend")
+        legend_selection = alt.selection_point(fields=[drawing.color], bind="legend")
         rendered = rendered.add_params(legend_selection).encode(
             opacity=alt.condition(legend_selection, alt.value(1), alt.value(0.2))
         )
-    if "zoom" in chart.interactions:
+    if "zoom" in interactions:
         rendered = rendered.interactive()
     return rendered
 
