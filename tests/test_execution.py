@@ -105,6 +105,45 @@ def test_decimal_columns_are_normalized_to_native_numbers() -> None:
     assert json.loads(json.dumps(list(result.rows)))[0]["revenue"] == 1200
 
 
+def test_from_arrow_accepts_a_record_batch_reader() -> None:
+    table = pa.table(
+        {
+            "region": ["east", "west"],
+            "revenue": pa.array([Decimal("1200"), Decimal("1800")], pa.decimal128(38, 0)),
+        }
+    )
+    reader = pa.RecordBatchReader.from_batches(table.schema, table.to_batches())
+
+    result = QueryResult.from_arrow(reader)
+
+    assert isinstance(result.table, pa.Table)
+    assert len(result) == 2
+    assert result.columns == ("region", "revenue")
+    assert result.table.schema.field("revenue").type == pa.int64()
+    assert list(result.rows) == [
+        {"region": "east", "revenue": 1200},
+        {"region": "west", "revenue": 1800},
+    ]
+
+
+def test_from_arrow_accepts_a_record_batch() -> None:
+    batch = pa.record_batch({"region": ["east", "west"], "revenue": [1, 2]})
+
+    result = QueryResult.from_arrow(batch)
+
+    assert isinstance(result.table, pa.Table)
+    assert len(result) == 2
+    assert list(result.rows) == [
+        {"region": "east", "revenue": 1},
+        {"region": "west", "revenue": 2},
+    ]
+
+
+def test_query_result_rejects_non_arrow_input() -> None:
+    with pytest.raises(TypeError, match="pyarrow Table, RecordBatch, RecordBatchReader"):
+        QueryResult(table=[{"region": "east"}])  # type: ignore[arg-type]
+
+
 def test_aggregated_hugeint_results_are_json_serializable(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
 

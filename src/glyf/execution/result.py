@@ -27,7 +27,7 @@ class QueryResult:
     table: pa.Table
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "table", _normalize_table(self.table))
+        object.__setattr__(self, "table", _normalize_table(_as_table(self.table)))
 
     def __len__(self) -> int:
         return self.table.num_rows
@@ -41,7 +41,13 @@ class QueryResult:
         return tuple(self.table.to_pylist())
 
     @classmethod
-    def from_arrow(cls, table: pa.Table) -> "QueryResult":
+    def from_arrow(
+        cls, table: pa.Table | pa.RecordBatch | pa.RecordBatchReader
+    ) -> "QueryResult":
+        """Build a result from a pyarrow table, batch or record batch reader.
+
+        A reader is consumed in full; the result always holds a ``pa.Table``.
+        """
         return cls(table=table)
 
     @classmethod
@@ -78,6 +84,27 @@ class QueryResult:
     def to_pandas(self) -> pd.DataFrame:
         """Convert to pandas; requires pandas to be installed in the caller's environment."""
         return self.table.to_pandas()
+
+
+def _as_table(data: object) -> pa.Table:
+    """Coerce a batch, a reader, or any Arrow-exportable object to a ``pa.Table``.
+
+    Executors hand over whatever their driver returns. A ``RecordBatchReader``
+    has neither ``num_rows`` nor ``column``, so storing one as-is fails later,
+    at the first ``len()`` or at decimal normalisation.
+    """
+    if isinstance(data, pa.Table):
+        return data
+    if isinstance(data, pa.RecordBatch):
+        return pa.Table.from_batches([data])
+    if isinstance(data, pa.RecordBatchReader):
+        return data.read_all()
+    if hasattr(data, "__arrow_c_stream__"):
+        return pa.table(data)
+    raise TypeError(
+        "QueryResult expects a pyarrow Table, RecordBatch, RecordBatchReader or "
+        f"an Arrow-exportable object, not {type(data).__name__}"
+    )
 
 
 def _normalize_table(table: pa.Table) -> pa.Table:
