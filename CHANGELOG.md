@@ -2,7 +2,7 @@
 
 All notable changes to `glyf` will be documented in this file.
 
-## Unreleased
+## 0.9.0 - 2026-09-22
 
 ### Visual diff
 
