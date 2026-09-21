@@ -334,6 +334,22 @@ npm start
 
 Paths in `glyf.yml` and dashboard YAML use forward slashes on every platform.
 
-## License
+## License and attribution
 
-[Apache 2.0](https://github.com/glyf-data/glyf/blob/main/LICENSE)
+glyf is licensed under [Apache 2.0](https://github.com/glyf-data/glyf/blob/main/LICENSE).
+Use it, modify it, ship it, at no cost, for any purpose.
+
+If you copy or adapt this code, keep the [LICENSE](./LICENSE) and
+[NOTICE](./NOTICE) files with it and credit the project. The Apache License
+requires both files to travel with the code. Visible credit is what keeps
+open source working, and a line like this is enough:
+
+```text
+Based on glyf (https://github.com/glyf-data/glyf), Copyright Kannan Kalidasan, Apache 2.0.
+```
+
+The name "glyf" and the logo are trademarks and are not covered by the code
+license. Forks and derived products need their own name. See
+[TRADEMARK.md](./TRADEMARK.md).
+
+Copyright 2026 Kannan Kalidasan.
