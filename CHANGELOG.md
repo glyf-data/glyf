@@ -30,6 +30,15 @@ All notable changes to `glyf` will be documented in this file.
   the base branch and the pull request are built in one job, compared, and the
   summary is posted on the pull request.
 
+### Fixed
+
+- `QueryResult.from_arrow` accepted a pyarrow `RecordBatchReader` and then
+  failed on the first `len()` or, when the result had a decimal column, inside
+  decimal normalisation with `'RecordBatchReader' object has no attribute
+  'column'`. A reader is now read in full, a `RecordBatch` becomes a one-batch
+  table, and anything that is not Arrow-exportable is rejected with a
+  `TypeError` at construction rather than a stray `AttributeError` later.
+
 ## 0.8.0 - 2026-09-20
 
 A chart drew a different picture on every build when its query left the row
