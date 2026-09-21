@@ -12,19 +12,6 @@ order is the priority.
   on the <Link href="https://github.com/glyf-data/glyf/releases">releases page</Link>.
 </p>
 
-## In the next release
-
-<div className="roadmapNext">
-  <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
-  <h3>Visual diff</h3>
-  <p>
-    <code>glyf diff</code> compares the charts of two builds and reports which changed, how much
-    of each picture moved, and why. It runs in a pull request, so a reviewer sees what a change
-    does to the dashboards and not only the line of SQL that did it.
-  </p>
-  <Link to="/docs/guides/visual-diff">Read the guide</Link>
-</div>
-
 ## Planned
 
 Vote with a 👍 on the issue. The most wanted go first.
@@ -71,6 +58,14 @@ if one of these would change how you work.
 ## Shipped
 
 <ol className="roadmapTimeline">
+  <li>
+    <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.9.0">0.9.0</Link>
+      <time dateTime="2026-09-22">22 September 2026</time>
+    </div>
+    <strong>Visual diff</strong>
+    <p><code>glyf diff</code> compares the charts of two builds and reports which changed, how much of each picture moved, and why: the query, the rows, the version, or the chart itself. It runs in a pull request, so a reviewer sees what a change does to the dashboards and not only the line of SQL that did it. <Link to="/docs/guides/visual-diff">Read the guide</Link>.</p>
+  </li>
   <li>
     <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.8.0">0.8.0</Link>
