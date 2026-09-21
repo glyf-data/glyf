@@ -81,6 +81,8 @@ include = [
     "Cargo.lock",
     "README.md",
     "LICENSE",
+    "NOTICE",
+    "TRADEMARK.md",
     "CHANGELOG.md",
     "pyproject.toml",
 ]
