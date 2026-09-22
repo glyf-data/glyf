@@ -191,7 +191,7 @@ const problemItems = [
 ];
 
 const workflowSteps = [
-  ['01 — Chart Definition', 'Write charts in GGSQL', 'SQL you already know, then a few lines saying what to draw. Glyf reads the GGSQL format and adds chart types of its own. Use ref() to reference dbt models directly.'],
+  ['01 — Chart Definition', 'Write charts in GGSQL', 'SQL you already know, then a few lines saying what to draw. Use ref() to reference dbt models directly.'],
   ['02 — Dashboard Layout', 'Compose in YAML + Python', 'Lay out charts into sections. Use Python macros for conditional logic, thresholds, and reusable components.'],
   ['03 — Build Output', 'Run one command', 'Glyf resolves dbt artifacts, validates chart specs, renders charts, and emits the files you can publish.'],
 ];
@@ -641,7 +641,7 @@ function FeatureVisual({item}) {
 <span className="codeKw">FROM</span> <span className="codeRef">{'{{ ref(\'orders\') }}'}</span> o{'\n'}
 <span className="codeKw">JOIN</span> <span className="codeRef">{'{{ ref(\'plans\') }}'}</span> p{'\n'}
 {'  '}<span className="codeKw">ON</span> o.plan_id = p.id{'\n'}
-<span className="codeKw">GROUP BY</span> <span className="codeNum">1</span>, <span className="codeNum">3</span>{'\n\n'}
+<span className="codeKw">GROUP BY</span> <span className="codeNum">1</span>, <span className="codeNum">3</span>{'\n'}
 <span className="codeMuted">────────────────────────────</span>{'\n'}
 <span className="codeOk">✓</span> resolved orders → analytics.orders{'\n'}
 <span className="codeOk">✓</span> resolved plans → analytics.plans{'\n'}
@@ -669,32 +669,28 @@ function FeatureVisual({item}) {
           <pre><code><span className="codeMuted"># glyf.yml</span>{'\n'}
 privacy:{'\n'}
 {'  '}pii_columns: [<span className="codeStr">customer_email</span>]{'\n'}
-{'  '}on_pii: <span className="codeStr">deny</span>{'\n\n'}
+{'  '}on_pii: <span className="codeStr">deny</span>{'\n'}
 <span className="codeFn">$</span> glyf build{'\n'}
 <span className="codeOk">✓</span> validated project{'\n'}
 <span className="featureDiffLine featureDiffLine--remove">Render failed</span>
 <span className="featureDiffLine featureDiffLine--remove">  - visualisations/overdue_invoices.ggsql returns a PII column:</span>
-<span className="featureDiffLine featureDiffLine--remove">    'customer_email' (listed in glyf.yml privacy.pii_columns).</span>
-<span className="featureDiffLine featureDiffLine--remove">    Drop it from the query, or set privacy.on_pii: redact to publish it masked.</span>{'\n'}
-<span className="codeMuted"># with on_pii: redact, the same build passes and the rows carry</span>{'\n'}
+<span className="featureDiffLine featureDiffLine--remove">    'customer_email'. Drop it from the query, or set</span>
+<span className="featureDiffLine featureDiffLine--remove">    privacy.on_pii: redact to publish it masked.</span>
+<span className="codeMuted"># with on_pii: redact, the build passes and the rows carry</span>{'\n'}
 <span className="codeMuted">#</span> {'{'}<span className="codeStr">"customer_email"</span>: <span className="codeStr">"I***"</span>, <span className="codeStr">"amount"</span>: <span className="codeNum">16391.88</span>, <span className="codeStr">"days_to_pay"</span>: <span className="codeNum">102</span>{'}'}</code></pre>
         </FeatureMacWindow>
       );
     case 'rowDataModes':
       return (
         <FeatureMacWindow filename={item.filename}>
-          <pre><code><span className="codeMuted"># one 8-chart dashboard, exported three ways</span>{'\n\n'}
-export.row_data: <span className="codeStr">include</span>{'\n'}
-<span className="codeMuted">  finance.html  106 KB</span>{'\n'}
-<span className="codeMuted">  every row behind every chart, for interaction</span>{'\n\n'}
-export.row_data: <span className="codeStr">minimal</span>{'\n'}
-<span className="codeMuted">  finance.html  105 KB</span>{'\n'}
-<span className="codeMuted">  only the columns each chart draws;</span>{'\n'}
-<span className="codeMuted">  bookings, gross_margin were selected, not plotted: gone</span>{'\n\n'}
-export.row_data: <span className="codeStr">exclude</span>{'\n'}
-<span className="codeMuted">  finance.html   26 KB</span>{'\n'}
+          <pre><code><span className="codeMuted"># one 8-chart dashboard, exported three ways</span>{'\n'}
+export.row_data: <span className="codeStr">include</span>{'   '}<span className="codeMuted">finance.html  106 KB</span>{'\n'}
+<span className="codeMuted">  every row behind every chart, for interaction</span>{'\n'}
+export.row_data: <span className="codeStr">minimal</span>{'   '}<span className="codeMuted">finance.html  105 KB</span>{'\n'}
+<span className="codeMuted">  only the columns each chart draws; bookings and</span>{'\n'}
+<span className="codeMuted">  gross_margin were selected, not plotted: gone</span>{'\n'}
+export.row_data: <span className="codeStr">exclude</span>{'   '}<span className="codeMuted">finance.html   26 KB</span>{'\n'}
 <span className="codeMuted">  rendered images only. No rows, no specs, no SQL.</span>{'\n\n'}
-<span className="codeMuted">─────────────────────────────</span>{'\n'}
 <span className="codeMuted"># bundle.json records it, every build</span>{'\n'}
 <span className="codeStr">"security"</span>: {'{'} <span className="codeStr">"row_data"</span>: <span className="codeStr">"excluded"</span> {'}'}</code></pre>
         </FeatureMacWindow>
@@ -717,17 +713,17 @@ export.row_data: <span className="codeStr">exclude</span>{'\n'}
     case 'buildOutput':
       return (
         <FeatureMacWindow filename={item.filename}>
-          <pre><code><span className="codeFn">$</span> glyf build --target prod{'\n\n'}
+          <pre><code><span className="codeFn">$</span> glyf build --target prod{'\n'}
 <span className="codeMuted">Building 12 charts...</span>{'\n'}
 <span className="codeOk">✓</span> revenue_weekly{'\n'}
 <span className="codeOk">✓</span> signups_by_plan{'\n'}
 <span className="codeOk">✓</span> churn_cohort{'\n'}
-<span className="codeMuted">  ... 9 more</span>{'\n\n'}
+<span className="codeMuted">  ... 9 more</span>{'\n'}
 <span className="codeMuted">Exporting static assets...</span>{'\n'}
 <span className="codeOk">✓</span> dist/revenue_weekly.html <span className="codeMuted">42kb</span>{'\n'}
 <span className="codeOk">✓</span> dist/signups_by_plan.html <span className="codeMuted">38kb</span>{'\n'}
 <span className="codeOk">✓</span> dist/index.html <span className="codeMuted">8kb</span>{'\n'}
-<span className="codeOk">✓</span> dist/charts.zip <span className="codeMuted">180kb</span>{'\n\n'}
+<span className="codeOk">✓</span> dist/charts.zip <span className="codeMuted">180kb</span>{'\n'}
 <span className="codeMuted">No server required.</span>{'\n'}
 <span className="codeMuted">Drop into S3, Notion, GitHub Pages, or CI artifacts.</span></code></pre>
         </FeatureMacWindow>
@@ -742,10 +738,10 @@ export.row_data: <span className="codeStr">exclude</span>{'\n'}
 {'    '}<span className="codeStr">"starter"</span>: <span className="codeStr">"#94a3b8"</span>,{'\n'}
 {'    '}<span className="codeStr">"growth"</span>: <span className="codeStr">"#6366f1"</span>,{'\n'}
 {'    '}<span className="codeStr">"enterprise"</span>: <span className="codeStr">"#0ea5e9"</span>,{'\n'}
-{'  }'}.get(plan, <span className="codeStr">"#e2e8f0"</span>){'\n\n'}
+{'  }'}.get(plan, <span className="codeStr">"#e2e8f0"</span>){'\n'}
 <span className="codeFn">@macro</span>{'\n'}
 <span className="codeKw">def</span> <span className="codeFn">alert_threshold</span>(ctx: <span className="codeVar">ChartContext</span>) -&gt; <span className="codeVar">float</span>:{'\n'}
-{'  '}<span className="codeKw">return</span> ctx.config[<span className="codeStr">"alert_pct"</span>]{'\n\n'}
+{'  '}<span className="codeKw">return</span> ctx.config[<span className="codeStr">"alert_pct"</span>]{'\n'}
 <span className="codeRef">{'{{ plan_color(\'growth\') }}'}</span> <span className="codeMuted">-- → "#6366f1"</span></code></pre>
         </FeatureMacWindow>
       );
@@ -761,7 +757,7 @@ charts:{'\n'}
 {'    '}color_macro: <span className="codeFn">plan_color</span>{'\n\n'}
 {'  '}- id: <span className="codeStr">churn_cohort</span>{'\n'}
 {'    '}sql: <span className="codeStr">./churn_cohort.sql</span>{'\n'}
-{'    '}visible_if: <span className="codeStr">"user.plan == \'enterprise\'"</span>{'\n\n'}
+{'    '}visible_if: <span className="codeStr">"user.plan == \'enterprise\'"</span>{'\n'}
 <span className="codeOk">✓</span> <span className="codeMuted">dashboard spec validated — 3 charts</span></code></pre>
         </FeatureMacWindow>
       );
@@ -1204,57 +1200,6 @@ function PersonasSection() {
   );
 }
 
-function GgsqlSection() {
-  const ggsqlLogoUrl = useBaseUrl('/img/ggsql-icon.svg');
-  const glyfLogoUrl = useBaseUrl('/img/glyf-logo-v4.svg');
-  return (
-    <section className="band">
-      <div className="container ggsqlLayout">
-        <div className="sectionHeader ggsqlSectionHeader">
-          <p className="eyebrow">ggsql + glyf</p>
-        </div>
-        <div className="ggsqlCopyBlocks">
-          <div className="ggsqlCopyColumn ggsqlCopyColumn--primary">
-            <div className="ggsqlCopyHeader">
-              <img
-                className="ggsqlCopyTitleMark ggsqlCopyTitleMark--ggsql"
-                src={ggsqlLogoUrl}
-                alt="GGSQL logo"
-                loading="lazy"
-              />
-              <h2 className="ggsqlCopyTitle">GGSQL is the format.</h2>
-            </div>
-            <p>
-              GGSQL is an open source grammar for describing a chart in SQL: the query, then a
-              few lines saying what to draw. Glyf adopts it as is, so a <code>.ggsql</code> file
-              gets the format's editor support and syntax highlighting, and every GGSQL chart is a
-              Glyf chart. Learn more at <a href="https://ggsql.org">ggsql.org</a>.
-            </p>
-          </div>
-          <div className="ggsqlCopyColumn ggsqlCopyColumn--secondary">
-            <div className="ggsqlCopyHeader">
-              <img
-                className="ggsqlCopyTitleMark ggsqlCopyTitleMark--glyf"
-                src={glyfLogoUrl}
-                alt="Glyf logo"
-                loading="lazy"
-              />
-              <h2 className="ggsqlCopyTitle">Glyf extends it, and builds it.</h2>
-            </div>
-            <p>
-              Glyf adds chart types and interaction the base grammar does not have, drawn by its
-              own rendering engine, and everything around the chart: dbt <code>ref()</code>
-              resolution, dashboards, validation, visual diff, data protection, and the files you
-              publish. Glyf's additions are marked in the{' '}
-              <Link to="/docs/guides/visualisation-syntax">syntax guide</Link>.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function FeatureLinks() {
   return (
     <section className="band band--muted">
@@ -1402,48 +1347,6 @@ function VisualDiffTerminal({filename}) {
   );
 }
 
-const communityLinks = [
-  ['Discussions', 'Questions and ideas that others will want to find later.', 'https://github.com/glyf-data/glyf/discussions'],
-  ['Contribute', 'From a fresh clone to a merged pull request, in five steps.', 'https://github.com/glyf-data/glyf/blob/main/CONTRIBUTING.md'],
-  ['Support', 'Where to ask what, and what to check first.', '/docs/resources/support'],
-  ['Roadmap', 'What shipped recently, and what is planned.', '/docs/resources/roadmap'],
-];
-
-function CommunitySection() {
-  return (
-    <section className="communitySection" aria-labelledby="community-heading">
-      <div className="container communitySection__inner">
-        <div className="communitySection__lead">
-          <h2 id="community-heading">Build with the glyf community</h2>
-          <p>
-            Ask a question, show what you made, or help decide what glyf does next. The help
-            channel is the quickest way to get unstuck.
-          </p>
-          <a className="communitySection__join" href="/slack">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M5.04 15.16a2.52 2.52 0 1 1-2.52-2.52h2.52v2.52Zm1.27 0a2.52 2.52 0 0 1 5.04 0v6.32a2.52 2.52 0 1 1-5.04 0v-6.32ZM8.83 5.04a2.52 2.52 0 1 1 2.52-2.52v2.52H8.83Zm0 1.27a2.52 2.52 0 0 1 0 5.04H2.52a2.52 2.52 0 1 1 0-5.04h6.31Zm10.13 2.52a2.52 2.52 0 1 1 2.52 2.52h-2.52V8.83Zm-1.27 0a2.52 2.52 0 0 1-5.04 0V2.52a2.52 2.52 0 1 1 5.04 0v6.31Zm-2.52 10.13a2.52 2.52 0 1 1-2.52 2.52v-2.52h2.52Zm0-1.27a2.52 2.52 0 0 1 0-5.04h6.32a2.52 2.52 0 1 1 0 5.04h-6.32Z"
-              />
-            </svg>
-            Join Slack Community
-          </a>
-        </div>
-        <ul className="communitySection__links">
-          {communityLinks.map(([title, description, href]) => (
-            <li key={title}>
-              <Link to={href}>
-                <strong>{title}</strong>
-                <span>{description}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
 function CtaSection() {
   return (
     <section className="ctaBand">
@@ -1478,8 +1381,6 @@ export default function Home() {
         <HowItWorks />
         <FeaturesSection />
         <PersonasSection />
-        <GgsqlSection />
-        <CommunitySection />
         <CtaSection />
       </main>
     </Layout>

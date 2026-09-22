@@ -412,53 +412,12 @@ select {
   }
 }
 
-/* Glyf landing page pivot */
-
-/* Reference hero design */
-
-.ggsqlLayout {
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: 2.5rem;
-  align-items: center;
-}
-
-.ggsqlLayout h2 {
-  font-size: 2.45rem;
-  line-height: 1.12;
-}
-
-.ggsqlLayout p {
-  color: var(--dbtc-slate);
-  font-size: 1rem;
-  line-height: 1.75;
-}
-
-.ggsqlCopyBlocks {
-  display: grid;
-  gap: 1.35rem;
-}
-
-.ggsqlCopyBlocks h2 {
-  margin-bottom: 0.65rem;
-}
-
-.ggsqlCopyBlocks p {
-  margin-bottom: 0;
-}
-
 @media (max-width: 996px) {
   
-  .ggsqlLayout {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 640px) {
 
-  .ggsqlLayout h2 {
-    font-size: 2rem;
-  }
 }
 
 @media (max-width: 1500px) and (min-width: 997px) {
@@ -750,23 +709,6 @@ pre,
   max-width: 760px !important;
 }
 
-.sectionHeader h2,
-.ggsqlLayout h2 {
-  font-family: var(--glyf-display-font) !important;
-  font-size: clamp(2.1rem, 3.2vw, 3.55rem) !important;
-  font-weight: 690 !important;
-  line-height: 1.04 !important;
-  letter-spacing: 0 !important;
-}
-
-.sectionHeader p,
-.ggsqlLayout p {
-  color: #5b677a !important;
-  font-size: 1.02rem !important;
-  font-weight: 450 !important;
-  line-height: 1.7 !important;
-}
-
 .eyebrow {
   font-family: var(--glyf-ui-font) !important;
   font-size: 0.76rem !important;
@@ -815,17 +757,6 @@ pre,
   .buttonRow {
     width: 100% !important;
   }
-}
-
-/* Keep the GGSQL headline compact enough to read as a two-line statement. */
-.ggsqlLayout h2 {
-  max-width: 780px !important;
-  font-size: clamp(1.55rem, 2vw, 2.2rem) !important;
-  line-height: 1.1 !important;
-}
-
-.ggsqlCopyBlocks h2 {
-  margin-bottom: 0.65rem !important;
 }
 
 /* Last landing overrides after legacy hero rules. */
@@ -950,8 +881,8 @@ pre,
 }
 
 .howCodeStep {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
@@ -1676,23 +1607,6 @@ body,
   border-color: rgba(0, 0, 0, 0.12) !important;
 }
 
-.sectionHeader h2,
-.ggsqlLayout h2,
-.footerCta h2 {
-  color: #000000 !important;
-}
-
-.sectionHeader p,
-.ggsqlLayout p,
-.problemCard p,
-.personaCard p,
-.docTile p,
-.exampleCard__body p,
-.howCodeStep p,
-.footerCta p:not(.eyebrow) {
-  color: #3f3f46 !important;
-}
-
 .eyebrow {
   color: #000000 !important;
 }
@@ -2071,7 +1985,7 @@ div[class*='codeBlockContent'] pre code,
 }
 
 .featureStorySection {
-  padding: 3.1rem 0;
+  padding: 2.4rem 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   scroll-margin-top: calc(var(--ifm-navbar-height) + 5.5rem);
 }
@@ -2082,7 +1996,7 @@ div[class*='codeBlockContent'] pre code,
 
 .featureStoryHeader {
   max-width: 36rem;
-  margin-bottom: 2.35rem;
+  margin-bottom: 1.6rem;
 }
 
 .featureStoryTag {
@@ -2228,12 +2142,19 @@ div[class*='codeBlockContent'] pre code,
   white-space: pre-wrap;
 }
 
+/* The window sits at the bottom of the card, so the three line up whatever
+   the length of the text above. */
 .howCodeStep .featureMacWindow {
-  margin-top: 1rem;
+  align-self: stretch;
+  margin-top: auto;
+}
+
+.howCodeStep > p {
+  margin-bottom: 1rem;
 }
 
 .howCodeStep .featureMacBody {
-  min-height: 13.5rem;
+  min-height: 11rem;
 }
 
 .codeKw { color: #ff7b72; }
@@ -2369,96 +2290,7 @@ div[class*='codeBlockContent'] pre code,
   color: #ffffff !important;
 }
 
-.ggsqlLayout {
-  display: block !important;
-}
-
-.ggsqlSectionHeader {
-  margin-bottom: 1.1rem !important;
-}
-
-.ggsqlCopyBlocks {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 0 !important;
-  align-items: start;
-}
-
-.ggsqlCopyColumn {
-  min-width: 0;
-}
-
-.ggsqlCopyColumn--primary {
-  padding-right: 2.2rem;
-}
-
-.ggsqlCopyColumn--secondary {
-  padding-left: 2.2rem;
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.ggsqlCopyColumn h2 {
-  margin: 0 0 0.7rem;
-}
-
-.ggsqlCopyHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 0.7rem;
-}
-
-.ggsqlCopyTitle {
-  margin: 0 !important;
-}
-
-.ggsqlCopyTitleMark {
-  display: block;
-  width: 74px;
-  height: 74px;
-  flex: 0 0 74px;
-  object-fit: contain;
-}
-
-.ggsqlCopyTitleMark--ggsql {
-  width: 68px;
-  height: 68px;
-  flex-basis: 68px;
-}
-
-.ggsqlCopyColumn p {
-  margin: 0;
-}
-
 @media (max-width: 996px) {
-  .ggsqlCopyBlocks {
-    grid-template-columns: 1fr;
-    gap: 1.5rem !important;
-  }
-
-  .ggsqlCopyColumn--primary {
-    padding-right: 0;
-  }
-
-  .ggsqlCopyColumn--secondary {
-    padding-left: 0;
-    border-left: 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding-top: 1.5rem;
-  }
-
-  .ggsqlCopyTitleMark {
-    width: 56px;
-    height: 56px;
-    flex-basis: 56px;
-  }
-
-  .ggsqlCopyTitleMark--ggsql {
-    width: 52px;
-    height: 52px;
-    flex-basis: 52px;
-  }
 }
 
 /* Final navbar wordmark and desktop assistant placeholder overrides */
@@ -2547,17 +2379,6 @@ div[class*='announcementBarContent'] {
   min-height: 40px !important;
   padding: 0.45rem 1rem !important;
   text-align: center !important;
-}
-
-/* Final landing-page section headline weight override */
-.problemSection .sectionHeader h2,
-.howSection .sectionHeader h2,
-.featuresSection .sectionHeader h2,
-.personasSection .sectionHeader h2,
-.ggsqlCopyColumn h2 {
-  font-weight: 400 !important;
-  font-size: clamp(2.2rem, 3.8vw, 2.95rem) !important;
-  line-height: 1.12 !important;
 }
 
 .personasSection .personaCard > span {
@@ -3253,15 +3074,50 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
   transform: translateY(-2px);
 }
+/* Every visual is the same fixed height: a card never grows to match its
+   neighbour or a lazily loaded image, and the section reads shorter. What
+   does not fit scrolls inside the window. */
 .landingSections .featureStoryBlock .featureStoryVisual {
   display: flex;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   width: 100%;
+  height: 21.5rem;
 }
-.landingSections .featureStoryBlock .featureStoryVisual > .featureMacWindow {
+.landingSections .featureStoryBlock .featureStoryVisual > .featureMacWindow,
+.landingSections .featureStoryBlock .featureStoryVisual > .visualDiffTerminal {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  min-height: 0;
   border: 0 !important;
   border-radius: 0 !important;
+}
+.landingSections .featureStoryBlock .visualDiffTerminal > .featureMacWindow {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+.landingSections .featureStoryBlock .featureMacBody,
+.landingSections .featureStoryBlock .visualDiffTerminal__body {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  padding: 0.75rem 0.9rem;
+  overflow: auto;
+}
+.landingSections .featureStoryBlock .featureMacBody,
+.landingSections .featureStoryBlock .featureMacBody code,
+.landingSections .featureStoryBlock .visualDiffTerminal__body code {
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+.landingSections .featureStoryBlock .featureMacBody > img.visualDiffReport {
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  object-fit: contain;
 }
 .landingSections .featureStoryBlock .featureStoryNote {
   padding: 1.1rem 1.4rem 1.3rem !important;
@@ -3351,17 +3207,6 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   stroke-width: 1.7;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-/* GGSQL + Glyf band: a credit, so smaller headings and marks. */
-.landingSections .band .ggsqlCopyTitle {
-  font-size: clamp(1.5rem, 2.4vw, 2rem) !important;
-  line-height: 1.2 !important;
-}
-.landingSections .band .ggsqlCopyTitleMark {
-  width: 48px;
-  height: 48px;
-  flex-basis: 48px;
 }
 
 /* Closing call to action before the footer. */
