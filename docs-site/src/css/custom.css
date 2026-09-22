@@ -3822,10 +3822,9 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   white-space: pre;
 }
 .visualDiffTerminal__replay {
-  position: absolute;
-  right: 0.85rem;
-  bottom: 0.85rem;
-  padding: 0.3rem 0.8rem;
+  margin: -0.3rem 0 -0.3rem auto;
+  padding: 0.1rem 0.65rem;
+  line-height: 1.2;
   border: 1px solid #334155;
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.85);
