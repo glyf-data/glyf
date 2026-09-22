@@ -256,12 +256,13 @@ Then open `examples/simple_dbt/target/glyf/site/index.html`.
 | Warehouse execution through the dbt profile (DuckDB, Trino, Snowflake, BigQuery) | shipped |
 | Dashboard YAML, Python macros, self-contained static site | shipped |
 | PNG / SVG chart artifacts and `--zip` export | shipped |
-| Generated typed React components | planned |
+| Visual diff between builds, on the pull request (`glyf diff`) | shipped |
+| Data protection: `row_data` modes, PII deny/redact, value scan, per-audience builds, build provenance | shipped |
+| React components (`@glyf/react`, experimental) | preview |
 | MCP server so agents can reason about the chart graph | planned |
-| Visual diff between builds as a CI artifact | planned |
 
-See [ROADMAP.md](https://github.com/glyf-data/glyf/blob/main/ROADMAP.md) for the
-longer view.
+See the [roadmap](https://glyf.pages.dev/docs/resources/roadmap) for the longer
+view.
 
 ## Documentation
 
