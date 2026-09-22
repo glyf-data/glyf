@@ -136,6 +136,34 @@ const featureSections = [
       },
     ],
   },
+  {
+    id: 'data-protection',
+    tag: 'governance',
+    label: 'Data protection',
+    title: 'Decide what leaves the warehouse. The build enforces it.',
+    description:
+      'A published dashboard is a file anyone with the link can read. Glyf treats what that file contains as part of the build: which rows it holds, which columns count as personal data, and what happens when a chart reaches for one. Every rule is in glyf.yml, reviewed like the rest.',
+    items: [
+      {
+        name: 'A chart cannot ship personal data by accident',
+        desc: 'Columns tagged pii in your dbt schema, or listed in glyf.yml, are known to every build. A query that returns one fails the build naming the chart and the column, or, with on_pii: redact, publishes it masked. A value scan warns about the columns nobody tagged that look like emails, phone or card numbers.',
+        status: 'live',
+        reverse: false,
+        visual: 'piiDeny',
+        filename: 'terminal — glyf build',
+        links: [['Keeping PII out of a chart', '/docs/reference/configuration#keeping-pii-out-of-a-chart']],
+      },
+      {
+        name: 'Ship the picture, or the plotted columns, or every row',
+        desc: 'export.row_data sets what a published site carries. include keeps the rows behind each chart for interactive use. minimal keeps only the columns a chart draws, so a query that selects more than it plots does not publish the rest. exclude ships rendered images and nothing else. bundle.json records which one the build used, so a reviewer can check.',
+        status: 'live',
+        reverse: true,
+        visual: 'rowDataModes',
+        filename: 'glyf.yml → target/glyf/site',
+        links: [['Data exposure guide', '/docs/guides/data-exposure']],
+      },
+    ],
+  },
 ];
 
 const roadmapItems = [
@@ -635,6 +663,42 @@ function FeatureVisual({item}) {
           />
         </FeatureMacWindow>
       );
+    case 'piiDeny':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code><span className="codeMuted"># glyf.yml</span>{'\n'}
+privacy:{'\n'}
+{'  '}pii_columns: [<span className="codeStr">customer_email</span>]{'\n'}
+{'  '}on_pii: <span className="codeStr">deny</span>{'\n\n'}
+<span className="codeFn">$</span> glyf build{'\n'}
+<span className="codeOk">✓</span> validated project{'\n'}
+<span className="featureDiffLine featureDiffLine--remove">Render failed</span>
+<span className="featureDiffLine featureDiffLine--remove">  - visualisations/overdue_invoices.ggsql returns a PII column:</span>
+<span className="featureDiffLine featureDiffLine--remove">    'customer_email' (listed in glyf.yml privacy.pii_columns).</span>
+<span className="featureDiffLine featureDiffLine--remove">    Drop it from the query, or set privacy.on_pii: redact to publish it masked.</span>{'\n'}
+<span className="codeMuted"># with on_pii: redact, the same build passes and the rows carry</span>{'\n'}
+<span className="codeMuted">#</span> {'{'}<span className="codeStr">"customer_email"</span>: <span className="codeStr">"I***"</span>, <span className="codeStr">"amount"</span>: <span className="codeNum">16391.88</span>, <span className="codeStr">"days_to_pay"</span>: <span className="codeNum">102</span>{'}'}</code></pre>
+        </FeatureMacWindow>
+      );
+    case 'rowDataModes':
+      return (
+        <FeatureMacWindow filename={item.filename}>
+          <pre><code><span className="codeMuted"># one 8-chart dashboard, exported three ways</span>{'\n\n'}
+export.row_data: <span className="codeStr">include</span>{'\n'}
+<span className="codeMuted">  finance.html  106 KB</span>{'\n'}
+<span className="codeMuted">  every row behind every chart, for interaction</span>{'\n\n'}
+export.row_data: <span className="codeStr">minimal</span>{'\n'}
+<span className="codeMuted">  finance.html  105 KB</span>{'\n'}
+<span className="codeMuted">  only the columns each chart draws;</span>{'\n'}
+<span className="codeMuted">  bookings, gross_margin were selected, not plotted: gone</span>{'\n\n'}
+export.row_data: <span className="codeStr">exclude</span>{'\n'}
+<span className="codeMuted">  finance.html   26 KB</span>{'\n'}
+<span className="codeMuted">  rendered images only. No rows, no specs, no SQL.</span>{'\n\n'}
+<span className="codeMuted">─────────────────────────────</span>{'\n'}
+<span className="codeMuted"># bundle.json records it, every build</span>{'\n'}
+<span className="codeStr">"security"</span>: {'{'} <span className="codeStr">"row_data"</span>: <span className="codeStr">"excluded"</span> {'}'}</code></pre>
+        </FeatureMacWindow>
+      );
     case 'gitDiff':
       return (
         <FeatureMacWindow filename={item.filename}>
@@ -860,7 +924,7 @@ function FeaturesSection() {
             <span className="featureIntroSignalMark" aria-hidden="true">
               ✓
             </span>
-            <span>Python interface for flexible macros and project workflows.</span>
+            <span>A chart that returns personal data fails the build; a published site carries only the rows you chose.</span>
           </div>
           <div className="featureIntroSignal">
             <span className="featureIntroSignalMark" aria-hidden="true">
