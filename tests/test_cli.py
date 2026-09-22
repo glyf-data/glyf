@@ -426,6 +426,22 @@ def test_validate_command_reports_malformed_ggsql(tmp_path: Path) -> None:
     assert "missing VISUALISE section" in result.output
 
 
+def test_validate_command_warns_on_sql_it_cannot_parse_and_still_passes(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "visualisations" / "revenue.ggsql").write_text(
+        "select month revenue oops from {{ ref('fct_orders') }}\n\n"
+        "VISUALISE month AS x, revenue AS y\nDRAW bar\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["validate", "--project", str(project)])
+
+    assert result.exit_code == 0
+    assert "! visualisations/revenue.ggsql: SQL did not parse as" in result.output
+    assert "Line: 1, Column: " in result.output
+    assert "Validation passed" in result.output
+
+
 def test_validate_command_reports_unsupported_interaction(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     (project / "visualisations" / "revenue.ggsql").write_text(

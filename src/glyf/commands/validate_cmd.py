@@ -10,6 +10,7 @@ from glyf.dashboard.macros import (
     DashboardMacroRegistry,
     resolve_dashboard_components,
 )
+from glyf.execution.dialect import sql_dialect
 from glyf.ggsql.parser import GgsqlParseError, parse_ggsql_file
 from glyf.manifest.loader import ManifestError, load_manifest
 from glyf.manifest.resolver import resolve_refs
@@ -30,6 +31,8 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
 
     scan = scan_project(project, config)
     errors: list[str] = []
+    warnings: list[str] = []
+    dialect = sql_dialect(scan.root, config.execution)
     macro_context = MacroContext(scan.root, config, strict=False)
     try:
         macro_registry = DashboardMacroRegistry.from_project(
@@ -68,10 +71,12 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
 
     for path in scan.ggsql_files:
         try:
-            parsed = parse_ggsql_file(path)
+            parsed = parse_ggsql_file(path, dialect=dialect)
         except GgsqlParseError as exc:
             errors.append(f"{_rel(path, scan.root)}: {exc}")
             continue
+        if parsed.sql_warning:
+            warnings.append(f"{_rel(path, scan.root)}: {parsed.sql_warning}")
 
         if manifest is None:
             continue
@@ -108,6 +113,8 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
             typer.echo(f"  - {error}")
         raise typer.Exit(1)
 
+    for warning in warnings:
+        typer.echo(f"! {warning}")
     typer.echo("Validation passed")
     typer.echo("✓ validated project structure")
     typer.echo("✓ loaded manifest")

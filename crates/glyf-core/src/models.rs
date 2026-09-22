@@ -20,6 +20,10 @@ pub struct GgsqlChart {
     /// rendered from whatever order the warehouse returned, which is not
     /// stable between builds.
     pub has_order_by: bool,
+    /// Set when the SQL did not parse. Never an error: the warehouse is the
+    /// judge of the SQL, and a parser can lag a dialect. Carries the parser's
+    /// message with its line and column.
+    pub sql_warning: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

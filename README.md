@@ -355,4 +355,8 @@ The name "glyf" and the logo are trademarks and are not covered by the code
 license. Forks and derived products need their own name. See
 [TRADEMARK.md](./TRADEMARK.md).
 
+The chart file format is [GGSQL](https://ggsql.org), an open source project
+from Posit, which glyf adopts and extends. Chart SQL is parsed with
+[sqlparser-rs](https://github.com/apache/datafusion-sqlparser-rs) (Apache 2.0).
+
 Copyright 2026 Kannan Kalidasan.

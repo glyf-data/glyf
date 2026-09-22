@@ -6,6 +6,7 @@ from pathlib import Path
 from glyf.config import ExecutionConfig, GlyfConfig, RenderConfig
 from glyf.downsample import Downsampling, downsample_m4, plan_downsampling
 from glyf.execution import QueryResult, SqlExecutionError, execute_sql
+from glyf.execution.dialect import sql_dialect
 from glyf.execution.limits import wrap_row_limit
 from glyf.ggsql.models import GgsqlChart
 from glyf.ggsql.parser import GgsqlParseError, parse_ggsql_file
@@ -86,6 +87,8 @@ class _Run:
     # Downgrades worth telling the user about, rather than doing silently.
     warnings: list[str] = field(default_factory=list)
     records: list[ChartRecord] = field(default_factory=list)
+    # The SQL dialect the charts are read in; see `glyf.execution.dialect`.
+    dialect: str = "generic"
 
     @property
     def validate_only(self) -> bool:
@@ -144,6 +147,7 @@ def render_project(
             if config.export.excludes_row_data
             else config.render
         ),
+        dialect=sql_dialect(scan.root, config.execution),
     )
     rendered = tuple(
         _render_chart_file(path, run) for path in _selected_files(scan, selection)
@@ -261,9 +265,11 @@ def _compile(path: Path, run: _Run) -> _Compiled:
     root = run.scan.root
     rel_path = path.relative_to(root).as_posix()
     try:
-        chart = parse_ggsql_file(path)
+        chart = parse_ggsql_file(path, dialect=run.dialect)
     except GgsqlParseError as exc:
         raise RenderError(f"{rel_path}: {exc}") from exc
+    if chart.sql_warning:
+        run.warnings.append(f"{rel_path}: {chart.sql_warning}")
 
     resolution = resolve_refs(chart.sql, run.manifest)
     missing_refs = [f"ref('{ref}')" for ref in resolution.missing_refs]
