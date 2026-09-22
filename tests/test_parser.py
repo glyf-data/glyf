@@ -166,3 +166,25 @@ def test_parse_ggsql_rejects_legend_filter_where_it_cannot_bind(
         parse_ggsql(
             f"select 1\n\nVISUALISE {mapping}\nDRAW {draw}\nINTERACT legend_filter\n"
         )
+
+
+def test_parse_ggsql_names_the_chart_the_user_wrote_on_an_unknown_role() -> None:
+    # glyf validates the chart block itself (DEC-008). Before, ggsql judged a
+    # stand-in and the error read "Layer 'bar' does not support the `banana`
+    # mapping" for a pie the user never called a bar.
+    with pytest.raises(
+        GgsqlParseError, match="^pie does not take a 'banana' mapping; it takes x, y, color$"
+    ):
+        parse_ggsql(
+            "SELECT region, revenue FROM t\n\nVISUALISE region AS x, revenue AS banana\nDRAW pie\n"
+        )
+
+
+def test_parse_ggsql_rejects_a_role_the_renderer_never_drew() -> None:
+    with pytest.raises(GgsqlParseError, match="scatter does not take a 'size' mapping"):
+        parse_ggsql("SELECT a, b, c FROM t\n\nVISUALISE a AS x, b AS y, c AS size\nDRAW scatter\n")
+
+
+def test_parse_ggsql_lists_the_supported_chart_types() -> None:
+    with pytest.raises(GgsqlParseError, match="supported chart types: area, bar, boxplot"):
+        parse_ggsql("SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW donut\n")
