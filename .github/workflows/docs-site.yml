@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 env:
-  DOCS_SITE_URL: https://glyf.pages.dev
+  DOCS_SITE_URL: https://glyfdata.com
   DOCS_SITE_BASE_URL: /
 
 jobs:

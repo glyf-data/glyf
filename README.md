@@ -201,7 +201,7 @@ CI artifact. Publish `site/` rather than `target/glyf/`: the rest is working
 output, and `data/` holds the raw rows.
 
 A published site carries the data behind its charts unless you ask otherwise.
-See [what a published site exposes](https://glyf.pages.dev/docs/guides/data-exposure).
+See [what a published site exposes](https://glyfdata.com/docs/guides/data-exposure).
 
 ## CLI
 
@@ -263,13 +263,13 @@ Then open `examples/simple_dbt/target/glyf/site/index.html`.
 | React components (`@glyf/react`, experimental) | preview |
 | MCP server so agents can reason about the chart graph | planned |
 
-See the [roadmap](https://glyf.pages.dev/docs/resources/roadmap) for the longer
+See the [roadmap](https://glyfdata.com/docs/resources/roadmap) for the longer
 view.
 
 ## Documentation
 
 The full docs site is built from [`docs-site/`](https://github.com/glyf-data/glyf/blob/main/docs-site)
-and published at [glyf.pages.dev](https://glyf.pages.dev). These guides are also
+and published at [glyfdata.com](https://glyfdata.com). These guides are also
 readable directly in the repository:
 
 | | |

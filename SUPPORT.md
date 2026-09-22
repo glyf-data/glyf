@@ -17,4 +17,4 @@ Before asking, run `glyf doctor` in your project and include its output. It
 checks the manifest, the execution backend and the connection, which answers a
 good share of questions by itself.
 
-The documentation is at <https://glyf.pages.dev>.
+The documentation is at <https://glyfdata.com>.

@@ -46,7 +46,7 @@ npm run serve
 
 Then open the URL printed by Docusaurus.
 
-Static files under `docs-site/static/` are copied to the site root. For example, dashboard exports committed under `docs-site/static/dashboards/simple-dbt/` are served locally as `/dashboards/simple-dbt/` and deployed as `https://glyf.pages.dev/dashboards/simple-dbt/`.
+Static files under `docs-site/static/` are copied to the site root. For example, dashboard exports committed under `docs-site/static/dashboards/simple-dbt/` are served locally as `/dashboards/simple-dbt/` and deployed as `https://glyfdata.com/dashboards/simple-dbt/`.
 
 ## Refreshing the demo dashboards
 
@@ -95,8 +95,14 @@ npm run build
 The published site is:
 
 ```text
-https://glyf.pages.dev
+https://glyfdata.com
 ```
+
+`glyf.pages.dev` is the Cloudflare Pages default hostname for the same
+deployment. `functions/_middleware.js` redirects it to `glyfdata.com`, so
+links and previews carry the real domain; a preview deployment's own hostname
+(`<hash>.glyf.pages.dev`) is left alone so a deploy can be checked before it
+is trusted.
 
 `.github/workflows/docs-site.yml` builds the site on every pull request and
 push to `main` and uploads the result as a workflow artifact, so a broken page
