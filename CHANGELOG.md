@@ -6,6 +6,23 @@ All notable changes to `glyf` will be documented in this file.
 
 ### Changed
 
+- A chart's SQL is now read with [sqlparser-rs](https://github.com/apache/datafusion-sqlparser-rs),
+  in the dialect of the warehouse the project runs on (DuckDB, Snowflake or
+  BigQuery from the dbt profile; generic SQL otherwise). Two things follow.
+  `glyf validate` and `glyf build` now print a warning, with a line and
+  column, for SQL that does not parse: `! visualisations/revenue.ggsql: SQL
+  did not parse as duckdb: Expected: end of statement, found: oops at Line:
+  1, Column: 30`. It is a warning and never an error, because the warehouse
+  is the judge of the SQL and a parser can lag a dialect; the build goes on
+  and the warehouse reports the error if it is one. And the rule from 0.8.0,
+  that glyf orders a chart's rows only when the query does not, reads the
+  query's `ORDER BY` from the parsed statement rather than from a walk of
+  ggsql's parse tree. Every chart in the example projects gets the same
+  answer as before, and that is now a test.
+
+  The `ggsql` and `tree-sitter` crates are no longer dependencies. GGSQL
+  remains the file format.
+
 - glyf now validates a chart's `VISUALISE`, `DRAW`, `INTERACT` and `CONFIG`
   lines itself, for every chart type. ggsql is the file format and still
   parses the SQL, but it no longer judges the chart block through a stand-in

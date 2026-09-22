@@ -1,4 +1,9 @@
 use regex::Regex;
+use sqlparser::ast::Statement;
+use sqlparser::dialect::{
+    BigQueryDialect, Dialect, DuckDbDialect, GenericDialect, SnowflakeDialect,
+};
+use sqlparser::parser::Parser;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::OnceLock;
 
@@ -10,7 +15,7 @@ use crate::resolver::{ref_regex, source_regex};
 /// source of truth for validation; the renderer draws exactly these roles.
 ///
 /// ggsql is the file format; pie, histogram and boxplot are glyf's additions
-/// to it. ggsql never sees the visual section: see `sql_for_ggsql`.
+/// to it. glyf validates the chart block; sqlparser reads the SQL (`read_sql`).
 struct DrawSpec {
     /// The name glyf reports and the renderer dispatches on.
     draw_type: &'static str,
@@ -65,33 +70,26 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
 /// The draw types glyf accepts, for error messages.
 const SUPPORTED_DRAWS: &str = "area, bar, boxplot, heatmap, histogram, line, pie, scatter";
 
+/// Parse a `.ggsql` file: the SQL, then the chart block.
+///
+/// `dialect` names the warehouse the SQL is written for (`duckdb`,
+/// `snowflake`, `bigquery`; anything else parses as generic SQL) and only
+/// affects how the SQL is read for the `ORDER BY` question and the syntax
+/// warning. The chart block is validated by glyf, whatever the dialect.
 pub fn parse_ggsql_text(
     text: &str,
     name: &str,
     path: Option<&str>,
+    dialect: &str,
 ) -> Result<GgsqlChart, CoreError> {
     let (legacy_sql, visual_lines) = split_legacy_parts(text)
         .ok_or_else(|| CoreError::Parse("missing VISUALISE section".to_string()))?;
-
-    // ggsql parses the SQL; glyf validates the chart block below. The stub
-    // keeps the file valid ggsql without showing it the user's chart lines.
-    let normalized = sql_for_ggsql(&legacy_sql);
-    let validated =
-        ggsql::validate::validate(&normalized).map_err(|err| CoreError::Parse(err.to_string()))?;
-    if !validated.valid() {
-        let errors = validated
-            .errors()
-            .iter()
-            .map(|err| err.message.as_str())
-            .collect::<Vec<_>>()
-            .join("; ");
-        return Err(CoreError::Parse(errors));
-    }
 
     let sql = legacy_sql.trim().to_string();
     if sql.is_empty() {
         return Err(CoreError::Parse("missing SQL query section".to_string()));
     }
+    let (has_order_by, sql_warning) = read_sql(&sql, dialect);
 
     let visualise_line = visual_lines
         .first()
@@ -169,11 +167,6 @@ pub fn parse_ggsql_text(
     validate_roles(&spec, &visualise)?;
     validate_interactions(&spec, &interactions)?;
 
-    let has_order_by = validated
-        .tree()
-        .map(|tree| statement_has_order_by(tree, &normalized))
-        .unwrap_or(false);
-
     Ok(GgsqlChart {
         path: path.unwrap_or(name).to_string(),
         name: name.to_string(),
@@ -184,55 +177,42 @@ pub fn parse_ggsql_text(
         config,
         interactions,
         has_order_by,
+        sql_warning,
     })
 }
 
-/// Whether the statement orders its own rows.
+/// Whether the query orders its own rows, and a warning if it could not be
+/// read.
 ///
-/// ggsql's grammar keeps SQL keywords as `sql_keyword` tokens inside a
-/// `select_body` rather than giving `ORDER BY` a node of its own, so this looks
-/// for the keyword among a body's own children. Descending into a subquery, a
-/// CTE, a window function or a function call would find an `ORDER BY` that
-/// orders something other than the rows the chart draws.
-fn statement_has_order_by(tree: &tree_sitter::Tree, source: &str) -> bool {
-    fn walk(node: tree_sitter::Node<'_>, source: &str, in_body: bool) -> bool {
-        let mut cursor = node.walk();
-        for child in node.children(&mut cursor) {
-            match child.kind() {
-                // A nested query orders its own rows, not the chart's.
-                "subquery" | "cte_definition" | "window_function" | "function_call"
-                | "scalar_subquery" | "cast_expression" => continue,
-                "sql_keyword"
-                    if in_body
-                        && child
-                            .utf8_text(source.as_bytes())
-                            .is_ok_and(|text| text.eq_ignore_ascii_case("order")) =>
-                {
-                    return true;
-                }
-                _ => {}
-            }
-            if walk(child, source, in_body || child.kind() == "select_body") {
-                return true;
-            }
+/// The SQL is parsed with sqlparser after dbt calls are resolved to plain
+/// names. Only the outer query's `ORDER BY` counts: one inside a CTE, a
+/// subquery or a window function orders something other than the rows the
+/// chart draws, and sqlparser keeps those apart. A parse failure is a
+/// warning, never an error: the warehouse is the judge of the SQL, and a
+/// parser can lag a dialect. The chart is then treated as unordered, so glyf
+/// orders its rows itself, the safe side of the 0.8.0 rule.
+fn read_sql(sql: &str, dialect: &str) -> (bool, Option<String>) {
+    let plain = normalize_jinja_for_ggsql(sql);
+    let dialect_impl: Box<dyn Dialect> = match dialect.to_ascii_lowercase().as_str() {
+        "duckdb" => Box::new(DuckDbDialect {}),
+        "snowflake" => Box::new(SnowflakeDialect {}),
+        "bigquery" => Box::new(BigQueryDialect {}),
+        _ => Box::new(GenericDialect {}),
+    };
+    match Parser::parse_sql(dialect_impl.as_ref(), &plain) {
+        Ok(statements) => {
+            let has_order_by = statements
+                .iter()
+                .any(|statement| matches!(statement, Statement::Query(query) if query.order_by.is_some()));
+            (has_order_by, None)
         }
-        false
-    }
-
-    walk(tree.root_node(), source, false)
-}
-
-/// What ggsql is shown: the SQL with dbt calls resolved, plus a fixed chart
-/// block so the text is valid ggsql. ggsql never sees the user's chart lines;
-/// glyf validates those itself, so glyf-only draw types need no stand-in and
-/// every error names the chart the user wrote.
-fn sql_for_ggsql(sql: &str) -> String {
-    let normalized_sql = normalize_jinja_for_ggsql(sql.trim());
-    const STUB: &str = "VISUALISE\nDRAW point MAPPING glyf_stub AS x, glyf_stub AS y";
-    if normalized_sql.is_empty() {
-        STUB.to_string()
-    } else {
-        format!("{normalized_sql}\n{STUB}")
+        Err(err) => (
+            false,
+            Some(format!(
+                "SQL did not parse as {dialect}: {}. The warehouse will report the error if it is one; the rows are treated as unordered.",
+                err.to_string().trim_start_matches("sql parser error: ")
+            )),
+        ),
     }
 }
 
@@ -405,11 +385,7 @@ mod tests {
 
     #[test]
     fn parses_legacy_ggsql_with_ggsql_validation() {
-        let chart = parse_ggsql_text(
-            "SELECT month, revenue, region FROM fct_orders\n\nVISUALISE month AS x, revenue AS y, region AS color\nDRAW scatter\nLABEL title => 'Revenue'\nCONFIG width => 900\nINTERACT tooltip, legend-filter\n",
-            "revenue",
-            Some("revenue.ggsql"),
-        )
+        let chart = parse_ggsql_text("SELECT month, revenue, region FROM fct_orders\n\nVISUALISE month AS x, revenue AS y, region AS color\nDRAW scatter\nLABEL title => 'Revenue'\nCONFIG width => 900\nINTERACT tooltip, legend-filter\n", "revenue", Some("revenue.ggsql"), "duckdb")
         .unwrap();
 
         assert_eq!(chart.sql, "SELECT month, revenue, region FROM fct_orders");
@@ -422,11 +398,7 @@ mod tests {
 
     #[test]
     fn preserves_legacy_pie_draw_type() {
-        let chart = parse_ggsql_text(
-            "SELECT region, sum(revenue) AS revenue FROM {{ ref('fct_orders') }} GROUP BY 1\n\nVISUALISE region AS x, revenue AS y\nDRAW pie\n",
-            "revenue_share",
-            None,
-        )
+        let chart = parse_ggsql_text("SELECT region, sum(revenue) AS revenue FROM {{ ref('fct_orders') }} GROUP BY 1\n\nVISUALISE region AS x, revenue AS y\nDRAW pie\n", "revenue_share", None, "duckdb")
         .unwrap();
 
         assert_eq!(chart.draw_type, "pie");
@@ -438,11 +410,7 @@ mod tests {
 
     #[test]
     fn accepts_double_quoted_labels() {
-        let chart = parse_ggsql_text(
-            "SELECT month, revenue FROM fct_orders\n\nVISUALISE month AS x, revenue AS y\nDRAW line\nLABEL title => \"This month's revenue\"\nLABEL x_title => \"Month\"\n",
-            "revenue",
-            None,
-        )
+        let chart = parse_ggsql_text("SELECT month, revenue FROM fct_orders\n\nVISUALISE month AS x, revenue AS y\nDRAW line\nLABEL title => \"This month's revenue\"\nLABEL x_title => \"Month\"\n", "revenue", None, "duckdb")
         .unwrap();
 
         assert_eq!(chart.labels.get("title").unwrap(), "This month's revenue");
@@ -451,11 +419,7 @@ mod tests {
 
     #[test]
     fn parses_histogram_with_x_alone() {
-        let chart = parse_ggsql_text(
-            "SELECT amount, region FROM fct_orders\n\nVISUALISE amount AS x, region AS color\nDRAW histogram\nINTERACT tooltip, legend_filter\n",
-            "order_size",
-            None,
-        )
+        let chart = parse_ggsql_text("SELECT amount, region FROM fct_orders\n\nVISUALISE amount AS x, region AS color\nDRAW histogram\nINTERACT tooltip, legend_filter\n", "order_size", None, "duckdb")
         .unwrap();
 
         assert_eq!(chart.draw_type, "histogram");
@@ -464,11 +428,7 @@ mod tests {
 
     #[test]
     fn rejects_histogram_with_y_mapping() {
-        let error = parse_ggsql_text(
-            "SELECT amount, revenue FROM fct_orders\n\nVISUALISE amount AS x, revenue AS y\nDRAW histogram\n",
-            "order_size",
-            None,
-        )
+        let error = parse_ggsql_text("SELECT amount, revenue FROM fct_orders\n\nVISUALISE amount AS x, revenue AS y\nDRAW histogram\n", "order_size", None, "duckdb")
         .unwrap_err();
 
         assert!(error.to_string().contains("takes no y mapping"));
@@ -478,11 +438,7 @@ mod tests {
     fn rejects_an_unknown_role_naming_the_chart_the_user_wrote() {
         // Before DEC-008 this came back from ggsql as "Layer 'bar' does not
         // support the `banana` mapping": the stand-in, not the pie.
-        let error = parse_ggsql_text(
-            "SELECT region, revenue FROM fct_orders\n\nVISUALISE region AS x, revenue AS banana\nDRAW pie\n",
-            "share",
-            None,
-        )
+        let error = parse_ggsql_text("SELECT region, revenue FROM fct_orders\n\nVISUALISE region AS x, revenue AS banana\nDRAW pie\n", "share", None, "duckdb")
         .unwrap_err();
 
         assert_eq!(
@@ -498,6 +454,7 @@ mod tests {
             "SELECT a, b, c FROM t\n\nVISUALISE a AS x, b AS y, c AS size\nDRAW scatter\n",
             "s",
             None,
+            "duckdb",
         )
         .unwrap_err();
 
@@ -521,6 +478,7 @@ mod tests {
                 &format!("SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW {draw}\n"),
                 "c",
                 None,
+                "duckdb",
             )
             .unwrap();
             assert_eq!(chart.draw_type, reported, "{draw}");
@@ -529,6 +487,7 @@ mod tests {
                 &format!("SELECT a, b FROM t\n\nVISUALISE a AS x, b AS nope\nDRAW {draw}\n"),
                 "c",
                 None,
+                "duckdb",
             )
             .unwrap_err()
             .to_string();
@@ -545,6 +504,7 @@ mod tests {
             "SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW donut\n",
             "c",
             None,
+            "duckdb",
         )
         .unwrap_err();
 
@@ -555,12 +515,63 @@ mod tests {
     }
 
     #[test]
-    fn parses_boxplot() {
+    fn broken_sql_is_a_warning_with_a_position_not_an_error() {
         let chart = parse_ggsql_text(
-            "SELECT region, amount FROM fct_orders\n\nVISUALISE region AS x, amount AS y\nDRAW boxplot\nINTERACT tooltip\n",
-            "order_spread",
+            "SELECT region\nFROM t\nWHERE region = AND 1\n\nVISUALISE region AS x, region AS y\nDRAW bar\n",
+            "c",
             None,
+            "duckdb",
         )
+        .unwrap();
+
+        let warning = chart.sql_warning.expect("a warning");
+        assert!(
+            warning.starts_with("SQL did not parse as duckdb: "),
+            "{warning}"
+        );
+        assert!(warning.contains("Line: 3, Column: "), "{warning}");
+        assert!(warning.contains("treated as unordered"), "{warning}");
+        assert!(!chart.has_order_by);
+    }
+
+    #[test]
+    fn well_formed_sql_carries_no_warning() {
+        let chart = parse_ggsql_text(
+            "SELECT a, b FROM {{ ref('t') }} ORDER BY a\n\nVISUALISE a AS x, b AS y\nDRAW bar\n",
+            "c",
+            None,
+            "snowflake",
+        )
+        .unwrap();
+        assert_eq!(chart.sql_warning, None);
+        assert!(chart.has_order_by);
+    }
+
+    #[test]
+    fn the_dialect_is_passed_through_and_named() {
+        // `SELECT * EXCLUDE (...)` is DuckDB and Snowflake syntax; the generic
+        // parser is permissive enough to take it too, so only the name shows.
+        let text = "SELECT * EXCLUDE (secret) FROM t\n\nVISUALISE a AS x, b AS y\nDRAW bar\n";
+        assert_eq!(
+            parse_ggsql_text(text, "c", None, "duckdb")
+                .unwrap()
+                .sql_warning,
+            None
+        );
+        let broken = "SELECT a b c FROM t\n\nVISUALISE a AS x, b AS y\nDRAW bar\n";
+        let warning = parse_ggsql_text(broken, "c", None, "bigquery")
+            .unwrap()
+            .sql_warning
+            .unwrap();
+        assert!(
+            warning.starts_with("SQL did not parse as bigquery: "),
+            "{warning}"
+        );
+    }
+
+    #[test]
+    fn parses_boxplot() {
+        let chart = parse_ggsql_text("SELECT region, amount FROM fct_orders\n\nVISUALISE region AS x, amount AS y\nDRAW boxplot\nINTERACT tooltip\n", "order_spread", None, "duckdb")
         .unwrap();
 
         assert_eq!(chart.draw_type, "boxplot");
@@ -569,13 +580,9 @@ mod tests {
     #[test]
     fn parses_heatmap_and_its_tile_alias() {
         for draw in ["heatmap", "tile"] {
-            let chart = parse_ggsql_text(
-                &format!(
+            let chart = parse_ggsql_text(&format!(
                     "SELECT weekday, hour, orders FROM fct_orders\n\nVISUALISE hour AS x, weekday AS y, orders AS color\nDRAW {draw}\n"
-                ),
-                "order_heatmap",
-                None,
-            )
+                ), "order_heatmap", None, "duckdb")
             .unwrap();
 
             assert_eq!(chart.draw_type, "heatmap");
@@ -584,11 +591,7 @@ mod tests {
 
     #[test]
     fn rejects_heatmap_without_color_mapping() {
-        let error = parse_ggsql_text(
-            "SELECT weekday, hour FROM fct_orders\n\nVISUALISE hour AS x, weekday AS y\nDRAW heatmap\n",
-            "order_heatmap",
-            None,
-        )
+        let error = parse_ggsql_text("SELECT weekday, hour FROM fct_orders\n\nVISUALISE hour AS x, weekday AS y\nDRAW heatmap\n", "order_heatmap", None, "duckdb")
         .unwrap_err();
 
         assert!(error
@@ -598,21 +601,13 @@ mod tests {
 
     #[test]
     fn rejects_legend_filter_on_boxplot_and_heatmap() {
-        let boxplot = parse_ggsql_text(
-            "SELECT region, amount FROM fct_orders\n\nVISUALISE region AS x, amount AS y, region AS color\nDRAW boxplot\nINTERACT legend_filter\n",
-            "order_spread",
-            None,
-        )
+        let boxplot = parse_ggsql_text("SELECT region, amount FROM fct_orders\n\nVISUALISE region AS x, amount AS y, region AS color\nDRAW boxplot\nINTERACT legend_filter\n", "order_spread", None, "duckdb")
         .unwrap_err();
         assert!(boxplot
             .to_string()
             .contains("legend_filter interaction is not supported for boxplot charts"));
 
-        let heatmap = parse_ggsql_text(
-            "SELECT weekday, hour, orders FROM fct_orders\n\nVISUALISE hour AS x, weekday AS y, orders AS color\nDRAW heatmap\nINTERACT legend_filter\n",
-            "order_heatmap",
-            None,
-        )
+        let heatmap = parse_ggsql_text("SELECT weekday, hour, orders FROM fct_orders\n\nVISUALISE hour AS x, weekday AS y, orders AS color\nDRAW heatmap\nINTERACT legend_filter\n", "order_heatmap", None, "duckdb")
         .unwrap_err();
         assert!(heatmap
             .to_string()
@@ -625,6 +620,7 @@ mod tests {
             "SELECT month FROM fct_orders\n\nVISUALISE month AS x\nDRAW bar\n",
             "revenue",
             None,
+            "duckdb",
         )
         .unwrap_err();
 
@@ -635,19 +631,11 @@ mod tests {
 
     #[test]
     fn records_whether_the_query_orders_its_own_rows() {
-        let ordered = parse_ggsql_text(
-            "SELECT month, revenue FROM fct_orders ORDER BY month\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n",
-            "revenue",
-            None,
-        )
+        let ordered = parse_ggsql_text("SELECT month, revenue FROM fct_orders ORDER BY month\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n", "revenue", None, "duckdb")
         .unwrap();
         assert!(ordered.has_order_by);
 
-        let unordered = parse_ggsql_text(
-            "SELECT month, revenue FROM fct_orders\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n",
-            "revenue",
-            None,
-        )
+        let unordered = parse_ggsql_text("SELECT month, revenue FROM fct_orders\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n", "revenue", None, "duckdb")
         .unwrap();
         assert!(!unordered.has_order_by);
     }
@@ -660,11 +648,7 @@ mod tests {
             "WITH ranked AS (SELECT month, revenue FROM fct_orders ORDER BY revenue) SELECT month, revenue FROM ranked",
             "SELECT month, row_number() OVER (ORDER BY month) AS revenue FROM fct_orders",
         ] {
-            let chart = parse_ggsql_text(
-                &format!("{sql}\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n"),
-                "revenue",
-                None,
-            )
+            let chart = parse_ggsql_text(&format!("{sql}\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n"), "revenue", None, "duckdb")
             .unwrap();
             assert!(!chart.has_order_by, "{sql}");
         }
@@ -672,11 +656,7 @@ mod tests {
 
     #[test]
     fn an_outer_order_by_counts_even_with_a_nested_query() {
-        let chart = parse_ggsql_text(
-            "WITH ranked AS (SELECT month, revenue FROM fct_orders) SELECT month, revenue FROM ranked ORDER BY month DESC\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n",
-            "revenue",
-            None,
-        )
+        let chart = parse_ggsql_text("WITH ranked AS (SELECT month, revenue FROM fct_orders) SELECT month, revenue FROM ranked ORDER BY month DESC\n\nVISUALISE month AS x, revenue AS y\nDRAW line\n", "revenue", None, "duckdb")
         .unwrap();
 
         assert!(chart.has_order_by);

@@ -38,6 +38,7 @@ fn chart_to_python(py: Python<'_>, chart: GgsqlChart) -> PyResult<Py<PyAny>> {
     dict.set_item("config", chart.config)?;
     dict.set_item("interactions", chart.interactions)?;
     dict.set_item("has_order_by", chart.has_order_by)?;
+    dict.set_item("sql_warning", chart.sql_warning)?;
     Ok(dict.into_any().unbind())
 }
 
@@ -131,9 +132,18 @@ fn py_err(err: CoreError) -> PyErr {
 }
 
 #[pyfunction]
-#[pyo3(signature = (text, name, path=None))]
-fn parse_ggsql(py: Python<'_>, text: &str, name: &str, path: Option<&str>) -> PyResult<Py<PyAny>> {
-    chart_to_python(py, parse_ggsql_text(text, name, path).map_err(py_err)?)
+#[pyo3(signature = (text, name, path=None, dialect="generic"))]
+fn parse_ggsql(
+    py: Python<'_>,
+    text: &str,
+    name: &str,
+    path: Option<&str>,
+    dialect: &str,
+) -> PyResult<Py<PyAny>> {
+    chart_to_python(
+        py,
+        parse_ggsql_text(text, name, path, dialect).map_err(py_err)?,
+    )
 }
 
 #[pyfunction]

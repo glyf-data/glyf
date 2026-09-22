@@ -19,6 +19,9 @@ class GgsqlChart:
     config: dict[str, int]
     interactions: tuple[str, ...] = ()
     has_order_by: bool = False
+    # Set when the SQL did not parse for the chosen dialect. A warning, never
+    # an error: the warehouse is the judge of the SQL.
+    sql_warning: str | None = None
 
     @property
     def title(self) -> str | None:

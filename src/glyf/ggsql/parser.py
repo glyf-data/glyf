@@ -22,14 +22,23 @@ SUPPORTED_CONFIG_KEYS = {"width", "height"}
 SUPPORTED_INTERACTIONS = {"tooltip", "zoom", "legend_filter"}
 
 
-def parse_ggsql_file(path: Path) -> GgsqlChart:
+def parse_ggsql_file(path: Path, *, dialect: str = "generic") -> GgsqlChart:
     text = path.read_text(encoding="utf-8")
-    return parse_ggsql(text, path=path, name=path.stem)
+    return parse_ggsql(text, path=path, name=path.stem, dialect=dialect)
 
 
-def parse_ggsql(text: str, *, path: Path | None = None, name: str = "chart") -> GgsqlChart:
+def parse_ggsql(
+    text: str, *, path: Path | None = None, name: str = "chart", dialect: str = "generic"
+) -> GgsqlChart:
+    """Parse a chart file.
+
+    `dialect` names the warehouse the SQL is written for (`duckdb`, `snowflake`,
+    `bigquery`; anything else reads as generic SQL). It only affects how the SQL
+    is read for the ORDER BY rule and the syntax warning; the chart block is
+    validated the same way whatever the dialect.
+    """
     try:
-        raw = _core.parse_ggsql(text, name, path.as_posix() if path else None)
+        raw = _core.parse_ggsql(text, name, path.as_posix() if path else None, dialect)
     except ValueError as exc:
         raise GgsqlParseError(str(exc)) from exc
     return _chart_from_core(raw)
@@ -59,6 +68,7 @@ def _chart_from_core(raw: dict[str, object]) -> GgsqlChart:
         },
         interactions=tuple(str(value) for value in _required_list(raw, "interactions")),
         has_order_by=bool(raw.get("has_order_by", False)),
+        sql_warning=_optional_str(raw, "sql_warning"),
     )
 
 
@@ -80,4 +90,13 @@ def _required_dict(raw: dict[str, object], key: str) -> dict[object, object]:
     value = raw.get(key)
     if not isinstance(value, dict):
         raise GgsqlParseError(f"Rust core returned invalid chart field '{key}'")
+    return value
+
+
+def _optional_str(raw: dict[str, object], key: str) -> str | None:
+    value = raw.get(key)
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise GgsqlParseError(f"core returned a non-string {key}")
     return value

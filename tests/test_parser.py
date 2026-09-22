@@ -188,3 +188,67 @@ def test_parse_ggsql_rejects_a_role_the_renderer_never_drew() -> None:
 def test_parse_ggsql_lists_the_supported_chart_types() -> None:
     with pytest.raises(GgsqlParseError, match="supported chart types: area, bar, boxplot"):
         parse_ggsql("SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW donut\n")
+
+
+def test_parse_ggsql_warns_on_broken_sql_instead_of_failing() -> None:
+    chart = parse_ggsql(
+        "SELECT a b c FROM t\n\nVISUALISE a AS x, b AS y\nDRAW bar\n", dialect="duckdb"
+    )
+
+    assert chart.sql_warning is not None
+    assert chart.sql_warning.startswith("SQL did not parse as duckdb: ")
+    assert "Line: 1, Column: " in chart.sql_warning
+    assert chart.has_order_by is False
+
+
+def test_parse_ggsql_reads_the_outer_order_by_only() -> None:
+    nested = (
+        "WITH ranked AS (\n"
+        "  SELECT region, revenue, row_number() OVER (ORDER BY revenue DESC) AS rn\n"
+        "  FROM {{ ref('t') }} ORDER BY region\n"
+        ")\n"
+        "SELECT region, sum(revenue) AS revenue FROM ranked GROUP BY 1\n\n"
+        "VISUALISE region AS x, revenue AS y\nDRAW bar\n"
+    )
+    assert parse_ggsql(nested).has_order_by is False
+    assert parse_ggsql(nested.replace("GROUP BY 1", "GROUP BY 1 ORDER BY 2")).has_order_by
+
+
+EXAMPLE_ORDER_BY = {
+    "basic/revenue": False,
+    "finance_metrics/bookings_trend": False,
+    "finance_metrics/days_to_pay": True,
+    "finance_metrics/discount_by_segment": False,
+    "finance_metrics/expenses_by_department": True,
+    "finance_metrics/gross_margin_trend": False,
+    "finance_metrics/margin_rate_by_department": True,
+    "finance_metrics/margin_share": True,
+    "finance_metrics/margin_vs_expenses": True,
+    "product_analytics/activation_by_plan": False,
+    "product_analytics/activation_rate_by_plan": False,
+    "product_analytics/active_users": False,
+    "product_analytics/activity_by_hour": True,
+    "product_analytics/session_length_distribution": True,
+    "product_analytics/sessions_by_plan": True,
+    "product_analytics/sessions_per_account": False,
+    "product_analytics/sessions_per_user": False,
+    "product_analytics/sessions_scatter": True,
+    "sales_dashboard/channel_revenue": True,
+    "sales_dashboard/monthly_revenue": False,
+    "sales_dashboard/regional_revenue": True,
+    "simple_dbt/revenue": True,
+    "simple_dbt/revenue_area": True,
+    "simple_dbt/revenue_by_region_bar": True,
+    "simple_dbt/revenue_scatter": True,
+    "simple_dbt/revenue_share_pie": True,
+}
+
+
+def test_every_example_chart_parses_cleanly_with_the_same_order_by_answer() -> None:
+    """The answers the ggsql tree walk gave before sqlparser replaced it."""
+    seen = {}
+    for path in sorted(Path("examples").glob("*/visualisations/*.ggsql")):
+        chart = parse_ggsql(path.read_text(), path=path, name=path.stem, dialect="duckdb")
+        assert chart.sql_warning is None, f"{path}: {chart.sql_warning}"
+        seen[f"{path.parent.parent.name}/{path.stem}"] = chart.has_order_by
+    assert seen == EXAMPLE_ORDER_BY
