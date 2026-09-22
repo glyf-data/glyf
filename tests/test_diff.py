@@ -144,17 +144,21 @@ def test_report_is_self_contained(tmp_path: Path) -> None:
     page = write_report(diff, tmp_path / "report")
 
     report = page.parent
-    for view in ("before", "after", "diff"):
+    for view in ("before", "after", "diff", "overlay"):
         assert (report / "images" / f"revenue.{view}.png").read_bytes().startswith(b"\x89PNG")
     document = json.loads((report / "diff.json").read_text(encoding="utf-8"))
     assert document["diff_version"] == "1"
     assert document["counts"] == {"added": 0, "changed": 1, "removed": 0, "unchanged": 0}
     assert document["charts"]["revenue"]["reasons"] == ["the rows changed"]
+    assert document["charts"]["revenue"]["marks"]["summary"] == "points: 1 higher"
     summary = (report / "summary.md").read_text(encoding="utf-8")
     assert "**1 changed, 0 unchanged**" in summary
-    assert "sum of revenue 5,400 → 6,000 (+11.1%)" in summary
+    assert "points: 1 higher<br>sum of revenue 5,400 → 6,000 (+11.1%)" in summary
     html = page.read_text(encoding="utf-8")
-    assert "images/revenue.diff.png" in html
+    # A chart the overlay can draw shows itself over its old self; the pixel
+    # picture is still written for anything that wants it.
+    assert "images/revenue.overlay.png" in html
+    assert "images/revenue.diff.png" not in html
     # A shared report does not publish the layout of the machine that built it.
     assert str(tmp_path) not in html
 
@@ -238,3 +242,71 @@ def _png(width: int, height: int, colour: tuple[int, int, int, int]) -> bytes:
 
     header = struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)
     return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header) + chunk(b"IDAT", body) + chunk(b"IEND", b"")
+
+
+def test_a_dropped_category_is_drawn_and_said_in_the_charts_terms(tmp_path: Path) -> None:
+    """A stacked bar with one series gone: the overlay lists it, the boxes name the months."""
+    project = copy_basic_project(tmp_path)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        "month,region,revenue\n"
+        "2026-01,east,100\n2026-01,west,50\n"
+        "2026-02,east,120\n2026-02,west,60\n"
+        "2026-03,east,140\n2026-03,west,70\n",
+        encoding="utf-8",
+    )
+    (project / "visualisations" / "revenue.ggsql").write_text(
+        "select month, region, sum(revenue) as revenue from {{ ref('fct_orders') }}\n"
+        "group by 1, 2 order by 1, 2\n\n"
+        "VISUALISE month AS x, revenue AS y, region AS color\nDRAW bar\n"
+        "LABEL title => 'Revenue'\n",
+        encoding="utf-8",
+    )
+    baseline = tmp_path / "baseline"
+    shutil.copytree(_build(project), baseline)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        "month,region,revenue\n2026-01,east,100\n2026-02,east,120\n2026-03,east,150\n",
+        encoding="utf-8",
+    )
+
+    diff = compare_builds(baseline, _build(project))
+
+    (chart,) = diff.with_status("changed")
+    assert chart.overlay_png is not None and chart.overlay_png.startswith(b"\x89PNG")
+    assert chart.marks is not None
+    assert chart.marks.describe() == "bars: 3 gone (west), 1 higher"
+    assert chart.marks.changed_x == ("2026-01", "2026-02", "2026-03")
+
+
+def test_a_chart_the_overlay_cannot_draw_keeps_the_pixel_picture(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    (project / "visualisations" / "revenue.ggsql").write_text(
+        "select month, revenue from {{ ref('fct_orders') }}\n\n"
+        "VISUALISE month AS x, revenue AS y\nDRAW pie\nLABEL title => 'Share'\n",
+        encoding="utf-8",
+    )
+    shutil.rmtree(baseline)
+    shutil.copytree(_build(project), baseline)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        SEEDS.replace("2400", "3000"), encoding="utf-8"
+    )
+
+    diff = compare_builds(baseline, _build(project))
+    page = write_report(diff, tmp_path / "report")
+
+    (chart,) = diff.with_status("changed")
+    assert chart.overlay_png is None and chart.marks is None
+    assert "images/revenue.diff.png" in page.read_text(encoding="utf-8")
+    assert not (page.parent / "images" / "revenue.overlay.png").exists()
+
+
+def test_the_overlay_is_byte_stable(tmp_path: Path) -> None:
+    baseline, project = _baseline_and_project(tmp_path)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        SEEDS.replace("2400", "3000"), encoding="utf-8"
+    )
+    current = _build(project)
+
+    first = compare_builds(baseline, current).with_status("changed")[0].overlay_png
+    second = compare_builds(baseline, current).with_status("changed")[0].overlay_png
+
+    assert first == second

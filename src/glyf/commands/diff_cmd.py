@@ -4,7 +4,7 @@ import typer
 
 from glyf.config import ConfigError, load_config, resolve_project_path
 from glyf.diff import DiffError, compare_builds, headline, write_report
-from glyf.diff.report import describe_data, format_percent
+from glyf.diff.report import describe_change, format_percent
 
 
 def run_diff(
@@ -20,7 +20,11 @@ def run_diff(
         config = load_config(project, config_path)
         current = resolve_project_path(project, config.output_path)
         diff = compare_builds(
-            baseline, current, threshold=threshold, tolerance=tolerance
+            baseline,
+            current,
+            threshold=threshold,
+            tolerance=tolerance,
+            render_config=config.render,
         )
         page = write_report(diff, diff.current / "diff")
     except ConfigError as exc:
@@ -40,7 +44,7 @@ def run_diff(
             )
             # What moved in the rows, under the chart it moved in: a CI log is
             # read more often than the report is downloaded.
-            for line in describe_data(chart.data):
+            for line in describe_change(chart):
                 typer.echo(f"    {line}")
         elif chart.status == "added":
             typer.echo(f"+ {chart.name}: added")

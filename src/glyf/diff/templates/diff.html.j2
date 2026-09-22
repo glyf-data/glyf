@@ -62,7 +62,7 @@
     </header>
     <div class="why">
       <strong>Why:</strong> {{ chart.reasons | join('; ') }}.
-      {% set lines = describe_data(chart.data) %}
+      {% set lines = describe_change(chart) %}
       {% if lines %}
       <ul>{% for line in lines %}<li>{{ line }}</li>{% endfor %}</ul>
       {% endif %}
@@ -73,7 +73,11 @@
     <div class="views">
       <figure><figcaption>Before</figcaption><img src="images/{{ chart.name }}.before.png" alt="{{ chart.title or chart.name }} in the baseline build" loading="lazy"></figure>
       <figure><figcaption>After</figcaption><img src="images/{{ chart.name }}.after.png" alt="{{ chart.title or chart.name }} in this build" loading="lazy"></figure>
+      {% if chart.overlay_png %}
+      <figure><figcaption><span class="swatch"></span>What moved</figcaption><img src="images/{{ chart.name }}.overlay.png" alt="This build's chart drawn over the baseline's in grey, with every category that moved boxed" loading="lazy"></figure>
+      {% else %}
       <figure><figcaption><span class="swatch"></span>What moved</figcaption><img src="images/{{ chart.name }}.diff.png" alt="This build's chart faded back, with every changed pixel marked" loading="lazy"></figure>
+      {% endif %}
     </div>
   </section>
   {% endfor %}

@@ -45,6 +45,8 @@ def write_report(diff: BuildDiff, output_dir: Path) -> Path:
             )
         if chart.diff_png is not None:
             (images / f"{chart.name}.diff.png").write_bytes(chart.diff_png)
+        if chart.overlay_png is not None:
+            (images / f"{chart.name}.overlay.png").write_bytes(chart.overlay_png)
 
     (output_dir / "diff.json").write_text(
         json.dumps(as_document(diff), indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -78,6 +80,7 @@ def _chart_document(chart: ChartDiff) -> dict[str, object]:
             "changed_pixels": chart.changed_pixels,
             "total_pixels": chart.total_pixels,
             "changed_percent": round(chart.changed_percent, 3),
+            "marks": _marks_document(chart),
             "before_size": list(chart.before_size or ()),
             "after_size": list(chart.after_size or ()),
             "reasons": list(chart.reasons),
@@ -131,7 +134,7 @@ def as_markdown(diff: BuildDiff) -> str:
             lines.append(
                 f"| {_label(chart)} | {format_percent(chart.changed_percent)} of pixels "
                 f"| {'; '.join(chart.reasons)} "
-                f"| {'<br>'.join(describe_data(chart.data)) or 'n/a'} |"
+                f"| {'<br>'.join(describe_change(chart)) or 'n/a'} |"
             )
         lines.append("")
     for status, heading in (("added", "Added"), ("removed", "Removed")):
@@ -140,6 +143,15 @@ def as_markdown(diff: BuildDiff) -> str:
             lines.append(f"**{heading}:** " + ", ".join(_label(chart) for chart in charts))
             lines.append("")
     return "\n".join(lines).rstrip("\n") + "\n"
+
+
+def describe_change(chart: ChartDiff) -> list[str]:
+    """What moved, in the chart's terms first and then in the rows'."""
+    lines = []
+    if chart.marks is not None and chart.marks.any:
+        lines.append(chart.marks.describe())
+    lines.extend(describe_data(chart.data))
+    return lines
 
 
 def describe_data(data: DataChange | None) -> list[str]:
@@ -186,6 +198,22 @@ def _listed(values: tuple[str, ...]) -> str:
     return f"{shown} and {rest} more" if rest > 0 else shown
 
 
+def _marks_document(chart: ChartDiff) -> dict[str, object] | None:
+    marks = chart.marks
+    if marks is None:
+        return None
+    return {
+        "gone": marks.gone,
+        "new": marks.new,
+        "higher": marks.higher,
+        "lower": marks.lower,
+        "gone_series": list(marks.gone_series),
+        "new_series": list(marks.new_series),
+        "changed_x": list(marks.changed_x),
+        "summary": marks.describe(),
+    }
+
+
 def _label(chart: ChartDiff) -> str:
     return f"**{chart.title}** `{chart.name}`" if chart.title else f"`{chart.name}`"
 
@@ -228,5 +256,5 @@ def _render_html(diff: BuildDiff) -> str:
         added=diff.with_status("added"),
         removed=diff.with_status("removed"),
         unchanged=diff.with_status("unchanged"),
-        describe_data=describe_data,
+        describe_change=describe_change,
     )

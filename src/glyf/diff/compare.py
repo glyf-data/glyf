@@ -12,6 +12,8 @@ from pathlib import Path
 from typing import Literal
 
 from glyf import _core
+from glyf.config import RenderConfig
+from glyf.diff.overlay import MarkChange, build_overlay
 
 Status = Literal["added", "removed", "changed", "unchanged"]
 
@@ -76,6 +78,11 @@ class ChartDiff:
     data: DataChange | None = None
     # The marked-up comparison; only a changed chart has one.
     diff_png: bytes | None = field(default=None, repr=False, compare=False)
+    # The chart's own account of the change: new marks over the old ones in
+    # grey, what moved boxed. Needs both builds' rows and a chart type the
+    # overlay can draw; otherwise the pixel picture is all there is.
+    overlay_png: bytes | None = field(default=None, repr=False, compare=False)
+    marks: MarkChange | None = None
 
     @property
     def changed_percent(self) -> float:
@@ -121,6 +128,7 @@ def compare_builds(
     *,
     threshold: float = 0.0,
     tolerance: int = 0,
+    render_config: RenderConfig | None = None,
 ) -> BuildDiff:
     """Compare every chart of two builds.
 
@@ -157,6 +165,7 @@ def compare_builds(
                     after_record=after_record,
                     threshold=threshold,
                     tolerance=tolerance,
+                    render_config=render_config or RenderConfig(),
                 )
             )
 
@@ -181,6 +190,7 @@ def _compare_chart(
     after_record: dict[str, object],
     threshold: float,
     tolerance: int,
+    render_config: RenderConfig,
 ) -> ChartDiff:
     before_bytes, after_bytes = old.read_bytes(), new.read_bytes()
     if before_bytes == after_bytes:
@@ -196,6 +206,7 @@ def _compare_chart(
         return ChartDiff(name=name, status="unchanged", title=title)
 
     data = _data_change(baseline, current, name)
+    overlay = _overlay(baseline, current, name, render_config)
     return ChartDiff(
         name=name,
         status="changed",
@@ -207,7 +218,22 @@ def _compare_chart(
         reasons=_reasons(name, before_record, after_record, data),
         data=data,
         diff_png=bytes(raw["diff_png"]),
+        overlay_png=overlay.png if overlay else None,
+        marks=overlay.marks if overlay else None,
     )
+
+
+def _overlay(baseline: Path, current: Path, name: str, render_config: RenderConfig):
+    """The chart drawn over its old self, when both builds published rows."""
+    rel = Path("data") / "normalized" / f"{name}.data.json"
+    before, after = _load_json(baseline / rel), _load_json(current / rel)
+    if not before or not after:
+        return None
+    metadata = _load_json(current / "charts" / f"{name}.json")
+    try:
+        return build_overlay(metadata, _rows(before), _rows(after), render_config)
+    except Exception:  # noqa: BLE001 - the overlay is an extra; the diff stands without it
+        return None
 
 
 def _reasons(
