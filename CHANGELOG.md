@@ -2,6 +2,22 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- glyf now validates a chart's `VISUALISE`, `DRAW`, `INTERACT` and `CONFIG`
+  lines itself, for every chart type. ggsql is the file format and still
+  parses the SQL, but it no longer judges the chart block through a stand-in
+  type (`pie` used to be shown to it as `bar`), so an error names the chart
+  you wrote: `pie does not take a 'banana' mapping; it takes x, y, color`
+  rather than `Layer 'bar' does not support the banana mapping`.
+
+  One consequence: a mapping the renderer never drew, such as `AS size` on a
+  scatter, used to pass validation and be silently ignored. It is now rejected
+  with that message. `unsupported chart type` and `unsupported CONFIG key`
+  errors list what is supported.
+
 ## 0.9.0 - 2026-09-22
 
 ### Visual diff

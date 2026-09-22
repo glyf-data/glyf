@@ -6,13 +6,76 @@ use crate::error::CoreError;
 use crate::models::{GgsqlChart, VisualiseMapping};
 use crate::resolver::{ref_regex, source_regex};
 
+/// glyf's chart language: what each draw type takes. This is the single
+/// source of truth for validation; the renderer draws exactly these roles.
+///
+/// ggsql is the file format; pie, histogram and boxplot are glyf's additions
+/// to it. ggsql never sees the visual section: see `sql_for_ggsql`.
+struct DrawSpec {
+    /// The name glyf reports and the renderer dispatches on.
+    draw_type: &'static str,
+    required: &'static [&'static str],
+    allowed: &'static [&'static str],
+    interactions: &'static [&'static str],
+}
+
+const XY: &[&str] = &["x", "y"];
+const XY_COLOR: &[&str] = &["x", "y", "color"];
+const ALL_INTERACTIONS: &[&str] = &["legend_filter", "tooltip", "zoom"];
+const CONFIG_KEYS: &[&str] = &["width", "height"];
+
+fn draw_spec(draw: &str) -> Option<DrawSpec> {
+    let xy = |draw_type| DrawSpec {
+        draw_type,
+        required: XY,
+        allowed: XY_COLOR,
+        interactions: ALL_INTERACTIONS,
+    };
+    Some(match draw {
+        "line" => xy("line"),
+        "bar" => xy("bar"),
+        "area" => xy("area"),
+        "pie" => xy("pie"),
+        // ggsql calls it `point`; glyf has always reported `scatter`.
+        "scatter" | "point" => xy("scatter"),
+        "histogram" => DrawSpec {
+            draw_type: "histogram",
+            required: &["x"],
+            allowed: &["x", "color"],
+            interactions: ALL_INTERACTIONS,
+        },
+        // A boxplot is a composite mark a legend selection cannot bind to, and
+        // a heatmap's colour is a continuous scale with no legend entries.
+        "boxplot" => DrawSpec {
+            draw_type: "boxplot",
+            required: XY,
+            allowed: XY_COLOR,
+            interactions: &["tooltip", "zoom"],
+        },
+        "heatmap" | "tile" => DrawSpec {
+            draw_type: "heatmap",
+            required: XY_COLOR,
+            allowed: XY_COLOR,
+            interactions: &["tooltip", "zoom"],
+        },
+        _ => return None,
+    })
+}
+
+/// The draw types glyf accepts, for error messages.
+const SUPPORTED_DRAWS: &str = "area, bar, boxplot, heatmap, histogram, line, pie, scatter";
+
 pub fn parse_ggsql_text(
     text: &str,
     name: &str,
     path: Option<&str>,
 ) -> Result<GgsqlChart, CoreError> {
-    reject_unsupported_draws(text)?;
-    let normalized = normalize_for_ggsql(text);
+    let (legacy_sql, visual_lines) = split_legacy_parts(text)
+        .ok_or_else(|| CoreError::Parse("missing VISUALISE section".to_string()))?;
+
+    // ggsql parses the SQL; glyf validates the chart block below. The stub
+    // keeps the file valid ggsql without showing it the user's chart lines.
+    let normalized = sql_for_ggsql(&legacy_sql);
     let validated =
         ggsql::validate::validate(&normalized).map_err(|err| CoreError::Parse(err.to_string()))?;
     if !validated.valid() {
@@ -24,18 +87,8 @@ pub fn parse_ggsql_text(
             .join("; ");
         return Err(CoreError::Parse(errors));
     }
-    if !validated.has_visual() {
-        return Err(CoreError::Parse("missing VISUALISE section".to_string()));
-    }
 
-    let (legacy_sql, visual_lines) = split_legacy_parts(text)
-        .ok_or_else(|| CoreError::Parse("missing VISUALISE section".to_string()))?;
-
-    let sql = if legacy_sql.trim().is_empty() {
-        validated.sql().trim().to_string()
-    } else {
-        legacy_sql.trim().to_string()
-    };
+    let sql = legacy_sql.trim().to_string();
     if sql.is_empty() {
         return Err(CoreError::Parse("missing SQL query section".to_string()));
     }
@@ -53,10 +106,12 @@ pub fn parse_ggsql_text(
 
     for line in visual_lines.iter().skip(1) {
         if let Some(draw) = parse_draw(line) {
-            if !is_supported_draw(&draw) {
-                return Err(CoreError::Parse(format!("unsupported chart type '{draw}'")));
-            }
-            draw_type = Some(legacy_draw_type(&draw).to_string());
+            let Some(spec) = draw_spec(&draw) else {
+                return Err(CoreError::Parse(format!(
+                    "unsupported chart type '{draw}'; supported chart types: {SUPPORTED_DRAWS}"
+                )));
+            };
+            draw_type = Some(spec.draw_type.to_string());
             continue;
         }
         if let Some((key, value)) = parse_key_value_directive(line, "LABEL") {
@@ -64,8 +119,10 @@ pub fn parse_ggsql_text(
             continue;
         }
         if let Some((key, value)) = parse_key_value_directive(line, "CONFIG") {
-            if key != "width" && key != "height" {
-                return Err(CoreError::Parse(format!("unsupported CONFIG key '{key}'")));
+            if !CONFIG_KEYS.contains(&key.as_str()) {
+                return Err(CoreError::Parse(format!(
+                    "unsupported CONFIG key '{key}'; supported keys: width, height"
+                )));
             }
             let parsed = value.trim().parse::<i64>().map_err(|_| {
                 CoreError::Parse(format!("invalid CONFIG {key}: expected a positive integer"))
@@ -84,13 +141,10 @@ pub fn parse_ggsql_text(
                 if interaction.is_empty() {
                     continue;
                 }
-                match interaction.as_str() {
-                    "tooltip" | "zoom" | "legend_filter" => {}
-                    _ => {
-                        return Err(CoreError::Parse(format!(
-                            "unsupported interaction '{interaction}'; supported interactions: legend_filter, tooltip, zoom"
-                        )));
-                    }
+                if !ALL_INTERACTIONS.contains(&interaction.as_str()) {
+                    return Err(CoreError::Parse(format!(
+                        "unsupported interaction '{interaction}'; supported interactions: legend_filter, tooltip, zoom"
+                    )));
                 }
                 if seen_interactions.insert(interaction.clone()) {
                     interactions.push(interaction);
@@ -111,8 +165,9 @@ pub fn parse_ggsql_text(
 
     let draw_type =
         draw_type.ok_or_else(|| CoreError::Parse("missing DRAW directive".to_string()))?;
-    validate_required_roles(&draw_type, &visualise)?;
-    validate_interactions(&draw_type, &interactions)?;
+    let spec = draw_spec(&draw_type).expect("a stored draw type is in the table");
+    validate_roles(&spec, &visualise)?;
+    validate_interactions(&spec, &interactions)?;
 
     let has_order_by = validated
         .tree()
@@ -167,42 +222,17 @@ fn statement_has_order_by(tree: &tree_sitter::Tree, source: &str) -> bool {
     walk(tree.root_node(), source, false)
 }
 
-fn normalize_for_ggsql(text: &str) -> String {
-    let Some((sql, visual_lines)) = split_legacy_parts(text) else {
-        return normalize_jinja_for_ggsql(text);
-    };
-    let Some(visualise_line) = visual_lines.first() else {
-        return normalize_jinja_for_ggsql(text);
-    };
-    let mapping = strip_keyword(visualise_line, "VISUALISE")
-        .or_else(|| strip_keyword(visualise_line, "VISUALIZE"))
-        .unwrap_or("")
-        .trim();
-    let mut normalized_visual = vec!["VISUALISE".to_string()];
-
-    for line in visual_lines.iter().skip(1) {
-        if line.is_empty() {
-            continue;
-        }
-        if let Some(draw) = parse_draw(line) {
-            normalized_visual.push(normalize_draw_for_ggsql(line, &draw, mapping));
-            continue;
-        }
-        if strip_keyword(line, "LABEL").is_some() {
-            normalized_visual.push(normalize_label_for_ggsql(line));
-            continue;
-        }
-        if strip_keyword(line, "CONFIG").is_some() || strip_keyword(line, "INTERACT").is_some() {
-            continue;
-        }
-        normalized_visual.push(line.to_string());
-    }
-
+/// What ggsql is shown: the SQL with dbt calls resolved, plus a fixed chart
+/// block so the text is valid ggsql. ggsql never sees the user's chart lines;
+/// glyf validates those itself, so glyf-only draw types need no stand-in and
+/// every error names the chart the user wrote.
+fn sql_for_ggsql(sql: &str) -> String {
     let normalized_sql = normalize_jinja_for_ggsql(sql.trim());
+    const STUB: &str = "VISUALISE\nDRAW point MAPPING glyf_stub AS x, glyf_stub AS y";
     if normalized_sql.is_empty() {
-        normalized_visual.join("\n")
+        STUB.to_string()
     } else {
-        format!("{}\n{}", normalized_sql, normalized_visual.join("\n"))
+        format!("{normalized_sql}\n{STUB}")
     }
 }
 
@@ -235,53 +265,6 @@ fn split_legacy_parts(text: &str) -> Option<(String, Vec<String>)> {
     }
 }
 
-fn normalize_draw_for_ggsql(line: &str, draw: &str, mapping: &str) -> String {
-    let raw = strip_keyword(line, "DRAW").unwrap_or_default();
-    let tail = raw
-        .trim_start()
-        .get(draw.len()..)
-        .map(str::trim_start)
-        .unwrap_or_default();
-    let ggsql_draw = match draw {
-        "heatmap" => "tile",
-        "pie" => "bar",
-        "scatter" => "point",
-        other => other,
-    };
-    let mut normalized = format!("DRAW {ggsql_draw}");
-    if !tail.is_empty() {
-        normalized.push(' ');
-        normalized.push_str(tail);
-    }
-    if !mapping.is_empty() && !contains_mapping_clause(&normalized) {
-        normalized.push_str(" MAPPING ");
-        normalized.push_str(mapping);
-    }
-    normalized
-}
-
-/// ggsql reads single-quoted strings only, while glyf has always unquoted
-/// either kind, and `glyf init` writes double quotes. Hand ggsql the label it
-/// can read; the value glyf keeps is still taken from the original line.
-fn normalize_label_for_ggsql(line: &str) -> String {
-    let Some((key, value)) = parse_key_value_directive(line, "LABEL") else {
-        return line.to_string();
-    };
-    let value = value.trim();
-    if value.len() < 2 || !value.starts_with('"') || !value.ends_with('"') {
-        return line.to_string();
-    }
-    let escaped = value[1..value.len() - 1]
-        .replace('\\', "\\\\")
-        .replace('\'', "\\'");
-    format!("LABEL {key} => '{escaped}'")
-}
-
-fn contains_mapping_clause(line: &str) -> bool {
-    line.split_whitespace()
-        .any(|part| part.eq_ignore_ascii_case("MAPPING"))
-}
-
 fn normalize_jinja_for_ggsql(text: &str) -> String {
     let replaced_refs = ref_regex()
         .replace_all(text, |captures: &regex::Captures<'_>| {
@@ -299,17 +282,6 @@ fn normalize_jinja_for_ggsql(text: &str) -> String {
             format!("{source_name}.{table_name}")
         })
         .to_string()
-}
-
-fn reject_unsupported_draws(text: &str) -> Result<(), CoreError> {
-    for line in text.lines() {
-        if let Some(draw) = parse_draw(line) {
-            if !is_supported_draw(&draw) {
-                return Err(CoreError::Parse(format!("unsupported chart type '{draw}'")));
-            }
-        }
-    }
-    Ok(())
 }
 
 fn parse_visualise(line: &str) -> Result<Vec<VisualiseMapping>, CoreError> {
@@ -334,54 +306,52 @@ fn parse_visualise(line: &str) -> Result<Vec<VisualiseMapping>, CoreError> {
     Ok(mappings)
 }
 
-fn validate_required_roles(
-    draw_type: &str,
-    visualise: &[VisualiseMapping],
-) -> Result<(), CoreError> {
+fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(), CoreError> {
+    let draw = spec.draw_type;
+    let takes = spec.allowed.join(", ");
+    // Say why, not just that: a histogram computes its own y.
+    if draw == "histogram" && visualise.iter().any(|mapping| mapping.role == "y") {
+        return Err(CoreError::Parse(
+            "histogram counts the rows in each bin of x and takes no y mapping".to_string(),
+        ));
+    }
+    for mapping in visualise {
+        if !spec.allowed.contains(&mapping.role.as_str()) {
+            return Err(CoreError::Parse(format!(
+                "{draw} does not take a '{}' mapping; it takes {takes}",
+                mapping.role
+            )));
+        }
+    }
     let roles = visualise
         .iter()
         .map(|mapping| mapping.role.as_str())
         .collect::<BTreeSet<_>>();
-    match draw_type {
-        "histogram" => {
-            if !roles.contains("x") {
-                return Err(CoreError::Parse(
-                    "histogram requires an x mapping".to_string(),
-                ));
-            }
-            if roles.contains("y") {
-                return Err(CoreError::Parse(
-                    "histogram counts the rows in each bin of x and takes no y mapping".to_string(),
-                ));
-            }
-        }
-        "heatmap" => {
-            if !roles.contains("x") || !roles.contains("y") || !roles.contains("color") {
-                return Err(CoreError::Parse(
-                    "heatmap requires x, y and color mappings".to_string(),
-                ));
-            }
-        }
-        _ => {
-            if !roles.contains("x") || !roles.contains("y") {
-                return Err(CoreError::Parse(
-                    "VISUALISE requires x and y mappings".to_string(),
-                ));
-            }
-        }
+    let missing = spec
+        .required
+        .iter()
+        .filter(|role| !roles.contains(*role))
+        .copied()
+        .collect::<Vec<_>>();
+    if !missing.is_empty() {
+        let message = match draw {
+            "histogram" => "histogram requires an x mapping".to_string(),
+            "heatmap" => "heatmap requires x, y and color mappings".to_string(),
+            _ => "VISUALISE requires x and y mappings".to_string(),
+        };
+        return Err(CoreError::Parse(message));
     }
     Ok(())
 }
 
-fn validate_interactions(draw_type: &str, interactions: &[String]) -> Result<(), CoreError> {
-    // A boxplot is a composite mark a legend selection cannot bind to, and a
-    // heatmap's colour is a continuous scale with no legend entries to click.
-    if matches!(draw_type, "boxplot" | "heatmap")
-        && interactions.iter().any(|item| item == "legend_filter")
-    {
-        return Err(CoreError::Parse(format!(
-            "legend_filter interaction is not supported for {draw_type} charts"
-        )));
+fn validate_interactions(spec: &DrawSpec, interactions: &[String]) -> Result<(), CoreError> {
+    for interaction in interactions {
+        if !spec.interactions.contains(&interaction.as_str()) {
+            return Err(CoreError::Parse(format!(
+                "{interaction} interaction is not supported for {} charts",
+                spec.draw_type
+            )));
+        }
     }
     Ok(())
 }
@@ -390,30 +360,6 @@ fn parse_draw(line: &str) -> Option<String> {
     let raw = strip_keyword(line, "DRAW")?;
     let draw = raw.split_whitespace().next()?;
     Some(draw.trim().to_lowercase())
-}
-
-fn legacy_draw_type(draw: &str) -> &str {
-    match draw {
-        "point" => "scatter",
-        "tile" => "heatmap",
-        other => other,
-    }
-}
-
-fn is_supported_draw(draw: &str) -> bool {
-    matches!(
-        draw,
-        "area"
-            | "bar"
-            | "boxplot"
-            | "heatmap"
-            | "histogram"
-            | "line"
-            | "pie"
-            | "point"
-            | "scatter"
-            | "tile"
-    )
 }
 
 fn parse_key_value_directive(line: &str, keyword: &str) -> Option<(String, String)> {
@@ -526,6 +472,86 @@ mod tests {
         .unwrap_err();
 
         assert!(error.to_string().contains("takes no y mapping"));
+    }
+
+    #[test]
+    fn rejects_an_unknown_role_naming_the_chart_the_user_wrote() {
+        // Before DEC-008 this came back from ggsql as "Layer 'bar' does not
+        // support the `banana` mapping": the stand-in, not the pie.
+        let error = parse_ggsql_text(
+            "SELECT region, revenue FROM fct_orders\n\nVISUALISE region AS x, revenue AS banana\nDRAW pie\n",
+            "share",
+            None,
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error.to_string(),
+            "pie does not take a 'banana' mapping; it takes x, y, color"
+        );
+    }
+
+    #[test]
+    fn rejects_a_role_the_renderer_would_ignore() {
+        // ggsql's grammar accepts `size`; glyf's renderer never drew it.
+        let error = parse_ggsql_text(
+            "SELECT a, b, c FROM t\n\nVISUALISE a AS x, b AS y, c AS size\nDRAW scatter\n",
+            "s",
+            None,
+        )
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .starts_with("scatter does not take a 'size' mapping"));
+    }
+
+    #[test]
+    fn every_draw_type_is_validated_by_glyf_not_a_stand_in() {
+        for (draw, reported) in [
+            ("line", "line"),
+            ("bar", "bar"),
+            ("area", "area"),
+            ("scatter", "scatter"),
+            ("point", "scatter"),
+            ("pie", "pie"),
+            ("boxplot", "boxplot"),
+        ] {
+            let chart = parse_ggsql_text(
+                &format!("SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW {draw}\n"),
+                "c",
+                None,
+            )
+            .unwrap();
+            assert_eq!(chart.draw_type, reported, "{draw}");
+
+            let error = parse_ggsql_text(
+                &format!("SELECT a, b FROM t\n\nVISUALISE a AS x, b AS nope\nDRAW {draw}\n"),
+                "c",
+                None,
+            )
+            .unwrap_err()
+            .to_string();
+            assert!(
+                error.starts_with(&format!("{reported} does not take a 'nope' mapping")),
+                "{draw}: {error}"
+            );
+        }
+    }
+
+    #[test]
+    fn names_the_supported_chart_types_on_an_unknown_draw() {
+        let error = parse_ggsql_text(
+            "SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW donut\n",
+            "c",
+            None,
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error.to_string(),
+            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, line, pie, scatter"
+        );
     }
 
     #[test]
