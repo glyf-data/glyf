@@ -41,7 +41,7 @@ if one of these would change how you work.
 
 <ul className="roadmapList">
   <li><strong>Watch mode.</strong> Rebuild charts and dashboards when a <code>.ggsql</code> file, a dashboard or <code>glyf.yml</code> changes.</li>
-  <li><strong>A table chart.</strong> The first thing an analytics engineer reaches for, and not part of the ggsql grammar glyf builds on.</li>
+  <li><strong>A table chart.</strong> The first thing an analytics engineer reaches for; a glyf addition to the ggsql format, like the histogram and heatmap.</li>
   <li><strong>Dashboard templates.</strong> Ready-made layouts to start from.</li>
   <li><strong>dbt docs on dashboards.</strong> Model, column and source descriptions from the manifest, shown beside the charts they describe.</li>
   <li><strong>Lineage.</strong> Which models and sources feed each chart, and which charts a changed model touches.</li>

@@ -2,7 +2,12 @@
 
 A `.ggsql` file contains SQL followed by a small chart block.
 
-`glyf` uses a focused subset of [ggsql](https://ggsql.org)-style directives so chart definitions stay readable in dbt projects and easy to validate in CI.
+The format is [ggsql](https://ggsql.org): a SQL query, then a few lines saying
+what to draw. glyf reads that format as is, so a ggsql chart is a glyf chart
+and `.ggsql` files get the format's editor support. glyf also adds chart
+types, `CONFIG` and `INTERACT`, which ggsql does not have; they are marked
+below. A file that uses one is a glyf file, and upstream ggsql tools will not
+accept it.
 
 ```sql
 SELECT month, revenue, region
@@ -33,16 +38,16 @@ Roles:
 
 ## Chart types
 
-| `DRAW` | Draws | Roles |
-| --- | --- | --- |
-| `line` | One line per `color` value. | `x`, `y`, optional `color` |
-| `bar` | One bar per `x` value, stacked by `color`. | `x`, `y`, optional `color` |
-| `scatter` | One point per row. `point` is accepted as an alias. | `x`, `y`, optional `color` |
-| `area` | One filled area per `color` value. | `x`, `y`, optional `color` |
-| `pie` | One slice per `x` value, sized by `y`. | `x`, `y`, optional `color` |
-| `histogram` | The number of rows in each bin of `x`, stacked by `color`. | `x`, optional `color` |
-| `boxplot` | The quartiles of `y` for each `x` value, with outliers as points. | `x`, `y`, optional `color` |
-| `heatmap` | One cell per `x` and `y` pair, shaded by `color`. `tile` is accepted as an alias. | `x`, `y`, `color` |
+| `DRAW` | Draws | Roles | From |
+| --- | --- | --- | --- |
+| `line` | One line per `color` value. | `x`, `y`, optional `color` | ggsql |
+| `bar` | One bar per `x` value, stacked by `color`. | `x`, `y`, optional `color` | ggsql |
+| `scatter` | One point per row. `point` is accepted as an alias. | `x`, `y`, optional `color` | ggsql (`point`) |
+| `area` | One filled area per `color` value. | `x`, `y`, optional `color` | ggsql |
+| `pie` | One slice per `x` value, sized by `y`. | `x`, `y`, optional `color` | glyf |
+| `histogram` | The number of rows in each bin of `x`, stacked by `color`. | `x`, optional `color` | glyf |
+| `boxplot` | The quartiles of `y` for each `x` value, with outliers as points. | `x`, `y`, optional `color` | glyf |
+| `heatmap` | One cell per `x` and `y` pair, shaded by `color`. `tile` is accepted as an alias. | `x`, `y`, `color` | ggsql (`tile`) |
 
 Any other `DRAW` value fails validation with `unsupported chart type`.
 
@@ -150,12 +155,14 @@ or `LABEL title => "Revenue"`.
 
 ## Config
 
+A glyf addition.
+
 - `width`: positive integer.
 - `height`: positive integer.
 
 ## Interactions
 
-Interactions are optional. Static SVG and PNG output remains the default when no `INTERACT` directive is present.
+A glyf addition. Interactions are optional. Static SVG and PNG output remains the default when no `INTERACT` directive is present.
 
 ```sql
 INTERACT tooltip, zoom, legend_filter
@@ -177,4 +184,8 @@ Unsupported interaction names fail validation with a parser error.
 
 ## Parser scope
 
-The parser is intentionally small. It does not parse SQL. SQL is passed through after dbt refs and sources are resolved.
+glyf validates the chart block itself: the draw type, the roles it takes,
+labels, `CONFIG` and `INTERACT`. The SQL is checked for syntax; whether a
+column exists is for the warehouse to say, so a query that names a missing
+column fails at build, with the chart's name. dbt refs and sources are
+resolved before the SQL runs.

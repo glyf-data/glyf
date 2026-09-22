@@ -6,7 +6,7 @@ import Link from '@docusaurus/Link';
 
 It lets analytics engineers define chart queries in `.ggsql`, connect them to analytical metadata, render the results into static chart artifacts, and publish dashboards without running a BI server. The first integration reads dbt artifacts and resolves dbt `ref()` and `source()` calls from `target/manifest.json`.
 
-The chart syntax builds on the SQL-first visualisation model from [ggsql](https://ggsql.org), which brings Grammar of Graphics-style clauses such as `VISUALISE`, `DRAW`, `SCALE`, and `LABEL` into SQL workflows.
+Charts are written in the [ggsql](https://ggsql.org) format: a SQL query followed by a few lines (`VISUALISE`, `DRAW`, `LABEL`) saying what to draw. glyf reads that format as is, so a ggsql chart is a glyf chart and `.ggsql` files get the format's editor support, and it adds chart types and interactions of its own, listed in the [syntax guide](./guides/visualisation-syntax.md).
 
 Use it when you want visualisations to live beside analytical code, move through code review, and produce static output for internal reporting, client delivery, or lightweight documentation.
 
