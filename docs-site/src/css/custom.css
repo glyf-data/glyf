@@ -3534,6 +3534,7 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
 .visualDiffLine--chart {
   color: #f9a8d4;
 }
+.visualDiffLine--marks { color: #f0abfc; }
 .visualDiffLine--row {
   color: #94a3b8;
 }
