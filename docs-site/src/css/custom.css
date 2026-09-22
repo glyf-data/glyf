@@ -3106,11 +3106,13 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   padding: 0.75rem 0.9rem;
   overflow: auto;
 }
+/* The type stays the size it was; only the spacing and padding are tighter. */
 .landingSections .featureStoryBlock .featureMacBody,
-.landingSections .featureStoryBlock .featureMacBody code,
-.landingSections .featureStoryBlock .visualDiffTerminal__body code {
-  font-size: 0.74rem;
+.landingSections .featureStoryBlock .featureMacBody code {
   line-height: 1.5;
+}
+.landingSections .featureStoryBlock .visualDiffTerminal__body code {
+  line-height: 1.55;
 }
 .landingSections .featureStoryBlock .featureMacBody > img.visualDiffReport {
   width: auto;
