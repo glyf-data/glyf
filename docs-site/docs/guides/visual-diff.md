@@ -46,13 +46,18 @@ images and can be uploaded as it is.
 
 | File | For |
 | --- | --- |
-| `index.html` | A reviewer. Each changed chart before, after, and marked up. |
+| `index.html` | A reviewer. Each changed chart before, after, and what moved. |
 | `summary.md` | A pull request comment. One table row per changed chart. |
-| `diff.json` | A script. Status, pixel counts, reasons and row changes per chart. |
-| `images/` | `<chart>.before.png`, `<chart>.after.png`, `<chart>.diff.png` |
+| `diff.json` | A script. Status, pixel counts, reasons, mark changes and row changes per chart. |
+| `images/` | `<chart>.before.png`, `<chart>.after.png`, `<chart>.overlay.png`, `<chart>.diff.png` |
 
-The marked-up image is the new chart faded back, with every pixel that differs
-from the baseline drawn on top in one colour.
+"What moved" is the chart drawn over its old self: the new marks in colour,
+the baseline's marks in grey behind them, and a box around every category
+whose value moved. A series the new build dropped stays in the legend with
+nothing under it. See [what moved, in the chart's terms](#what-moved-in-the-charts-terms).
+The `diff.png` is the older, pixel-level view: the new chart faded back with
+every differing pixel drawn in one colour. The report shows it for a chart the
+overlay cannot draw.
 
 ## How a chart is judged
 
@@ -92,6 +97,37 @@ rows 48 → 36
 gone from department: Partners
 sum of expenses 576,000 → 527,500 (-8.4%)
 ```
+
+## What moved, in the chart's terms
+
+A pixel comparison says where the picture differs and cannot say why: a bar
+that shrank lights up at its old height and its new one, a line that lost six
+months re-spreads across the axis and lights up twice. So for a bar, line or
+area chart, glyf compares the two builds' rows the way the chart draws them,
+one mark per x value and series, and reports what it finds first:
+
+```text
+~ expenses_by_department: 50.8% of the picture moved (the rows changed)
+    bars: 12 gone (Partners)
+    rows 48 → 36
+    gone from department: Partners
+    sum of expenses 576,000 → 527,500 (-8.4%)
+```
+
+`bars: 12 gone (Partners)` means twelve bars that the baseline drew have no
+counterpart in this build, all of them in the Partners series. The other
+counts are `new`, `higher` and `lower`. A line or area chart says `points`.
+
+The report draws the same thing: this build's marks in colour, the baseline's
+in grey behind them, and a magenta box around each x value where a mark went,
+appeared or changed height. In the example above every month is boxed, and
+the grey outline above each stack is the total the baseline had.
+
+This needs both builds' rows and a chart with a category on x. A scatter has
+a number on x, so there is nothing to box; a histogram bins and a boxplot
+summarises its own rows; a heatmap has no height to compare and a pie no
+axis. Those, and a build under `export.row_data: exclude`, show the
+pixel-level picture instead.
 
 A numeric column is summarised by its sum. For a rate or a percentage the sum
 means nothing by itself; read it as "this column moved" and look at the picture.

@@ -57,6 +57,16 @@ def write_chart_metadata(project_root: Path, chart: GgsqlChart, artifacts: Chart
         "png_path": artifacts.png.relative_to(project_root).as_posix(),
         "svg_path": artifacts.svg.relative_to(project_root).as_posix(),
     }
+    # What `glyf diff` needs to draw the chart over its old self; only when set.
+    for key, value in (
+        ("color", chart.field_for_role("color")),
+        ("x_title", chart.x_title),
+        ("y_title", chart.y_title),
+        ("width", chart.width),
+        ("height", chart.height),
+    ):
+        if value is not None:
+            metadata[key] = value
     if chart.is_interactive:
         metadata["interactions"] = list(chart.interactions)
         metadata["vega_json_path"] = artifacts.vega_json.relative_to(

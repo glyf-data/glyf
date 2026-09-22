@@ -4,6 +4,27 @@ All notable changes to `glyf` will be documented in this file.
 
 ## Unreleased
 
+### What moved, in the chart's terms
+
+- `glyf diff` now explains a changed bar, line or area chart the way the
+  chart draws it. It compares the two builds' rows one mark per x value and
+  series and says what it finds, before the row changes: `bars: 12 gone
+  (Partners)`, `points: 3 higher, 1 lower`. The report's "What moved" panel
+  draws it: this build's marks in colour, the baseline's in grey behind them,
+  and a box around every x value where a mark went, appeared or changed. A
+  series the new build dropped stays in the legend with nothing under it.
+
+  The pixel-level picture (every differing pixel in magenta) said where the
+  picture changed and could not say why: a bar that shrank lit up at its old
+  height and its new one. It is still written as `images/<chart>.diff.png`,
+  and still shown for the charts the overlay cannot draw: a scatter (a
+  number on x, nothing to box), a histogram, a boxplot, a heatmap, a pie, or
+  any chart from a build under `export.row_data: exclude`.
+
+  `diff.json` gains a `marks` object per changed chart, and chart metadata
+  (`charts/<name>.json`) now records the `color` column and the chart's
+  labels and size, which is what the overlay reads.
+
 ### Changed
 
 - A chart's SQL is now read with [sqlparser-rs](https://github.com/apache/datafusion-sqlparser-rs),
