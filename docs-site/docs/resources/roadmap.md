@@ -12,6 +12,21 @@ order is the priority.
   on the <Link href="https://github.com/glyf-data/glyf/releases">releases page</Link>.
 </p>
 
+## In the next release
+
+<div className="roadmapNext">
+  <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
+  <h3>What moved, in the chart's terms</h3>
+  <p>
+    <code>glyf diff</code> now says what happened to a bar, line or area chart the way the chart
+    draws it, <code>bars: 12 gone (Partners)</code>, and draws it: this build's marks over the
+    baseline's in grey, with every category that moved boxed. It replaces the pixel-level
+    picture for those charts. Also merged: glyf validates the chart block itself for every chart
+    type, and reads chart SQL with a parser that reports syntax errors with a position.
+  </p>
+  <Link to="/docs/guides/visual-diff#what-moved-in-the-charts-terms">Read the guide</Link>
+</div>
+
 ## Planned
 
 Vote with a 👍 on the issue. The most wanted go first.

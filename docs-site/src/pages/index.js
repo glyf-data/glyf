@@ -118,7 +118,7 @@ const featureSections = [
     items: [
       {
         name: 'A diff that says what moved, and why',
-        desc: 'The query changed, the rows changed, or only the chart definition did. Row changes are spelled out: a missing category, a column total, the row count. The same data renders to the same bytes, so an unchanged chart is never reported.',
+        desc: 'First in the chart\'s terms: bars gone, points higher or lower, and which series. Then the rows: a missing category, a column total, the row count. Then why: the query changed, the rows changed, or only the chart definition did. The same data renders to the same bytes, so an unchanged chart is never reported.',
         status: 'live',
         reverse: false,
         visual: 'visualDiffTerminal',
@@ -127,12 +127,12 @@ const featureSections = [
       },
       {
         name: 'Before, after, and what moved',
-        desc: 'Every changed chart is drawn three times: as it was, as it is, and with each pixel that differs marked, so you can see where it moved and not only that it did. One workflow file puts a summary on the pull request and the full report in its artifacts.',
+        desc: 'Every changed chart is drawn three times: as it was, as it is, and as it is over its old self, the baseline in grey behind the new marks and every category that moved boxed. A series that disappeared stays in the legend with nothing under it. One workflow file puts a summary on the pull request and the full report in its artifacts.',
         status: 'live',
         reverse: true,
         visual: 'visualDiffReport',
         filename: 'target/glyf/diff/index.html',
-        links: [['See it on a real pull request', 'https://github.com/glyf-data/glyf/pull/155']],
+        links: [['See it on a real pull request', 'https://github.com/glyf-data/glyf/pull/175']],
       },
     ],
   },
@@ -655,10 +655,10 @@ function FeatureVisual({item}) {
         <FeatureMacWindow filename={item.filename}>
           <img
             src="/img/visual-diff/report-card.png"
-            alt="One chart from the visual diff report, shown three times: before, after, and what moved, where every pixel that differs is marked in magenta. Above them it lists the row changes: rows 48 to 36, Partners gone from department, and the sum of expenses down 8.4 percent."
+            alt="One chart from the visual diff report, shown three times: before, after, and what moved, where the new bars are drawn over the baseline's in grey and every month that moved is boxed. Above them it says bars: 12 gone (Partners), rows 48 to 36, and the sum of expenses down 8.4 percent."
             className="visualDiffReport"
-            width="1768"
-            height="784"
+            width="2208"
+            height="922"
             loading="lazy"
           />
         </FeatureMacWindow>
@@ -1230,12 +1230,15 @@ const visualDiffSession = [
   ['ctx', ' group by 1, 2', 700],
   ['cmd', 'glyf diff --baseline ../base', 600],
   ['chart', '~ bookings_trend: 6.1% of the picture moved (the rows changed)', 130],
+  ['marks', '    points: 12 lower', 90],
   ['row', '    sum of bookings 1,079,700 → 974,000 (-9.8%)', 130],
   ['chart', '~ expenses_by_department: 50.8% of the picture moved (the rows changed)', 130],
+  ['marks', '    bars: 12 gone (Partners)', 90],
   ['row', '    rows 48 → 36', 90],
   ['row', '    gone from department: Partners', 90],
   ['row', '    sum of expenses 576,000 → 527,500 (-8.4%)', 130],
   ['chart', '~ gross_margin_trend: 7.4% of the picture moved (the rows changed)', 130],
+  ['marks', '    points: 12 lower', 90],
   ['row', '    sum of gross_margin 503,700 → 446,500 (-11.4%)', 130],
   ['chart', '~ margin_rate_by_department: 35.0% of the picture moved (the rows changed)', 130],
   ['row', '    rows 48 → 36', 90],
