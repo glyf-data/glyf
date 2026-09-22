@@ -1,7 +1,7 @@
 const lightCodeTheme = require('prism-react-renderer').themes.github;
 const darkCodeTheme = require('prism-react-renderer').themes.dracula;
 
-const siteUrl = (process.env.DOCS_SITE_URL || 'https://glyf.pages.dev').replace(/\/$/, '');
+const siteUrl = (process.env.DOCS_SITE_URL || 'https://glyfdata.com').replace(/\/$/, '');
 const rawBaseUrl = process.env.DOCS_SITE_BASE_URL || '/';
 const normalizedBaseUrl = rawBaseUrl.startsWith('/') ? rawBaseUrl : `/${rawBaseUrl}`;
 const baseUrl = normalizedBaseUrl.endsWith('/') ? normalizedBaseUrl : `${normalizedBaseUrl}/`;

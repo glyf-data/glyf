@@ -7,7 +7,7 @@ contact_links:
     url: https://github.com/glyf-data/glyf/discussions
     about: Questions and ideas that others will want to find later.
   - name: Read the documentation
-    url: https://glyf.pages.dev
+    url: https://glyfdata.com
     about: Guides, the CLI and configuration reference, and the example projects.
   - name: Report a security problem
     url: https://github.com/glyf-data/glyf/security/advisories/new
