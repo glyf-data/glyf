@@ -1368,6 +1368,15 @@ function VisualDiffTerminal({filename}) {
           <span className="featureMacDot featureMacDot--yellow" />
           <span className="featureMacDot featureMacDot--green" />
           <span className="featureMacFilename">{filename}</span>
+          {/* In the title bar, so it never sits on top of the output. */}
+          <button
+            type="button"
+            className="visualDiffTerminal__replay"
+            onClick={play}
+            disabled={playing}
+          >
+            Replay
+          </button>
         </div>
         <div className="visualDiffTerminal__body" ref={bodyRef} aria-hidden="true">
           <pre>
@@ -1389,14 +1398,6 @@ function VisualDiffTerminal({filename}) {
           {visualDiffSession.map(([kind, text]) => `${kind === 'cmd' ? '$ ' : ''}${text}`).join('\n')}
         </pre>
       </div>
-      <button
-        type="button"
-        className="visualDiffTerminal__replay"
-        onClick={play}
-        disabled={playing}
-      >
-        Replay
-      </button>
     </div>
   );
 }
