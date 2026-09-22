@@ -131,8 +131,10 @@ rather than a stack trace.
 
 ### 01. Write charts in GGSQL
 
-SQL you already know, extended with a visualization grammar. Use `ref()` to
-reference dbt models directly, exactly as a dbt model would:
+SQL you already know, then a few lines saying what to draw. The format is
+[GGSQL](https://ggsql.org); glyf reads it as is and adds chart types and
+interactions of its own, marked in the syntax guide. Use `ref()` to reference
+dbt models directly, exactly as a dbt model would:
 
 ```sql
 SELECT month, revenue
@@ -274,7 +276,7 @@ readable directly in the repository:
 | --- | --- |
 | [Quickstart](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/get-started/quickstart.md) | First build, end to end |
 | [Configuration](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/reference/configuration.md) | `glyf.yml` reference |
-| [Visualisation syntax](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/visualisation-syntax.md) | The GGSQL grammar |
+| [Visualisation syntax](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/visualisation-syntax.md) | The GGSQL format, and glyf's additions to it |
 | [Dashboard YAML](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/dashboard-yaml.md) | Layout, sections, macros |
 | [dbt integration](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/dbt-integration.md) | Artifacts, `ref()`, adapters |
 | [CI/CD](https://github.com/glyf-data/glyf/blob/main/docs-site/docs/guides/ci-cd.md) | Building glyf in a pipeline |

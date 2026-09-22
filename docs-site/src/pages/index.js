@@ -178,7 +178,7 @@ const featureLinks = [
   ['Quickstart', 'Run the included analytical project and render your first dashboard.', '/docs/get-started/quickstart'],
   ['Command reference', 'See every CLI command, option, and common workflow.', '/docs/reference/cli'],
   ['Technical guide', 'Understand parsing, dbt artifact resolution, rendering, and output paths.', '/docs/guides/technical-architecture'],
-  ['GGSQL syntax', 'Write SQL-native visualizations with the supported ggsql directives.', '/docs/guides/visualisation-syntax'],
+  ['Chart syntax', 'The GGSQL format, and the chart types and interactions Glyf adds to it.', '/docs/guides/visualisation-syntax'],
 ];
 
 const problemItems = [
@@ -191,7 +191,7 @@ const problemItems = [
 ];
 
 const workflowSteps = [
-  ['01 — Chart Definition', 'Write charts in GGSQL', 'SQL you already know, extended with a visualization grammar. Use ref() to reference dbt models directly.'],
+  ['01 — Chart Definition', 'Write charts in GGSQL', 'SQL you already know, then a few lines saying what to draw. Glyf reads the GGSQL format and adds chart types of its own. Use ref() to reference dbt models directly.'],
   ['02 — Dashboard Layout', 'Compose in YAML + Python', 'Lay out charts into sections. Use Python macros for conditional logic, thresholds, and reusable components.'],
   ['03 — Build Output', 'Run one command', 'Glyf resolves dbt artifacts, validates chart specs, renders charts, and emits the files you can publish.'],
 ];
@@ -1062,7 +1062,7 @@ function HowItWorks() {
           <p className="eyebrow">how it works</p>
           <h2>Charts, dashboards, and outputs in one build step.</h2>
           <p>
-            Glyf keeps authoring close to the project: chart grammar in GGSQL, dashboard composition
+            Glyf keeps authoring close to the project: charts in GGSQL and its Glyf extensions, dashboard composition
             in YAML, reusable logic in Python, and outputs from the CLI.
           </p>
         </div>
@@ -1222,12 +1222,13 @@ function GgsqlSection() {
                 alt="GGSQL logo"
                 loading="lazy"
               />
-              <h2 className="ggsqlCopyTitle">GGSQL provides the SQL visualization grammar.</h2>
+              <h2 className="ggsqlCopyTitle">GGSQL is the format.</h2>
             </div>
             <p>
-              GGSQL is a separate open source project focused on SQL-native visualization:
-              chart grammar, visualization primitives, and query-oriented authoring. Learn
-              more at <a href="https://ggsql.org">ggsql.org</a>.
+              GGSQL is an open source grammar for describing a chart in SQL: the query, then a
+              few lines saying what to draw. Glyf adopts it as is, so a <code>.ggsql</code> file
+              gets the format's editor support and syntax highlighting, and every GGSQL chart is a
+              Glyf chart. Learn more at <a href="https://ggsql.org">ggsql.org</a>.
             </p>
           </div>
           <div className="ggsqlCopyColumn ggsqlCopyColumn--secondary">
@@ -1238,12 +1239,14 @@ function GgsqlSection() {
                 alt="Glyf logo"
                 loading="lazy"
               />
-              <h2 className="ggsqlCopyTitle">Glyf brings it into an analytics-engineering workflow.</h2>
+              <h2 className="ggsqlCopyTitle">Glyf extends it, and builds it.</h2>
             </div>
             <p>
-              Glyf is built on top of GGSQL and adds the surrounding project layer: dbt artifact
-              resolution, dashboard YAML, validation commands, and rendered outputs your team
-              can publish.
+              Glyf adds chart types and interaction the base grammar does not have, drawn by its
+              own rendering engine, and everything around the chart: dbt <code>ref()</code>
+              resolution, dashboards, validation, visual diff, data protection, and the files you
+              publish. Glyf's additions are marked in the{' '}
+              <Link to="/docs/guides/visualisation-syntax">syntax guide</Link>.
             </p>
           </div>
         </div>
