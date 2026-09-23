@@ -2,6 +2,16 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## 0.10.1 - 2026-09-23
+
+### Fixed
+
+- The macOS wheels are linked with room in the Mach-O header for Homebrew
+  to rewrite the extension module's install name. `brew install glyf` at
+  0.10.0 failed with `Updated load commands do not fit in the header`;
+  0.9.0 had passed the same step by eight bytes. Nothing else changed; a
+  PyPI or installer-script install of 0.10.0 was never affected.
+
 ## 0.10.0 - 2026-09-23
 
 ### Table chart
