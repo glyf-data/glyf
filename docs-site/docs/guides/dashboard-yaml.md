@@ -273,8 +273,12 @@ removes duplicates.
 
 ## Theme
 
-Use `theme` to switch the generated dashboard shell between `light` and `dark`.
-When omitted, the dashboard falls back to the configured default in `glyf.yml`.
+Use `theme` to choose the dashboard shell's default, `light` or `dark`. When
+omitted, the dashboard falls back to the configured default in `glyf.yml`.
+Every page also has a sun-and-moon button in its top-right actions that lets
+the reader switch, and the choice is remembered in that reader's browser. When
+`chart_theme` is `auto` the charts follow the switch; a `chart_theme` set to
+`light` or `dark` keeps the charts as built.
 
 ```yaml
 name: executive_dark

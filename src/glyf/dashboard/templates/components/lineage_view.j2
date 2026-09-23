@@ -1,45 +1,54 @@
-{% macro render_lineage_view(lineage) -%}
-<section class="glyf-lineage" id="glyf-lineage-view" aria-label="Lineage" hidden>
-  <div class="glyf-lineage-head">
-    <div class="glyf-lineage-title">Lineage</div>
-    <div class="glyf-lineage-summary glyf-mono">{{ lineage.source_count }} source{% if lineage.source_count != 1 %}s{% endif %} · {{ lineage.model_count }} model{% if lineage.model_count != 1 %}s{% endif %} · {{ lineage.chart_count }} chart{% if lineage.chart_count != 1 %}s{% endif %}</div>
-  </div>
-  {% if lineage.is_empty %}
-  <p class="glyf-lineage-empty">No lineage was recorded for these charts. Rebuild with a current glyf to record it.</p>
-  {% else %}
-  <div class="glyf-lineage-colheads">
-    <div class="glyf-lineage-colhead">Sources</div>
-    <div class="glyf-lineage-colhead">Models</div>
-    <div class="glyf-lineage-colhead">Charts on this dashboard</div>
-  </div>
-  <div class="glyf-lineage-wrap" data-glyf-lineage>
-    <svg class="glyf-lineage-svg" viewBox="0 0 {{ lineage.width }} {{ lineage.height }}" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
-      <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
-        <g class="glyf-lineage-edges">
-          {%- for edge in lineage.edges %}
-          {%- set mx = (edge.x1 + edge.x2) / 2 %}
-          <path d="M{{ edge.x1 }},{{ edge.y1 }} C{{ mx }},{{ edge.y1 }} {{ mx }},{{ edge.y2 }} {{ edge.x2 }},{{ edge.y2 }}" data-from="{{ edge.source }}" data-to="{{ edge.target }}"/>
-          {%- endfor %}
-        </g>
-        <g class="glyf-lineage-nodes">
-          {%- for node in lineage.nodes %}
-          <g class="glyf-lineage-node glyf-lineage-node--{{ node.kind }}" data-node="{{ node.id }}" data-tip="{{ node.tip }}" transform="translate({{ node.x }},{{ node.y }})" tabindex="0" role="button" aria-label="{{ node.title }}, {{ node.subtitle }}">
-            <rect width="240" height="44" rx="7"/>
-            <text class="glyf-lineage-node-title" x="12" y="18">{{ node.title }}</text>
-            <text class="glyf-lineage-node-sub" x="12" y="34">{{ node.subtitle }}</text>
-          </g>
-          {%- endfor %}
-        </g>
-      </g>
-    </svg>
-    <div class="glyf-lineage-controls" aria-label="Zoom">
-      <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="in" aria-label="Zoom in">+</button>
-      <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="out" aria-label="Zoom out">&minus;</button>
-      <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="reset" aria-label="Reset view">&#8690;</button>
+{% import "components/icons.j2" as icons %}
+
+{% macro render_lineage_modal(lineage) -%}
+<div class="glyf-modal-backdrop" id="glyf-lineage-modal" data-glyf-lineage-modal>
+  <div class="glyf-modal glyf-modal--wide" role="dialog" aria-modal="true" aria-label="Lineage">
+    <div class="glyf-modal-head">
+      <div class="glyf-lineage-head">
+        <div class="glyf-modal-title">Lineage</div>
+        <div class="glyf-lineage-summary glyf-mono">{{ lineage.source_count }} source{% if lineage.source_count != 1 %}s{% endif %} · {{ lineage.model_count }} model{% if lineage.model_count != 1 %}s{% endif %} · {{ lineage.chart_count }} chart{% if lineage.chart_count != 1 %}s{% endif %}</div>
+      </div>
+      <button class="glyf-close-btn" type="button" aria-label="Close lineage" data-glyf-lineage-close>x</button>
     </div>
-    <div class="glyf-lineage-tip" role="tooltip" hidden></div>
+    <div class="glyf-lineage-body">
+      {% if lineage.is_empty %}
+      <p class="glyf-lineage-empty">No lineage was recorded for these charts. Rebuild with a current glyf to record it.</p>
+      {% else %}
+      <div class="glyf-lineage-colheads">
+        <div class="glyf-lineage-colhead">Sources</div>
+        <div class="glyf-lineage-colhead">Models</div>
+        <div class="glyf-lineage-colhead">Charts on this dashboard</div>
+      </div>
+      <div class="glyf-lineage-wrap" data-glyf-lineage>
+        <svg class="glyf-lineage-svg" viewBox="0 0 {{ lineage.width }} {{ lineage.height }}" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
+          <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
+            <g class="glyf-lineage-edges">
+              {%- for edge in lineage.edges %}
+              {%- set mx = (edge.x1 + edge.x2) / 2 %}
+              <path d="M{{ edge.x1 }},{{ edge.y1 }} C{{ mx }},{{ edge.y1 }} {{ mx }},{{ edge.y2 }} {{ edge.x2 }},{{ edge.y2 }}" data-from="{{ edge.source }}" data-to="{{ edge.target }}"/>
+              {%- endfor %}
+            </g>
+            <g class="glyf-lineage-nodes">
+              {%- for node in lineage.nodes %}
+              <g class="glyf-lineage-node glyf-lineage-node--{{ node.kind }}" data-node="{{ node.id }}" data-tip="{{ node.tip }}" transform="translate({{ node.x }},{{ node.y }})" tabindex="0" role="button" aria-label="{{ node.title }}, {{ node.subtitle }}">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">{{ node.title }}</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">{{ node.subtitle }}</text>
+              </g>
+              {%- endfor %}
+            </g>
+          </g>
+        </svg>
+        <div class="glyf-lineage-controls" aria-label="Zoom">
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="in" aria-label="Zoom in">+</button>
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="out" aria-label="Zoom out">&minus;</button>
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="reset" aria-label="Reset view">&#8690;</button>
+        </div>
+        <div class="glyf-lineage-tip" role="tooltip" hidden></div>
+      </div>
+      <p class="glyf-lineage-hint">Click a node to trace what feeds it and what it feeds; click again to clear. Hover a node for what it binds or reads. Drag to move the canvas; scroll or use the buttons to zoom. Escape closes.</p>
+      {% endif %}
+    </div>
   </div>
-  <p class="glyf-lineage-hint">Click a node to trace what feeds it and what it feeds; click again or press Escape to clear. Hover a node for what it binds or reads. Drag to move the canvas; scroll or use the buttons to zoom.</p>
-  {% endif %}
-</section>
+</div>
 {%- endmacro %}

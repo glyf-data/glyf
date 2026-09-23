@@ -111,10 +111,20 @@ class DashboardRenderer:
         )
 
     def _environment(self) -> Environment:
-        return Environment(
+        environment = Environment(
             loader=FileSystemLoader(self.templates_dir),
             autoescape=select_autoescape(("html", "xml")),
         )
+        environment.filters["tag_tone"] = tag_tone
+        return environment
+
+
+TAG_TONES = 6
+
+
+def tag_tone(tag: str) -> int:
+    """Which of the tag tints a tag gets: the same one on every page it appears."""
+    return sum(ord(char) for char in str(tag)) % TAG_TONES
 
 
 def _strip_trailing_whitespace(value: str) -> str:

@@ -31,8 +31,12 @@
   </button>
   <div class="glyf-action-divider" aria-hidden="true"></div>
   {% endif %}
-  <button class="glyf-icon-btn" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
+  <button class="glyf-icon-btn glyf-icon-btn--accent" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
     {{ icons.icon("spark") }}
+  </button>
+  <button class="glyf-icon-btn glyf-theme-toggle" type="button" data-tip="Theme" aria-label="Switch between light and dark" data-glyf-theme-toggle>
+    {{ icons.icon("sun", "glyf-theme-icon glyf-theme-icon--light") }}
+    {{ icons.icon("moon", "glyf-theme-icon glyf-theme-icon--dark") }}
   </button>
 </div>
 {%- endmacro %}

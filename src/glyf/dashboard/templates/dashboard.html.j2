@@ -8,9 +8,10 @@
 {%- import "components/ai_panel.j2" as ai_panel -%}
 {%- import "components/lineage_view.j2" as lineage_view -%}
 <!doctype html>
-<html lang="en" data-theme="{{ dashboard_theme }}">
+<html lang="en" data-theme="{{ dashboard_theme }}" data-glyf-chart-follows="{{ 'true' if dashboard.chart_theme in (none, 'auto') else 'false' }}">
 <head>
   <meta charset="utf-8">
+  <script>try { var t = localStorage.getItem("glyf-theme"); if (t === "light" || t === "dark") { document.documentElement.setAttribute("data-theme", t); } } catch (e) {}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ dashboard.title }}</title>
   {% if assets.inline_css %}
@@ -36,7 +37,7 @@
           </nav>
           <div class="glyf-title-row">
             <h1 class="glyf-title">{{ dashboard.title }}</h1>
-            <span class="glyf-badge{% if dashboard.toolbar.visibility == 'public' %} glyf-badge-green{% endif %}">
+            <span class="glyf-badge {% if dashboard.toolbar.visibility == 'public' %}glyf-badge-green{% else %}glyf-badge-amber{% endif %}">
               {{ dashboard.toolbar.visibility }}
             </span>
           </div>
@@ -48,7 +49,7 @@
           {% if dashboard.tags %}
           <div class="glyf-tags" aria-label="Dashboard tags">
             {% for tag in dashboard.tags %}
-            <span class="glyf-badge">{{ tag }}</span>
+            <span class="glyf-badge glyf-tag glyf-tag--{{ tag | tag_tone }}">{{ tag }}</span>
             {% endfor %}
           </div>
           {% endif %}
@@ -170,9 +171,6 @@
     <div class="glyf-main">
       {{ source_drawer.render_source_drawer(charts, dashboard_config) }}
 
-      {% if lineage is not none %}
-      {{ lineage_view.render_lineage_view(lineage) }}
-      {% endif %}
       <main class="glyf-content" id="glyf-charts-view">
         {% if dashboard.sections %}
           {% for section in dashboard.sections %}
@@ -236,6 +234,10 @@
     </div>
 
     {{ ai_panel.render_ai_panel(dashboard) }}
+
+    {% if lineage is not none %}
+    {{ lineage_view.render_lineage_modal(lineage) }}
+    {% endif %}
 
     <div class="glyf-modal-backdrop" id="glyf-lookback-modal" data-glyf-modal>
       <div class="glyf-modal" role="dialog" aria-modal="true" aria-label="Lookback chart versions">
@@ -314,20 +316,21 @@
   {% if lineage is not none and not lineage.is_empty %}
   <script>
     (function () {
-      // The Lineage view swaps in for the chart grid; the button toggles it back.
+      // Lineage opens as a window over the dashboard, like Lookback.
       const button = document.querySelector("[data-glyf-lineage-button]");
-      const view = document.getElementById("glyf-lineage-view");
-      const charts = document.getElementById("glyf-charts-view");
-      if (!button || !view || !charts) return;
-      button.addEventListener("click", () => {
-        const open = view.hidden;
-        view.hidden = !open;
-        charts.hidden = open;
+      const modal = document.getElementById("glyf-lineage-modal");
+      if (!button || !modal) return;
+      const setOpen = (open) => {
+        modal.classList.toggle("is-open", open);
         button.classList.toggle("is-active", open);
         button.setAttribute("aria-pressed", open ? "true" : "false");
-      });
+      };
+      button.addEventListener("click", () => setOpen(!modal.classList.contains("is-open")));
+      modal.querySelector("[data-glyf-lineage-close]").addEventListener("click", () => setOpen(false));
+      modal.addEventListener("click", (event) => { if (event.target === modal) setOpen(false); });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape" && modal.classList.contains("is-open")) setOpen(false); });
 
-      const wrap = view.querySelector("[data-glyf-lineage]");
+      const wrap = modal.querySelector("[data-glyf-lineage]");
       const svg = wrap.querySelector("svg");
       const canvas = wrap.querySelector("[data-glyf-lineage-canvas]");
       const nodes = Array.from(wrap.querySelectorAll("[data-node]"));
@@ -355,8 +358,6 @@
         node.addEventListener("click", () => trace(node.dataset.node));
         node.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); trace(node.dataset.node); } });
       });
-      document.addEventListener("keydown", (event) => { if (event.key === "Escape") clear(); });
-
       // Pan and zoom: one transform on the canvas group.
       const state = { x: 0, y: 0, k: 1 };
       const apply = () => canvas.setAttribute("transform", `translate(${state.x},${state.y}) scale(${state.k})`);
@@ -478,6 +479,66 @@
         }
       });
     }
+
+    (function () {
+      // Light or dark, chosen by the reader and remembered in this browser.
+      // The page's palette is tokens, so the frame follows on its own; charts
+      // drawn at build time get the same colour swaps the build applies.
+      const root = document.documentElement;
+      const toggle = document.querySelector("[data-glyf-theme-toggle]");
+      const chartsFollow = root.dataset.glyfChartFollows !== "false";
+      const svgSwaps = [
+        ["stroke", "#d9e2ec", "#3f3f46"], ["stroke", "#ddd", "#27272a"], ["stroke", "#888", "#a1a1aa"],
+        ["fill", "#000", "#f4f4f5"], ["fill", "black", "#f4f4f5"],
+      ];
+      const swapAttributes = (svg, dark) => {
+        const first = svg.querySelector("rect");
+        if (first) {
+          const fill = first.getAttribute("fill");
+          if (dark && fill === "white") first.setAttribute("fill", "#09090b");
+          if (!dark && fill === "#09090b") first.setAttribute("fill", "white");
+        }
+        svgSwaps.forEach(([attr, light, darkValue]) => {
+          const from = dark ? light : darkValue, to = dark ? darkValue : light;
+          svg.querySelectorAll(`[${attr}="${from}"]`).forEach((el) => el.setAttribute(attr, to));
+        });
+      };
+      const darkVega = { background: "#09090b", view: { stroke: "#3f3f46", fill: "#09090b" }, axis: { labelColor: "#f4f4f5", titleColor: "#f4f4f5", domainColor: "#a1a1aa", tickColor: "#a1a1aa", gridColor: "#27272a" }, legend: { labelColor: "#f4f4f5", titleColor: "#f4f4f5" }, title: { color: "#f4f4f5", subtitleColor: "#d4d4d8" } };
+      const lightVega = { background: "#ffffff", view: { stroke: "#d9e2ec", fill: "#ffffff" }, axis: { labelColor: "#000000", titleColor: "#000000", domainColor: "#888888", tickColor: "#888888", gridColor: "#dddddd" }, legend: { labelColor: "#000000", titleColor: "#000000" }, title: { color: "#000000", subtitleColor: "#52525b" } };
+      const themeCharts = (dark) => {
+        if (!chartsFollow) return;
+        document.querySelectorAll(".glyf-chart-card").forEach((card) => {
+          card.setAttribute("data-chart-theme", dark ? "dark" : "light");
+          card.querySelectorAll(".glyf-chart-body > svg").forEach((svg) => swapAttributes(svg, dark));
+        });
+        {% if has_interactive_charts %}
+        {
+          document.querySelectorAll("[data-vega-chart]").forEach((container) => {
+            const specElement = document.getElementById(container.dataset.vegaChart);
+            if (!specElement) return;
+            const spec = JSON.parse(specElement.textContent);
+            const palette = dark ? darkVega : lightVega;
+            spec.background = palette.background;
+            spec.config = spec.config || {};
+            ["view", "axis", "legend", "title"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
+            vegaEmbed(container, spec, { actions: false, renderer: "svg" });
+          });
+        }
+        {% endif %}
+      };
+      const buildTheme = "{{ dashboard_theme }}";
+      const current = () => root.getAttribute("data-theme") === "dark";
+      // The page may have been switched before paint; bring the charts along.
+      if (current() !== (buildTheme === "dark")) themeCharts(current());
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          const dark = !current();
+          root.setAttribute("data-theme", dark ? "dark" : "light");
+          try { localStorage.setItem("glyf-theme", dark ? "dark" : "light"); } catch (e) {}
+          themeCharts(dark);
+        });
+      }
+    })();
 
     document.querySelectorAll("[data-glyf-filter-menu]").forEach((menu) => {
       const button = menu.querySelector("[data-glyf-filter-button]");
