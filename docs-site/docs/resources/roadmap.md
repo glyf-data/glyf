@@ -12,20 +12,6 @@ order is the priority.
   on the <Link href="https://github.com/glyf-data/glyf/releases">releases page</Link>.
 </p>
 
-## In the next release
-
-<div className="roadmapNext">
-  <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
-  <h3>Lineage on the dashboard</h3>
-  <p>
-    A <strong>Lineage</strong> button beside Source swaps the chart grid for a graph of the raw
-    sources, the dbt models and the dashboard's charts. Click a model and the charts it feeds
-    light up; click a chart and its path back to raw data does. Built from the chart artifacts
-    alone, so an exported site carries it.
-  </p>
-  <Link to="/docs/guides/dbt-integration#lineage-on-the-dashboard">Read the guide</Link>
-</div>
-
 ## Planned
 
 Vote with a 👍 on the issue. The most wanted go first.
@@ -65,6 +51,14 @@ if one of these would change how you work.
 ## Shipped
 
 <ol className="roadmapTimeline">
+  <li>
+    <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.12.0">0.12.0</Link>
+      <time dateTime="2026-09-23">23 September 2026</time>
+    </div>
+    <strong>Lineage on the dashboard</strong>
+    <p>A <strong>Lineage</strong> button beside Source swaps the chart grid for a graph of the raw sources, the dbt models and the dashboard's charts. Click a model and the charts it feeds light up; click a chart and its path back to raw data does; drag to pan and scroll to zoom. Built from the chart artifacts alone, so an exported site carries it, and withheld under <code>export.row_data: exclude</code> like the compiled SQL. <Link to="/docs/guides/dbt-integration#lineage-on-the-dashboard">Read the guide</Link>.</p>
+  </li>
   <li>
     <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.11.0">0.11.0</Link>
