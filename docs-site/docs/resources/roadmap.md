@@ -53,6 +53,14 @@ if one of these would change how you work.
 <ol className="roadmapTimeline">
   <li>
     <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.13.0">0.13.0</Link>
+      <time dateTime="2026-09-23">23 September 2026</time>
+    </div>
+    <strong>Filters that filter, a theme switch, and lineage as a window</strong>
+    <p>A dashboard filter is now a select: choosing a value redraws every chart whose rows carry the column, in the browser, from the rows the page already holds, and dims the charts it cannot touch, saying why. Every page has a light-and-dark switch remembered in the reader's browser; tags and the visibility pill carry a little colour; Lineage opens as a window over the dashboard. <Link to="/docs/guides/dashboard-yaml#filters">Read the guide</Link>.</p>
+  </li>
+  <li>
+    <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.12.0">0.12.0</Link>
       <time dateTime="2026-09-23">23 September 2026</time>
     </div>
