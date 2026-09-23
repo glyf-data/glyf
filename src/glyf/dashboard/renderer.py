@@ -8,6 +8,7 @@ from glyf.config import GlyfConfig
 from glyf.dashboard.artifacts import ChartArtifact
 from glyf.dashboard.assets import AssetManager, DashboardAssets
 from glyf.dashboard.chart_theme import apply_chart_theme, resolve_chart_theme
+from glyf.dashboard.filters import plan_filters
 from glyf.dashboard.lineage import build_lineage
 from glyf.dashboard.loader import Dashboard
 from glyf.dashboard.theme import DEFAULT_THEME, Theme
@@ -85,11 +86,18 @@ class DashboardRenderer:
             themed_chart_artifacts[chart.metadata.name] for chart in charts
         )
         template = self._environment().get_template("dashboard.html.j2")
+        filters = plan_filters(dashboard, themed_chart_artifacts)
+        interactive = any(chart.metadata.interactions for chart in themed_charts)
         html = template.render(
             dashboard=dashboard,
             chart_artifacts=themed_chart_artifacts,
             charts=themed_charts,
-            has_interactive_charts=any(chart.vega_spec is not None for chart in themed_charts),
+            has_interactive_charts=interactive,
+            # The Vega runtime is loaded for an interactive chart, and for a
+            # filter that redraws a static one; a page with neither stays free
+            # of it.
+            needs_vega=interactive or bool(filters.vega_charts),
+            filters=filters,
             has_tables=any(chart.metadata.is_table for chart in themed_charts),
             lineage=build_lineage(charts) if config.dashboard.show_lineage else None,
             dashboard_config=config.dashboard,

@@ -61,6 +61,9 @@ class DashboardFilter:
     values: tuple[str, ...] = ()
     source_chart: str | None = None
     source_field: str | None = None
+    # The charts the filter applies to. Empty means every chart on the
+    # dashboard whose rows carry the field.
+    charts: tuple[str, ...] = ()
 
     @property
     def is_sourced(self) -> bool:
@@ -316,6 +319,14 @@ def _parse_filters(raw: object) -> tuple[DashboardFilter, ...]:
         field = item.get("field")
         if not isinstance(field, str) or not field.strip():
             raise ValueError(f"expected 'filters[{index}].field' to be a non-empty string")
+        charts_raw = item.get("charts", [])
+        if charts_raw is None:
+            charts_raw = []
+        if not isinstance(charts_raw, list) or not all(
+            isinstance(name, str) and name.strip() for name in charts_raw
+        ):
+            raise ValueError(f"expected 'filters[{index}].charts' to be a list of chart names")
+        applies_to = tuple(dict.fromkeys(name.strip() for name in charts_raw))
         values = item.get("values")
         if isinstance(values, list):
             parsed_values = tuple(
@@ -329,6 +340,7 @@ def _parse_filters(raw: object) -> tuple[DashboardFilter, ...]:
                 DashboardFilter(
                     field=field.strip(),
                     values=tuple(dict.fromkeys(parsed_values)),
+                    charts=applies_to,
                 )
             )
             continue
@@ -343,6 +355,7 @@ def _parse_filters(raw: object) -> tuple[DashboardFilter, ...]:
                     field=field.strip(),
                     source_chart=source_match.group("chart"),
                     source_field=source_match.group("field"),
+                    charts=applies_to,
                 )
             )
             continue

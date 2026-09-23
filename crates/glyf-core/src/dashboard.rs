@@ -189,6 +189,11 @@ fn validate_filter(filter: &Value, index: usize) -> Result<(), CoreError> {
         .as_object()
         .ok_or_else(|| dashboard_error(format!("expected {label} to be a mapping")))?;
     non_empty_string(filter.get("field"), &format!("{label}.field"), "string")?;
+    if let Some(charts) = filter.get("charts") {
+        if !charts.is_null() {
+            validate_charts(Some(charts), &format!("{label}.charts"))?;
+        }
+    }
 
     let Some(values) = filter.get("values") else {
         return Err(dashboard_error(format!(
@@ -668,6 +673,21 @@ mod tests {
         .unwrap_err();
 
         assert!(error.to_string().contains("tags[2]"));
+    }
+
+    #[test]
+    fn a_filter_may_name_the_charts_it_applies_to() {
+        validate_dashboard_json_text(
+            r#"{"name": "d", "title": "D", "charts": ["a", "b"], "filters": [{"field": "plan", "values": ["Pro"], "charts": ["a"]}]}"#,
+            "d.yml",
+        )
+        .unwrap();
+        let error = validate_dashboard_json_text(
+            r#"{"name": "d", "title": "D", "charts": ["a"], "filters": [{"field": "plan", "values": ["Pro"], "charts": "a"}]}"#,
+            "d.yml",
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("filters[1].charts"), "{error}");
     }
 
     #[test]

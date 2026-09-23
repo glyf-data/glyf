@@ -124,7 +124,10 @@ the rendered chart displays.** The encoded values are still there, because Vega
 needs them to draw, and they are the values the pixels already reveal.
 
 A `source(chart, field)` filter is resolved as usual. It names a column
-explicitly, so its distinct values are something you asked to publish.
+explicitly, so its distinct values are something you asked to publish. A
+filter redraws a chart from the columns its spec carries, so under `minimal`
+only a filter on an encoded column applies; the others dim the chart and say
+so.
 
 ## Publishing without the rows
 

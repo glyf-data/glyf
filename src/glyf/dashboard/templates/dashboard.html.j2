@@ -19,7 +19,7 @@
   {% else %}
   <link rel="stylesheet" href="../{{ assets.css_href }}">
   {% endif %}
-  {% if has_interactive_charts %}
+  {% if needs_vega %}
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
@@ -111,50 +111,31 @@
       </div>
     </div>
 
-    <div class="glyf-control-bar">
+    <div class="glyf-control-bar"{% if filters.live %} data-glyf-filter-bar{% endif %}>
       <span class="glyf-control-label">Filters</span>
-      {% if dashboard.filters %}
+      {% if dashboard.filters and filters.live %}
         {% for filter in dashboard.filters %}
-        <div class="glyf-filter-menu" data-glyf-filter-menu>
-          <button
-            class="glyf-filter-button"
-            type="button"
-            aria-expanded="false"
-            data-glyf-filter-button
-            {% if filter.is_sourced %}title="source({{ filter.source_chart }}, {{ filter.source_field }})"{% elif filter.values %}title="{{ filter.values | join(', ') }}"{% endif %}
-          >
-            {{ icons.icon("filter") }}
-            <span class="glyf-filter-field">{{ filter.field }}</span>
-            {% if filter.values %}
-            <span class="glyf-filter-inline-sep">/</span>
-            <span class="glyf-filter-inline-values">{{ filter.values | length }} value{% if filter.values | length != 1 %}s{% endif %}</span>
-            {% else %}
-            <span class="glyf-filter-value">no values</span>
-            {% endif %}
-            <span class="glyf-filter-value">{% if filter.is_sourced %}source{% else %}static{% endif %}</span>
-            {{ icons.icon("chevron-down", "glyf-filter-button-icon") }}
-          </button>
-          <div class="glyf-filter-popover" role="menu" aria-label="{{ filter.field }} values" data-glyf-filter-popover>
-            <div class="glyf-filter-popover-head">
-              <div class="glyf-filter-popover-title">{{ filter.field }}</div>
-              <div class="glyf-filter-popover-note">{% if filter.is_sourced %}source({{ filter.source_chart }}, {{ filter.source_field }}){% else %}static values{% endif %}</div>
-            </div>
-            <div class="glyf-filter-options">
-              {% if filter.values %}
-                {% for value in filter.values %}
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">{{ value }}</span>
-                </button>
-                {% endfor %}
-              {% else %}
-              <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                <span class="glyf-filter-option-title">No values</span>
-              </button>
-              {% endif %}
-            </div>
-          </div>
+        <label class="glyf-filter-select" data-glyf-filter="{{ filter.field }}">
+          {{ icons.icon("filter") }}
+          <span class="glyf-filter-field">{{ filter.field }}</span>
+          <select class="glyf-filter-control" id="glyf-filter-{{ filter.field }}" data-glyf-filter-select="{{ filter.field }}" aria-label="Filter by {{ filter.field }}">
+            <option value="">All</option>
+            {% for value in filter.values %}
+            <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        {% endfor %}
+        <button class="glyf-filter-clear" type="button" data-glyf-filter-clear hidden>Clear</button>
+      {% elif dashboard.filters %}
+        {% for filter in dashboard.filters %}
+        <div class="glyf-filter-chip" title="{% if filter.is_sourced %}source({{ filter.source_chart }}, {{ filter.source_field }}){% else %}static values{% endif %}">
+          {{ icons.icon("filter") }}
+          <span class="glyf-filter-field">{{ filter.field }}</span>
+          <span class="glyf-filter-value">{% if filter.values %}{{ filter.values | length }} value{% if filter.values | length != 1 %}s{% endif %}{% else %}no values{% endif %}</span>
         </div>
         {% endfor %}
+        <span class="glyf-filter-value">no chart on this page publishes these columns</span>
       {% else %}
         <div class="glyf-filter-chip">
           {{ icons.icon("info") }}
@@ -199,11 +180,11 @@
             >
               {% for item in section.items %}
                 {% if item.kind == "chart" and item.chart and chart_artifacts[item.chart].metadata.is_table %}
-                  {{ table_cards.render_table_card(chart_artifacts[item.chart], item.title, item.width) }}
+                  {{ table_cards.render_table_card(chart_artifacts[item.chart], item.title, item.width, filters) }}
                 {% elif item.kind == "chart" and item.chart and chart_artifacts[item.chart].metadata.is_kpi %}
-                  {{ kpi_cards.render_kpi_card(chart_artifacts[item.chart], item.title, item.width) }}
+                  {{ kpi_cards.render_kpi_card(chart_artifacts[item.chart], item.title, item.width, filters) }}
                 {% elif item.kind == "chart" and item.chart %}
-                  {{ chart_cards.render_chart_card(chart_artifacts[item.chart], dashboard_config, chart_theme, item.title, item.width) }}
+                  {{ chart_cards.render_chart_card(chart_artifacts[item.chart], dashboard_config, chart_theme, item.title, item.width, filters) }}
                 {% elif item.kind == "component" and item.component_spec %}
                   {{ component_cards.render_component_card(item.component_spec, item.width) }}
                 {% elif item.kind == "markdown" %}
@@ -220,11 +201,11 @@
           <div class="glyf-chart-grid" data-auto-columns="true">
             {% for chart in charts %}
             {% if chart.metadata.is_table %}
-            {{ table_cards.render_table_card(chart) }}
+            {{ table_cards.render_table_card(chart, filters=filters) }}
             {% elif chart.metadata.is_kpi %}
-            {{ kpi_cards.render_kpi_card(chart) }}
+            {{ kpi_cards.render_kpi_card(chart, filters=filters) }}
             {% else %}
-            {{ chart_cards.render_chart_card(chart, dashboard_config, chart_theme) }}
+            {{ chart_cards.render_chart_card(chart, dashboard_config, chart_theme, filters=filters) }}
             {% endif %}
             {% endfor %}
           </div>
@@ -505,23 +486,25 @@
       };
       const darkVega = { background: "#09090b", view: { stroke: "#3f3f46", fill: "#09090b" }, axis: { labelColor: "#f4f4f5", titleColor: "#f4f4f5", domainColor: "#a1a1aa", tickColor: "#a1a1aa", gridColor: "#27272a" }, legend: { labelColor: "#f4f4f5", titleColor: "#f4f4f5" }, title: { color: "#f4f4f5", subtitleColor: "#d4d4d8" } };
       const lightVega = { background: "#ffffff", view: { stroke: "#d9e2ec", fill: "#ffffff" }, axis: { labelColor: "#000000", titleColor: "#000000", domainColor: "#888888", tickColor: "#888888", gridColor: "#dddddd" }, legend: { labelColor: "#000000", titleColor: "#000000" }, title: { color: "#000000", subtitleColor: "#52525b" } };
+      window.glyfVegaTheme = (spec, dark) => {
+        const palette = dark ? darkVega : lightVega;
+        spec.background = palette.background;
+        spec.config = spec.config || {};
+        ["view", "axis", "legend", "title"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
+        return spec;
+      };
       const themeCharts = (dark) => {
         if (!chartsFollow) return;
         document.querySelectorAll(".glyf-chart-card").forEach((card) => {
           card.setAttribute("data-chart-theme", dark ? "dark" : "light");
           card.querySelectorAll(".glyf-chart-body > svg").forEach((svg) => swapAttributes(svg, dark));
         });
-        {% if has_interactive_charts %}
+        {% if needs_vega %}
         {
           document.querySelectorAll("[data-vega-chart]").forEach((container) => {
             const specElement = document.getElementById(container.dataset.vegaChart);
             if (!specElement) return;
-            const spec = JSON.parse(specElement.textContent);
-            const palette = dark ? darkVega : lightVega;
-            spec.background = palette.background;
-            spec.config = spec.config || {};
-            ["view", "axis", "legend", "title"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
-            vegaEmbed(container, spec, { actions: false, renderer: "svg" });
+            vegaEmbed(container, window.glyfVegaTheme(JSON.parse(specElement.textContent), dark), { actions: false, renderer: "svg" });
           });
         }
         {% endif %}
@@ -536,9 +519,73 @@
           root.setAttribute("data-theme", dark ? "dark" : "light");
           try { localStorage.setItem("glyf-theme", dark ? "dark" : "light"); } catch (e) {}
           themeCharts(dark);
+          if (window.glyfApplyFilters) window.glyfApplyFilters();
         });
       }
     })();
+
+    {% if filters.live %}
+    (function () {
+      // A filter redraws every chart it can, from the rows the page carries,
+      // and dims the ones it cannot: a chart that looks filtered and is not
+      // would be worse than one that says so.
+      const selects = Array.from(document.querySelectorAll("[data-glyf-filter-select]"));
+      const clearButton = document.querySelector("[data-glyf-filter-clear]");
+      const cards = Array.from(document.querySelectorAll("[data-glyf-chart]"));
+      const active = () => selects.filter((s) => s.value !== "").map((s) => ({ field: s.dataset.glyfFilterSelect, value: s.value }));
+      const modesOf = (card) => Object.fromEntries((card.dataset.glyfFilters || "").split(" ").filter(Boolean).map((pair) => pair.split(":")));
+      const vegaSpecOf = (card) => {
+        const el = card.querySelector('script[type="application/json"]');
+        return el ? JSON.parse(el.textContent) : null;
+      };
+      const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
+      const filterExpr = (pairs) => pairs.map((p) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(p.value)}`).join(" && ");
+      const redrawVega = (card, pairs) => {
+        const spec = vegaSpecOf(card);
+        const target = card.querySelector("[data-glyf-filter-chart], [data-vega-chart]");
+        if (!spec || !target || typeof vegaEmbed !== "function") return;
+        if (pairs.length) spec.transform = [{ filter: filterExpr(pairs) }].concat(spec.transform || []);
+        if (window.glyfVegaTheme) window.glyfVegaTheme(spec, isDark());
+        const still = card.querySelector("[data-glyf-still]");
+        if (still) { still.hidden = pairs.length > 0; }
+        if (target.hasAttribute("data-glyf-filter-chart")) { target.hidden = pairs.length === 0; }
+        if (pairs.length || target.hasAttribute("data-vega-chart")) vegaEmbed(target, spec, { actions: false, renderer: "svg" });
+      };
+      const filterTable = (card, pairs) => {
+        const table = card.querySelector("table");
+        if (!table) return;
+        const headers = Array.from(table.querySelectorAll("th[data-column]")).map((th) => th.dataset.column);
+        const rows = Array.from(table.querySelectorAll("tbody tr"));
+        let shown = 0;
+        rows.forEach((row) => {
+          const ok = pairs.every((p) => { const i = headers.indexOf(p.field); return i >= 0 && row.children[i] && row.children[i].textContent === p.value; });
+          row.hidden = !ok; if (ok) shown += 1;
+        });
+        const caption = card.querySelector(".glyf-table-caption");
+        if (caption) caption.textContent = pairs.length ? `${shown} of ${rows.length} rows` : `${rows.length} row${rows.length === 1 ? "" : "s"}`;
+      };
+      const apply = () => {
+        const pairs = active();
+        if (clearButton) clearButton.hidden = pairs.length === 0;
+        cards.forEach((card) => {
+          const modes = modesOf(card);
+          const applies = pairs.filter((p) => modes[p.field] && modes[p.field] !== "none");
+          const cannot = pairs.filter((p) => !modes[p.field] || modes[p.field] === "none");
+          const chip = card.querySelector("[data-glyf-filter-applied]");
+          const note = card.querySelector("[data-glyf-filter-note]");
+          if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.value}`).join(", "); }
+          card.classList.toggle("is-unfiltered", pairs.length > 0 && cannot.length > 0 && applies.length === 0);
+          if (note) { note.hidden = cannot.length === 0; note.textContent = cannot.length ? `not filtered by ${cannot.map((p) => p.field).join(", ")}` : ""; }
+          const first = Object.values(modes).find((m) => m !== "none");
+          if (first === "vega") redrawVega(card, applies);
+          else if (first === "table") filterTable(card, applies);
+        });
+      };
+      selects.forEach((s) => s.addEventListener("change", apply));
+      if (clearButton) clearButton.addEventListener("click", () => { selects.forEach((s) => { s.value = ""; }); apply(); });
+      window.glyfApplyFilters = apply;
+    })();
+    {% endif %}
 
     document.querySelectorAll("[data-glyf-filter-menu]").forEach((menu) => {
       const button = menu.querySelector("[data-glyf-filter-button]");

@@ -62,7 +62,9 @@ def _render_altair_chart(
             _patch_svg_fonts(svg_path)
         if "png" in config.formats:
             chart_spec.save(png_path)
-        if chart.is_interactive and vega_json_path is not None:
+        if vega_json_path is not None:
+            # Every drawn chart keeps its spec: an interactive card embeds it,
+            # and a dashboard filter redraws any chart from it in the browser.
             vega_json_path.parent.mkdir(parents=True, exist_ok=True)
             chart_spec.save(vega_json_path)
             _patch_vega_json_fonts(vega_json_path)

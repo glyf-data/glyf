@@ -695,7 +695,9 @@ def test_dashboard_generation_supports_artifact_aware_macros_and_filters(
     assert "🟢 Healthy" in html
     assert "Months from chart data" in html
     assert "2026-01, 2026-02, 2026-03, 2026-04" in html
-    assert 'title="source(revenue, month)"' in html
+    # The sourced values become the options of a live select.
+    assert 'data-glyf-filter-select="month"' in html
+    assert '<option value="2026-04">2026-04</option>' in html
 
 
 def test_dashboard_generation_reports_invalid_macro(tmp_path: Path) -> None:

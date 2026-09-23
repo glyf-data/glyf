@@ -57,6 +57,7 @@ def write_chart_metadata(
     *,
     columns: tuple[str, ...] = (),
     lineage: dict[str, object] | None = None,
+    vega: bool = False,
 ) -> None:
     """Write `charts/<name>.json`.
 
@@ -102,6 +103,7 @@ def write_chart_metadata(
         metadata["lineage"] = lineage
     if chart.is_interactive:
         metadata["interactions"] = list(chart.interactions)
+    if vega:
         metadata["vega_json_path"] = artifacts.vega_json.relative_to(
             project_root
         ).as_posix()

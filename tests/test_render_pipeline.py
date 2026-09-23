@@ -33,6 +33,7 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
         "data_json_path": "target/glyf/data/normalized/revenue.data.json",
         "lineage": {"models": {"fct_orders": {"parents": [], "path": None}}, "sources": []},
         "metadata_path": "target/glyf/charts/revenue.json",
+        "vega_json_path": "target/glyf/data/vega/revenue.vega.json",
         "png_path": "target/glyf/charts/revenue.png",
         "svg_path": "target/glyf/charts/revenue.svg",
         "title": "Monthly Revenue",
