@@ -1,4 +1,5 @@
 import base64
+import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 import re
@@ -41,8 +42,12 @@ class AssetManager:
         destination = assets_dir / theme.css_file
         shutil.copy2(source, destination)
         self._copy_font_assets(source.parent, assets_dir)
+        # The content hash in the link means a browser that cached an earlier
+        # stylesheet fetches this one: a new page with an old stylesheet shows
+        # every component added since unstyled.
+        digest = hashlib.sha256(source.read_bytes()).hexdigest()[:10]
         return DashboardAssets(
-            css_href=f"assets/{theme.css_file}",
+            css_href=f"assets/{theme.css_file}?v={digest}",
             css_path=destination,
         )
 

@@ -240,6 +240,7 @@ textarea {
 .glyf-source-toggle svg,
 .glyf-meta-item svg,
 .glyf-filter-chip svg,
+.glyf-filter-select svg,
 .glyf-filter-add svg,
 .glyf-static-note svg,
 .glyf-ai-panel-title svg {
@@ -1090,16 +1091,62 @@ html[data-theme="dark"] .glyf-theme-icon--light {
   color: var(--glyf-color-bg);
 }
 
-.glyf-modal.glyf-modal--wide {
-  width: min(1280px, calc(100vw - 32px));
-  max-height: calc(100vh - 40px);
+/* Lineage takes the whole window, like a page of its own: a graph needs width. */
+.glyf-lineage-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  overflow: auto;
+  background: var(--glyf-color-bg-subtle);
+}
+
+.glyf-lineage-screen.is-open {
+  display: block;
+}
+
+.glyf-lineage-frame {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--glyf-space-5) var(--glyf-space-5);
+}
+
+.glyf-lineage-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: var(--glyf-space-4);
+  padding: 14px 0;
+  border-bottom: 0.5px solid var(--glyf-color-border);
+  background: var(--glyf-color-bg-subtle);
+}
+
+.glyf-lineage-back {
+  height: 32px;
+  padding: 0 12px;
+  border: 0.5px solid var(--glyf-color-border);
+  border-radius: var(--glyf-radius-sm);
+  background: var(--glyf-color-bg);
+  color: var(--glyf-color-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.glyf-lineage-back:hover {
+  background: var(--glyf-color-bg-muted);
+}
+
+.glyf-lineage-heading {
+  color: var(--glyf-color-text);
+  font-size: 17px;
+  font-weight: 600;
 }
 
 .glyf-lineage-body {
-  overflow: auto;
-  padding: 14px 16px 16px;
+  padding: 16px 0 0;
 }
 
 .glyf-lineage-head {

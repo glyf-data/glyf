@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Macro Showcase</title>
 
-  <link rel="stylesheet" href="../assets/dashboard.css">
+  <link rel="stylesheet" href="../assets/dashboard.css?v=321cffed63">
 
 
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
@@ -138,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-23T21:18:13Z">23 Sep 2026, 21:18 UTC</strong>
+          Refreshed <strong title="2026-09-23T21:50:12Z">23 Sep 2026, 21:50 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -205,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 23 Sep 2026, 21:18 UTC</span>
+              <span class="glyf-version-option-note">built 23 Sep 2026, 21:50 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -349,7 +349,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">Generated</div>
-  <div class="glyf-component-value">2026-09-23 22:18</div>
+  <div class="glyf-component-value">2026-09-23 22:50</div>
 
 
   </div>
@@ -814,7 +814,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">Local time</div>
-  <div class="glyf-component-value">2026-09-23 22:18</div>
+  <div class="glyf-component-value">2026-09-23 22:50</div>
 
   <div class="glyf-component-note">time.now local timezone</div>
 
@@ -828,7 +828,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">London time</div>
-  <div class="glyf-component-value">2026-09-23 22:18</div>
+  <div class="glyf-component-value">2026-09-23 22:50</div>
 
   <div class="glyf-component-note">time.now explicit timezone</div>
 
@@ -841,7 +841,7 @@ GROUP BY 1, 2
                   <article class="glyf-card glyf-component-card">
   <div class="glyf-card-body">
 
-  <span class="glyf-badge">Refreshed 22:18</span>
+  <span class="glyf-badge">Refreshed 22:50</span>
 
   </div>
 </article>
@@ -1009,7 +1009,7 @@ GROUP BY 1, 2
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-23 22:18
+      2026-09-23 22:50
 
     </div>
   </div>
@@ -1052,14 +1052,14 @@ GROUP BY 1, 2
 </aside>
 
 
-    <div class="glyf-modal-backdrop" id="glyf-lineage-modal" data-glyf-lineage-modal>
-  <div class="glyf-modal glyf-modal--wide" role="dialog" aria-modal="true" aria-label="Lineage">
-    <div class="glyf-modal-head">
+    <div class="glyf-lineage-screen" id="glyf-lineage-modal" data-glyf-lineage-modal role="dialog" aria-modal="true" aria-label="Lineage">
+  <div class="glyf-lineage-frame">
+    <div class="glyf-lineage-bar">
+      <button class="glyf-lineage-back" type="button" data-glyf-lineage-close>&larr; Back to dashboard</button>
       <div class="glyf-lineage-head">
-        <div class="glyf-modal-title">Lineage</div>
+        <div class="glyf-lineage-heading">Lineage</div>
         <div class="glyf-lineage-summary glyf-mono">1 source · 1 model · 2 charts</div>
       </div>
-      <button class="glyf-close-btn" type="button" aria-label="Close lineage" data-glyf-lineage-close>x</button>
     </div>
     <div class="glyf-lineage-body">
 
@@ -1124,7 +1124,7 @@ GROUP BY 1, 2
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">23 Sep 2026, 21:18 UTC</div>
+              <div class="glyf-version-date">23 Sep 2026, 21:50 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -1162,12 +1162,12 @@ GROUP BY 1, 2
       if (!button || !modal) return;
       const setOpen = (open) => {
         modal.classList.toggle("is-open", open);
+        document.body.style.overflow = open ? "hidden" : "";
         button.classList.toggle("is-active", open);
         button.setAttribute("aria-pressed", open ? "true" : "false");
       };
       button.addEventListener("click", () => setOpen(!modal.classList.contains("is-open")));
       modal.querySelector("[data-glyf-lineage-close]").addEventListener("click", () => setOpen(false));
-      modal.addEventListener("click", (event) => { if (event.target === modal) setOpen(false); });
       document.addEventListener("keydown", (event) => { if (event.key === "Escape" && modal.classList.contains("is-open")) setOpen(false); });
 
       const wrap = modal.querySelector("[data-glyf-lineage]");

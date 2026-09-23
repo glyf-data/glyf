@@ -2,6 +2,22 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- A dashboard's stylesheet link carries a hash of its contents, so a
+  browser that cached an earlier stylesheet fetches the new one. Without it
+  a rebuilt page could render with the old stylesheet: the lineage graph as
+  black boxes, oversized filter icons, untinted tags.
+- The filter select's icon is sized like every other control icon.
+
+### Changed
+
+- Lineage opens as a full-screen view with a "Back to dashboard" bar,
+  rather than a window over the dashboard, so the graph has the page's
+  width. Escape still closes it.
+
 ## 0.13.0 - 2026-09-23
 
 ### Dashboard

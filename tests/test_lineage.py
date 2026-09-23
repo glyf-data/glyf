@@ -115,7 +115,8 @@ def test_the_dashboard_gets_a_lineage_button_and_view(tmp_path: Path) -> None:
 
     html = (project / "target" / "glyf" / "dashboards" / "executive.html").read_text(encoding="utf-8")
     assert 'data-glyf-lineage-button' in html
-    assert 'id="glyf-lineage-modal"' in html and "glyf-modal--wide" in html
+    assert 'id="glyf-lineage-modal"' in html and "glyf-lineage-screen" in html
+    assert "Back to dashboard" in html
     assert 'data-node="chart:revenue"' in html
     assert 'data-node="model:fct_orders"' in html
     assert 'data-glyf-zoom="in"' in html
