@@ -28,10 +28,7 @@ sections:
     description: Active user growth and engagement across twelve weeks.
     columns: "30% 70%"
     items:
-      - metric:
-          label: Weekly active users
-          value: "2.3k"
-          note: Week 12, up from 1.5k in week 1
+      - chart: weekly_active_users
       - chart: active_users
         title: Active Users Trend
       - metric:

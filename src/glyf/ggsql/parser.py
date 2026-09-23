@@ -18,6 +18,7 @@ SUPPORTED_CHART_TYPES = {
     "boxplot",
     "heatmap",
     "table",
+    "kpi",
 }
 SUPPORTED_CONFIG_KEYS = {"width", "height"}
 SUPPORTED_INTERACTIONS = {"tooltip", "zoom", "legend_filter"}

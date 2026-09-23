@@ -69,6 +69,16 @@ class GgsqlChart:
         return self.draw_type == "table"
 
     @property
+    def is_kpi(self) -> bool:
+        """A kpi is one number, shown as an HTML tile rather than drawn."""
+        return self.draw_type == "kpi"
+
+    @property
+    def has_picture(self) -> bool:
+        """Whether the renderer draws this chart to a PNG and SVG."""
+        return not (self.is_table or self.is_kpi)
+
+    @property
     def lists_every_column(self) -> bool:
         """`VISUALISE *`: the columns are whatever the query returns."""
         return self.is_table and any(

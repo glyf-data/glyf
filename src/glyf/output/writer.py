@@ -18,6 +18,8 @@ class ChartArtifacts:
     vega_json: Path
     # A table's rendering: an HTML fragment instead of a picture.
     table_html: Path
+    # A kpi's rendering, likewise.
+    kpi_html: Path
 
 
 def chart_artifact_paths(
@@ -39,6 +41,7 @@ def chart_artifact_paths(
         svg=paths.charts_dir / f"{chart.name}.svg",
         vega_json=paths.vega_data_dir / f"{chart.name}.vega.json",
         table_html=paths.charts_dir / f"{chart.name}.table.html",
+        kpi_html=paths.charts_dir / f"{chart.name}.kpi.html",
     )
 
 
@@ -73,6 +76,10 @@ def write_chart_metadata(
         metadata["table_html_path"] = artifacts.table_html.relative_to(
             project_root
         ).as_posix()
+    elif chart.is_kpi:
+        metadata["value"] = chart.field_for_role("value")
+        metadata["compare"] = chart.field_for_role("compare")
+        metadata["kpi_html_path"] = artifacts.kpi_html.relative_to(project_root).as_posix()
     else:
         metadata["x"] = chart.field_for_role("x")
         metadata["y"] = chart.field_for_role("y")

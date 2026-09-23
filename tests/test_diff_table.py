@@ -70,8 +70,8 @@ def test_changed_rows_change_the_table_and_are_said_in_the_rows_terms(
     assert months.data is not None
     (revenue,) = months.data.fields
     assert (revenue.before_sum, revenue.after_sum) == (5400.0, 6000.0)
-    assert months.before_table is not None and "2400" in months.before_table
-    assert months.after_table is not None and "3000" in months.after_table
+    assert months.before_fragment is not None and "2400" in months.before_fragment
+    assert months.after_fragment is not None and "3000" in months.after_fragment
 
 
 def test_a_changed_label_changes_the_table_as_a_definition_change(tmp_path: Path) -> None:
@@ -97,8 +97,8 @@ def test_the_report_shows_both_fragments_and_no_picture(tmp_path: Path) -> None:
     page = write_report(diff, tmp_path / "report")
 
     report = page.parent
-    assert (report / "tables" / "months.before.html").exists()
-    assert (report / "tables" / "months.after.html").exists()
+    assert (report / "fragments" / "months.before.html").exists()
+    assert (report / "fragments" / "months.after.html").exists()
     assert not list((report / "images").glob("months.*"))
 
     document = json.loads((report / "diff.json").read_text(encoding="utf-8"))
@@ -106,9 +106,9 @@ def test_the_report_shows_both_fragments_and_no_picture(tmp_path: Path) -> None:
     assert months["table"] is True
     assert months["status"] == "changed"
     assert months["reasons"] == ["the rows changed"]
-    assert months["tables"] == {
-        "before": "tables/months.before.html",
-        "after": "tables/months.after.html",
+    assert months["fragments"] == {
+        "before": "fragments/months.before.html",
+        "after": "fragments/months.after.html",
     }
     assert "changed_pixels" not in months and "images" not in months
     assert months["data"]["fields"][0]["name"] == "revenue"
@@ -135,13 +135,13 @@ def test_an_added_table_is_shown_as_new(tmp_path: Path) -> None:
     page = write_report(diff, tmp_path / "report")
 
     (months,) = diff.with_status("added")
-    assert months.table and months.after_table is not None
+    assert months.table and months.after_fragment is not None
     document = json.loads((page.parent / "diff.json").read_text(encoding="utf-8"))
     assert document["charts"]["months"] == {
         "status": "added",
         "title": "Months",
         "table": True,
-        "tables": {"after": "tables/months.after.html"},
+        "fragments": {"after": "fragments/months.after.html"},
     }
     assert "New in this build" in page.read_text(encoding="utf-8")
 

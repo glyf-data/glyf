@@ -32,10 +32,11 @@ INTERACT tooltip, zoom
 
 Roles:
 
-- `x`: required by every chart type except `table`.
-- `y`: required by every chart type except `histogram`, which rejects it, and
-  `table`.
+- `x`: required by every chart type except `table` and `kpi`.
+- `y`: required by every chart type except `histogram`, which rejects it,
+  `table` and `kpi`.
 - `color`: optional, except for `heatmap`, which requires it.
+- `value` and `compare`: a `kpi`'s roles, and nobody else's. See [KPI](#kpi).
 
 A `table` takes no roles at all: its `VISUALISE` is a list of columns. See
 [Table](#table).
@@ -53,6 +54,7 @@ A `table` takes no roles at all: its `VISUALISE` is a list of columns. See
 | `boxplot` | The quartiles of `y` for each `x` value, with outliers as points. | `x`, `y`, optional `color` | glyf |
 | `heatmap` | One cell per `x` and `y` pair, shaded by `color`. `tile` is accepted as an alias. | `x`, `y`, `color` | ggsql (`tile`) |
 | `table` | The rows themselves, one column per listed column. Not drawn: no PNG or SVG. | a column list, or `*` | glyf |
+| `kpi` | One number as a tile, with the change against a comparison value. Not drawn. | `value`, optional `compare` | glyf |
 
 Any other `DRAW` value fails validation with `unsupported chart type`.
 
@@ -145,6 +147,41 @@ the way `render.max_marks` does for a picture. And
 [`export.row_data: exclude`](data-exposure.md) fails a table at validation,
 because a picture can be published without its rows and a table cannot.
 
+### KPI
+
+```sql
+WITH weekly AS (
+  SELECT week, sum(active_users) AS active_users
+  FROM {{ ref('fct_product_usage') }}
+  GROUP BY 1
+)
+SELECT active_users, lag(active_users) OVER (ORDER BY week) AS previous
+FROM weekly
+ORDER BY week DESC
+LIMIT 1
+
+VISUALISE active_users AS value, previous AS compare
+DRAW kpi
+LABEL title => 'Weekly active users'
+LABEL compare => 'vs last week'
+```
+
+A kpi is one number. The query must return exactly one row; more or fewer
+fails the build naming the chart, so aggregate until it does. `value` is the
+headline. `compare`, when mapped, is the number to stand it against: the tile
+shows the difference with its direction, and the difference as a share of the
+comparison when that is not zero. A comparison of `NULL` shows the value
+alone. `LABEL compare => '...'` names the comparison; it reads `vs previous`
+without one. A number is shown with thousands separators and its precision
+untouched; a text value is shown as it is. `INTERACT` is rejected.
+
+Like a table, a kpi is not drawn. The build writes `charts/<name>.kpi.html`
+beside the data JSON and metadata; the dashboard shows it as a tile; the
+bundle records `fields.value`, `fields.compare` and `artifacts.kpi`, with
+`png` and `svg` null. Unlike a table, a kpi is published under
+`export.row_data: exclude`: one number is what the tile shows, the way a PNG
+shows its values.
+
 ### Numeric columns
 
 A histogram's `x`, a boxplot's `y` and a heatmap's `color` must be integer or
@@ -193,6 +230,7 @@ last one.
 - `x_title`
 - `y_title`
 - a column name, for a `table`: the text its header shows
+- `compare`, for a `kpi`: what the comparison is called
 
 A label value is quoted with single or double quotes: `LABEL title => 'Revenue'`
 or `LABEL title => "Revenue"`.
@@ -223,7 +261,7 @@ Supported interactions:
   there.
 
 A `table` takes no `INTERACT` clause; sorting by column is built into the
-dashboard.
+dashboard. A `kpi` takes none either.
 
 Interactive charts still write PNG and SVG artifacts. They also write a Vega-Lite JSON artifact, which dashboard pages embed with the Vega runtime scripts. The exported dashboard is still static HTML, but interactive rendering needs a browser with JavaScript enabled and access to those scripts.
 

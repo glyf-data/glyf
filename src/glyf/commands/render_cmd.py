@@ -66,10 +66,13 @@ def run_render(
         return
     typer.echo("\u2713 executed SQL")
     tables = sum(1 for rendered in result.charts if rendered.chart.is_table)
-    if tables < chart_count:
+    kpis = sum(1 for rendered in result.charts if rendered.chart.is_kpi)
+    if tables + kpis < chart_count:
         typer.echo("\u2713 rendered PNG/SVG")
     if tables:
         typer.echo(f"\u2713 wrote table HTML ({tables})")
+    if kpis:
+        typer.echo(f"\u2713 wrote KPI HTML ({kpis})")
     typer.echo("\u2713 wrote metadata")
 
 

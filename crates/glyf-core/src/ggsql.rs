@@ -14,7 +14,7 @@ use crate::resolver::{ref_regex, source_regex};
 /// glyf's chart language: what each draw type takes. This is the single
 /// source of truth for validation; the renderer draws exactly these roles.
 ///
-/// ggsql is the file format; pie, histogram, boxplot and table are glyf's
+/// ggsql is the file format; pie, histogram, boxplot, table and kpi are glyf's
 /// additions to it. glyf validates the chart block; sqlparser reads the SQL
 /// (`read_sql`).
 struct DrawSpec {
@@ -79,12 +79,20 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
             allowed: &[COLUMN_ROLE],
             interactions: &[],
         },
+        // A kpi is one number, with an optional one to compare it against.
+        "kpi" => DrawSpec {
+            draw_type: "kpi",
+            required: &["value"],
+            allowed: &["value", "compare"],
+            interactions: &[],
+        },
         _ => return None,
     })
 }
 
 /// The draw types glyf accepts, for error messages.
-const SUPPORTED_DRAWS: &str = "area, bar, boxplot, heatmap, histogram, line, pie, scatter, table";
+const SUPPORTED_DRAWS: &str =
+    "area, bar, boxplot, heatmap, histogram, kpi, line, pie, scatter, table";
 
 /// Parse a `.ggsql` file: the SQL, then the chart block.
 ///
@@ -325,8 +333,9 @@ fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(),
     if let Some(bare) = visualise.iter().find(|mapping| mapping.role == COLUMN_ROLE) {
         // `VISUALISE month, revenue` reads as a column list, which only a
         // table takes; say what this chart wants instead of "invalid mapping".
+        let first = spec.required.first().copied().unwrap_or("x");
         return Err(CoreError::Parse(format!(
-            "{draw} maps each column to a role ({takes}); write '{} AS x', or DRAW table to list columns",
+            "{draw} maps each column to a role ({takes}); write '{} AS {first}', or DRAW table to list columns",
             bare.field
         )));
     }
@@ -358,6 +367,7 @@ fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(),
         let message = match draw {
             "histogram" => "histogram requires an x mapping".to_string(),
             "heatmap" => "heatmap requires x, y and color mappings".to_string(),
+            "kpi" => "kpi requires a value mapping".to_string(),
             _ => "VISUALISE requires x and y mappings".to_string(),
         };
         return Err(CoreError::Parse(message));
@@ -401,6 +411,11 @@ fn validate_interactions(spec: &DrawSpec, interactions: &[String]) -> Result<(),
                 return Err(CoreError::Parse(
                     "table takes no INTERACT clause: its rows are the picture, and every column is already readable"
                         .to_string(),
+                ));
+            }
+            if spec.draw_type == "kpi" {
+                return Err(CoreError::Parse(
+                    "kpi takes no INTERACT clause: it is one number".to_string(),
                 ));
             }
             return Err(CoreError::Parse(format!(
@@ -701,6 +716,76 @@ mod tests {
     }
 
     #[test]
+    fn parses_a_kpi_with_a_value_and_an_optional_comparison() {
+        let chart = parse_ggsql_text(
+            "SELECT sum(revenue) AS revenue, sum(previous) AS previous FROM t\n\nVISUALISE revenue AS value, previous AS compare\nDRAW kpi\nLABEL title => 'Revenue'\nLABEL compare => 'vs last month'\n",
+            "revenue_kpi",
+            None,
+            "duckdb",
+        )
+        .unwrap();
+        assert_eq!(chart.draw_type, "kpi");
+        assert_eq!(chart.visualise.len(), 2);
+        assert_eq!(chart.labels.get("compare").unwrap(), "vs last month");
+
+        let alone = parse_ggsql_text(
+            "SELECT 1 AS n\n\nVISUALISE n AS value\nDRAW kpi\n",
+            "n",
+            None,
+            "duckdb",
+        )
+        .unwrap();
+        assert_eq!(alone.visualise.len(), 1);
+    }
+
+    #[test]
+    fn a_kpi_rejects_axes_a_column_list_and_interactions() {
+        let axes = parse_ggsql_text(
+            "SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW kpi\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert_eq!(
+            axes.to_string(),
+            "kpi does not take a 'x' mapping; it takes value, compare"
+        );
+
+        let missing = parse_ggsql_text(
+            "SELECT a FROM t\n\nVISUALISE a AS compare\nDRAW kpi\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert_eq!(missing.to_string(), "kpi requires a value mapping");
+
+        let list = parse_ggsql_text(
+            "SELECT a FROM t\n\nVISUALISE a\nDRAW kpi\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert_eq!(
+            list.to_string(),
+            "kpi maps each column to a role (value, compare); write 'a AS value', or DRAW table to list columns"
+        );
+
+        let interact = parse_ggsql_text(
+            "SELECT a FROM t\n\nVISUALISE a AS value\nDRAW kpi\nINTERACT tooltip\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert!(interact
+            .to_string()
+            .starts_with("kpi takes no INTERACT clause"));
+    }
+
+    #[test]
     fn names_the_supported_chart_types_on_an_unknown_draw() {
         let error = parse_ggsql_text(
             "SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW donut\n",
@@ -712,7 +797,7 @@ mod tests {
 
         assert_eq!(
             error.to_string(),
-            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, line, pie, scatter, table"
+            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, kpi, line, pie, scatter, table"
         );
     }
 

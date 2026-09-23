@@ -200,6 +200,7 @@ def _copy_public_chart_metadata(
     _rewrite_public_chart_path(payload, "png_path", "charts")
     _rewrite_public_chart_path(payload, "svg_path", "charts")
     _rewrite_public_chart_path(payload, "table_html_path", "charts")
+    _rewrite_public_chart_path(payload, "kpi_html_path", "charts")
     _rewrite_public_chart_path(payload, "compiled_sql_path", "compiled")
     destination.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",

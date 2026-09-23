@@ -39,6 +39,12 @@
   .table-view .glyf-table-num { text-align:right; font-variant-numeric:tabular-nums; }
   .table-view td[data-empty="true"]::before { color:#cbd5e1; content:"\2014"; }
   .table-view figcaption { padding:.35rem .7rem; color:var(--quiet); font-size:.78rem; }
+  .table-view .glyf-kpi { margin:0; padding:1rem 1.2rem; }
+  .table-view .glyf-kpi-value { color:var(--ink); font-size:1.9rem; font-weight:650; line-height:1.2; font-variant-numeric:tabular-nums; }
+  .table-view .glyf-kpi-compare { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.4rem; color:var(--quiet); font-size:.9rem; }
+  .table-view .glyf-kpi-delta { font-weight:600; }
+  .table-view .glyf-kpi-compare--up .glyf-kpi-delta { color:#15803d; }
+  .table-view .glyf-kpi-compare--down .glyf-kpi-delta { color:#b91c1c; }
   a:focus-visible, summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
   summary { cursor:pointer; color:var(--ink); font-weight:600; }
   @media (max-width: 900px) { .views { grid-template-columns:minmax(0,1fr); } .moved { margin-left:0; } }
@@ -65,7 +71,7 @@
     <header>
       <h3>{{ chart.title or chart.name }}</h3>
       <span class="name">{{ chart.name }}</span>
-      <span class="moved">{% if chart.table %}the rows changed{% else %}{{ chart.changed_percent | percent }} of the picture moved{% endif %}</span>
+      <span class="moved">{% if chart.table %}the rows changed{% elif chart.kpi %}the value changed{% else %}{{ chart.changed_percent | percent }} of the picture moved{% endif %}</span>
     </header>
     <div class="why">
       <strong>Why:</strong> {{ chart.reasons | join('; ') }}.
@@ -73,14 +79,14 @@
       {% if lines %}
       <ul>{% for line in lines %}<li>{{ line }}</li>{% endfor %}</ul>
       {% endif %}
-      {% if not chart.table and chart.before_size != chart.after_size %}
+      {% if not chart.is_fragment and chart.before_size != chart.after_size %}
       <ul><li>size {{ chart.before_size[0] }}×{{ chart.before_size[1] }} → {{ chart.after_size[0] }}×{{ chart.after_size[1] }}</li></ul>
       {% endif %}
     </div>
-    {% if chart.table %}
+    {% if chart.is_fragment %}
     <div class="views" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-      <figure><figcaption>Before</figcaption><div class="table-view">{{ chart.before_table | safe }}</div></figure>
-      <figure><figcaption>After</figcaption><div class="table-view">{{ chart.after_table | safe }}</div></figure>
+      <figure><figcaption>Before</figcaption><div class="table-view">{{ chart.before_fragment | safe }}</div></figure>
+      <figure><figcaption>After</figcaption><div class="table-view">{{ chart.after_fragment | safe }}</div></figure>
     </div>
     {% else %}
     <div class="views">
@@ -102,7 +108,7 @@
   {% for chart in added %}
   <section class="chart" id="{{ chart.name }}">
     <header><h3>{{ chart.title or chart.name }}</h3><span class="name">{{ chart.name }}</span></header>
-    <div class="views pair"><figure><figcaption>New in this build</figcaption>{% if chart.table %}<div class="table-view">{{ chart.after_table | safe }}</div>{% else %}<img src="images/{{ chart.name }}.after.png" alt="{{ chart.title or chart.name }}" loading="lazy">{% endif %}</figure></div>
+    <div class="views pair"><figure><figcaption>New in this build</figcaption>{% if chart.is_fragment %}<div class="table-view">{{ chart.after_fragment | safe }}</div>{% else %}<img src="images/{{ chart.name }}.after.png" alt="{{ chart.title or chart.name }}" loading="lazy">{% endif %}</figure></div>
   </section>
   {% endfor %}
   {% endif %}
@@ -112,7 +118,7 @@
   {% for chart in removed %}
   <section class="chart" id="{{ chart.name }}">
     <header><h3>{{ chart.title or chart.name }}</h3><span class="name">{{ chart.name }}</span></header>
-    <div class="views pair"><figure><figcaption>Was in the baseline</figcaption>{% if chart.table %}<div class="table-view">{{ chart.before_table | safe }}</div>{% else %}<img src="images/{{ chart.name }}.before.png" alt="{{ chart.title or chart.name }}" loading="lazy">{% endif %}</figure></div>
+    <div class="views pair"><figure><figcaption>Was in the baseline</figcaption>{% if chart.is_fragment %}<div class="table-view">{{ chart.before_fragment | safe }}</div>{% else %}<img src="images/{{ chart.name }}.before.png" alt="{{ chart.title or chart.name }}" loading="lazy">{% endif %}</figure></div>
   </section>
   {% endfor %}
   {% endif %}

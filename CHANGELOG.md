@@ -44,6 +44,37 @@ All notable changes to `glyf` will be documented in this file.
   wanted instead: `bar maps each column to a role (x, y, color); write
   'region AS x', or DRAW table to list columns`.
 
+### KPI tile
+
+- `DRAW kpi` shows one number as a tile: `VISUALISE revenue AS value,
+  previous AS compare`. The query must return exactly one row. With a
+  `compare` column the tile shows the difference, its direction and its
+  share of the comparison; `LABEL compare => 'vs last week'` names it. A
+  number reads with thousands separators, its precision untouched.
+
+  ```sql
+  SELECT active_users, lag(active_users) OVER (ORDER BY week) AS previous
+  FROM weekly
+  ORDER BY week DESC
+  LIMIT 1
+
+  VISUALISE active_users AS value, previous AS compare
+  DRAW kpi
+  LABEL title => 'Weekly active users'
+  ```
+
+  A kpi follows the table's path: `charts/<name>.kpi.html` beside the data
+  JSON, a card on the dashboard, `fields.value`, `fields.compare` and
+  `artifacts.kpi` in the bundle with `png` and `svg` null, and a diff by
+  its rows that says `the value changed`. Unlike a table it is published
+  under `export.row_data: exclude`, because one number is what a picture
+  of it would show. The `product_analytics` example's hand-written
+  "Weekly active users" tile is now a kpi computed from the data.
+
+- In `glyf diff`, a table's or a kpi's before and after are written to
+  `fragments/<name>.before.html` and `.after.html`, and `diff.json` points
+  at them under `fragments`.
+
 ### What moved, in the chart's terms
 
 - `glyf diff` now explains a changed bar, line or area chart the way the

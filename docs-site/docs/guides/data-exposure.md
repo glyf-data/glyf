@@ -113,6 +113,7 @@ drops the values: `plan; sessions` rather than `plan: Pro; sessions: 6610`.
 | `charts/*.svg` | The picture, and which columns each mark came from. |
 | `charts/*.png` | The picture only. |
 | `charts/*.table.html` | A table's listed columns, every row. A table shows its columns by definition, so `minimal` changes nothing for it. |
+| `charts/*.kpi.html` | A kpi's one or two numbers, and nothing else. |
 | `charts/*.json` | Chart metadata, as before. |
 | `compiled/*.sql` | The chart's SQL, as before. It names columns, not values. |
 | `bundle.json` | As before, plus `security.row_data: "minimal"`. |
@@ -142,7 +143,9 @@ A [table](visualisation-syntax.md#table) cannot be published this way: it is
 its rows, and there is no picture to publish instead. A build with a table and
 `row_data: exclude` fails at validation, naming the chart, so the choice is
 made in the open: set `row_data` to `include` or `minimal`, or leave the table
-out of that build with `--select`.
+out of that build with `--select`. A [kpi](visualisation-syntax.md#kpi) is
+published: its tile carries one number, or two, which is what a PNG of it
+would show.
 
 What still gets published is what you wrote: dashboard titles and descriptions,
 markdown blocks, hand-written filter lists, chart titles, and whatever your
