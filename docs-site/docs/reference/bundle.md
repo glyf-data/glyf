@@ -8,7 +8,7 @@ packages, or an application of your own that fetches the exported site.
 ```json title="target/glyf/site/bundle.json"
 {
   "bundle_version": "1",
-  "glyf_version": "0.13.0",
+  "glyf_version": "0.14.0",
   "project": "basic",
   "mode": "public_site",
   "generated_at": "2026-08-30T10:38:38Z"
@@ -288,7 +288,7 @@ otherwise. Withholding the paths does not withhold the data. See
     }
   },
   "generated_at": "2026-08-30T10:38:38Z",
-  "glyf_version": "0.13.0",
+  "glyf_version": "0.14.0",
   "mode": "public_site",
   "paths": {
     "assets": "assets/",

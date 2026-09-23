@@ -58,6 +58,14 @@ if one of these would change how you work.
 <ol className="roadmapTimeline">
   <li>
     <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.14.0">0.14.0</Link>
+      <time dateTime="2026-09-24">24 September 2026</time>
+    </div>
+    <strong>Lineage full screen, and cards that say when a filter misses</strong>
+    <p>Lineage opens as a full-screen view with every column coloured. A card a filter cannot touch is stamped "Not filtered", and one the filter empties "No data". The stylesheet link carries a content hash, so a cached stylesheet never meets a newer page. <Link to="/docs/guides/dashboard-yaml#filters">Read the guide</Link>.</p>
+  </li>
+  <li>
+    <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.13.0">0.13.0</Link>
       <time dateTime="2026-09-23">23 September 2026</time>
     </div>

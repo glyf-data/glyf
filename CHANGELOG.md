@@ -2,9 +2,19 @@
 
 All notable changes to `glyf` will be documented in this file.
 
-## Unreleased
+## 0.14.0 - 2026-09-24
+
+### Added
+
+- A card a dashboard filter cannot touch is stamped "Not filtered" across
+  its face, and a card the filter empties is stamped "No data", instead of
+  only dimming.
+- `toolbar.stars` in dashboard YAML sets the count the star button shows.
 
 ### Fixed
+
+- A class that sets `display` no longer beats the `hidden` attribute,
+  which had left an empty chip beside every chart-type badge.
 
 - A dashboard's stylesheet link carries a hash of its contents, so a
   browser that cached an earlier stylesheet fetches the new one. Without it
