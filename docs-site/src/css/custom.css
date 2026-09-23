@@ -3340,6 +3340,9 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   align-items: flex-start;
   gap: 10px;
 }
+.glyfHero .glyfHero__demoButton { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; min-height: 44px; padding: 0 20px; border-radius: 999px; background: var(--hero-blue); color: #fff; font-weight: 600; font-size: 0.95rem; text-decoration: none; box-shadow: 0 10px 24px -10px rgba(37, 99, 235, 0.55); transition: background-color 120ms ease, transform 120ms ease; }
+.glyfHero .glyfHero__demoButton:hover { background: var(--hero-blue-strong); color: #fff; transform: translateY(-1px); text-decoration: none; }
+.glyfHero .glyfHero__demoButton:focus-visible { outline: 2px solid var(--hero-blue); outline-offset: 3px; }
 .glyfHero__installNote {
   margin: 0;
   color: var(--hero-muted);
