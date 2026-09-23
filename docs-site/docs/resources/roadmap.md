@@ -12,23 +12,6 @@ order is the priority.
   on the <Link href="https://github.com/glyf-data/glyf/releases">releases page</Link>.
 </p>
 
-## In the next release
-
-<div className="roadmapNext">
-  <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
-  <h3>Impact, a validate that asks the warehouse, and an MCP server</h3>
-  <p>
-    <code>glyf impact fct_finance.margin</code> lists the charts and dashboards a model, a source or
-    a column change reaches, saying on each line how sure it is. Next to <code>glyf diff</code> it
-    is the review a pull request wants: which charts this touches, and what moved in them.
-    <code>glyf validate --execute</code> runs each chart's SQL with <code>LIMIT 0</code> and checks
-    its columns, so a renamed column fails in CI rather than at build. And <code>glyf mcp</code>
-    serves all of it to an AI agent over the Model Context Protocol: list, read, impact, validate
-    and diff, never a build and never a row.
-  </p>
-  <Link to="/docs/integrations/mcp">Read the guide</Link>
-</div>
-
 ## Planned
 
 Vote with a 👍 on the issue. The most wanted go first.
@@ -69,6 +52,14 @@ if one of these would change how you work.
 ## Shipped
 
 <ol className="roadmapTimeline">
+  <li>
+    <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.11.0">0.11.0</Link>
+      <time dateTime="2026-09-23">23 September 2026</time>
+    </div>
+    <strong>Impact, a validate that asks the warehouse, and an MCP server</strong>
+    <p><code>glyf impact fct_finance.margin</code> lists the charts and dashboards a model, a source or a column change reaches, saying on each line how sure it is; next to <code>glyf diff</code> it is the review a pull request wants. <code>glyf validate --execute</code> runs each chart's SQL with <code>LIMIT 0</code> and checks its columns, so a renamed column fails in CI rather than at build. And <code>glyf mcp</code> serves all of it to an AI agent over the Model Context Protocol: list, read, impact, validate and diff, never a build and never a row. <Link to="/docs/integrations/mcp">Read the guide</Link>.</p>
+  </li>
   <li>
     <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.10.0">0.10.0</Link>
