@@ -10,7 +10,7 @@ const featureSections = [
     label: 'Integration',
     title: 'Your dbt project is the source of truth.',
     description:
-      'Glyf reads your dbt manifest directly. Charts reference models the same way dbt models reference each other, with ref(). No copy-pasting SQL and no schema drift.',
+      'Charts reference models with ref(), the way dbt models reference each other, and every reference is checked at build time. No copied SQL and no schema drift.',
     items: [
       {
         name: 'dbt ref() in every chart',
@@ -191,7 +191,7 @@ const problemItems = [
 ];
 
 const workflowSteps = [
-  ['01 — Chart Definition', 'Write charts in GGSQL', 'SQL you already know, then a few lines saying what to draw. Use ref() to reference dbt models directly.'],
+  ['01 — Chart Definition', 'Write charts as SQL', 'The query you already know, then a few lines saying what to draw. .ggsql files, the ggsql format with Glyf\'s chart types, and ref() to reach dbt models.'],
   ['02 — Dashboard Layout', 'Compose in YAML + Python', 'Lay out charts into sections. Use Python macros for conditional logic, thresholds, and reusable components.'],
   ['03 — Build Output', 'Run one command', 'Glyf resolves dbt artifacts, validates chart specs, renders charts, and emits the files you can publish.'],
 ];
@@ -926,7 +926,7 @@ function FeaturesSection() {
             <span className="featureIntroSignalMark" aria-hidden="true">
               ✓
             </span>
-            <span>Integrated with dbt and GGSQL today. SQLMesh and more on the roadmap.</span>
+            <span>Integrated with dbt today. SQLMesh and more on the roadmap.</span>
           </div>
         </div>
         <div className="featureStoryNavBand">
@@ -1058,8 +1058,8 @@ function HowItWorks() {
           <p className="eyebrow">how it works</p>
           <h2>Charts, dashboards, and outputs in one build step.</h2>
           <p>
-            Glyf keeps authoring close to the project: charts in GGSQL and its Glyf extensions, dashboard composition
-            in YAML, reusable logic in Python, and outputs from the CLI.
+            Glyf keeps authoring close to the project: charts as SQL plus a chart block in the ggsql format, dashboard
+            composition in YAML, reusable logic in Python, and outputs from the CLI.
           </p>
         </div>
         <figure className="howWalkthrough">
