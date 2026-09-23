@@ -461,36 +461,11 @@ function HeroArrow({className}) {
   );
 }
 
-function HeroDiagram() {
+function HeroDiagram({liveDashboardUrl, openLive}) {
   const logoUrl = useBaseUrl('/img/glyf-logo-v4.svg');
   const hostedDashboardUrl = useBaseUrl('/dashboards/sales-dashboard/dashboards/sales.html');
-  const liveDashboardUrl = useBaseUrl('/dashboards/product-analytics/dashboards/product.html');
-  const [liveOpen, setLiveOpen] = React.useState(false);
-  React.useEffect(() => {
-    if (!liveOpen) return undefined;
-    const onKey = (event) => { if (event.key === 'Escape') setLiveOpen(false); };
-    document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [liveOpen]);
-  const openLive = (event) => {
-    // A phone gets the demo as a page of its own; the overlay needs room.
-    if (window.matchMedia && window.matchMedia('(max-width: 720px)').matches) return;
-    event.preventDefault();
-    setLiveOpen(true);
-  };
   return (
     <figure className="glyfHeroDiagram" aria-label="dbt models, YAML layouts, and Python macros go through glyf build and ship as dashboards, embedded analytics, and hosted dashboards">
-      {liveOpen ? (
-        <div className="liveDashboard" role="dialog" aria-modal="true" aria-label="A live glyf dashboard">
-          <div className="liveDashboard__bar">
-            <button type="button" className="liveDashboard__back" onClick={() => setLiveOpen(false)}>&larr; Back</button>
-            <span className="liveDashboard__title">Product Analytics <span>built by glyf from a dbt project</span></span>
-            <a className="liveDashboard__open" href={liveDashboardUrl} target="_blank" rel="noopener">Open in a new tab &#8599;</a>
-          </div>
-          <iframe className="liveDashboard__frame" src={liveDashboardUrl} title="Product analytics dashboard, built by glyf" />
-        </div>
-      ) : null}
       <div className="glyfHeroFlow">
         <div className="glyfHeroInputs">
           {heroInputs.map((item) => (
@@ -834,12 +809,42 @@ charts:{'\n'}
   }
 }
 
+function useLiveDashboard() {
+  const liveDashboardUrl = useBaseUrl('/dashboards/product-analytics/dashboards/product.html');
+  const [liveOpen, setLiveOpen] = React.useState(false);
+  React.useEffect(() => {
+    if (!liveOpen) return undefined;
+    const onKey = (event) => { if (event.key === 'Escape') setLiveOpen(false); };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+  }, [liveOpen]);
+  const openLive = (event) => {
+    // A phone gets the demo as a page of its own; the overlay needs room.
+    if (window.matchMedia && window.matchMedia('(max-width: 720px)').matches) return;
+    event.preventDefault();
+    setLiveOpen(true);
+  };
+  return {liveDashboardUrl, liveOpen, setLiveOpen, openLive};
+}
+
 function HomepageHeader() {
+  const {liveDashboardUrl, liveOpen, setLiveOpen, openLive} = useLiveDashboard();
   return (
     <header className="glyfHero">
+      {liveOpen ? (
+        <div className="liveDashboard" role="dialog" aria-modal="true" aria-label="A live glyf dashboard">
+          <div className="liveDashboard__bar">
+            <button type="button" className="liveDashboard__back" onClick={() => setLiveOpen(false)}>&larr; Back</button>
+            <span className="liveDashboard__title">Product Analytics <span>built by glyf from a dbt project</span></span>
+            <a className="liveDashboard__open" href={liveDashboardUrl} target="_blank" rel="noopener">Open in a new tab &#8599;</a>
+          </div>
+          <iframe className="liveDashboard__frame" src={liveDashboardUrl} title="Product analytics dashboard, built by glyf" />
+        </div>
+      ) : null}
+
       <div className="container glyfHero__inner">
         <div className="glyfHero__copy">
-          <p className="glyfHero__badge">Open source</p>
           <h1 className="glyfHero__title">
             Build visualizations <span>the way you build pipelines</span>
           </h1>
@@ -850,6 +855,9 @@ function HomepageHeader() {
           <div className="glyfHero__actions">
             <InstallCommand className="installCommand--hero" />
             <p className="glyfHero__installNote">macOS and Linux. Other ways to install are in the <Link to="/docs/get-started/installation">installation guide</Link>.</p>
+            <a className="glyfHero__demoButton" href={liveDashboardUrl} onClick={openLive}>
+              View Glyf generated dashboard <span aria-hidden="true">&rarr;</span>
+            </a>
           </div>
           <ul className="glyfHero__traits">
             {heroTraits.map(([icon, label]) => (
@@ -857,7 +865,7 @@ function HomepageHeader() {
             ))}
           </ul>
         </div>
-        <HeroDiagram />
+        <HeroDiagram liveDashboardUrl={liveDashboardUrl} openLive={openLive} />
       </div>
     </header>
   );
