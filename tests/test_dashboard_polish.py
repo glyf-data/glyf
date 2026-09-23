@@ -60,3 +60,18 @@ def test_the_pill_and_tags_carry_a_tint(tmp_path: Path) -> None:
 def test_tag_tones_are_stable_and_bounded() -> None:
     assert tag_tone("finance") == tag_tone("finance")
     assert all(0 <= tag_tone(word) < 6 for word in ("a", "finance", "executive", "usage"))
+
+
+def test_the_stylesheet_link_carries_a_content_hash(tmp_path: Path) -> None:
+    """A browser that cached an older stylesheet must not pair it with a new page."""
+    import hashlib
+    from glyf.dashboard.assets import AssetManager
+
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    generate_dashboards(project)
+
+    source = AssetManager().package_root / "assets" / "dashboard.css"
+    digest = hashlib.sha256(source.read_bytes()).hexdigest()[:10]
+    assert f'href="../assets/dashboard.css?v={digest}"' in _html(project)
+    assert f'href="assets/dashboard.css?v={digest}"' in _html(project, "index.html")

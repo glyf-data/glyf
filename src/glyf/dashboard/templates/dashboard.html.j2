@@ -303,12 +303,12 @@
       if (!button || !modal) return;
       const setOpen = (open) => {
         modal.classList.toggle("is-open", open);
+        document.body.style.overflow = open ? "hidden" : "";
         button.classList.toggle("is-active", open);
         button.setAttribute("aria-pressed", open ? "true" : "false");
       };
       button.addEventListener("click", () => setOpen(!modal.classList.contains("is-open")));
       modal.querySelector("[data-glyf-lineage-close]").addEventListener("click", () => setOpen(false));
-      modal.addEventListener("click", (event) => { if (event.target === modal) setOpen(false); });
       document.addEventListener("keydown", (event) => { if (event.key === "Escape" && modal.classList.contains("is-open")) setOpen(false); });
 
       const wrap = modal.querySelector("[data-glyf-lineage]");

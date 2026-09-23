@@ -1,14 +1,14 @@
 {% import "components/icons.j2" as icons %}
 
 {% macro render_lineage_modal(lineage) -%}
-<div class="glyf-modal-backdrop" id="glyf-lineage-modal" data-glyf-lineage-modal>
-  <div class="glyf-modal glyf-modal--wide" role="dialog" aria-modal="true" aria-label="Lineage">
-    <div class="glyf-modal-head">
+<div class="glyf-lineage-screen" id="glyf-lineage-modal" data-glyf-lineage-modal role="dialog" aria-modal="true" aria-label="Lineage">
+  <div class="glyf-lineage-frame">
+    <div class="glyf-lineage-bar">
+      <button class="glyf-lineage-back" type="button" data-glyf-lineage-close>&larr; Back to dashboard</button>
       <div class="glyf-lineage-head">
-        <div class="glyf-modal-title">Lineage</div>
+        <div class="glyf-lineage-heading">Lineage</div>
         <div class="glyf-lineage-summary glyf-mono">{{ lineage.source_count }} source{% if lineage.source_count != 1 %}s{% endif %} · {{ lineage.model_count }} model{% if lineage.model_count != 1 %}s{% endif %} · {{ lineage.chart_count }} chart{% if lineage.chart_count != 1 %}s{% endif %}</div>
       </div>
-      <button class="glyf-close-btn" type="button" aria-label="Close lineage" data-glyf-lineage-close>x</button>
     </div>
     <div class="glyf-lineage-body">
       {% if lineage.is_empty %}
