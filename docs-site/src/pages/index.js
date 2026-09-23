@@ -823,9 +823,8 @@ function HomepageHeader() {
             charts and dashboards from your dbt models.
           </p>
           <div className="glyfHero__actions">
-            <Link className="glyfHero__button glyfHero__button--primary" to="/docs/get-started/quickstart">
-              <span aria-hidden="true">&gt;_</span> Get Started <span aria-hidden="true">&rarr;</span>
-            </Link>
+            <InstallCommand className="installCommand--hero" />
+            <p className="glyfHero__installNote">macOS and Linux. Other ways to install are in the <Link to="/docs/get-started/installation">installation guide</Link>.</p>
           </div>
           <ul className="glyfHero__traits">
             {heroTraits.map(([icon, label]) => (
@@ -1361,7 +1360,7 @@ function VisualDiffTerminal({filename}) {
 
 const INSTALL_COMMAND = 'curl -fsSL https://glyfdata.com/install.sh | sh';
 
-function CtaSection() {
+function InstallCommand({className = ''}) {
   const [copied, setCopied] = React.useState(false);
   const copy = () => {
     const done = () => { setCopied(true); setTimeout(() => setCopied(false), 1600); };
@@ -1370,22 +1369,34 @@ function CtaSection() {
     }
   };
   return (
+    <div className={`installCommand ${className}`.trim()}>
+      <span className="installCommand__prompt" aria-hidden="true">$</span>
+      <code>{INSTALL_COMMAND}</code>
+      <button type="button" className="installCommand__copy" onClick={copy} aria-label="Copy the install command">
+        {copied ? 'Copied' : 'Copy'}
+      </button>
+    </div>
+  );
+}
+
+function StarButton({className = ''}) {
+  return (
+    <a className={`starButton ${className}`.trim()} href="https://github.com/glyf-data/glyf">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4l-5.9 3.2 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>
+      Star on GitHub
+    </a>
+  );
+}
+
+function CtaSection() {
+  return (
     <section className="ctaBand">
       <div className="container ctaBand__inner">
         <p className="ctaBand__eyebrow">Install</p>
-        <div className="ctaBand__install">
-          <span className="ctaBand__prompt" aria-hidden="true">$</span>
-          <code>{INSTALL_COMMAND}</code>
-          <button type="button" className="ctaBand__copy" onClick={copy} aria-label="Copy the install command">
-            {copied ? 'Copied' : 'Copy'}
-          </button>
-        </div>
-        <p className="ctaBand__note">macOS and Linux. Windows and every other way to install are in the <Link to="/docs/get-started/installation">installation guide</Link>.</p>
+        <InstallCommand className="installCommand--dark" />
+        <p className="ctaBand__note">macOS and Linux. Other ways to install are in the <Link to="/docs/get-started/installation">installation guide</Link>.</p>
         <div className="ctaBand__actions">
-          <a className="ctaBand__button ctaBand__button--star" href="https://github.com/glyf-data/glyf">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4l-5.9 3.2 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>
-            Star on GitHub
-          </a>
+          <StarButton className="starButton--light" />
         </div>
       </div>
     </section>

@@ -128,6 +128,20 @@ select {
   height: 1.65rem;
 }
 
+.navbarGithubLink.navbarStar {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.navbarStarMark {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  fill: #f5b301;
+  stroke: #d99a00;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
 .navbarGithubLink .navbarExternalIcon {
   width: 1.15rem;
   height: 1.15rem;
@@ -3262,22 +3276,22 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.ctaBand__install {
+/* The install command: one element, in the hero on light and at the end on dark. */
+.installCommand {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
   max-width: 100%;
-  margin: 0 0 0.9rem;
-  padding: 0.7rem 0.6rem 0.7rem 1.1rem;
-  border: 1px solid rgba(148, 163, 184, 0.22);
+  padding: 0.65rem 0.6rem 0.65rem 1.1rem;
+  border: 1px solid rgba(15, 23, 42, 0.14);
   border-radius: 12px;
-  background: #07090e;
+  background: #0b0e14;
   color: #6f7a91;
   font-family: 'JetBrains Mono', SFMono-Regular, Menlo, monospace;
-  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
   overflow-x: auto;
 }
-.landingSections .ctaBand__install code {
+.installCommand code {
   padding: 0;
   border: 0;
   background: none;
@@ -3285,7 +3299,7 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   font-size: inherit;
   white-space: nowrap;
 }
-.ctaBand__copy {
+.installCommand__copy {
   flex-shrink: 0;
   padding: 0.35rem 0.75rem;
   border: 1px solid rgba(148, 163, 184, 0.28);
@@ -3296,7 +3310,28 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   font-size: 0.8rem;
   cursor: pointer;
 }
-.ctaBand__copy:hover { border-color: #c7d0dd; color: #ffffff; }
+.installCommand__copy:hover { border-color: #ffffff; color: #ffffff; }
+.installCommand--dark {
+  margin: 0 0 0.9rem;
+  border-color: rgba(148, 163, 184, 0.22);
+  background: #07090e;
+}
+.installCommand--hero {
+  margin: 0;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+}
+.glyfHero .glyfHero__actions {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.glyfHero__installNote {
+  margin: 0;
+  color: var(--hero-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.glyfHero__installNote a { color: var(--hero-blue); text-decoration: underline; text-underline-offset: 3px; }
 .landingSections .ctaBand__note {
   max-width: 34rem;
   margin: 0 0 1.5rem;
@@ -3311,7 +3346,7 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   justify-content: center;
   gap: 12px;
 }
-.landingSections .ctaBand__button {
+.starButton {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -3324,15 +3359,7 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   text-decoration: none !important;
   transition: background-color 120ms ease, border-color 120ms ease;
 }
-.landingSections .ctaBand__button--star {
-  background: #f3f6fb;
-  color: #0b0e14 !important;
-}
-.landingSections .ctaBand__button--star:hover {
-  background: #ffffff;
-  color: #0b0e14 !important;
-}
-.landingSections .ctaBand__button--star svg {
+.starButton svg {
   width: 18px;
   height: 18px;
   fill: #f5b301;
@@ -3340,14 +3367,15 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
   stroke-width: 1;
   stroke-linejoin: round;
 }
-.landingSections .ctaBand__button svg {
-  width: 18px;
-  height: 18px;
+.landingSections .starButton--light {
+  background: #f3f6fb;
+  color: #0b0e14 !important;
 }
-.landingSections .ctaBand__button:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 3px;
+.landingSections .starButton--light:hover {
+  background: #ffffff;
+  color: #0b0e14 !important;
 }
+
 
 /* Roadmap panel: planned items linked to their GitHub issues, plus an ask to open a feature request. */
 .landingSections .featureRoadmap {
