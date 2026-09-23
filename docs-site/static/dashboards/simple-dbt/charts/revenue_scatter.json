@@ -1,18 +1,32 @@
 {
   "chart_type": "scatter",
-  "compiled_sql_path": "target/glyf/compiled/revenue_scatter.sql",
-  "data_json_path": "target/glyf/data/normalized/revenue_scatter.data.json",
+  "color": "region",
+  "compiled_sql_path": "compiled/revenue_scatter.sql",
   "interactions": [
     "tooltip",
     "zoom",
     "legend_filter"
   ],
-  "metadata_path": "target/glyf/charts/revenue_scatter.json",
+  "lineage": {
+    "models": {
+      "fct_orders": {
+        "parents": [
+          "source:raw.orders"
+        ],
+        "path": "models/fct_orders.sql"
+      }
+    },
+    "sources": [
+      "raw.orders"
+    ]
+  },
+  "metadata_path": "charts/revenue_scatter.json",
   "name": "revenue_scatter",
-  "png_path": "target/glyf/charts/revenue_scatter.png",
-  "svg_path": "target/glyf/charts/revenue_scatter.svg",
+  "png_path": "charts/revenue_scatter.png",
+  "svg_path": "charts/revenue_scatter.svg",
   "title": "Revenue Scatter",
-  "vega_json_path": "target/glyf/data/vega/revenue_scatter.vega.json",
   "x": "month",
-  "y": "revenue"
+  "x_title": "Month",
+  "y": "revenue",
+  "y_title": "Revenue"
 }

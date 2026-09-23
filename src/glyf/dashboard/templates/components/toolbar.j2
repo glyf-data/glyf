@@ -5,7 +5,7 @@
   {% if dashboard.toolbar.enabled %}
   <button class="glyf-star-btn" type="button" data-glyf-star>
     {{ icons.icon("star") }}
-    <span class="glyf-star-count">0</span>
+    <span class="glyf-star-count">{{ dashboard.toolbar.stars }}</span>
   </button>
   <div class="glyf-action-divider" aria-hidden="true"></div>
   {% if "share" in dashboard.toolbar.actions %}

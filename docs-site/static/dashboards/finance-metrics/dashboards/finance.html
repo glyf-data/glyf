@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-glyf-chart-follows="true">
 <head>
   <meta charset="utf-8">
+  <script>try { var t = localStorage.getItem("glyf-theme"); if (t === "light" || t === "dark") { document.documentElement.setAttribute("data-theme", t); } } catch (e) {}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Finance Metrics</title>
 
-  <link rel="stylesheet" href="../assets/dashboard.css">
+  <link rel="stylesheet" href="../assets/dashboard.css?v=e9f6caa9b1">
 
 
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
@@ -25,7 +26,7 @@
           </nav>
           <div class="glyf-title-row">
             <h1 class="glyf-title">Finance Metrics</h1>
-            <span class="glyf-badge">
+            <span class="glyf-badge glyf-badge-amber">
               private
             </span>
           </div>
@@ -35,13 +36,13 @@
 
           <div class="glyf-tags" aria-label="Dashboard tags">
 
-            <span class="glyf-badge">finance</span>
+            <span class="glyf-badge glyf-tag glyf-tag--4">finance</span>
 
-            <span class="glyf-badge">margin</span>
+            <span class="glyf-badge glyf-tag glyf-tag--2">margin</span>
 
-            <span class="glyf-badge">bookings</span>
+            <span class="glyf-badge glyf-tag glyf-tag--2">bookings</span>
 
-            <span class="glyf-badge">collections</span>
+            <span class="glyf-badge glyf-tag glyf-tag--1">collections</span>
 
           </div>
 
@@ -103,13 +104,26 @@
   </button>
   <div class="glyf-action-divider" aria-hidden="true"></div>
 
-  <button class="glyf-icon-btn" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
+  <button class="glyf-icon-btn glyf-icon-btn--accent" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path>
     <path d="M20 2v4"></path>
     <path d="M22 4h-4"></path>
     <circle cx="4" cy="20" r="2"></circle>
+  </svg>
+
+  </button>
+  <button class="glyf-icon-btn glyf-theme-toggle" type="button" data-tip="Theme" aria-label="Switch between light and dark" data-glyf-theme-toggle>
+
+  <svg class="glyf-theme-icon glyf-theme-icon--light" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+  </svg>
+
+
+  <svg class="glyf-theme-icon glyf-theme-icon--dark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path>
   </svg>
 
   </button>
@@ -126,7 +140,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-20T19:32:17Z">20 Sep 2026, 19:32 UTC</strong>
+          Refreshed <strong title="2026-09-23T22:22:07Z">23 Sep 2026, 22:22 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -161,6 +175,20 @@
           Source
         </button>
 
+
+        <button class="glyf-source-toggle" type="button" id="glyf-lineage-button" data-glyf-lineage-button aria-pressed="false">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6" cy="6" r="3"></circle>
+    <circle cx="18" cy="12" r="3"></circle>
+    <circle cx="6" cy="18" r="3"></circle>
+    <path d="M9 6h3a3 3 0 0 1 3 3v0a3 3 0 0 0 3 3"></path>
+    <path d="M9 18h3a3 3 0 0 0 3-3v0a3 3 0 0 1 3-3"></path>
+  </svg>
+
+          Lineage
+        </button>
+
         <div class="glyf-version-menu" data-glyf-version-menu>
           <button
             class="glyf-version-button"
@@ -179,7 +207,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 20 Sep 2026, 19:32 UTC</span>
+              <span class="glyf-version-option-note">built 23 Sep 2026, 22:22 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -190,114 +218,51 @@
       </div>
     </div>
 
-    <div class="glyf-control-bar">
+    <div class="glyf-control-bar" data-glyf-filter-bar>
       <span class="glyf-control-label">Filters</span>
 
 
-        <div class="glyf-filter-menu" data-glyf-filter-menu>
-          <button
-            class="glyf-filter-button"
-            type="button"
-            aria-expanded="false"
-            data-glyf-filter-button
-            title="source(expenses_by_department, department)"
-          >
+        <label class="glyf-filter-select" data-glyf-filter="department">
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
 
-            <span class="glyf-filter-field">department</span>
+          <span class="glyf-filter-field">department</span>
+          <select class="glyf-filter-control" id="glyf-filter-department" data-glyf-filter-select="department" aria-label="Filter by department">
+            <option value="">All</option>
 
-            <span class="glyf-filter-inline-sep">/</span>
-            <span class="glyf-filter-inline-values">4 values</span>
+            <option value="Partners">Partners</option>
 
-            <span class="glyf-filter-value">source</span>
+            <option value="Product">Product</option>
 
-  <svg class="glyf-filter-button-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m6 9 6 6 6-6"></path>
-  </svg>
+            <option value="Sales">Sales</option>
 
-          </button>
-          <div class="glyf-filter-popover" role="menu" aria-label="department values" data-glyf-filter-popover>
-            <div class="glyf-filter-popover-head">
-              <div class="glyf-filter-popover-title">department</div>
-              <div class="glyf-filter-popover-note">source(expenses_by_department, department)</div>
-            </div>
-            <div class="glyf-filter-options">
+            <option value="Services">Services</option>
 
+          </select>
+        </label>
 
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">Partners</span>
-                </button>
-
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">Product</span>
-                </button>
-
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">Sales</span>
-                </button>
-
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">Services</span>
-                </button>
-
-
-            </div>
-          </div>
-        </div>
-
-        <div class="glyf-filter-menu" data-glyf-filter-menu>
-          <button
-            class="glyf-filter-button"
-            type="button"
-            aria-expanded="false"
-            data-glyf-filter-button
-            title="source(days_to_pay, segment)"
-          >
+        <label class="glyf-filter-select" data-glyf-filter="segment">
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
 
-            <span class="glyf-filter-field">segment</span>
+          <span class="glyf-filter-field">segment</span>
+          <select class="glyf-filter-control" id="glyf-filter-segment" data-glyf-filter-select="segment" aria-label="Filter by segment">
+            <option value="">All</option>
 
-            <span class="glyf-filter-inline-sep">/</span>
-            <span class="glyf-filter-inline-values">3 values</span>
+            <option value="SMB">SMB</option>
 
-            <span class="glyf-filter-value">source</span>
+            <option value="Mid-market">Mid-market</option>
 
-  <svg class="glyf-filter-button-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m6 9 6 6 6-6"></path>
-  </svg>
+            <option value="Enterprise">Enterprise</option>
 
-          </button>
-          <div class="glyf-filter-popover" role="menu" aria-label="segment values" data-glyf-filter-popover>
-            <div class="glyf-filter-popover-head">
-              <div class="glyf-filter-popover-title">segment</div>
-              <div class="glyf-filter-popover-note">source(days_to_pay, segment)</div>
-            </div>
-            <div class="glyf-filter-options">
+          </select>
+        </label>
 
-
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">SMB</span>
-                </button>
-
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">Mid-market</span>
-                </button>
-
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">Enterprise</span>
-                </button>
-
-
-            </div>
-          </div>
-        </div>
-
+        <button class="glyf-filter-clear" type="button" data-glyf-filter-clear hidden>Clear</button>
 
       <span class="glyf-static-note">
 
@@ -439,7 +404,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 </aside>
 
 
-      <main class="glyf-content">
+      <main class="glyf-content" id="glyf-charts-view">
 
 
 
@@ -522,13 +487,19 @@ FROM "finance_metrics"."main"."fct_invoices"
             >
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="bookings_trend" data-glyf-filters="department:none segment:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Bookings Trend</div>
       <div class="glyf-card-subtitle">month -> bookings</div>
     </div>
-    <span class="glyf-badge glyf-mono">line</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">line</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -542,18 +513,26 @@ FROM "finance_metrics"."main"."fct_invoices"
       <img src="../charts/bookings_trend.png" alt="Bookings Trend">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="margin_share" data-glyf-filters="department:vega segment:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Gross Margin Share</div>
       <div class="glyf-card-subtitle">department -> gross_margin</div>
     </div>
-    <span class="glyf-badge glyf-mono">pie</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">pie</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -567,7 +546,9 @@ FROM "finance_metrics"."main"."fct_invoices"
       <img src="../charts/margin_share.png" alt="Gross Margin Share">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
@@ -595,13 +576,19 @@ FROM "finance_metrics"."main"."fct_invoices"
             >
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="expenses_by_department" data-glyf-filters="department:vega segment:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Expenses by Department</div>
       <div class="glyf-card-subtitle">month -> expenses</div>
     </div>
-    <span class="glyf-badge glyf-mono">bar</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">bar</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -615,18 +602,26 @@ FROM "finance_metrics"."main"."fct_invoices"
       <img src="../charts/expenses_by_department.png" alt="Expenses by Department">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="gross_margin_trend" data-glyf-filters="department:none segment:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Gross Margin Trend</div>
       <div class="glyf-card-subtitle">month -> gross_margin</div>
     </div>
-    <span class="glyf-badge glyf-mono">area</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">area</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -640,7 +635,9 @@ FROM "finance_metrics"."main"."fct_invoices"
       <img src="../charts/gross_margin_trend.png" alt="Gross Margin Trend">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
@@ -668,13 +665,19 @@ FROM "finance_metrics"."main"."fct_invoices"
             >
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="margin_rate_by_department" data-glyf-filters="department:vega segment:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Margin Rate by Department</div>
       <div class="glyf-card-subtitle">month -> department</div>
     </div>
-    <span class="glyf-badge glyf-mono">heatmap</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">heatmap</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -688,18 +691,26 @@ FROM "finance_metrics"."main"."fct_invoices"
       <img src="../charts/margin_rate_by_department.png" alt="Margin Rate by Department">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="margin_vs_expenses" data-glyf-filters="department:vega segment:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Margin vs Expenses</div>
       <div class="glyf-card-subtitle">expenses -> gross_margin</div>
     </div>
-    <span class="glyf-badge glyf-mono">scatter</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">scatter</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -713,7 +724,9 @@ FROM "finance_metrics"."main"."fct_invoices"
       <img src="../charts/margin_vs_expenses.png" alt="Margin vs Expenses">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
@@ -741,13 +754,19 @@ FROM "finance_metrics"."main"."fct_invoices"
             >
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="days_to_pay" data-glyf-filters="department:none segment:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Days to Pay</div>
       <div class="glyf-card-subtitle">days_to_pay</div>
     </div>
-    <span class="glyf-badge glyf-mono">histogram</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">histogram</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -761,18 +780,26 @@ FROM "finance_metrics"."main"."fct_invoices"
       <img src="../charts/days_to_pay.png" alt="Days to Pay">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="discount_by_segment" data-glyf-filters="department:none segment:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Discount by Segment</div>
       <div class="glyf-card-subtitle">segment -> discount_pct</div>
     </div>
-    <span class="glyf-badge glyf-mono">boxplot</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">boxplot</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -786,7 +813,9 @@ FROM "finance_metrics"."main"."fct_invoices"
       <img src="../charts/discount_by_segment.png" alt="Discount by Segment">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
@@ -869,7 +898,7 @@ FROM "finance_metrics"."main"."fct_invoices"
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-20 20:32
+      2026-09-23 23:22
 
     </div>
   </div>
@@ -899,6 +928,116 @@ FROM "finance_metrics"."main"."fct_invoices"
   </div>
 </aside>
 
+
+    <div class="glyf-lineage-screen" id="glyf-lineage-modal" data-glyf-lineage-modal role="dialog" aria-modal="true" aria-label="Lineage">
+  <div class="glyf-lineage-frame">
+    <div class="glyf-lineage-bar">
+      <button class="glyf-lineage-back" type="button" data-glyf-lineage-close>&larr; Back to dashboard</button>
+      <div class="glyf-lineage-head">
+        <div class="glyf-lineage-heading">Lineage</div>
+        <div class="glyf-lineage-summary glyf-mono">2 sources · 2 models · 8 charts</div>
+      </div>
+    </div>
+    <div class="glyf-lineage-body">
+
+      <div class="glyf-lineage-colheads">
+        <div class="glyf-lineage-colhead">Sources</div>
+        <div class="glyf-lineage-colhead">Models</div>
+        <div class="glyf-lineage-colhead">Charts on this dashboard</div>
+      </div>
+      <div class="glyf-lineage-wrap" data-glyf-lineage>
+        <svg class="glyf-lineage-svg" viewBox="0 0 1068 498" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
+          <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
+            <g class="glyf-lineage-edges">
+              <path d="M264,220.0 C339.0,220.0 339.0,220.0 414,220.0" data-from="source:raw.finance" data-to="model:fct_finance"/>
+              <path d="M264,278.0 C339.0,278.0 339.0,278.0 414,278.0" data-from="source:raw.invoices" data-to="model:fct_invoices"/>
+              <path d="M654,220.0 C729.0,220.0 729.0,46.0 804,46.0" data-from="model:fct_finance" data-to="chart:bookings_trend"/>
+              <path d="M654,220.0 C729.0,220.0 729.0,104.0 804,104.0" data-from="model:fct_finance" data-to="chart:margin_share"/>
+              <path d="M654,220.0 C729.0,220.0 729.0,162.0 804,162.0" data-from="model:fct_finance" data-to="chart:expenses_by_department"/>
+              <path d="M654,220.0 C729.0,220.0 729.0,220.0 804,220.0" data-from="model:fct_finance" data-to="chart:gross_margin_trend"/>
+              <path d="M654,220.0 C729.0,220.0 729.0,278.0 804,278.0" data-from="model:fct_finance" data-to="chart:margin_rate_by_department"/>
+              <path d="M654,220.0 C729.0,220.0 729.0,336.0 804,336.0" data-from="model:fct_finance" data-to="chart:margin_vs_expenses"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,394.0 804,394.0" data-from="model:fct_invoices" data-to="chart:days_to_pay"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,452.0 804,452.0" data-from="model:fct_invoices" data-to="chart:discount_by_segment"/>
+            </g>
+            <g class="glyf-lineage-nodes">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.finance" data-tip="raw table, read through source()" transform="translate(24,198.0)" tabindex="0" role="button" aria-label="raw.finance, source">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">raw.finance</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.invoices" data-tip="raw table, read through source()" transform="translate(24,256.0)" tabindex="0" role="button" aria-label="raw.invoices, source">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">raw.invoices</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_finance" data-tip="models/fct_finance.sql" transform="translate(414,198.0)" tabindex="0" role="button" aria-label="fct_finance, model">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">fct_finance</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_invoices" data-tip="models/fct_invoices.sql" transform="translate(414,256.0)" tabindex="0" role="button" aria-label="fct_invoices, model">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">fct_invoices</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:bookings_trend" data-tip="binds month AS x, bookings AS y" transform="translate(804,24.0)" tabindex="0" role="button" aria-label="Bookings Trend, line">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Bookings Trend</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">line</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:margin_share" data-tip="binds department AS x, gross_margin AS y" transform="translate(804,82.0)" tabindex="0" role="button" aria-label="Gross Margin Share, pie">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Gross Margin Share</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">pie</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:expenses_by_department" data-tip="binds month AS x, expenses AS y" transform="translate(804,140.0)" tabindex="0" role="button" aria-label="Expenses by Department, bar">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Expenses by Department</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">bar</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:gross_margin_trend" data-tip="binds month AS x, gross_margin AS y" transform="translate(804,198.0)" tabindex="0" role="button" aria-label="Gross Margin Trend, area">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Gross Margin Trend</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">area</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:margin_rate_by_department" data-tip="binds month AS x, department AS y" transform="translate(804,256.0)" tabindex="0" role="button" aria-label="Margin Rate by Department, heatmap">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Margin Rate by Department</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">heatmap</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:margin_vs_expenses" data-tip="binds expenses AS x, gross_margin AS y" transform="translate(804,314.0)" tabindex="0" role="button" aria-label="Margin vs Expenses, scatter">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Margin vs Expenses</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">scatter</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:days_to_pay" data-tip="binds days_to_pay AS x" transform="translate(804,372.0)" tabindex="0" role="button" aria-label="Days to Pay, histogram">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Days to Pay</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">histogram</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:discount_by_segment" data-tip="binds segment AS x, discount_pct AS y" transform="translate(804,430.0)" tabindex="0" role="button" aria-label="Discount by Segment, boxplot">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Discount by Segment</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">boxplot</text>
+              </g>
+            </g>
+          </g>
+        </svg>
+        <div class="glyf-lineage-controls" aria-label="Zoom">
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="in" aria-label="Zoom in">+</button>
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="out" aria-label="Zoom out">&minus;</button>
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="reset" aria-label="Reset view">&#8690;</button>
+        </div>
+        <div class="glyf-lineage-tip" role="tooltip" hidden></div>
+      </div>
+      <p class="glyf-lineage-hint">Click a node to trace what feeds it and what it feeds; click again to clear. Hover a node for what it binds or reads. Drag to move the canvas; scroll or use the buttons to zoom. Escape closes.</p>
+
+    </div>
+  </div>
+</div>
+
+
     <div class="glyf-modal-backdrop" id="glyf-lookback-modal" data-glyf-modal>
       <div class="glyf-modal" role="dialog" aria-modal="true" aria-label="Lookback chart versions">
         <div class="glyf-modal-head">
@@ -909,7 +1048,7 @@ FROM "finance_metrics"."main"."fct_invoices"
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">20 Sep 2026, 19:32 UTC</div>
+              <div class="glyf-version-date">23 Sep 2026, 22:22 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -926,6 +1065,7 @@ FROM "finance_metrics"."main"."fct_invoices"
   </div>
 
 
+
   <script>
     document.querySelectorAll("[data-vega-chart]").forEach((container) => {
       const specElement = document.getElementById(container.dataset.vegaChart);
@@ -935,6 +1075,101 @@ FROM "finance_metrics"."main"."fct_invoices"
       const spec = JSON.parse(specElement.textContent);
       vegaEmbed(container, spec, { actions: false, renderer: "svg" });
     });
+  </script>
+
+
+  <script>
+    (function () {
+      // Lineage opens as a window over the dashboard, like Lookback.
+      const button = document.querySelector("[data-glyf-lineage-button]");
+      const modal = document.getElementById("glyf-lineage-modal");
+      if (!button || !modal) return;
+      const setOpen = (open) => {
+        modal.classList.toggle("is-open", open);
+        document.body.style.overflow = open ? "hidden" : "";
+        button.classList.toggle("is-active", open);
+        button.setAttribute("aria-pressed", open ? "true" : "false");
+      };
+      button.addEventListener("click", () => setOpen(!modal.classList.contains("is-open")));
+      modal.querySelector("[data-glyf-lineage-close]").addEventListener("click", () => setOpen(false));
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape" && modal.classList.contains("is-open")) setOpen(false); });
+
+      const wrap = modal.querySelector("[data-glyf-lineage]");
+      const svg = wrap.querySelector("svg");
+      const canvas = wrap.querySelector("[data-glyf-lineage-canvas]");
+      const nodes = Array.from(wrap.querySelectorAll("[data-node]"));
+      const edges = Array.from(wrap.querySelectorAll("path[data-from]"));
+
+      // Tracing: light the node, everything upstream and everything downstream.
+      const up = new Map(), down = new Map();
+      edges.forEach((edge) => {
+        const a = edge.dataset.from, b = edge.dataset.to;
+        (down.get(a) || down.set(a, []).get(a)).push(b);
+        (up.get(b) || up.set(b, []).get(b)).push(a);
+      });
+      let current = null;
+      const walk = (start, map, seen) => (map.get(start) || []).forEach((n) => { if (!seen.has(n)) { seen.add(n); walk(n, map, seen); } });
+      const clear = () => { current = null; wrap.classList.remove("has-focus"); nodes.concat(edges).forEach((el) => el.classList.remove("is-lit")); };
+      const trace = (id) => {
+        if (current === id) return clear();
+        current = id;
+        const lit = new Set([id]); walk(id, up, lit); walk(id, down, lit);
+        wrap.classList.add("has-focus");
+        nodes.forEach((n) => n.classList.toggle("is-lit", lit.has(n.dataset.node)));
+        edges.forEach((e) => e.classList.toggle("is-lit", lit.has(e.dataset.from) && lit.has(e.dataset.to)));
+      };
+      nodes.forEach((node) => {
+        node.addEventListener("click", () => trace(node.dataset.node));
+        node.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); trace(node.dataset.node); } });
+      });
+      // Pan and zoom: one transform on the canvas group.
+      const state = { x: 0, y: 0, k: 1 };
+      const apply = () => canvas.setAttribute("transform", `translate(${state.x},${state.y}) scale(${state.k})`);
+      const scale = () => { const box = svg.getBoundingClientRect(); const vb = svg.viewBox.baseVal; return { box, sx: vb.width / box.width, sy: vb.height / box.height }; };
+      const zoomBy = (factor, cx, cy) => {
+        const k = Math.min(3, Math.max(0.4, state.k * factor));
+        const { box, sx, sy } = scale();
+        const px = (cx - box.left) * sx, py = (cy - box.top) * sy;
+        state.x = px - (px - state.x) * (k / state.k);
+        state.y = py - (py - state.y) * (k / state.k);
+        state.k = k; apply();
+      };
+      wrap.addEventListener("wheel", (event) => { event.preventDefault(); zoomBy(event.deltaY < 0 ? 1.12 : 1 / 1.12, event.clientX, event.clientY); }, { passive: false });
+      wrap.querySelectorAll("[data-glyf-zoom]").forEach((control) => control.addEventListener("click", () => {
+        const { box } = scale(); const cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+        if (control.dataset.glyfZoom === "in") zoomBy(1.25, cx, cy);
+        else if (control.dataset.glyfZoom === "out") zoomBy(1 / 1.25, cx, cy);
+        else { state.x = 0; state.y = 0; state.k = 1; apply(); }
+      }));
+      let drag = null;
+      wrap.addEventListener("pointerdown", (event) => {
+        if (event.target.closest("[data-node], button")) return;
+        drag = { x: event.clientX, y: event.clientY, vx: state.x, vy: state.y };
+        wrap.classList.add("is-panning"); wrap.setPointerCapture(event.pointerId);
+      });
+      wrap.addEventListener("pointermove", (event) => {
+        if (!drag) return;
+        const { sx, sy } = scale();
+        state.x = drag.vx + (event.clientX - drag.x) * sx;
+        state.y = drag.vy + (event.clientY - drag.y) * sy;
+        apply();
+      });
+      const endDrag = () => { drag = null; wrap.classList.remove("is-panning"); };
+      wrap.addEventListener("pointerup", endDrag); wrap.addEventListener("pointercancel", endDrag);
+
+      // The tooltip carries what the node does not: a model's file, a chart's bindings.
+      const tip = wrap.querySelector(".glyf-lineage-tip");
+      nodes.forEach((node) => {
+        const show = () => {
+          tip.textContent = node.dataset.tip || ""; tip.hidden = !tip.textContent;
+          const r = node.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+          tip.style.left = `${r.left - w.left}px`; tip.style.top = `${r.bottom - w.top + 6}px`;
+        };
+        const hide = () => { tip.hidden = true; };
+        node.addEventListener("pointerenter", show); node.addEventListener("pointerleave", hide);
+        node.addEventListener("focus", show); node.addEventListener("blur", hide);
+      });
+    })();
   </script>
 
   <script>
@@ -1008,6 +1243,149 @@ FROM "finance_metrics"."main"."fct_invoices"
         }
       });
     }
+
+    (function () {
+      // Light or dark, chosen by the reader and remembered in this browser.
+      // The page's palette is tokens, so the frame follows on its own; charts
+      // drawn at build time get the same colour swaps the build applies.
+      const root = document.documentElement;
+      const toggle = document.querySelector("[data-glyf-theme-toggle]");
+      const chartsFollow = root.dataset.glyfChartFollows !== "false";
+      const svgSwaps = [
+        ["stroke", "#d9e2ec", "#3f3f46"], ["stroke", "#ddd", "#27272a"], ["stroke", "#888", "#a1a1aa"],
+        ["fill", "#000", "#f4f4f5"], ["fill", "black", "#f4f4f5"],
+      ];
+      const swapAttributes = (svg, dark) => {
+        const first = svg.querySelector("rect");
+        if (first) {
+          const fill = first.getAttribute("fill");
+          if (dark && fill === "white") first.setAttribute("fill", "#09090b");
+          if (!dark && fill === "#09090b") first.setAttribute("fill", "white");
+        }
+        svgSwaps.forEach(([attr, light, darkValue]) => {
+          const from = dark ? light : darkValue, to = dark ? darkValue : light;
+          svg.querySelectorAll(`[${attr}="${from}"]`).forEach((el) => el.setAttribute(attr, to));
+        });
+      };
+      const darkVega = { background: "#09090b", view: { stroke: "#3f3f46", fill: "#09090b" }, axis: { labelColor: "#f4f4f5", titleColor: "#f4f4f5", domainColor: "#a1a1aa", tickColor: "#a1a1aa", gridColor: "#27272a" }, legend: { labelColor: "#f4f4f5", titleColor: "#f4f4f5" }, title: { color: "#f4f4f5", subtitleColor: "#d4d4d8" } };
+      const lightVega = { background: "#ffffff", view: { stroke: "#d9e2ec", fill: "#ffffff" }, axis: { labelColor: "#000000", titleColor: "#000000", domainColor: "#888888", tickColor: "#888888", gridColor: "#dddddd" }, legend: { labelColor: "#000000", titleColor: "#000000" }, title: { color: "#000000", subtitleColor: "#52525b" } };
+      window.glyfVegaTheme = (spec, dark) => {
+        const palette = dark ? darkVega : lightVega;
+        spec.background = palette.background;
+        spec.config = spec.config || {};
+        ["view", "axis", "legend", "title"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
+        return spec;
+      };
+      const themeCharts = (dark) => {
+        if (!chartsFollow) return;
+        document.querySelectorAll(".glyf-chart-card").forEach((card) => {
+          card.setAttribute("data-chart-theme", dark ? "dark" : "light");
+          card.querySelectorAll(".glyf-chart-body > svg").forEach((svg) => swapAttributes(svg, dark));
+        });
+
+        {
+          document.querySelectorAll("[data-vega-chart]").forEach((container) => {
+            const specElement = document.getElementById(container.dataset.vegaChart);
+            if (!specElement) return;
+            vegaEmbed(container, window.glyfVegaTheme(JSON.parse(specElement.textContent), dark), { actions: false, renderer: "svg" });
+          });
+        }
+
+      };
+      const buildTheme = "light";
+      const current = () => root.getAttribute("data-theme") === "dark";
+      // The page may have been switched before paint; bring the charts along.
+      if (current() !== (buildTheme === "dark")) themeCharts(current());
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          const dark = !current();
+          root.setAttribute("data-theme", dark ? "dark" : "light");
+          try { localStorage.setItem("glyf-theme", dark ? "dark" : "light"); } catch (e) {}
+          themeCharts(dark);
+          if (window.glyfApplyFilters) window.glyfApplyFilters();
+        });
+      }
+    })();
+
+
+    (function () {
+      // A filter redraws every chart it can, from the rows the page carries,
+      // and dims the ones it cannot: a chart that looks filtered and is not
+      // would be worse than one that says so.
+      const selects = Array.from(document.querySelectorAll("[data-glyf-filter-select]"));
+      const clearButton = document.querySelector("[data-glyf-filter-clear]");
+      const cards = Array.from(document.querySelectorAll("[data-glyf-chart]"));
+      const active = () => selects.filter((s) => s.value !== "").map((s) => ({ field: s.dataset.glyfFilterSelect, value: s.value }));
+      const modesOf = (card) => Object.fromEntries((card.dataset.glyfFilters || "").split(" ").filter(Boolean).map((pair) => pair.split(":")));
+      const vegaSpecOf = (card) => {
+        const el = card.querySelector('script[type="application/json"]');
+        return el ? JSON.parse(el.textContent) : null;
+      };
+      const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
+      const filterExpr = (pairs) => pairs.map((p) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(p.value)}`).join(" && ");
+      const redrawVega = (card, pairs) => {
+        const spec = vegaSpecOf(card);
+        const target = card.querySelector("[data-glyf-filter-chart], [data-vega-chart]");
+        if (!spec || !target || typeof vegaEmbed !== "function") return;
+        if (pairs.length) spec.transform = [{ filter: filterExpr(pairs) }].concat(spec.transform || []);
+        if (window.glyfVegaTheme) window.glyfVegaTheme(spec, isDark());
+        const still = card.querySelector("[data-glyf-still]");
+        if (still) { still.hidden = pairs.length > 0; }
+        if (target.hasAttribute("data-glyf-filter-chart")) { target.hidden = pairs.length === 0; }
+        if (pairs.length || target.hasAttribute("data-vega-chart")) vegaEmbed(target, spec, { actions: false, renderer: "svg" });
+        markEmpty(card, pairs.length > 0 && !hasRows(spec, pairs));
+      };
+      const markEmpty = (card, empty) => {
+        card.classList.toggle("is-empty", empty);
+        const mark = card.querySelector("[data-glyf-watermark]");
+        if (mark && empty) mark.textContent = "No data";
+      };
+      // Whether any inlined row survives the filter: Vega draws an empty
+      // chart without saying so.
+      const hasRows = (spec, pairs) => {
+        const datasets = spec.datasets || {};
+        return Object.values(datasets).some((rows) => Array.isArray(rows) && rows.some((row) => pairs.every((p) => String(row[p.field]) === p.value)));
+      };
+      const filterTable = (card, pairs) => {
+        const table = card.querySelector("table");
+        if (!table) return;
+        const headers = Array.from(table.querySelectorAll("th[data-column]")).map((th) => th.dataset.column);
+        const rows = Array.from(table.querySelectorAll("tbody tr"));
+        let shown = 0;
+        rows.forEach((row) => {
+          const ok = pairs.every((p) => { const i = headers.indexOf(p.field); return i >= 0 && row.children[i] && row.children[i].textContent === p.value; });
+          row.hidden = !ok; if (ok) shown += 1;
+        });
+        const caption = card.querySelector(".glyf-table-caption");
+        if (caption) caption.textContent = pairs.length ? `${shown} of ${rows.length} rows` : `${rows.length} row${rows.length === 1 ? "" : "s"}`;
+        markEmpty(card, pairs.length > 0 && shown === 0);
+      };
+      const apply = () => {
+        const pairs = active();
+        if (clearButton) clearButton.hidden = pairs.length === 0;
+        cards.forEach((card) => {
+          const modes = modesOf(card);
+          const applies = pairs.filter((p) => modes[p.field] && modes[p.field] !== "none");
+          const cannot = pairs.filter((p) => !modes[p.field] || modes[p.field] === "none");
+          const chip = card.querySelector("[data-glyf-filter-applied]");
+          const note = card.querySelector("[data-glyf-filter-note]");
+          if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.value}`).join(", "); }
+          const unfiltered = pairs.length > 0 && cannot.length > 0 && applies.length === 0;
+          card.classList.toggle("is-unfiltered", unfiltered);
+          card.classList.remove("is-empty");
+          const mark = card.querySelector("[data-glyf-watermark]");
+          if (mark) mark.textContent = unfiltered ? "Not filtered" : "";
+          if (note) { note.hidden = cannot.length === 0; note.textContent = cannot.length ? `not filtered by ${cannot.map((p) => p.field).join(", ")}` : ""; }
+          const first = Object.values(modes).find((m) => m !== "none");
+          if (first === "vega") redrawVega(card, applies);
+          else if (first === "table") filterTable(card, applies);
+        });
+      };
+      selects.forEach((s) => s.addEventListener("change", apply));
+      if (clearButton) clearButton.addEventListener("click", () => { selects.forEach((s) => { s.value = ""; }); apply(); });
+      window.glyfApplyFilters = apply;
+    })();
+
 
     document.querySelectorAll("[data-glyf-filter-menu]").forEach((menu) => {
       const button = menu.querySelector("[data-glyf-filter-button]");

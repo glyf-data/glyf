@@ -363,6 +363,11 @@ html[data-theme="dark"] .glyf-badge-amber { border-color: #78350f; }
   color: var(--glyf-color-blue);
 }
 
+/* A class that sets display wins over the hidden attribute; say it again. */
+[hidden] {
+  display: none !important;
+}
+
 .glyf-card-badges {
   display: flex;
   align-items: center;
@@ -418,8 +423,34 @@ html[data-theme="dark"] .glyf-badge-amber { border-color: #78350f; }
   color: var(--glyf-color-text);
 }
 
-.glyf-card.is-unfiltered {
-  opacity: 0.45;
+.glyf-card {
+  position: relative;
+}
+
+.glyf-card.is-unfiltered > *,
+.glyf-card.is-empty > .glyf-card-body > :not(.glyf-card-watermark) {
+  opacity: 0.35;
+}
+
+/* A word across a card the filter cannot draw: stamped, not a message. */
+.glyf-card-watermark {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--glyf-color-text-muted);
+  font-size: clamp(18px, 2.4vw, 26px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.glyf-card.is-unfiltered .glyf-card-watermark,
+.glyf-card.is-empty .glyf-card-watermark {
+  display: flex;
 }
 
 .glyf-filter-note {
@@ -1231,6 +1262,15 @@ html[data-theme="dark"] .glyf-theme-icon--light {
 
 .glyf-lineage-node--source rect {
   fill: var(--glyf-color-bg-muted);
+}
+
+.glyf-lineage-node--chart rect {
+  fill: var(--glyf-color-green-bg);
+  stroke: #bbf7d0;
+}
+
+html[data-theme="dark"] .glyf-lineage-node--chart rect {
+  stroke: #14532d;
 }
 
 .glyf-lineage-node:focus-visible {

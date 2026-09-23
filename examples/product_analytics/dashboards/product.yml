@@ -14,27 +14,38 @@ filters:
 
 toolbar:
   visibility: private
+  stars: 24
 
 summary:
+  - "{{ ui.text('Active users grew every week of the quarter, from 1,480 in week 1 to 2,325 in week 12, and the Team plan accounts for most of the growth in sessions per user. Activation holds near a third of active users; Pro converts best. Hourly activity peaks mid-morning on weekdays.', title='Overview') }}"
+  - "{{ alert.info('Written by hand for this demo. An AI-generated summary is on the roadmap.', 'About this summary') }}"
   - "{{ product_owner() }}"
   - "{{ ui.label_value('Generated', time.now('%Y-%m-%d %H:%M')) }}"
-  - "{{ ui.badge('Demo macros', tone='info') }}"
 
 layout:
   columns: "30% 70%"
 
 sections:
-  - title: Usage Overview
-    description: Active user growth and engagement across twelve weeks.
-    columns: "30% 70%"
+  - title: Headline
+    description: Twelve weeks of product usage in three numbers.
+    columns: 3
     items:
       - chart: weekly_active_users
-      - chart: active_users
-        title: Active Users Trend
       - metric:
           label: Sessions
           value: "86.7k"
           note: Total product sessions across all plans
+      - metric:
+          label: Activation rate
+          value: "31%"
+          note: Activated users over active users, week 12
+
+  - title: Usage Overview
+    description: Active user growth and engagement across twelve weeks.
+    columns: 2
+    items:
+      - chart: active_users
+        title: Active Users Trend
       - chart: sessions_scatter
         title: Sessions vs Active Users
 

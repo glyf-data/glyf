@@ -240,6 +240,7 @@ textarea {
 .glyf-source-toggle svg,
 .glyf-meta-item svg,
 .glyf-filter-chip svg,
+.glyf-filter-select svg,
 .glyf-filter-add svg,
 .glyf-static-note svg,
 .glyf-ai-panel-title svg {
@@ -331,6 +332,151 @@ html[data-theme="dark"] .glyf-icon-btn[data-tip]:hover::after {
   border-color: #fde68a;
   background: var(--glyf-color-amber-bg);
   color: var(--glyf-color-amber);
+}
+
+/* Tags: a soft tint, the same one for the same word on every page. */
+.glyf-tag--0 { border-color: #bfdbfe; background: #eff6ff; color: #1d4ed8; }
+.glyf-tag--1 { border-color: #bbf7d0; background: #f0fdf4; color: #15803d; }
+.glyf-tag--2 { border-color: #fde68a; background: #fffbeb; color: #b45309; }
+.glyf-tag--3 { border-color: #e9d5ff; background: #faf5ff; color: #7e22ce; }
+.glyf-tag--4 { border-color: #fbcfe8; background: #fdf2f8; color: #be185d; }
+.glyf-tag--5 { border-color: #99f6e4; background: #f0fdfa; color: #0f766e; }
+
+html[data-theme="dark"] .glyf-tag--0 { border-color: #1e3a8a; background: #172554; color: #93c5fd; }
+html[data-theme="dark"] .glyf-tag--1 { border-color: #14532d; background: #052e16; color: #86efac; }
+html[data-theme="dark"] .glyf-tag--2 { border-color: #78350f; background: #451a03; color: #fcd34d; }
+html[data-theme="dark"] .glyf-tag--3 { border-color: #581c87; background: #3b0764; color: #d8b4fe; }
+html[data-theme="dark"] .glyf-tag--4 { border-color: #831843; background: #500724; color: #f9a8d4; }
+html[data-theme="dark"] .glyf-tag--5 { border-color: #134e4a; background: #042f2e; color: #5eead4; }
+
+html[data-theme="dark"] .glyf-badge-green { border-color: #14532d; }
+html[data-theme="dark"] .glyf-badge-amber { border-color: #78350f; }
+
+/* The one action that reads the dashboard rather than shows it. */
+.glyf-icon-btn--accent {
+  color: var(--glyf-color-blue);
+}
+
+.glyf-icon-btn--accent:hover {
+  border-color: var(--glyf-color-blue-border);
+  background: var(--glyf-color-blue-bg);
+  color: var(--glyf-color-blue);
+}
+
+/* A class that sets display wins over the hidden attribute; say it again. */
+[hidden] {
+  display: none !important;
+}
+
+.glyf-card-badges {
+  display: flex;
+  align-items: center;
+  gap: var(--glyf-space-1);
+  flex-shrink: 0;
+}
+
+.glyf-filter-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 6px 0 10px;
+  border: 0.5px solid var(--glyf-color-border);
+  border-radius: var(--glyf-radius-sm);
+  background: var(--glyf-color-bg);
+  color: var(--glyf-color-text-muted);
+  font-size: 13px;
+}
+
+.glyf-filter-select:focus-within {
+  border-color: var(--glyf-color-blue-border);
+}
+
+.glyf-filter-control {
+  border: 0;
+  background: transparent;
+  color: var(--glyf-color-text);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.glyf-filter-control:focus-visible {
+  outline: 2px solid var(--glyf-color-blue);
+  outline-offset: 1px;
+  border-radius: 3px;
+}
+
+.glyf-filter-clear {
+  height: 30px;
+  padding: 0 10px;
+  border: 0.5px solid var(--glyf-color-border);
+  border-radius: var(--glyf-radius-sm);
+  background: var(--glyf-color-bg-muted);
+  color: var(--glyf-color-text-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.glyf-filter-clear:hover {
+  color: var(--glyf-color-text);
+}
+
+.glyf-card {
+  position: relative;
+}
+
+.glyf-card.is-unfiltered > *,
+.glyf-card.is-empty > .glyf-card-body > :not(.glyf-card-watermark) {
+  opacity: 0.35;
+}
+
+/* A word across a card the filter cannot draw: stamped, not a message. */
+.glyf-card-watermark {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--glyf-color-text-muted);
+  font-size: clamp(18px, 2.4vw, 26px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.glyf-card.is-unfiltered .glyf-card-watermark,
+.glyf-card.is-empty .glyf-card-watermark {
+  display: flex;
+}
+
+.glyf-filter-note {
+  padding: 6px 14px 10px;
+  color: var(--glyf-color-text-subtle);
+  font-size: 12px;
+}
+
+.glyf-chart-body .glyf-filter-note {
+  padding: 8px 0 0;
+}
+
+.glyf-filter-chart {
+  width: 100%;
+}
+
+.glyf-theme-icon--dark {
+  display: none;
+}
+
+html[data-theme="dark"] .glyf-theme-icon--dark {
+  display: block;
+}
+
+html[data-theme="dark"] .glyf-theme-icon--light {
+  display: none;
 }
 
 .glyf-meta-bar {
@@ -833,6 +979,379 @@ html[data-theme="dark"] .glyf-icon-btn[data-tip]:hover::after {
 
 .glyf-chart-card[data-chart-theme="dark"] .glyf-chart-body {
   background: #09090b;
+}
+
+.glyf-table-body {
+  padding: 0;
+}
+
+.glyf-table {
+  margin: 0;
+}
+
+.glyf-table-scroll {
+  overflow: auto;
+}
+
+.glyf-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.glyf-table th,
+.glyf-table td {
+  padding: 8px 14px;
+  border-bottom: 0.5px solid var(--glyf-color-border);
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.glyf-table th {
+  position: sticky;
+  top: 0;
+  background: var(--glyf-color-bg-subtle);
+  color: var(--glyf-color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.glyf-table th::after {
+  display: inline-block;
+  width: 1em;
+  color: var(--glyf-color-text-subtle);
+  content: "";
+}
+
+.glyf-table th[aria-sort="ascending"]::after {
+  content: " \2191";
+}
+
+.glyf-table th[aria-sort="descending"]::after {
+  content: " \2193";
+}
+
+.glyf-table td {
+  color: var(--glyf-color-text);
+}
+
+.glyf-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.glyf-table tbody tr:hover td {
+  background: var(--glyf-color-bg-subtle);
+}
+
+.glyf-table .glyf-table-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.glyf-table td[data-empty="true"]::before {
+  color: var(--glyf-color-text-faint);
+  content: "\2014";
+}
+
+.glyf-table-caption {
+  padding: 8px 14px;
+  border-top: 0.5px solid var(--glyf-color-border);
+  color: var(--glyf-color-text-subtle);
+  font-size: 12px;
+  text-align: left;
+}
+
+.glyf-kpi-card {
+  min-height: 100%;
+}
+
+.glyf-kpi-label {
+  color: var(--glyf-color-text-subtle);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.glyf-kpi {
+  margin: 0;
+}
+
+.glyf-kpi-value {
+  margin-top: var(--glyf-space-1);
+  color: var(--glyf-color-text);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.glyf-kpi-compare {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--glyf-space-2);
+  align-items: baseline;
+  margin-top: var(--glyf-space-2);
+  color: var(--glyf-color-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.glyf-kpi-delta {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.glyf-kpi-compare--up .glyf-kpi-delta {
+  color: var(--glyf-color-green);
+}
+
+.glyf-kpi-compare--down .glyf-kpi-delta {
+  color: var(--glyf-color-red);
+}
+
+.glyf-kpi-compare-label {
+  color: var(--glyf-color-text-subtle);
+}
+
+.glyf-source-toggle.is-active {
+  border-color: var(--glyf-color-text);
+  background: var(--glyf-color-text);
+  color: var(--glyf-color-bg);
+}
+
+/* Lineage takes the whole window, like a page of its own: a graph needs width. */
+.glyf-lineage-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  overflow: auto;
+  background: var(--glyf-color-bg-subtle);
+}
+
+.glyf-lineage-screen.is-open {
+  display: block;
+}
+
+.glyf-lineage-frame {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--glyf-space-5) var(--glyf-space-5);
+}
+
+.glyf-lineage-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--glyf-space-4);
+  padding: 14px 0;
+  border-bottom: 0.5px solid var(--glyf-color-border);
+  background: var(--glyf-color-bg-subtle);
+}
+
+.glyf-lineage-back {
+  height: 32px;
+  padding: 0 12px;
+  border: 0.5px solid var(--glyf-color-border);
+  border-radius: var(--glyf-radius-sm);
+  background: var(--glyf-color-bg);
+  color: var(--glyf-color-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.glyf-lineage-back:hover {
+  background: var(--glyf-color-bg-muted);
+}
+
+.glyf-lineage-heading {
+  color: var(--glyf-color-text);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.glyf-lineage-body {
+  padding: 16px 0 0;
+}
+
+.glyf-lineage-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--glyf-space-3);
+}
+
+.glyf-lineage-summary,
+.glyf-lineage-empty,
+.glyf-lineage-hint {
+  color: var(--glyf-color-text-subtle);
+  font-size: 12px;
+}
+
+.glyf-lineage-hint {
+  margin: 10px 2px 0;
+}
+
+.glyf-lineage-colheads {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  min-width: 720px;
+  padding: 0 24px;
+  margin-bottom: 6px;
+}
+
+.glyf-lineage-colhead {
+  color: var(--glyf-color-text-subtle);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.glyf-lineage-wrap {
+  position: relative;
+  overflow: hidden;
+  border: 0.5px solid var(--glyf-color-border);
+  border-radius: var(--glyf-radius-md);
+  background: var(--glyf-color-bg);
+  padding: 14px 0 16px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.glyf-lineage-wrap.is-panning {
+  cursor: grabbing;
+}
+
+.glyf-lineage-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 720px;
+  font-family: var(--glyf-font-family);
+  user-select: none;
+}
+
+.glyf-lineage-edges path {
+  fill: none;
+  stroke: var(--glyf-color-border-strong);
+  stroke-width: 1.5;
+  transition: stroke 0.15s, opacity 0.15s;
+}
+
+.glyf-lineage-node {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.glyf-lineage-node rect {
+  fill: var(--glyf-color-bg);
+  stroke: var(--glyf-color-border-strong);
+  stroke-width: 1;
+}
+
+.glyf-lineage-node--model rect {
+  fill: var(--glyf-color-blue-bg);
+  stroke: var(--glyf-color-blue-border);
+}
+
+.glyf-lineage-node--source rect {
+  fill: var(--glyf-color-bg-muted);
+}
+
+.glyf-lineage-node--chart rect {
+  fill: var(--glyf-color-green-bg);
+  stroke: #bbf7d0;
+}
+
+html[data-theme="dark"] .glyf-lineage-node--chart rect {
+  stroke: #14532d;
+}
+
+.glyf-lineage-node:focus-visible {
+  outline: none;
+}
+
+.glyf-lineage-node:focus-visible rect,
+.glyf-lineage-node.is-lit rect {
+  stroke: var(--glyf-color-blue);
+  stroke-width: 2;
+}
+
+.glyf-lineage-node-title {
+  fill: var(--glyf-color-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.glyf-lineage-node-sub {
+  fill: var(--glyf-color-text-subtle);
+  font-family: var(--glyf-font-mono);
+  font-size: 10.5px;
+}
+
+.glyf-lineage-wrap.has-focus .glyf-lineage-node:not(.is-lit) {
+  opacity: 0.28;
+}
+
+.glyf-lineage-wrap.has-focus .glyf-lineage-edges path:not(.is-lit) {
+  opacity: 0.18;
+}
+
+.glyf-lineage-edges path.is-lit {
+  stroke: var(--glyf-color-blue);
+  stroke-width: 2;
+}
+
+.glyf-lineage-controls {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 4px;
+}
+
+.glyf-lineage-zoom {
+  width: 30px;
+  height: 30px;
+  border: 0.5px solid var(--glyf-color-border);
+  border-radius: var(--glyf-radius-sm);
+  background: var(--glyf-color-bg);
+  color: var(--glyf-color-text-muted);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.glyf-lineage-zoom:hover {
+  background: var(--glyf-color-bg-muted);
+  color: var(--glyf-color-text);
+}
+
+.glyf-lineage-tip {
+  position: absolute;
+  z-index: 5;
+  max-width: 320px;
+  padding: 6px 9px;
+  border-radius: 4px;
+  background: var(--glyf-color-text);
+  color: var(--glyf-color-bg);
+  font-family: var(--glyf-font-mono);
+  font-size: 11.5px;
+  line-height: 1.45;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyf-lineage-node,
+  .glyf-lineage-edges path {
+    transition: none;
+  }
 }
 
 .glyf-component-card,

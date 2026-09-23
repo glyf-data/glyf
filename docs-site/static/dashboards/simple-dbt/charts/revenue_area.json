@@ -1,12 +1,27 @@
 {
   "chart_type": "area",
-  "compiled_sql_path": "target/glyf/compiled/revenue_area.sql",
-  "data_json_path": "target/glyf/data/normalized/revenue_area.data.json",
-  "metadata_path": "target/glyf/charts/revenue_area.json",
+  "color": "region",
+  "compiled_sql_path": "compiled/revenue_area.sql",
+  "lineage": {
+    "models": {
+      "fct_orders": {
+        "parents": [
+          "source:raw.orders"
+        ],
+        "path": "models/fct_orders.sql"
+      }
+    },
+    "sources": [
+      "raw.orders"
+    ]
+  },
+  "metadata_path": "charts/revenue_area.json",
   "name": "revenue_area",
-  "png_path": "target/glyf/charts/revenue_area.png",
-  "svg_path": "target/glyf/charts/revenue_area.svg",
+  "png_path": "charts/revenue_area.png",
+  "svg_path": "charts/revenue_area.svg",
   "title": "Revenue Area",
   "x": "month",
-  "y": "revenue"
+  "x_title": "Month",
+  "y": "revenue",
+  "y_title": "Revenue"
 }

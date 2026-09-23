@@ -75,3 +75,40 @@ def test_the_stylesheet_link_carries_a_content_hash(tmp_path: Path) -> None:
     digest = hashlib.sha256(source.read_bytes()).hexdigest()[:10]
     assert f'href="../assets/dashboard.css?v={digest}"' in _html(project)
     assert f'href="assets/dashboard.css?v={digest}"' in _html(project, "index.html")
+
+
+def test_the_star_count_comes_from_the_toolbar(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\ntitle: Executive\ntoolbar:\n  stars: 24\ncharts:\n  - revenue\n", encoding="utf-8"
+    )
+    render_project(project)
+    generate_dashboards(project)
+
+    assert '<span class="glyf-star-count">24</span>' in _html(project)
+
+
+def test_a_negative_star_count_is_rejected(tmp_path: Path) -> None:
+    import pytest
+    from glyf.dashboard.loader import load_dashboard
+
+    project = copy_basic_project(tmp_path)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\ntitle: Executive\ntoolbar:\n  stars: -1\ncharts:\n  - revenue\n", encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="toolbar.stars"):
+        load_dashboard(project / "dashboards" / "executive.yml")
+
+
+def test_every_card_can_carry_a_watermark(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\ntitle: Executive\nfilters:\n  - field: month\n    values: [2026-01]\ncharts:\n  - revenue\n",
+        encoding="utf-8",
+    )
+    render_project(project)
+    generate_dashboards(project)
+
+    html = _html(project)
+    assert 'data-glyf-watermark' in html
+    assert '"Not filtered"' in html and '"No data"' in html

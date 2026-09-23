@@ -145,6 +145,14 @@ fn validate_toolbar(value: Option<&Value>) -> Result<(), CoreError> {
         }
     }
 
+    if let Some(stars) = toolbar.get("stars") {
+        if stars.as_u64().is_none() {
+            return Err(dashboard_error(
+                "expected 'toolbar.stars' to be a non-negative integer",
+            ));
+        }
+    }
+
     if let Some(actions) = toolbar.get("actions") {
         let actions = actions
             .as_array()

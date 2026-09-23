@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-glyf-chart-follows="true">
 <head>
   <meta charset="utf-8">
+  <script>try { var t = localStorage.getItem("glyf-theme"); if (t === "light" || t === "dark") { document.documentElement.setAttribute("data-theme", t); } } catch (e) {}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Executive Dashboard</title>
 
-  <link rel="stylesheet" href="../assets/dashboard.css">
+  <link rel="stylesheet" href="../assets/dashboard.css?v=e9f6caa9b1">
 
 
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
@@ -25,7 +26,7 @@
           </nav>
           <div class="glyf-title-row">
             <h1 class="glyf-title">Executive Dashboard</h1>
-            <span class="glyf-badge">
+            <span class="glyf-badge glyf-badge-amber">
               private
             </span>
           </div>
@@ -35,11 +36,11 @@
 
           <div class="glyf-tags" aria-label="Dashboard tags">
 
-            <span class="glyf-badge">glyf</span>
+            <span class="glyf-badge glyf-tag glyf-tag--2">glyf</span>
 
-            <span class="glyf-badge">dbt</span>
+            <span class="glyf-badge glyf-tag glyf-tag--2">dbt</span>
 
-            <span class="glyf-badge">revenue</span>
+            <span class="glyf-badge glyf-tag glyf-tag--0">revenue</span>
 
           </div>
 
@@ -101,13 +102,26 @@
   </button>
   <div class="glyf-action-divider" aria-hidden="true"></div>
 
-  <button class="glyf-icon-btn" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
+  <button class="glyf-icon-btn glyf-icon-btn--accent" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path>
     <path d="M20 2v4"></path>
     <path d="M22 4h-4"></path>
     <circle cx="4" cy="20" r="2"></circle>
+  </svg>
+
+  </button>
+  <button class="glyf-icon-btn glyf-theme-toggle" type="button" data-tip="Theme" aria-label="Switch between light and dark" data-glyf-theme-toggle>
+
+  <svg class="glyf-theme-icon glyf-theme-icon--light" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+  </svg>
+
+
+  <svg class="glyf-theme-icon glyf-theme-icon--dark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path>
   </svg>
 
   </button>
@@ -124,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-20T18:27:18Z">20 Sep 2026, 18:27 UTC</strong>
+          Refreshed <strong title="2026-09-23T22:22:10Z">23 Sep 2026, 22:22 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -159,6 +173,20 @@
           Source
         </button>
 
+
+        <button class="glyf-source-toggle" type="button" id="glyf-lineage-button" data-glyf-lineage-button aria-pressed="false">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6" cy="6" r="3"></circle>
+    <circle cx="18" cy="12" r="3"></circle>
+    <circle cx="6" cy="18" r="3"></circle>
+    <path d="M9 6h3a3 3 0 0 1 3 3v0a3 3 0 0 0 3 3"></path>
+    <path d="M9 18h3a3 3 0 0 0 3-3v0a3 3 0 0 1 3-3"></path>
+  </svg>
+
+          Lineage
+        </button>
+
         <div class="glyf-version-menu" data-glyf-version-menu>
           <button
             class="glyf-version-button"
@@ -177,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 20 Sep 2026, 18:27 UTC</span>
+              <span class="glyf-version-option-note">built 23 Sep 2026, 22:22 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -293,7 +321,7 @@ ORDER BY revenue DESC
 </aside>
 
 
-      <main class="glyf-content">
+      <main class="glyf-content" id="glyf-charts-view">
 
 
 
@@ -342,19 +370,32 @@ Use this example to inspect layout sections, metric tiles, and notes.
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light" style="--glyf-item-width: 2">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="revenue" style="--glyf-item-width: 2">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Monthly revenue</div>
       <div class="glyf-card-subtitle">month -> revenue</div>
     </div>
-    <span class="glyf-badge glyf-mono">line</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">line</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="962" height="582" viewBox="0 0 962 582"><style>@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Regular.ttf') format('truetype');font-weight:400;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Medium.ttf') format('truetype');font-weight:500;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Bold.ttf') format('truetype');font-weight:700;font-style:normal;}</style><rect width="962" height="582" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(57,44)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h900v500h-900Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,500)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,455)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,409)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,318)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,273)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,227)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,136)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,91)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,45)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Month' for a discrete scale with 3 values: 2026-01, 2026-02, 2026-03"><g transform="translate(0.5,500.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(150,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(450,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(750,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(150,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-01</text><text text-anchor="middle" transform="translate(450,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-02</text><text text-anchor="middle" transform="translate(750,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="900" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(450,31)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Month</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Revenue' for a linear scale with values from 0 to 2,200"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,500)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,455)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,409)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,318)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,273)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,227)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,136)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,91)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,45)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,503)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,457.5454545454545)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">200</text><text text-anchor="end" transform="translate(-7,412.09090909090907)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">400</text><text text-anchor="end" transform="translate(-7,366.6363636363636)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">600</text><text text-anchor="end" transform="translate(-7,321.1818181818182)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">800</text><text text-anchor="end" transform="translate(-7,275.7272727272727)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,000</text><text text-anchor="end" transform="translate(-7,230.27272727272728)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,200</text><text text-anchor="end" transform="translate(-7,184.8181818181818)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,400</text><text text-anchor="end" transform="translate(-7,139.36363636363635)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,600</text><text text-anchor="end" transform="translate(-7,93.90909090909088)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,800</text><text text-anchor="end" transform="translate(-7,48.45454545454547)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,000</text><text text-anchor="end" transform="translate(-7,3)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,200</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,500)" x2="0" y2="-500" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-38.52685546875,250) rotate(-90) translate(0,-3)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Revenue</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-line role-mark layer_0_marks" role="graphics-object" aria-roledescription="line mark container"><path aria-label="Month: 2026-01; Revenue: 1200" role="graphics-symbol" aria-roledescription="line mark" d="M150,227.273L450,90.909L750,22.727" stroke="#4c78a8" stroke-width="2"/></g><g class="mark-symbol role-mark layer_1_marks" role="graphics-object" aria-roledescription="symbol mark container"><path aria-label="Month: 2026-01; Revenue: 1200" role="graphics-symbol" aria-roledescription="point" transform="translate(150,227.27272727272728)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/><path aria-label="Month: 2026-02; Revenue: 1800" role="graphics-symbol" aria-roledescription="point" transform="translate(450,90.90909090909088)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/><path aria-label="Month: 2026-03; Revenue: 2100" role="graphics-symbol" aria-roledescription="point" transform="translate(750,22.727272727272705)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/></g><g class="mark-group role-title"><g transform="translate(450,-39)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Monthly Revenue'" pointer-events="none"><text text-anchor="middle" transform="translate(0,12)" font-family="Hanken Grotesk" font-size="15px" font-weight="600" fill="#000" opacity="1">Monthly Revenue</text></g><g class="mark-text role-title-subtitle" role="graphics-symbol" aria-roledescription="subtitle" aria-label="Subtitle text 'Revenue trend from dbt model'" pointer-events="none"><text text-anchor="middle" transform="translate(0,27)" font-family="Hanken Grotesk" font-size="12px" font-weight="400" fill="#000" opacity="1">Revenue trend from dbt model</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+    <div class="glyf-chart-still" data-glyf-still>
 
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="962" height="582" viewBox="0 0 962 582"><style>@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Regular.ttf') format('truetype');font-weight:400;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Medium.ttf') format('truetype');font-weight:500;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Bold.ttf') format('truetype');font-weight:700;font-style:normal;}</style><rect width="962" height="582" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(57,44)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h900v500h-900Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,500)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,455)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,409)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,318)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,273)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,227)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,136)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,91)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,45)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="900" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Month' for a discrete scale with 3 values: 2026-01, 2026-02, 2026-03"><g transform="translate(0.5,500.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(150,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(450,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(750,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(150,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-01</text><text text-anchor="middle" transform="translate(450,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-02</text><text text-anchor="middle" transform="translate(750,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="900" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(450,31)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Month</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Revenue' for a linear scale with values from 0 to 2,200"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,500)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,455)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,409)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,318)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,273)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,227)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,136)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,91)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,45)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,503)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,457.5454545454545)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">200</text><text text-anchor="end" transform="translate(-7,412.09090909090907)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">400</text><text text-anchor="end" transform="translate(-7,366.6363636363636)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">600</text><text text-anchor="end" transform="translate(-7,321.1818181818182)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">800</text><text text-anchor="end" transform="translate(-7,275.7272727272727)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,000</text><text text-anchor="end" transform="translate(-7,230.27272727272728)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,200</text><text text-anchor="end" transform="translate(-7,184.8181818181818)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,400</text><text text-anchor="end" transform="translate(-7,139.36363636363635)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,600</text><text text-anchor="end" transform="translate(-7,93.90909090909088)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,800</text><text text-anchor="end" transform="translate(-7,48.45454545454547)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,000</text><text text-anchor="end" transform="translate(-7,3)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,200</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,500)" x2="0" y2="-500" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-38.52685546875,250) rotate(-90) translate(0,-3)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Revenue</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-line role-mark layer_0_marks" role="graphics-object" aria-roledescription="line mark container"><path aria-label="Month: 2026-01; Revenue: 1200" role="graphics-symbol" aria-roledescription="line mark" d="M150,227.273L450,90.909L750,22.727" stroke="#4c78a8" stroke-width="2"/></g><g class="mark-symbol role-mark layer_1_marks" role="graphics-object" aria-roledescription="symbol mark container"><path aria-label="Month: 2026-01; Revenue: 1200" role="graphics-symbol" aria-roledescription="point" transform="translate(150,227.27272727272728)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/><path aria-label="Month: 2026-02; Revenue: 1800" role="graphics-symbol" aria-roledescription="point" transform="translate(450,90.90909090909088)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/><path aria-label="Month: 2026-03; Revenue: 2100" role="graphics-symbol" aria-roledescription="point" transform="translate(750,22.727272727272705)" d="M2.739,0A2.739,2.739,0,1,1,-2.739,0A2.739,2.739,0,1,1,2.739,0" fill="#4c78a8" stroke-width="2" opacity="1"/></g><g class="mark-group role-title"><g transform="translate(450,-39)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Monthly Revenue'" pointer-events="none"><text text-anchor="middle" transform="translate(0,12)" font-family="Hanken Grotesk" font-size="15px" font-weight="600" fill="#000" opacity="1">Monthly Revenue</text></g><g class="mark-text role-title-subtitle" role="graphics-symbol" aria-roledescription="subtitle" aria-label="Subtitle text 'Revenue trend from dbt model'" pointer-events="none"><text text-anchor="middle" transform="translate(0,27)" font-family="Hanken Grotesk" font-size="12px" font-weight="400" fill="#000" opacity="1">Revenue trend from dbt model</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+
+    </div>
+
+
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
@@ -454,30 +495,49 @@ Use this example to inspect layout sections, metric tiles, and notes.
             >
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="revenue_by_region_bar">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Revenue by Region</div>
       <div class="glyf-card-subtitle">month -> revenue</div>
     </div>
-    <span class="glyf-badge glyf-mono">bar</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">bar</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="925" height="482" viewBox="0 0 925 482"><style>@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Regular.ttf') format('truetype');font-weight:400;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Medium.ttf') format('truetype');font-weight:500;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Bold.ttf') format('truetype');font-weight:700;font-style:normal;}</style><rect width="925" height="482" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(57,44)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h800v400h-800Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,400)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,327)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,291)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,255)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,218)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,145)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,109)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,73)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,36)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Month' for a discrete scale with 3 values: 2026-01, 2026-02, 2026-03"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(133,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(400,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(666,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(132.83333333333331,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-01</text><text text-anchor="middle" transform="translate(399.5,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-02</text><text text-anchor="middle" transform="translate(666.1666666666667,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="800" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(400,31)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Month</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Revenue' for a linear scale with values from 0 to 2,200"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,400)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,327)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,291)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,255)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,218)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,145)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,109)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,73)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,36)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,403)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,366.6363636363636)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">200</text><text text-anchor="end" transform="translate(-7,330.27272727272725)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">400</text><text text-anchor="end" transform="translate(-7,293.90909090909093)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">600</text><text text-anchor="end" transform="translate(-7,257.5454545454545)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">800</text><text text-anchor="end" transform="translate(-7,221.18181818181816)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,000</text><text text-anchor="end" transform="translate(-7,184.81818181818184)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,200</text><text text-anchor="end" transform="translate(-7,148.45454545454547)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,400</text><text text-anchor="end" transform="translate(-7,112.09090909090908)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,600</text><text text-anchor="end" transform="translate(-7,75.7272727272727)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,800</text><text text-anchor="end" transform="translate(-7,39.363636363636374)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,000</text><text text-anchor="end" transform="translate(-7,3)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,200</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,400)" x2="0" y2="-400" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-38.52685546875,200) rotate(-90) translate(0,-3)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Revenue</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-rect role-mark marks" role="graphics-object" aria-roledescription="rect mark container"><path aria-label="Month: 2026-01; Revenue: 700; region: North" role="graphics-symbol" aria-roledescription="bar" d="M13.333333333333314,181.81818181818184h240.00000000000003v127.27272727272722h-240.00000000000003Z" fill="#4c78a8"/><path aria-label="Month: 2026-01; Revenue: 500; region: South" role="graphics-symbol" aria-roledescription="bar" d="M13.333333333333314,309.09090909090907h240.00000000000003v90.90909090909093h-240.00000000000003Z" fill="#f58518"/><path aria-label="Month: 2026-02; Revenue: 1100; region: North" role="graphics-symbol" aria-roledescription="bar" d="M280,72.7272727272727h240.00000000000003v200.00000000000006h-240.00000000000003Z" fill="#4c78a8"/><path aria-label="Month: 2026-02; Revenue: 700; region: South" role="graphics-symbol" aria-roledescription="bar" d="M280,272.72727272727275h240.00000000000003v127.27272727272725h-240.00000000000003Z" fill="#f58518"/><path aria-label="Month: 2026-03; Revenue: 1200; region: North" role="graphics-symbol" aria-roledescription="bar" d="M546.6666666666667,18.181818181818166h240.00000000000003v218.18181818181816h-240.00000000000003Z" fill="#4c78a8"/><path aria-label="Month: 2026-03; Revenue: 900; region: South" role="graphics-symbol" aria-roledescription="bar" d="M546.6666666666667,236.36363636363632h240.00000000000003v163.63636363636368h-240.00000000000003Z" fill="#f58518"/></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend titled 'region' for fill color with 2 values: North, South"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h45v41h-45Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,17)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M-5,-5h10v10h-10Z" fill="#4c78a8" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">North</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,13)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M-5,-5h10v10h-10Z" fill="#f58518" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">South</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-text role-legend-title" pointer-events="none"><text text-anchor="start" transform="translate(0,9)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">region</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-39)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Revenue by Region'" pointer-events="none"><text text-anchor="middle" transform="translate(0,12)" font-family="Hanken Grotesk" font-size="15px" font-weight="600" fill="#000" opacity="1">Revenue by Region</text></g><g class="mark-text role-title-subtitle" role="graphics-symbol" aria-roledescription="subtitle" aria-label="Subtitle text 'Grouped monthly revenue'" pointer-events="none"><text text-anchor="middle" transform="translate(0,27)" font-family="Hanken Grotesk" font-size="12px" font-weight="400" fill="#000" opacity="1">Grouped monthly revenue</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+    <div class="glyf-chart-still" data-glyf-still>
 
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="925" height="482" viewBox="0 0 925 482"><style>@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Regular.ttf') format('truetype');font-weight:400;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Medium.ttf') format('truetype');font-weight:500;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Bold.ttf') format('truetype');font-weight:700;font-style:normal;}</style><rect width="925" height="482" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(57,44)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h800v400h-800Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,400)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,327)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,291)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,255)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,218)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,145)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,109)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,73)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,36)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Month' for a discrete scale with 3 values: 2026-01, 2026-02, 2026-03"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(133,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(400,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(666,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(132.83333333333331,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-01</text><text text-anchor="middle" transform="translate(399.5,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-02</text><text text-anchor="middle" transform="translate(666.1666666666667,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="800" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(400,31)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Month</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Revenue' for a linear scale with values from 0 to 2,200"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,400)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,327)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,291)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,255)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,218)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,145)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,109)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,73)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,36)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,403)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,366.6363636363636)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">200</text><text text-anchor="end" transform="translate(-7,330.27272727272725)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">400</text><text text-anchor="end" transform="translate(-7,293.90909090909093)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">600</text><text text-anchor="end" transform="translate(-7,257.5454545454545)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">800</text><text text-anchor="end" transform="translate(-7,221.18181818181816)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,000</text><text text-anchor="end" transform="translate(-7,184.81818181818184)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,200</text><text text-anchor="end" transform="translate(-7,148.45454545454547)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,400</text><text text-anchor="end" transform="translate(-7,112.09090909090908)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,600</text><text text-anchor="end" transform="translate(-7,75.7272727272727)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,800</text><text text-anchor="end" transform="translate(-7,39.363636363636374)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,000</text><text text-anchor="end" transform="translate(-7,3)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,200</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,400)" x2="0" y2="-400" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-38.52685546875,200) rotate(-90) translate(0,-3)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Revenue</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-rect role-mark marks" role="graphics-object" aria-roledescription="rect mark container"><path aria-label="Month: 2026-01; Revenue: 700; region: North" role="graphics-symbol" aria-roledescription="bar" d="M13.333333333333314,181.81818181818184h240.00000000000003v127.27272727272722h-240.00000000000003Z" fill="#4c78a8"/><path aria-label="Month: 2026-01; Revenue: 500; region: South" role="graphics-symbol" aria-roledescription="bar" d="M13.333333333333314,309.09090909090907h240.00000000000003v90.90909090909093h-240.00000000000003Z" fill="#f58518"/><path aria-label="Month: 2026-02; Revenue: 1100; region: North" role="graphics-symbol" aria-roledescription="bar" d="M280,72.7272727272727h240.00000000000003v200.00000000000006h-240.00000000000003Z" fill="#4c78a8"/><path aria-label="Month: 2026-02; Revenue: 700; region: South" role="graphics-symbol" aria-roledescription="bar" d="M280,272.72727272727275h240.00000000000003v127.27272727272725h-240.00000000000003Z" fill="#f58518"/><path aria-label="Month: 2026-03; Revenue: 1200; region: North" role="graphics-symbol" aria-roledescription="bar" d="M546.6666666666667,18.181818181818166h240.00000000000003v218.18181818181816h-240.00000000000003Z" fill="#4c78a8"/><path aria-label="Month: 2026-03; Revenue: 900; region: South" role="graphics-symbol" aria-roledescription="bar" d="M546.6666666666667,236.36363636363632h240.00000000000003v163.63636363636368h-240.00000000000003Z" fill="#f58518"/></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend titled 'region' for fill color with 2 values: North, South"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h45v41h-45Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,17)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M-5,-5h10v10h-10Z" fill="#4c78a8" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">North</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,13)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M-5,-5h10v10h-10Z" fill="#f58518" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">South</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-text role-legend-title" pointer-events="none"><text text-anchor="start" transform="translate(0,9)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">region</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-39)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Revenue by Region'" pointer-events="none"><text text-anchor="middle" transform="translate(0,12)" font-family="Hanken Grotesk" font-size="15px" font-weight="600" fill="#000" opacity="1">Revenue by Region</text></g><g class="mark-text role-title-subtitle" role="graphics-symbol" aria-roledescription="subtitle" aria-label="Subtitle text 'Grouped monthly revenue'" pointer-events="none"><text text-anchor="middle" transform="translate(0,27)" font-family="Hanken Grotesk" font-size="12px" font-weight="400" fill="#000" opacity="1">Grouped monthly revenue</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+
+    </div>
+
+
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="revenue_scatter">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Revenue Scatter</div>
       <div class="glyf-card-subtitle">month -> revenue</div>
     </div>
-    <span class="glyf-badge glyf-mono">scatter</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">scatter</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -491,41 +551,69 @@ Use this example to inspect layout sections, metric tiles, and notes.
       <img src="../charts/revenue_scatter.png" alt="Revenue Scatter">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="revenue_area">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Revenue Area</div>
       <div class="glyf-card-subtitle">month -> revenue</div>
     </div>
-    <span class="glyf-badge glyf-mono">area</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">area</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="925" height="482" viewBox="0 0 925 482"><style>@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Regular.ttf') format('truetype');font-weight:400;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Medium.ttf') format('truetype');font-weight:500;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Bold.ttf') format('truetype');font-weight:700;font-style:normal;}</style><rect width="925" height="482" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(57,44)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h800v400h-800Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,400)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,327)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,291)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,255)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,218)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,145)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,109)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,73)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,36)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Month' for a discrete scale with 3 values: 2026-01, 2026-02, 2026-03"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(133,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(400,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(667,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(133.33333333333331,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-01</text><text text-anchor="middle" transform="translate(400,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-02</text><text text-anchor="middle" transform="translate(666.6666666666667,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="800" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(400,31)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Month</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Revenue' for a linear scale with values from 0 to 2,200"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,400)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,327)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,291)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,255)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,218)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,145)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,109)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,73)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,36)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,403)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,366.6363636363636)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">200</text><text text-anchor="end" transform="translate(-7,330.27272727272725)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">400</text><text text-anchor="end" transform="translate(-7,293.90909090909093)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">600</text><text text-anchor="end" transform="translate(-7,257.5454545454545)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">800</text><text text-anchor="end" transform="translate(-7,221.18181818181816)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,000</text><text text-anchor="end" transform="translate(-7,184.81818181818184)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,200</text><text text-anchor="end" transform="translate(-7,148.45454545454547)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,400</text><text text-anchor="end" transform="translate(-7,112.09090909090908)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,600</text><text text-anchor="end" transform="translate(-7,75.7272727272727)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,800</text><text text-anchor="end" transform="translate(-7,39.363636363636374)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,000</text><text text-anchor="end" transform="translate(-7,3)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,200</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,400)" x2="0" y2="-400" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-38.52685546875,200) rotate(-90) translate(0,-3)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Revenue</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-scope pathgroup" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h800v400h-800Z"/><g><g class="mark-area role-mark marks" role="graphics-object" aria-roledescription="area mark container"><path aria-label="Month: 2026-01; Revenue: 700; region: North" role="graphics-symbol" aria-roledescription="area mark" d="M133.333,181.818L400,72.727L666.667,18.182L666.667,236.364L400,272.727L133.333,309.091Z" fill="#4c78a8" opacity="0.7"/></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h800v400h-800Z"/><g><g class="mark-area role-mark marks" role="graphics-object" aria-roledescription="area mark container"><path aria-label="Month: 2026-01; Revenue: 500; region: South" role="graphics-symbol" aria-roledescription="area mark" d="M133.333,309.091L400,272.727L666.667,236.364L666.667,400L400,400L133.333,400Z" fill="#f58518" opacity="0.7"/></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend titled 'region' for fill color with 2 values: North, South"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h45v41h-45Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,17)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#4c78a8" stroke-width="1.5" opacity="0.7"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">North</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,13)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#f58518" stroke-width="1.5" opacity="0.7"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">South</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-text role-legend-title" pointer-events="none"><text text-anchor="start" transform="translate(0,9)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">region</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-39)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Revenue Area'" pointer-events="none"><text text-anchor="middle" transform="translate(0,12)" font-family="Hanken Grotesk" font-size="15px" font-weight="600" fill="#000" opacity="1">Revenue Area</text></g><g class="mark-text role-title-subtitle" role="graphics-symbol" aria-roledescription="subtitle" aria-label="Subtitle text 'Area chart with color grouping'" pointer-events="none"><text text-anchor="middle" transform="translate(0,27)" font-family="Hanken Grotesk" font-size="12px" font-weight="400" fill="#000" opacity="1">Area chart with color grouping</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+    <div class="glyf-chart-still" data-glyf-still>
 
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="925" height="482" viewBox="0 0 925 482"><style>@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Regular.ttf') format('truetype');font-weight:400;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Medium.ttf') format('truetype');font-weight:500;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Bold.ttf') format('truetype');font-weight:700;font-style:normal;}</style><rect width="925" height="482" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(57,44)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0.5,0.5h800v400h-800Z" stroke="#d9e2ec"/><g><g class="mark-group role-axis" aria-hidden="true"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-grid" pointer-events="none"><line transform="translate(0,400)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,327)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,291)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,255)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,218)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,145)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,109)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,73)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,36)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="800" y2="0" stroke="#ddd" stroke-width="1" opacity="1"/></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="X-axis titled 'Month' for a discrete scale with 3 values: 2026-01, 2026-02, 2026-03"><g transform="translate(0.5,400.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(133,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(400,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(667,0)" x2="0" y2="5" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="middle" transform="translate(133.33333333333331,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-01</text><text text-anchor="middle" transform="translate(400,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-02</text><text text-anchor="middle" transform="translate(666.6666666666667,16)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2026-03</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,0)" x2="800" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(400,31)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Month</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-axis" role="graphics-symbol" aria-roledescription="axis" aria-label="Y-axis titled 'Revenue' for a linear scale with values from 0 to 2,200"><g transform="translate(0.5,0.5)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-rule role-axis-tick" pointer-events="none"><line transform="translate(0,400)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,364)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,327)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,291)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,255)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,218)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,182)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,145)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,109)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,73)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,36)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/><line transform="translate(0,0)" x2="-5" y2="0" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-label" pointer-events="none"><text text-anchor="end" transform="translate(-7,403)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">0</text><text text-anchor="end" transform="translate(-7,366.6363636363636)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">200</text><text text-anchor="end" transform="translate(-7,330.27272727272725)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">400</text><text text-anchor="end" transform="translate(-7,293.90909090909093)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">600</text><text text-anchor="end" transform="translate(-7,257.5454545454545)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">800</text><text text-anchor="end" transform="translate(-7,221.18181818181816)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,000</text><text text-anchor="end" transform="translate(-7,184.81818181818184)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,200</text><text text-anchor="end" transform="translate(-7,148.45454545454547)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,400</text><text text-anchor="end" transform="translate(-7,112.09090909090908)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,600</text><text text-anchor="end" transform="translate(-7,75.7272727272727)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">1,800</text><text text-anchor="end" transform="translate(-7,39.363636363636374)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,000</text><text text-anchor="end" transform="translate(-7,3)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">2,200</text></g><g class="mark-rule role-axis-domain" pointer-events="none"><line transform="translate(0,400)" x2="0" y2="-400" stroke="#888" stroke-width="1" opacity="1"/></g><g class="mark-text role-axis-title" pointer-events="none"><text text-anchor="middle" transform="translate(-38.52685546875,200) rotate(-90) translate(0,-3)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">Revenue</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-scope pathgroup" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h800v400h-800Z"/><g><g class="mark-area role-mark marks" role="graphics-object" aria-roledescription="area mark container"><path aria-label="Month: 2026-01; Revenue: 700; region: North" role="graphics-symbol" aria-roledescription="area mark" d="M133.333,181.818L400,72.727L666.667,18.182L666.667,236.364L400,272.727L133.333,309.091Z" fill="#4c78a8" opacity="0.7"/></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h800v400h-800Z"/><g><g class="mark-area role-mark marks" role="graphics-object" aria-roledescription="area mark container"><path aria-label="Month: 2026-01; Revenue: 500; region: South" role="graphics-symbol" aria-roledescription="area mark" d="M133.333,309.091L400,272.727L666.667,236.364L666.667,400L400,400L133.333,400Z" fill="#f58518" opacity="0.7"/></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend titled 'region' for fill color with 2 values: North, South"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h45v41h-45Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,17)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#4c78a8" stroke-width="1.5" opacity="0.7"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">North</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,13)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#f58518" stroke-width="1.5" opacity="0.7"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">South</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-text role-legend-title" pointer-events="none"><text text-anchor="start" transform="translate(0,9)" font-family="Hanken Grotesk" font-size="12px" font-weight="600" fill="#000" opacity="1">region</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-39)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Revenue Area'" pointer-events="none"><text text-anchor="middle" transform="translate(0,12)" font-family="Hanken Grotesk" font-size="15px" font-weight="600" fill="#000" opacity="1">Revenue Area</text></g><g class="mark-text role-title-subtitle" role="graphics-symbol" aria-roledescription="subtitle" aria-label="Subtitle text 'Area chart with color grouping'" pointer-events="none"><text text-anchor="middle" transform="translate(0,27)" font-family="Hanken Grotesk" font-size="12px" font-weight="400" fill="#000" opacity="1">Area chart with color grouping</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+
+    </div>
+
+
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="revenue_share_pie">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Revenue Share</div>
       <div class="glyf-card-subtitle">region -> revenue</div>
     </div>
-    <span class="glyf-badge glyf-mono">pie</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">pie</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="873" height="443" viewBox="0 0 873 443"><style>@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Regular.ttf') format('truetype');font-weight:400;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Medium.ttf') format('truetype');font-weight:500;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Bold.ttf') format('truetype');font-weight:700;font-style:normal;}</style><rect width="873" height="443" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(5,38)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h800v400h-800Z"/><g><g class="mark-arc role-mark marks" role="graphics-object" aria-roledescription="arc mark container"><path aria-label="revenue: 3000; region: North" role="graphics-symbol" aria-roledescription="arc mark" transform="translate(400,200)" d="M-105.286,170.043A200,200,0,1,0,0,-200L0,0Z" fill="#4c78a8"/><path aria-label="revenue: 2100; region: South" role="graphics-symbol" aria-roledescription="arc mark" transform="translate(400,200)" d="M0,-200A200,200,0,0,0,-105.286,170.043L0,0Z" fill="#f58518"/></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend for fill color with 2 values: North, South"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h45v24h-45Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#4c78a8" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">North</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,13)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#f58518" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">South</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-33)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Revenue Share'" pointer-events="none"><text text-anchor="middle" transform="translate(0,12)" font-family="Hanken Grotesk" font-size="15px" font-weight="600" fill="#000" opacity="1">Revenue Share</text></g><g class="mark-text role-title-subtitle" role="graphics-symbol" aria-roledescription="subtitle" aria-label="Subtitle text 'Share of revenue by region'" pointer-events="none"><text text-anchor="middle" transform="translate(0,27)" font-family="Hanken Grotesk" font-size="12px" font-weight="400" fill="#000" opacity="1">Share of revenue by region</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+    <div class="glyf-chart-still" data-glyf-still>
 
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="marks" width="873" height="443" viewBox="0 0 873 443"><style>@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Regular.ttf') format('truetype');font-weight:400;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Medium.ttf') format('truetype');font-weight:500;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;}@font-face{font-family:'Hanken Grotesk';src:url('../assets/fonts/HankenGrotesk-Bold.ttf') format('truetype');font-weight:700;font-style:normal;}</style><rect width="873" height="443" fill="white"/><g fill="none" stroke-miterlimit="10" transform="translate(5,38)"><g class="mark-group role-frame root" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h800v400h-800Z"/><g><g class="mark-arc role-mark marks" role="graphics-object" aria-roledescription="arc mark container"><path aria-label="revenue: 3000; region: North" role="graphics-symbol" aria-roledescription="arc mark" transform="translate(400,200)" d="M-105.286,170.043A200,200,0,1,0,0,-200L0,0Z" fill="#4c78a8"/><path aria-label="revenue: 2100; region: South" role="graphics-symbol" aria-roledescription="arc mark" transform="translate(400,200)" d="M0,-200A200,200,0,0,0,-105.286,170.043L0,0Z" fill="#f58518"/></g><g class="mark-group role-legend" role="graphics-symbol" aria-roledescription="legend" aria-label="Symbol legend for fill color with 2 values: North, South"><g transform="translate(818,0)"><path class="background" aria-hidden="true" d="M0,0h45v24h-45Z" pointer-events="none"/><g><g class="mark-group role-legend-entry"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-group role-scope" role="graphics-object" aria-roledescription="group mark container"><g transform="translate(0,0)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#4c78a8" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">North</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g><g transform="translate(0,13)"><path class="background" aria-hidden="true" d="M0,0h44.74609375v11h-44.74609375Z" pointer-events="none" opacity="1"/><g><g class="mark-symbol role-legend-symbol" pointer-events="none"><path transform="translate(6,6)" d="M5,0A5,5,0,1,1,-5,0A5,5,0,1,1,5,0" fill="#f58518" stroke-width="1.5" opacity="1"/></g><g class="mark-text role-legend-label" pointer-events="none"><text text-anchor="start" transform="translate(16,9)" font-family="Hanken Grotesk" font-size="11px" fill="#000" opacity="1">South</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g><g class="mark-group role-title"><g transform="translate(400,-33)"><path class="background" aria-hidden="true" d="M0,0h0v0h0Z" pointer-events="none"/><g><g class="mark-text role-title-text" role="graphics-symbol" aria-roledescription="title" aria-label="Title text 'Revenue Share'" pointer-events="none"><text text-anchor="middle" transform="translate(0,12)" font-family="Hanken Grotesk" font-size="15px" font-weight="600" fill="#000" opacity="1">Revenue Share</text></g><g class="mark-text role-title-subtitle" role="graphics-symbol" aria-roledescription="subtitle" aria-label="Subtitle text 'Share of revenue by region'" pointer-events="none"><text text-anchor="middle" transform="translate(0,27)" font-family="Hanken Grotesk" font-size="12px" font-weight="400" fill="#000" opacity="1">Share of revenue by region</text></g></g><path class="foreground" aria-hidden="true" d="" pointer-events="none" display="none"/></g></g></g><path class="foreground" aria-hidden="true" d="" display="none"/></g></g></g></svg>
+
+    </div>
+
+
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
@@ -568,7 +656,7 @@ Use this example to inspect layout sections, metric tiles, and notes.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-20 19:27
+      2026-09-23 23:22
 
     </div>
   </div>
@@ -589,6 +677,87 @@ Use this example to inspect layout sections, metric tiles, and notes.
   </div>
 </aside>
 
+
+    <div class="glyf-lineage-screen" id="glyf-lineage-modal" data-glyf-lineage-modal role="dialog" aria-modal="true" aria-label="Lineage">
+  <div class="glyf-lineage-frame">
+    <div class="glyf-lineage-bar">
+      <button class="glyf-lineage-back" type="button" data-glyf-lineage-close>&larr; Back to dashboard</button>
+      <div class="glyf-lineage-head">
+        <div class="glyf-lineage-heading">Lineage</div>
+        <div class="glyf-lineage-summary glyf-mono">1 source · 1 model · 5 charts</div>
+      </div>
+    </div>
+    <div class="glyf-lineage-body">
+
+      <div class="glyf-lineage-colheads">
+        <div class="glyf-lineage-colhead">Sources</div>
+        <div class="glyf-lineage-colhead">Models</div>
+        <div class="glyf-lineage-colhead">Charts on this dashboard</div>
+      </div>
+      <div class="glyf-lineage-wrap" data-glyf-lineage>
+        <svg class="glyf-lineage-svg" viewBox="0 0 1068 324" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
+          <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
+            <g class="glyf-lineage-edges">
+              <path d="M264,162.0 C339.0,162.0 339.0,162.0 414,162.0" data-from="source:raw.orders" data-to="model:fct_orders"/>
+              <path d="M654,162.0 C729.0,162.0 729.0,46.0 804,46.0" data-from="model:fct_orders" data-to="chart:revenue"/>
+              <path d="M654,162.0 C729.0,162.0 729.0,104.0 804,104.0" data-from="model:fct_orders" data-to="chart:revenue_by_region_bar"/>
+              <path d="M654,162.0 C729.0,162.0 729.0,162.0 804,162.0" data-from="model:fct_orders" data-to="chart:revenue_scatter"/>
+              <path d="M654,162.0 C729.0,162.0 729.0,220.0 804,220.0" data-from="model:fct_orders" data-to="chart:revenue_area"/>
+              <path d="M654,162.0 C729.0,162.0 729.0,278.0 804,278.0" data-from="model:fct_orders" data-to="chart:revenue_share_pie"/>
+            </g>
+            <g class="glyf-lineage-nodes">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.orders" data-tip="raw table, read through source()" transform="translate(24,140.0)" tabindex="0" role="button" aria-label="raw.orders, source">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">raw.orders</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_orders" data-tip="models/fct_orders.sql" transform="translate(414,140.0)" tabindex="0" role="button" aria-label="fct_orders, model">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">fct_orders</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:revenue" data-tip="binds month AS x, revenue AS y" transform="translate(804,24.0)" tabindex="0" role="button" aria-label="Monthly Revenue, line">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Monthly Revenue</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">line</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:revenue_by_region_bar" data-tip="binds month AS x, revenue AS y" transform="translate(804,82.0)" tabindex="0" role="button" aria-label="Revenue by Region, bar">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Revenue by Region</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">bar</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:revenue_scatter" data-tip="binds month AS x, revenue AS y" transform="translate(804,140.0)" tabindex="0" role="button" aria-label="Revenue Scatter, scatter">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Revenue Scatter</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">scatter</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:revenue_area" data-tip="binds month AS x, revenue AS y" transform="translate(804,198.0)" tabindex="0" role="button" aria-label="Revenue Area, area">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Revenue Area</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">area</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:revenue_share_pie" data-tip="binds region AS x, revenue AS y" transform="translate(804,256.0)" tabindex="0" role="button" aria-label="Revenue Share, pie">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Revenue Share</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">pie</text>
+              </g>
+            </g>
+          </g>
+        </svg>
+        <div class="glyf-lineage-controls" aria-label="Zoom">
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="in" aria-label="Zoom in">+</button>
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="out" aria-label="Zoom out">&minus;</button>
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="reset" aria-label="Reset view">&#8690;</button>
+        </div>
+        <div class="glyf-lineage-tip" role="tooltip" hidden></div>
+      </div>
+      <p class="glyf-lineage-hint">Click a node to trace what feeds it and what it feeds; click again to clear. Hover a node for what it binds or reads. Drag to move the canvas; scroll or use the buttons to zoom. Escape closes.</p>
+
+    </div>
+  </div>
+</div>
+
+
     <div class="glyf-modal-backdrop" id="glyf-lookback-modal" data-glyf-modal>
       <div class="glyf-modal" role="dialog" aria-modal="true" aria-label="Lookback chart versions">
         <div class="glyf-modal-head">
@@ -599,7 +768,7 @@ Use this example to inspect layout sections, metric tiles, and notes.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">20 Sep 2026, 18:27 UTC</div>
+              <div class="glyf-version-date">23 Sep 2026, 22:22 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -616,6 +785,7 @@ Use this example to inspect layout sections, metric tiles, and notes.
   </div>
 
 
+
   <script>
     document.querySelectorAll("[data-vega-chart]").forEach((container) => {
       const specElement = document.getElementById(container.dataset.vegaChart);
@@ -625,6 +795,101 @@ Use this example to inspect layout sections, metric tiles, and notes.
       const spec = JSON.parse(specElement.textContent);
       vegaEmbed(container, spec, { actions: false, renderer: "svg" });
     });
+  </script>
+
+
+  <script>
+    (function () {
+      // Lineage opens as a window over the dashboard, like Lookback.
+      const button = document.querySelector("[data-glyf-lineage-button]");
+      const modal = document.getElementById("glyf-lineage-modal");
+      if (!button || !modal) return;
+      const setOpen = (open) => {
+        modal.classList.toggle("is-open", open);
+        document.body.style.overflow = open ? "hidden" : "";
+        button.classList.toggle("is-active", open);
+        button.setAttribute("aria-pressed", open ? "true" : "false");
+      };
+      button.addEventListener("click", () => setOpen(!modal.classList.contains("is-open")));
+      modal.querySelector("[data-glyf-lineage-close]").addEventListener("click", () => setOpen(false));
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape" && modal.classList.contains("is-open")) setOpen(false); });
+
+      const wrap = modal.querySelector("[data-glyf-lineage]");
+      const svg = wrap.querySelector("svg");
+      const canvas = wrap.querySelector("[data-glyf-lineage-canvas]");
+      const nodes = Array.from(wrap.querySelectorAll("[data-node]"));
+      const edges = Array.from(wrap.querySelectorAll("path[data-from]"));
+
+      // Tracing: light the node, everything upstream and everything downstream.
+      const up = new Map(), down = new Map();
+      edges.forEach((edge) => {
+        const a = edge.dataset.from, b = edge.dataset.to;
+        (down.get(a) || down.set(a, []).get(a)).push(b);
+        (up.get(b) || up.set(b, []).get(b)).push(a);
+      });
+      let current = null;
+      const walk = (start, map, seen) => (map.get(start) || []).forEach((n) => { if (!seen.has(n)) { seen.add(n); walk(n, map, seen); } });
+      const clear = () => { current = null; wrap.classList.remove("has-focus"); nodes.concat(edges).forEach((el) => el.classList.remove("is-lit")); };
+      const trace = (id) => {
+        if (current === id) return clear();
+        current = id;
+        const lit = new Set([id]); walk(id, up, lit); walk(id, down, lit);
+        wrap.classList.add("has-focus");
+        nodes.forEach((n) => n.classList.toggle("is-lit", lit.has(n.dataset.node)));
+        edges.forEach((e) => e.classList.toggle("is-lit", lit.has(e.dataset.from) && lit.has(e.dataset.to)));
+      };
+      nodes.forEach((node) => {
+        node.addEventListener("click", () => trace(node.dataset.node));
+        node.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); trace(node.dataset.node); } });
+      });
+      // Pan and zoom: one transform on the canvas group.
+      const state = { x: 0, y: 0, k: 1 };
+      const apply = () => canvas.setAttribute("transform", `translate(${state.x},${state.y}) scale(${state.k})`);
+      const scale = () => { const box = svg.getBoundingClientRect(); const vb = svg.viewBox.baseVal; return { box, sx: vb.width / box.width, sy: vb.height / box.height }; };
+      const zoomBy = (factor, cx, cy) => {
+        const k = Math.min(3, Math.max(0.4, state.k * factor));
+        const { box, sx, sy } = scale();
+        const px = (cx - box.left) * sx, py = (cy - box.top) * sy;
+        state.x = px - (px - state.x) * (k / state.k);
+        state.y = py - (py - state.y) * (k / state.k);
+        state.k = k; apply();
+      };
+      wrap.addEventListener("wheel", (event) => { event.preventDefault(); zoomBy(event.deltaY < 0 ? 1.12 : 1 / 1.12, event.clientX, event.clientY); }, { passive: false });
+      wrap.querySelectorAll("[data-glyf-zoom]").forEach((control) => control.addEventListener("click", () => {
+        const { box } = scale(); const cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+        if (control.dataset.glyfZoom === "in") zoomBy(1.25, cx, cy);
+        else if (control.dataset.glyfZoom === "out") zoomBy(1 / 1.25, cx, cy);
+        else { state.x = 0; state.y = 0; state.k = 1; apply(); }
+      }));
+      let drag = null;
+      wrap.addEventListener("pointerdown", (event) => {
+        if (event.target.closest("[data-node], button")) return;
+        drag = { x: event.clientX, y: event.clientY, vx: state.x, vy: state.y };
+        wrap.classList.add("is-panning"); wrap.setPointerCapture(event.pointerId);
+      });
+      wrap.addEventListener("pointermove", (event) => {
+        if (!drag) return;
+        const { sx, sy } = scale();
+        state.x = drag.vx + (event.clientX - drag.x) * sx;
+        state.y = drag.vy + (event.clientY - drag.y) * sy;
+        apply();
+      });
+      const endDrag = () => { drag = null; wrap.classList.remove("is-panning"); };
+      wrap.addEventListener("pointerup", endDrag); wrap.addEventListener("pointercancel", endDrag);
+
+      // The tooltip carries what the node does not: a model's file, a chart's bindings.
+      const tip = wrap.querySelector(".glyf-lineage-tip");
+      nodes.forEach((node) => {
+        const show = () => {
+          tip.textContent = node.dataset.tip || ""; tip.hidden = !tip.textContent;
+          const r = node.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+          tip.style.left = `${r.left - w.left}px`; tip.style.top = `${r.bottom - w.top + 6}px`;
+        };
+        const hide = () => { tip.hidden = true; };
+        node.addEventListener("pointerenter", show); node.addEventListener("pointerleave", hide);
+        node.addEventListener("focus", show); node.addEventListener("blur", hide);
+      });
+    })();
   </script>
 
   <script>
@@ -698,6 +963,71 @@ Use this example to inspect layout sections, metric tiles, and notes.
         }
       });
     }
+
+    (function () {
+      // Light or dark, chosen by the reader and remembered in this browser.
+      // The page's palette is tokens, so the frame follows on its own; charts
+      // drawn at build time get the same colour swaps the build applies.
+      const root = document.documentElement;
+      const toggle = document.querySelector("[data-glyf-theme-toggle]");
+      const chartsFollow = root.dataset.glyfChartFollows !== "false";
+      const svgSwaps = [
+        ["stroke", "#d9e2ec", "#3f3f46"], ["stroke", "#ddd", "#27272a"], ["stroke", "#888", "#a1a1aa"],
+        ["fill", "#000", "#f4f4f5"], ["fill", "black", "#f4f4f5"],
+      ];
+      const swapAttributes = (svg, dark) => {
+        const first = svg.querySelector("rect");
+        if (first) {
+          const fill = first.getAttribute("fill");
+          if (dark && fill === "white") first.setAttribute("fill", "#09090b");
+          if (!dark && fill === "#09090b") first.setAttribute("fill", "white");
+        }
+        svgSwaps.forEach(([attr, light, darkValue]) => {
+          const from = dark ? light : darkValue, to = dark ? darkValue : light;
+          svg.querySelectorAll(`[${attr}="${from}"]`).forEach((el) => el.setAttribute(attr, to));
+        });
+      };
+      const darkVega = { background: "#09090b", view: { stroke: "#3f3f46", fill: "#09090b" }, axis: { labelColor: "#f4f4f5", titleColor: "#f4f4f5", domainColor: "#a1a1aa", tickColor: "#a1a1aa", gridColor: "#27272a" }, legend: { labelColor: "#f4f4f5", titleColor: "#f4f4f5" }, title: { color: "#f4f4f5", subtitleColor: "#d4d4d8" } };
+      const lightVega = { background: "#ffffff", view: { stroke: "#d9e2ec", fill: "#ffffff" }, axis: { labelColor: "#000000", titleColor: "#000000", domainColor: "#888888", tickColor: "#888888", gridColor: "#dddddd" }, legend: { labelColor: "#000000", titleColor: "#000000" }, title: { color: "#000000", subtitleColor: "#52525b" } };
+      window.glyfVegaTheme = (spec, dark) => {
+        const palette = dark ? darkVega : lightVega;
+        spec.background = palette.background;
+        spec.config = spec.config || {};
+        ["view", "axis", "legend", "title"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
+        return spec;
+      };
+      const themeCharts = (dark) => {
+        if (!chartsFollow) return;
+        document.querySelectorAll(".glyf-chart-card").forEach((card) => {
+          card.setAttribute("data-chart-theme", dark ? "dark" : "light");
+          card.querySelectorAll(".glyf-chart-body > svg").forEach((svg) => swapAttributes(svg, dark));
+        });
+
+        {
+          document.querySelectorAll("[data-vega-chart]").forEach((container) => {
+            const specElement = document.getElementById(container.dataset.vegaChart);
+            if (!specElement) return;
+            vegaEmbed(container, window.glyfVegaTheme(JSON.parse(specElement.textContent), dark), { actions: false, renderer: "svg" });
+          });
+        }
+
+      };
+      const buildTheme = "light";
+      const current = () => root.getAttribute("data-theme") === "dark";
+      // The page may have been switched before paint; bring the charts along.
+      if (current() !== (buildTheme === "dark")) themeCharts(current());
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          const dark = !current();
+          root.setAttribute("data-theme", dark ? "dark" : "light");
+          try { localStorage.setItem("glyf-theme", dark ? "dark" : "light"); } catch (e) {}
+          themeCharts(dark);
+          if (window.glyfApplyFilters) window.glyfApplyFilters();
+        });
+      }
+    })();
+
+
 
     document.querySelectorAll("[data-glyf-filter-menu]").forEach((menu) => {
       const button = menu.querySelector("[data-glyf-filter-button]");
