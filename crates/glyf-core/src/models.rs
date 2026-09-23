@@ -24,6 +24,14 @@ pub struct GgsqlChart {
     /// judge of the SQL, and a parser can lag a dialect. Carries the parser's
     /// message with its line and column.
     pub sql_warning: Option<String>,
+    /// Every column name the SQL mentions, lower-cased and de-duplicated: the
+    /// last part of each identifier, wherever it appears. Empty when the SQL
+    /// did not parse. `glyf impact` reads it to find the charts a column
+    /// change touches.
+    pub sql_columns: Vec<String>,
+    /// Whether any SELECT in the query uses `*`, which reads columns the
+    /// query never names.
+    pub sql_selects_star: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

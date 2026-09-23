@@ -12,6 +12,21 @@ order is the priority.
   on the <Link href="https://github.com/glyf-data/glyf/releases">releases page</Link>.
 </p>
 
+## In the next release
+
+<div className="roadmapNext">
+  <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
+  <h3>Impact, and a validate that asks the warehouse</h3>
+  <p>
+    <code>glyf impact fct_finance.margin</code> lists the charts and dashboards a model, a source or
+    a column change reaches, saying on each line how sure it is. Next to <code>glyf diff</code> it
+    is the review a pull request wants: which charts this touches, and what moved in them.
+    <code>glyf validate --execute</code> runs each chart's SQL with <code>LIMIT 0</code> and checks
+    its columns, so a renamed column fails in CI rather than at build.
+  </p>
+  <Link to="/docs/reference/cli#impact">Read the reference</Link>
+</div>
+
 ## Planned
 
 Vote with a 👍 on the issue. The most wanted go first.
@@ -43,7 +58,7 @@ if one of these would change how you work.
   <li><strong>Watch mode.</strong> Rebuild charts and dashboards when a <code>.ggsql</code> file, a dashboard or <code>glyf.yml</code> changes.</li>
   <li><strong>Dashboard templates.</strong> Ready-made layouts to start from.</li>
   <li><strong>dbt docs on dashboards.</strong> Model, column and source descriptions from the manifest, shown beside the charts they describe.</li>
-  <li><strong>Lineage.</strong> Which models and sources feed each chart, and which charts a changed model touches.</li>
+  <li><strong>Lineage on the dashboard.</strong> Under each chart, the models and sources it reads. The command-line half, <code>glyf impact</code>, is merged.</li>
   <li><strong>Richer layout.</strong> Grid and chart sizing beyond column tracks.</li>
   <li><strong>Publish helpers</strong> for common static hosts.</li>
   <li><strong>JavaScript packages.</strong> React components and a client for <code>bundle.json</code> are experimental in <Link href="https://github.com/glyf-data/glyf-js">glyf-js</Link>.</li>

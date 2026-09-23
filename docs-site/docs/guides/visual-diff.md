@@ -152,6 +152,13 @@ carries `"kpi": true`, and the report shows the two tiles side by side.
 Build the base branch and the pull request in the same job, then compare. The
 same runner draws both, so the comparison can be exact.
 
+Before the build, [`glyf impact`](../reference/cli.md#impact) answers the
+question a reviewer asks first: a pull request that changes `fct_finance`
+reaches which charts? `glyf impact fct_finance` lists them with their
+dashboards, and `glyf impact fct_finance.margin` narrows it to the charts that
+name the column, saying which only might. The diff then says what moved in
+them.
+
 ```yaml title=".github/workflows/visual-diff.yml"
 name: visual diff
 

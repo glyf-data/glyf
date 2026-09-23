@@ -71,6 +71,8 @@ def _chart_from_core(raw: dict[str, object]) -> GgsqlChart:
         interactions=tuple(str(value) for value in _required_list(raw, "interactions")),
         has_order_by=bool(raw.get("has_order_by", False)),
         sql_warning=_optional_str(raw, "sql_warning"),
+        sql_columns=tuple(str(value) for value in _required_list(raw, "sql_columns")),
+        sql_selects_star=bool(raw.get("sql_selects_star", False)),
     )
 
 

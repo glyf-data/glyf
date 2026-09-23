@@ -39,6 +39,8 @@ fn chart_to_python(py: Python<'_>, chart: GgsqlChart) -> PyResult<Py<PyAny>> {
     dict.set_item("interactions", chart.interactions)?;
     dict.set_item("has_order_by", chart.has_order_by)?;
     dict.set_item("sql_warning", chart.sql_warning)?;
+    dict.set_item("sql_columns", chart.sql_columns)?;
+    dict.set_item("sql_selects_star", chart.sql_selects_star)?;
     Ok(dict.into_any().unbind())
 }
 
