@@ -564,7 +564,7 @@ def test_dashboard_generation_uses_dashboard_theme_override(tmp_path: Path) -> N
 
     html = generate_dashboards(project).dashboards[0].path.read_text(encoding="utf-8")
 
-    assert '<html lang="en" data-theme="dark">' in html
+    assert '<html lang="en" data-theme="dark"' in html
 
 
 def test_dashboard_generation_applies_dark_chart_theme(tmp_path: Path) -> None:

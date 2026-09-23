@@ -1,7 +1,8 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-glyf-chart-follows="true">
 <head>
   <meta charset="utf-8">
+  <script>try { var t = localStorage.getItem("glyf-theme"); if (t === "light" || t === "dark") { document.documentElement.setAttribute("data-theme", t); } } catch (e) {}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Macro Showcase</title>
 
@@ -25,7 +26,7 @@
           </nav>
           <div class="glyf-title-row">
             <h1 class="glyf-title">Macro Showcase</h1>
-            <span class="glyf-badge">
+            <span class="glyf-badge glyf-badge-amber">
               private
             </span>
           </div>
@@ -35,11 +36,11 @@
 
           <div class="glyf-tags" aria-label="Dashboard tags">
 
-            <span class="glyf-badge">macros</span>
+            <span class="glyf-badge glyf-tag glyf-tag--3">macros</span>
 
-            <span class="glyf-badge">components</span>
+            <span class="glyf-badge glyf-tag glyf-tag--2">components</span>
 
-            <span class="glyf-badge">demo</span>
+            <span class="glyf-badge glyf-tag glyf-tag--1">demo</span>
 
           </div>
 
@@ -101,13 +102,26 @@
   </button>
   <div class="glyf-action-divider" aria-hidden="true"></div>
 
-  <button class="glyf-icon-btn" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
+  <button class="glyf-icon-btn glyf-icon-btn--accent" type="button" data-tip="AI Summary" aria-label="Open AI summary" data-glyf-ai-button>
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path>
     <path d="M20 2v4"></path>
     <path d="M22 4h-4"></path>
     <circle cx="4" cy="20" r="2"></circle>
+  </svg>
+
+  </button>
+  <button class="glyf-icon-btn glyf-theme-toggle" type="button" data-tip="Theme" aria-label="Switch between light and dark" data-glyf-theme-toggle>
+
+  <svg class="glyf-theme-icon glyf-theme-icon--light" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+  </svg>
+
+
+  <svg class="glyf-theme-icon glyf-theme-icon--dark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path>
   </svg>
 
   </button>
@@ -124,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-23T20:29:02Z">23 Sep 2026, 20:29 UTC</strong>
+          Refreshed <strong title="2026-09-23T21:09:14Z">23 Sep 2026, 21:09 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -191,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 23 Sep 2026, 20:29 UTC</span>
+              <span class="glyf-version-option-note">built 23 Sep 2026, 21:09 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -356,61 +370,6 @@ GROUP BY 1, 2
 </aside>
 
 
-
-      <section class="glyf-lineage" id="glyf-lineage-view" aria-label="Lineage" hidden>
-  <div class="glyf-lineage-head">
-    <div class="glyf-lineage-title">Lineage</div>
-    <div class="glyf-lineage-summary glyf-mono">1 source · 1 model · 2 charts</div>
-  </div>
-
-  <div class="glyf-lineage-colheads">
-    <div class="glyf-lineage-colhead">Sources</div>
-    <div class="glyf-lineage-colhead">Models</div>
-    <div class="glyf-lineage-colhead">Charts on this dashboard</div>
-  </div>
-  <div class="glyf-lineage-wrap" data-glyf-lineage>
-    <svg class="glyf-lineage-svg" viewBox="0 0 1068 150" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
-      <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
-        <g class="glyf-lineage-edges">
-          <path d="M264,75.0 C339.0,75.0 339.0,75.0 414,75.0" data-from="source:raw.product_usage" data-to="model:fct_product_usage"/>
-          <path d="M654,75.0 C729.0,75.0 729.0,46.0 804,46.0" data-from="model:fct_product_usage" data-to="chart:active_users"/>
-          <path d="M654,75.0 C729.0,75.0 729.0,104.0 804,104.0" data-from="model:fct_product_usage" data-to="chart:activation_by_plan"/>
-        </g>
-        <g class="glyf-lineage-nodes">
-          <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.product_usage" data-tip="raw table, read through source()" transform="translate(24,53.0)" tabindex="0" role="button" aria-label="raw.product_usage, source">
-            <rect width="240" height="44" rx="7"/>
-            <text class="glyf-lineage-node-title" x="12" y="18">raw.product_usage</text>
-            <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
-          </g>
-          <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_product_usage" data-tip="models/fct_product_usage.sql" transform="translate(414,53.0)" tabindex="0" role="button" aria-label="fct_product_usage, model">
-            <rect width="240" height="44" rx="7"/>
-            <text class="glyf-lineage-node-title" x="12" y="18">fct_product_usage</text>
-            <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
-          </g>
-          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:active_users" data-tip="binds week AS x, active_users AS y" transform="translate(804,24.0)" tabindex="0" role="button" aria-label="Active Users, area">
-            <rect width="240" height="44" rx="7"/>
-            <text class="glyf-lineage-node-title" x="12" y="18">Active Users</text>
-            <text class="glyf-lineage-node-sub" x="12" y="34">area</text>
-          </g>
-          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activation_by_plan" data-tip="binds week AS x, activated_users AS y" transform="translate(804,82.0)" tabindex="0" role="button" aria-label="Activation by Plan, line">
-            <rect width="240" height="44" rx="7"/>
-            <text class="glyf-lineage-node-title" x="12" y="18">Activation by Plan</text>
-            <text class="glyf-lineage-node-sub" x="12" y="34">line</text>
-          </g>
-        </g>
-      </g>
-    </svg>
-    <div class="glyf-lineage-controls" aria-label="Zoom">
-      <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="in" aria-label="Zoom in">+</button>
-      <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="out" aria-label="Zoom out">&minus;</button>
-      <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="reset" aria-label="Reset view">&#8690;</button>
-    </div>
-    <div class="glyf-lineage-tip" role="tooltip" hidden></div>
-  </div>
-  <p class="glyf-lineage-hint">Click a node to trace what feeds it and what it feeds; click again or press Escape to clear. Hover a node for what it binds or reads. Drag to move the canvas; scroll or use the buttons to zoom.</p>
-
-</section>
-
       <main class="glyf-content" id="glyf-charts-view">
 
 
@@ -451,7 +410,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">Generated</div>
-  <div class="glyf-component-value">2026-09-23 21:29</div>
+  <div class="glyf-component-value">2026-09-23 22:09</div>
 
 
   </div>
@@ -916,7 +875,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">Local time</div>
-  <div class="glyf-component-value">2026-09-23 21:29</div>
+  <div class="glyf-component-value">2026-09-23 22:09</div>
 
   <div class="glyf-component-note">time.now local timezone</div>
 
@@ -930,7 +889,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">London time</div>
-  <div class="glyf-component-value">2026-09-23 21:29</div>
+  <div class="glyf-component-value">2026-09-23 22:09</div>
 
   <div class="glyf-component-note">time.now explicit timezone</div>
 
@@ -943,7 +902,7 @@ GROUP BY 1, 2
                   <article class="glyf-card glyf-component-card">
   <div class="glyf-card-body">
 
-  <span class="glyf-badge">Refreshed 21:29</span>
+  <span class="glyf-badge">Refreshed 22:09</span>
 
   </div>
 </article>
@@ -1097,7 +1056,7 @@ GROUP BY 1, 2
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-23 21:29
+      2026-09-23 22:09
 
     </div>
   </div>
@@ -1139,6 +1098,69 @@ GROUP BY 1, 2
   </div>
 </aside>
 
+
+    <div class="glyf-modal-backdrop" id="glyf-lineage-modal" data-glyf-lineage-modal>
+  <div class="glyf-modal glyf-modal--wide" role="dialog" aria-modal="true" aria-label="Lineage">
+    <div class="glyf-modal-head">
+      <div class="glyf-lineage-head">
+        <div class="glyf-modal-title">Lineage</div>
+        <div class="glyf-lineage-summary glyf-mono">1 source · 1 model · 2 charts</div>
+      </div>
+      <button class="glyf-close-btn" type="button" aria-label="Close lineage" data-glyf-lineage-close>x</button>
+    </div>
+    <div class="glyf-lineage-body">
+
+      <div class="glyf-lineage-colheads">
+        <div class="glyf-lineage-colhead">Sources</div>
+        <div class="glyf-lineage-colhead">Models</div>
+        <div class="glyf-lineage-colhead">Charts on this dashboard</div>
+      </div>
+      <div class="glyf-lineage-wrap" data-glyf-lineage>
+        <svg class="glyf-lineage-svg" viewBox="0 0 1068 150" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
+          <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
+            <g class="glyf-lineage-edges">
+              <path d="M264,75.0 C339.0,75.0 339.0,75.0 414,75.0" data-from="source:raw.product_usage" data-to="model:fct_product_usage"/>
+              <path d="M654,75.0 C729.0,75.0 729.0,46.0 804,46.0" data-from="model:fct_product_usage" data-to="chart:active_users"/>
+              <path d="M654,75.0 C729.0,75.0 729.0,104.0 804,104.0" data-from="model:fct_product_usage" data-to="chart:activation_by_plan"/>
+            </g>
+            <g class="glyf-lineage-nodes">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.product_usage" data-tip="raw table, read through source()" transform="translate(24,53.0)" tabindex="0" role="button" aria-label="raw.product_usage, source">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">raw.product_usage</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_product_usage" data-tip="models/fct_product_usage.sql" transform="translate(414,53.0)" tabindex="0" role="button" aria-label="fct_product_usage, model">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">fct_product_usage</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:active_users" data-tip="binds week AS x, active_users AS y" transform="translate(804,24.0)" tabindex="0" role="button" aria-label="Active Users, area">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Active Users</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">area</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activation_by_plan" data-tip="binds week AS x, activated_users AS y" transform="translate(804,82.0)" tabindex="0" role="button" aria-label="Activation by Plan, line">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Activation by Plan</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">line</text>
+              </g>
+            </g>
+          </g>
+        </svg>
+        <div class="glyf-lineage-controls" aria-label="Zoom">
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="in" aria-label="Zoom in">+</button>
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="out" aria-label="Zoom out">&minus;</button>
+          <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="reset" aria-label="Reset view">&#8690;</button>
+        </div>
+        <div class="glyf-lineage-tip" role="tooltip" hidden></div>
+      </div>
+      <p class="glyf-lineage-hint">Click a node to trace what feeds it and what it feeds; click again to clear. Hover a node for what it binds or reads. Drag to move the canvas; scroll or use the buttons to zoom. Escape closes.</p>
+
+    </div>
+  </div>
+</div>
+
+
     <div class="glyf-modal-backdrop" id="glyf-lookback-modal" data-glyf-modal>
       <div class="glyf-modal" role="dialog" aria-modal="true" aria-label="Lookback chart versions">
         <div class="glyf-modal-head">
@@ -1149,7 +1171,7 @@ GROUP BY 1, 2
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">23 Sep 2026, 20:29 UTC</div>
+              <div class="glyf-version-date">23 Sep 2026, 21:09 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -1181,20 +1203,21 @@ GROUP BY 1, 2
 
   <script>
     (function () {
-      // The Lineage view swaps in for the chart grid; the button toggles it back.
+      // Lineage opens as a window over the dashboard, like Lookback.
       const button = document.querySelector("[data-glyf-lineage-button]");
-      const view = document.getElementById("glyf-lineage-view");
-      const charts = document.getElementById("glyf-charts-view");
-      if (!button || !view || !charts) return;
-      button.addEventListener("click", () => {
-        const open = view.hidden;
-        view.hidden = !open;
-        charts.hidden = open;
+      const modal = document.getElementById("glyf-lineage-modal");
+      if (!button || !modal) return;
+      const setOpen = (open) => {
+        modal.classList.toggle("is-open", open);
         button.classList.toggle("is-active", open);
         button.setAttribute("aria-pressed", open ? "true" : "false");
-      });
+      };
+      button.addEventListener("click", () => setOpen(!modal.classList.contains("is-open")));
+      modal.querySelector("[data-glyf-lineage-close]").addEventListener("click", () => setOpen(false));
+      modal.addEventListener("click", (event) => { if (event.target === modal) setOpen(false); });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape" && modal.classList.contains("is-open")) setOpen(false); });
 
-      const wrap = view.querySelector("[data-glyf-lineage]");
+      const wrap = modal.querySelector("[data-glyf-lineage]");
       const svg = wrap.querySelector("svg");
       const canvas = wrap.querySelector("[data-glyf-lineage-canvas]");
       const nodes = Array.from(wrap.querySelectorAll("[data-node]"));
@@ -1222,8 +1245,6 @@ GROUP BY 1, 2
         node.addEventListener("click", () => trace(node.dataset.node));
         node.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); trace(node.dataset.node); } });
       });
-      document.addEventListener("keydown", (event) => { if (event.key === "Escape") clear(); });
-
       // Pan and zoom: one transform on the canvas group.
       const state = { x: 0, y: 0, k: 1 };
       const apply = () => canvas.setAttribute("transform", `translate(${state.x},${state.y}) scale(${state.k})`);
@@ -1345,6 +1366,66 @@ GROUP BY 1, 2
         }
       });
     }
+
+    (function () {
+      // Light or dark, chosen by the reader and remembered in this browser.
+      // The page's palette is tokens, so the frame follows on its own; charts
+      // drawn at build time get the same colour swaps the build applies.
+      const root = document.documentElement;
+      const toggle = document.querySelector("[data-glyf-theme-toggle]");
+      const chartsFollow = root.dataset.glyfChartFollows !== "false";
+      const svgSwaps = [
+        ["stroke", "#d9e2ec", "#3f3f46"], ["stroke", "#ddd", "#27272a"], ["stroke", "#888", "#a1a1aa"],
+        ["fill", "#000", "#f4f4f5"], ["fill", "black", "#f4f4f5"],
+      ];
+      const swapAttributes = (svg, dark) => {
+        const first = svg.querySelector("rect");
+        if (first) {
+          const fill = first.getAttribute("fill");
+          if (dark && fill === "white") first.setAttribute("fill", "#09090b");
+          if (!dark && fill === "#09090b") first.setAttribute("fill", "white");
+        }
+        svgSwaps.forEach(([attr, light, darkValue]) => {
+          const from = dark ? light : darkValue, to = dark ? darkValue : light;
+          svg.querySelectorAll(`[${attr}="${from}"]`).forEach((el) => el.setAttribute(attr, to));
+        });
+      };
+      const darkVega = { background: "#09090b", view: { stroke: "#3f3f46", fill: "#09090b" }, axis: { labelColor: "#f4f4f5", titleColor: "#f4f4f5", domainColor: "#a1a1aa", tickColor: "#a1a1aa", gridColor: "#27272a" }, legend: { labelColor: "#f4f4f5", titleColor: "#f4f4f5" }, title: { color: "#f4f4f5", subtitleColor: "#d4d4d8" } };
+      const lightVega = { background: "#ffffff", view: { stroke: "#d9e2ec", fill: "#ffffff" }, axis: { labelColor: "#000000", titleColor: "#000000", domainColor: "#888888", tickColor: "#888888", gridColor: "#dddddd" }, legend: { labelColor: "#000000", titleColor: "#000000" }, title: { color: "#000000", subtitleColor: "#52525b" } };
+      const themeCharts = (dark) => {
+        if (!chartsFollow) return;
+        document.querySelectorAll(".glyf-chart-card").forEach((card) => {
+          card.setAttribute("data-chart-theme", dark ? "dark" : "light");
+          card.querySelectorAll(".glyf-chart-body > svg").forEach((svg) => swapAttributes(svg, dark));
+        });
+
+        {
+          document.querySelectorAll("[data-vega-chart]").forEach((container) => {
+            const specElement = document.getElementById(container.dataset.vegaChart);
+            if (!specElement) return;
+            const spec = JSON.parse(specElement.textContent);
+            const palette = dark ? darkVega : lightVega;
+            spec.background = palette.background;
+            spec.config = spec.config || {};
+            ["view", "axis", "legend", "title"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
+            vegaEmbed(container, spec, { actions: false, renderer: "svg" });
+          });
+        }
+
+      };
+      const buildTheme = "light";
+      const current = () => root.getAttribute("data-theme") === "dark";
+      // The page may have been switched before paint; bring the charts along.
+      if (current() !== (buildTheme === "dark")) themeCharts(current());
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          const dark = !current();
+          root.setAttribute("data-theme", dark ? "dark" : "light");
+          try { localStorage.setItem("glyf-theme", dark ? "dark" : "light"); } catch (e) {}
+          themeCharts(dark);
+        });
+      }
+    })();
 
     document.querySelectorAll("[data-glyf-filter-menu]").forEach((menu) => {
       const button = menu.querySelector("[data-glyf-filter-button]");

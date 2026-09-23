@@ -115,7 +115,7 @@ def test_the_dashboard_gets_a_lineage_button_and_view(tmp_path: Path) -> None:
 
     html = (project / "target" / "glyf" / "dashboards" / "executive.html").read_text(encoding="utf-8")
     assert 'data-glyf-lineage-button' in html
-    assert 'id="glyf-lineage-view"' in html and "hidden" in html
+    assert 'id="glyf-lineage-modal"' in html and "glyf-modal--wide" in html
     assert 'data-node="chart:revenue"' in html
     assert 'data-node="model:fct_orders"' in html
     assert 'data-glyf-zoom="in"' in html
@@ -133,7 +133,7 @@ def test_the_view_can_be_turned_off_in_config(tmp_path: Path) -> None:
 
     html = (project / "target" / "glyf" / "dashboards" / "executive.html").read_text(encoding="utf-8")
     assert "data-glyf-lineage-button" not in html
-    assert "glyf-lineage-view" not in html
+    assert "glyf-lineage-modal" not in html
 
 
 def test_exclude_withholds_lineage_like_the_compiled_sql(tmp_path: Path) -> None:

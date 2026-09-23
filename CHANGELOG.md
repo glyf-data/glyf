@@ -2,6 +2,23 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Dashboard
+
+- Every page has a light-and-dark switch in its top-right actions. The
+  choice is remembered in the reader's browser, the frame follows at once,
+  and charts follow too when `chart_theme` is `auto`: static SVGs get the
+  same colour swaps the build applies for a dark dashboard, and interactive
+  charts re-embed with the dark config.
+- Lineage opens as a window over the dashboard rather than in place of the
+  chart grid, with a close button and Escape. The Source drawer stays a
+  drawer.
+- A little colour, in the places that mean something: tags get a soft tint
+  that is the same for the same word on every page, the visibility pill is
+  green for public and amber for private, and the AI Summary button takes
+  the accent.
+
 ## 0.12.0 - 2026-09-23
 
 ### Added
