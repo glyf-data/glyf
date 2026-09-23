@@ -99,6 +99,7 @@ dashboard:
 | `dashboard.theme` | `light` | Default dashboard theme, `light` or `dark`; a dashboard YAML `theme` overrides it. |
 | `dashboard.embed_charts` | `true` | Inline chart artifacts into the dashboard HTML instead of linking them. |
 | `dashboard.show_compiled_sql` | `true` | Show the `Source` drawer with each chart's compiled SQL. |
+| `dashboard.show_lineage` | `true` | Show the `Lineage` view: the sources, models and charts behind the dashboard. See [lineage on the dashboard](../guides/dbt-integration.md#lineage-on-the-dashboard). |
 
 ## Using another config file
 

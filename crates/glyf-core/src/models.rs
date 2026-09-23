@@ -45,6 +45,12 @@ pub struct ManifestRelation {
     /// Columns the dbt project classifies as PII: `meta: {pii: true}` or a
     /// `pii` tag on the column in `schema.yml`.
     pub pii_columns: Vec<String>,
+    /// The nodes this one reads, as dbt records them in `depends_on.nodes`:
+    /// unique ids of models, seeds, snapshots and sources. Lineage follows
+    /// these back from a chart to the raw tables.
+    pub parents: Vec<String>,
+    /// The file dbt read the node from, `original_file_path`.
+    pub path: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

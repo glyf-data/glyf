@@ -134,8 +134,8 @@ export:
 ```
 
 This publishes rendered PNG images and nothing else: no SVG, no Vega
-specification, no compiled SQL, no SQL drawer, and no filter values resolved out
-of chart rows. An `INTERACT` chart becomes a static image, and the build says
+specification, no compiled SQL, no SQL drawer, no lineage view, and no filter
+values resolved out of chart rows. An `INTERACT` chart becomes a static image, and the build says
 which chart was downgraded. The full behaviour is in the
 [configuration reference](../reference/configuration.md#publishing-without-the-rows).
 

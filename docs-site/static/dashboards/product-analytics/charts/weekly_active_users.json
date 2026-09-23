@@ -3,6 +3,19 @@
   "compare": "previous",
   "compiled_sql_path": "compiled/weekly_active_users.sql",
   "kpi_html_path": "charts/weekly_active_users.kpi.html",
+  "lineage": {
+    "models": {
+      "fct_product_usage": {
+        "parents": [
+          "source:raw.product_usage"
+        ],
+        "path": "models/fct_product_usage.sql"
+      }
+    },
+    "sources": [
+      "raw.product_usage"
+    ]
+  },
   "metadata_path": "charts/weekly_active_users.json",
   "name": "weekly_active_users",
   "title": "Weekly active users",

@@ -4,6 +4,19 @@
   "interactions": [
     "tooltip"
   ],
+  "lineage": {
+    "models": {
+      "fct_product_usage": {
+        "parents": [
+          "source:raw.product_usage"
+        ],
+        "path": "models/fct_product_usage.sql"
+      }
+    },
+    "sources": [
+      "raw.product_usage"
+    ]
+  },
   "metadata_path": "charts/active_users.json",
   "name": "active_users",
   "png_path": "charts/active_users.png",

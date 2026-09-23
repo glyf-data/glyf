@@ -970,6 +970,191 @@ html[data-theme="dark"] .glyf-icon-btn[data-tip]:hover::after {
   color: var(--glyf-color-text-subtle);
 }
 
+.glyf-source-toggle.is-active {
+  border-color: var(--glyf-color-text);
+  background: var(--glyf-color-text);
+  color: var(--glyf-color-bg);
+}
+
+.glyf-lineage {
+  flex: 1;
+  min-width: 0;
+  padding: var(--glyf-space-5);
+}
+
+.glyf-lineage-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--glyf-space-3);
+  margin-bottom: var(--glyf-space-3);
+}
+
+.glyf-lineage-title {
+  color: var(--glyf-color-text);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.glyf-lineage-summary,
+.glyf-lineage-empty,
+.glyf-lineage-hint {
+  color: var(--glyf-color-text-subtle);
+  font-size: 12px;
+}
+
+.glyf-lineage-hint {
+  margin: 10px 2px 0;
+}
+
+.glyf-lineage-colheads {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  min-width: 720px;
+  padding: 0 24px;
+  margin-bottom: 6px;
+}
+
+.glyf-lineage-colhead {
+  color: var(--glyf-color-text-subtle);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.glyf-lineage-wrap {
+  position: relative;
+  overflow: hidden;
+  border: 0.5px solid var(--glyf-color-border);
+  border-radius: var(--glyf-radius-md);
+  background: var(--glyf-color-bg);
+  padding: 14px 0 16px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.glyf-lineage-wrap.is-panning {
+  cursor: grabbing;
+}
+
+.glyf-lineage-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 720px;
+  font-family: var(--glyf-font-family);
+  user-select: none;
+}
+
+.glyf-lineage-edges path {
+  fill: none;
+  stroke: var(--glyf-color-border-strong);
+  stroke-width: 1.5;
+  transition: stroke 0.15s, opacity 0.15s;
+}
+
+.glyf-lineage-node {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.glyf-lineage-node rect {
+  fill: var(--glyf-color-bg);
+  stroke: var(--glyf-color-border-strong);
+  stroke-width: 1;
+}
+
+.glyf-lineage-node--model rect {
+  fill: var(--glyf-color-blue-bg);
+  stroke: var(--glyf-color-blue-border);
+}
+
+.glyf-lineage-node--source rect {
+  fill: var(--glyf-color-bg-muted);
+}
+
+.glyf-lineage-node:focus-visible {
+  outline: none;
+}
+
+.glyf-lineage-node:focus-visible rect,
+.glyf-lineage-node.is-lit rect {
+  stroke: var(--glyf-color-blue);
+  stroke-width: 2;
+}
+
+.glyf-lineage-node-title {
+  fill: var(--glyf-color-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.glyf-lineage-node-sub {
+  fill: var(--glyf-color-text-subtle);
+  font-family: var(--glyf-font-mono);
+  font-size: 10.5px;
+}
+
+.glyf-lineage-wrap.has-focus .glyf-lineage-node:not(.is-lit) {
+  opacity: 0.28;
+}
+
+.glyf-lineage-wrap.has-focus .glyf-lineage-edges path:not(.is-lit) {
+  opacity: 0.18;
+}
+
+.glyf-lineage-edges path.is-lit {
+  stroke: var(--glyf-color-blue);
+  stroke-width: 2;
+}
+
+.glyf-lineage-controls {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 4px;
+}
+
+.glyf-lineage-zoom {
+  width: 30px;
+  height: 30px;
+  border: 0.5px solid var(--glyf-color-border);
+  border-radius: var(--glyf-radius-sm);
+  background: var(--glyf-color-bg);
+  color: var(--glyf-color-text-muted);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.glyf-lineage-zoom:hover {
+  background: var(--glyf-color-bg-muted);
+  color: var(--glyf-color-text);
+}
+
+.glyf-lineage-tip {
+  position: absolute;
+  z-index: 5;
+  max-width: 320px;
+  padding: 6px 9px;
+  border-radius: 4px;
+  background: var(--glyf-color-text);
+  color: var(--glyf-color-bg);
+  font-family: var(--glyf-font-mono);
+  font-size: 11.5px;
+  line-height: 1.45;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyf-lineage-node,
+  .glyf-lineage-edges path {
+    transition: none;
+  }
+}
+
 .glyf-component-card,
 .glyf-metric-card,
 .glyf-markdown-card {

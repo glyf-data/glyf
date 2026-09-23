@@ -4,6 +4,19 @@
   "interactions": [
     "tooltip"
   ],
+  "lineage": {
+    "models": {
+      "fct_account_sessions": {
+        "parents": [
+          "source:raw.account_sessions"
+        ],
+        "path": "models/fct_account_sessions.sql"
+      }
+    },
+    "sources": [
+      "raw.account_sessions"
+    ]
+  },
   "metadata_path": "charts/sessions_per_account.json",
   "name": "sessions_per_account",
   "png_path": "charts/sessions_per_account.png",

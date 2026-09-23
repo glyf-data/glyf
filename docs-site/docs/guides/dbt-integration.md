@@ -179,6 +179,38 @@ pull; see the [configuration reference](../reference/configuration.md).
 `dbt run`, `dbt build`, or `dbt compile` for you. Run dbt first so both
 `target/manifest.json` and the DuckDB relations exist before rendering.
 
+## Lineage on the dashboard
+
+Every dashboard has a **Lineage** button beside **Source**. It swaps the chart
+grid for a graph of everything behind the page: the raw sources on the left,
+the dbt models in the middle, and the dashboard's charts on the right, with a
+line for each read. Click a node to light everything upstream and downstream
+of it; click a model and the charts it feeds stand out, click a chart and its
+one path back to raw data does. Hover a node for what it binds or reads. The
+canvas drags to move and zooms with the wheel or the corner buttons.
+
+The graph is built from the chart artifacts alone. At build time glyf records,
+in each chart's `charts/<name>.json`, the models its SQL references and, from
+the manifest's `depends_on`, every model behind those back to the sources:
+
+```json title="charts/revenue.json (excerpt)"
+"lineage": {
+  "models": {
+    "fct_orders": {"parents": ["stg_orders"], "path": "models/fct_orders.sql"},
+    "stg_orders": {"parents": ["source:raw.orders"], "path": "models/stg_orders.sql"}
+  },
+  "sources": ["raw.orders"]
+}
+```
+
+So an exported site carries its lineage with no manifest and no chart files,
+and the view is static SVG with a few lines of script for tracing, pan and
+zoom. It is the visual form of [`glyf impact`](../reference/cli.md#impact).
+
+The view names warehouse tables, so it follows the compiled SQL's rule:
+[`export.row_data: exclude`](./data-exposure.md) withholds it and the
+`lineage` key, and `dashboard.show_lineage: false` turns it off everywhere.
+
 ## Practical workflow
 
 Run dbt first, then run glyf:

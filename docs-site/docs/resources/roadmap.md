@@ -12,6 +12,20 @@ order is the priority.
   on the <Link href="https://github.com/glyf-data/glyf/releases">releases page</Link>.
 </p>
 
+## In the next release
+
+<div className="roadmapNext">
+  <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
+  <h3>Lineage on the dashboard</h3>
+  <p>
+    A <strong>Lineage</strong> button beside Source swaps the chart grid for a graph of the raw
+    sources, the dbt models and the dashboard's charts. Click a model and the charts it feeds
+    light up; click a chart and its path back to raw data does. Built from the chart artifacts
+    alone, so an exported site carries it.
+  </p>
+  <Link to="/docs/guides/dbt-integration#lineage-on-the-dashboard">Read the guide</Link>
+</div>
+
 ## Planned
 
 Vote with a 👍 on the issue. The most wanted go first.
@@ -38,7 +52,6 @@ if one of these would change how you work.
   <li><strong>Watch mode.</strong> Rebuild charts and dashboards when a <code>.ggsql</code> file, a dashboard or <code>glyf.yml</code> changes.</li>
   <li><strong>Dashboard templates.</strong> Ready-made layouts to start from.</li>
   <li><strong>dbt docs on dashboards.</strong> Model, column and source descriptions from the manifest, shown beside the charts they describe.</li>
-  <li><strong>Lineage on the dashboard.</strong> Under each chart, the models and sources it reads. The command-line half, <code>glyf impact</code>, is merged.</li>
   <li><strong>Richer layout.</strong> Grid and chart sizing beyond column tracks.</li>
   <li><strong>Publish helpers</strong> for common static hosts.</li>
   <li><strong>JavaScript packages.</strong> React components and a client for <code>bundle.json</code> are experimental in <Link href="https://github.com/glyf-data/glyf-js">glyf-js</Link>.</li>

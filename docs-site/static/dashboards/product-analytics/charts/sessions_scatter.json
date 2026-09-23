@@ -6,6 +6,19 @@
     "tooltip",
     "zoom"
   ],
+  "lineage": {
+    "models": {
+      "fct_product_usage": {
+        "parents": [
+          "source:raw.product_usage"
+        ],
+        "path": "models/fct_product_usage.sql"
+      }
+    },
+    "sources": [
+      "raw.product_usage"
+    ]
+  },
   "metadata_path": "charts/sessions_scatter.json",
   "name": "sessions_scatter",
   "png_path": "charts/sessions_scatter.png",

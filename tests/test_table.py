@@ -140,6 +140,7 @@ def test_a_table_is_written_as_rows_and_a_fragment_not_a_picture(tmp_path: Path)
         "data_json_path": "target/glyf/data/normalized/best_months.data.json",
         "metadata_path": "target/glyf/charts/best_months.json",
         "table_html_path": "target/glyf/charts/best_months.table.html",
+        "lineage": {"models": {"fct_orders": {"parents": [], "path": None}}, "sources": []},
     }
     data = json.loads(
         (project / "target" / "glyf" / "data" / "normalized" / "best_months.data.json")

@@ -31,6 +31,7 @@ def test_render_project_writes_compiled_sql_and_artifacts(tmp_path: Path) -> Non
         "chart_type": "line",
         "compiled_sql_path": "target/glyf/compiled/revenue.sql",
         "data_json_path": "target/glyf/data/normalized/revenue.data.json",
+        "lineage": {"models": {"fct_orders": {"parents": [], "path": None}}, "sources": []},
         "metadata_path": "target/glyf/charts/revenue.json",
         "png_path": "target/glyf/charts/revenue.png",
         "svg_path": "target/glyf/charts/revenue.svg",

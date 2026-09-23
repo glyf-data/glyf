@@ -49,7 +49,12 @@ def generate_dashboards(
     if exclude_row_data:
         # The drawer prints the compiled SQL, schema-qualified table names and
         # all. A build that publishes no rows should not publish that either.
-        config = replace(config, dashboard=replace(config.dashboard, show_compiled_sql=False))
+        config = replace(
+            config,
+            dashboard=replace(
+                config.dashboard, show_compiled_sql=False, show_lineage=False
+            ),
+        )
     scan = scan_project(project, config)
     paths = artifact_paths(scan.root, config)
     paths.dashboards_dir.mkdir(parents=True, exist_ok=True)

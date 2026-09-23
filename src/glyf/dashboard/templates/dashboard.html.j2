@@ -6,6 +6,7 @@
 {%- import "components/component_card.j2" as component_cards -%}
 {%- import "components/source_drawer.j2" as source_drawer -%}
 {%- import "components/ai_panel.j2" as ai_panel -%}
+{%- import "components/lineage_view.j2" as lineage_view -%}
 <!doctype html>
 <html lang="en" data-theme="{{ dashboard_theme }}">
 <head>
@@ -76,6 +77,12 @@
         <button class="glyf-source-toggle" type="button" id="glyf-source-button" data-glyf-source-button>
           {{ icons.icon("code") }}
           Source
+        </button>
+        {% endif %}
+        {% if lineage is not none %}
+        <button class="glyf-source-toggle" type="button" id="glyf-lineage-button" data-glyf-lineage-button aria-pressed="false">
+          {{ icons.icon("branch") }}
+          Lineage
         </button>
         {% endif %}
         <div class="glyf-version-menu" data-glyf-version-menu>
@@ -163,7 +170,10 @@
     <div class="glyf-main">
       {{ source_drawer.render_source_drawer(charts, dashboard_config) }}
 
-      <main class="glyf-content">
+      {% if lineage is not none %}
+      {{ lineage_view.render_lineage_view(lineage) }}
+      {% endif %}
+      <main class="glyf-content" id="glyf-charts-view">
         {% if dashboard.sections %}
           {% for section in dashboard.sections %}
           {% set section_columns = section.columns or dashboard.layout_config.columns or 3 %}
@@ -299,6 +309,102 @@
       const spec = JSON.parse(specElement.textContent);
       vegaEmbed(container, spec, { actions: false, renderer: "svg" });
     });
+  </script>
+  {% endif %}
+  {% if lineage is not none and not lineage.is_empty %}
+  <script>
+    (function () {
+      // The Lineage view swaps in for the chart grid; the button toggles it back.
+      const button = document.querySelector("[data-glyf-lineage-button]");
+      const view = document.getElementById("glyf-lineage-view");
+      const charts = document.getElementById("glyf-charts-view");
+      if (!button || !view || !charts) return;
+      button.addEventListener("click", () => {
+        const open = view.hidden;
+        view.hidden = !open;
+        charts.hidden = open;
+        button.classList.toggle("is-active", open);
+        button.setAttribute("aria-pressed", open ? "true" : "false");
+      });
+
+      const wrap = view.querySelector("[data-glyf-lineage]");
+      const svg = wrap.querySelector("svg");
+      const canvas = wrap.querySelector("[data-glyf-lineage-canvas]");
+      const nodes = Array.from(wrap.querySelectorAll("[data-node]"));
+      const edges = Array.from(wrap.querySelectorAll("path[data-from]"));
+
+      // Tracing: light the node, everything upstream and everything downstream.
+      const up = new Map(), down = new Map();
+      edges.forEach((edge) => {
+        const a = edge.dataset.from, b = edge.dataset.to;
+        (down.get(a) || down.set(a, []).get(a)).push(b);
+        (up.get(b) || up.set(b, []).get(b)).push(a);
+      });
+      let current = null;
+      const walk = (start, map, seen) => (map.get(start) || []).forEach((n) => { if (!seen.has(n)) { seen.add(n); walk(n, map, seen); } });
+      const clear = () => { current = null; wrap.classList.remove("has-focus"); nodes.concat(edges).forEach((el) => el.classList.remove("is-lit")); };
+      const trace = (id) => {
+        if (current === id) return clear();
+        current = id;
+        const lit = new Set([id]); walk(id, up, lit); walk(id, down, lit);
+        wrap.classList.add("has-focus");
+        nodes.forEach((n) => n.classList.toggle("is-lit", lit.has(n.dataset.node)));
+        edges.forEach((e) => e.classList.toggle("is-lit", lit.has(e.dataset.from) && lit.has(e.dataset.to)));
+      };
+      nodes.forEach((node) => {
+        node.addEventListener("click", () => trace(node.dataset.node));
+        node.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); trace(node.dataset.node); } });
+      });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape") clear(); });
+
+      // Pan and zoom: one transform on the canvas group.
+      const state = { x: 0, y: 0, k: 1 };
+      const apply = () => canvas.setAttribute("transform", `translate(${state.x},${state.y}) scale(${state.k})`);
+      const scale = () => { const box = svg.getBoundingClientRect(); const vb = svg.viewBox.baseVal; return { box, sx: vb.width / box.width, sy: vb.height / box.height }; };
+      const zoomBy = (factor, cx, cy) => {
+        const k = Math.min(3, Math.max(0.4, state.k * factor));
+        const { box, sx, sy } = scale();
+        const px = (cx - box.left) * sx, py = (cy - box.top) * sy;
+        state.x = px - (px - state.x) * (k / state.k);
+        state.y = py - (py - state.y) * (k / state.k);
+        state.k = k; apply();
+      };
+      wrap.addEventListener("wheel", (event) => { event.preventDefault(); zoomBy(event.deltaY < 0 ? 1.12 : 1 / 1.12, event.clientX, event.clientY); }, { passive: false });
+      wrap.querySelectorAll("[data-glyf-zoom]").forEach((control) => control.addEventListener("click", () => {
+        const { box } = scale(); const cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+        if (control.dataset.glyfZoom === "in") zoomBy(1.25, cx, cy);
+        else if (control.dataset.glyfZoom === "out") zoomBy(1 / 1.25, cx, cy);
+        else { state.x = 0; state.y = 0; state.k = 1; apply(); }
+      }));
+      let drag = null;
+      wrap.addEventListener("pointerdown", (event) => {
+        if (event.target.closest("[data-node], button")) return;
+        drag = { x: event.clientX, y: event.clientY, vx: state.x, vy: state.y };
+        wrap.classList.add("is-panning"); wrap.setPointerCapture(event.pointerId);
+      });
+      wrap.addEventListener("pointermove", (event) => {
+        if (!drag) return;
+        const { sx, sy } = scale();
+        state.x = drag.vx + (event.clientX - drag.x) * sx;
+        state.y = drag.vy + (event.clientY - drag.y) * sy;
+        apply();
+      });
+      const endDrag = () => { drag = null; wrap.classList.remove("is-panning"); };
+      wrap.addEventListener("pointerup", endDrag); wrap.addEventListener("pointercancel", endDrag);
+
+      // The tooltip carries what the node does not: a model's file, a chart's bindings.
+      const tip = wrap.querySelector(".glyf-lineage-tip");
+      nodes.forEach((node) => {
+        const show = () => {
+          tip.textContent = node.dataset.tip || ""; tip.hidden = !tip.textContent;
+          const r = node.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+          tip.style.left = `${r.left - w.left}px`; tip.style.top = `${r.bottom - w.top + 6}px`;
+        };
+        const hide = () => { tip.hidden = true; };
+        node.addEventListener("pointerenter", show); node.addEventListener("pointerleave", hide);
+        node.addEventListener("focus", show); node.addEventListener("blur", hide);
+      });
+    })();
   </script>
   {% endif %}
   <script>
