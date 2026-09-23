@@ -12,34 +12,6 @@ order is the priority.
   on the <Link href="https://github.com/glyf-data/glyf/releases">releases page</Link>.
 </p>
 
-## In the next release
-
-<div className="roadmapNext">
-  <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
-  <h3>What moved, in the chart's terms</h3>
-  <p>
-    <code>glyf diff</code> now says what happened to a bar, line or area chart the way the chart
-    draws it, <code>bars: 12 gone (Partners)</code>, and draws it: this build's marks over the
-    baseline's in grey, with every category that moved boxed. It replaces the pixel-level
-    picture for those charts. Also merged: glyf validates the chart block itself for every chart
-    type, and reads chart SQL with a parser that reports syntax errors with a position.
-  </p>
-  <Link to="/docs/guides/visual-diff#what-moved-in-the-charts-terms">Read the guide</Link>
-</div>
-
-<div className="roadmapNext">
-  <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
-  <h3>A table chart and a KPI tile</h3>
-  <p>
-    <code>DRAW table</code> shows a query's rows as they are: <code>VISUALISE region, revenue</code>
-    lists the columns, <code>VISUALISE *</code> takes every one, and the dashboard sorts by any
-    column. <code>DRAW kpi</code> shows one number with the change against a comparison value.
-    Neither is drawn, so <code>glyf diff</code> compares their rows and shows before and after
-    side by side, and <code>render.max_rows</code> keeps a table from becoming a data export.
-  </p>
-  <Link to="/docs/guides/visualisation-syntax#table">Read the guide</Link>
-</div>
-
 ## Planned
 
 Vote with a 👍 on the issue. The most wanted go first.
@@ -85,6 +57,14 @@ if one of these would change how you work.
 ## Shipped
 
 <ol className="roadmapTimeline">
+  <li>
+    <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.10.0">0.10.0</Link>
+      <time dateTime="2026-09-23">23 September 2026</time>
+    </div>
+    <strong>Table chart, KPI tile, and a diff that says what moved</strong>
+    <p><code>DRAW table</code> shows a query's rows as they are, sortable on the dashboard, and <code>DRAW kpi</code> shows one number with the change against a comparison value; neither is drawn, so <code>glyf diff</code> compares their rows and shows before and after side by side. For a bar, line or area chart the diff now says what happened the way the chart draws it, <code>bars: 12 gone (Partners)</code>, and draws this build's marks over the baseline's in grey. Underneath, glyf validates the chart block itself for every chart type and reads chart SQL with a parser that reports syntax errors with a position. <Link to="/docs/guides/visualisation-syntax#table">Read the guide</Link>.</p>
+  </li>
   <li>
     <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.9.0">0.9.0</Link>
