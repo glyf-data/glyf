@@ -1,16 +1,16 @@
 {
   "chart_type": "boxplot",
-  "compiled_sql_path": "target/glyf/compiled/sessions_per_account.sql",
-  "data_json_path": "target/glyf/data/normalized/sessions_per_account.data.json",
+  "compiled_sql_path": "compiled/sessions_per_account.sql",
   "interactions": [
     "tooltip"
   ],
-  "metadata_path": "target/glyf/charts/sessions_per_account.json",
+  "metadata_path": "charts/sessions_per_account.json",
   "name": "sessions_per_account",
-  "png_path": "target/glyf/charts/sessions_per_account.png",
-  "svg_path": "target/glyf/charts/sessions_per_account.svg",
+  "png_path": "charts/sessions_per_account.png",
+  "svg_path": "charts/sessions_per_account.svg",
   "title": "Sessions per Account",
-  "vega_json_path": "target/glyf/data/vega/sessions_per_account.vega.json",
   "x": "plan",
-  "y": "sessions"
+  "x_title": "Plan",
+  "y": "sessions",
+  "y_title": "Sessions"
 }

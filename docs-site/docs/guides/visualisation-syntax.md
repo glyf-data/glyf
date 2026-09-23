@@ -32,9 +32,13 @@ INTERACT tooltip, zoom
 
 Roles:
 
-- `x`: required by every chart type.
-- `y`: required by every chart type except `histogram`, which rejects it.
+- `x`: required by every chart type except `table`.
+- `y`: required by every chart type except `histogram`, which rejects it, and
+  `table`.
 - `color`: optional, except for `heatmap`, which requires it.
+
+A `table` takes no roles at all: its `VISUALISE` is a list of columns. See
+[Table](#table).
 
 ## Chart types
 
@@ -48,6 +52,7 @@ Roles:
 | `histogram` | The number of rows in each bin of `x`, stacked by `color`. | `x`, optional `color` | glyf |
 | `boxplot` | The quartiles of `y` for each `x` value, with outliers as points. | `x`, `y`, optional `color` | glyf |
 | `heatmap` | One cell per `x` and `y` pair, shaded by `color`. `tile` is accepted as an alias. | `x`, `y`, `color` | ggsql (`tile`) |
+| `table` | The rows themselves, one column per listed column. Not drawn: no PNG or SVG. | a column list, or `*` | glyf |
 
 Any other `DRAW` value fails validation with `unsupported chart type`.
 
@@ -102,6 +107,44 @@ such as an hour is drawn as 24 columns rather than a continuous scale.
 Cells appear in the order the query returns them. Use `ORDER BY` to put Monday
 before Tuesday; without it the order is whatever the warehouse returns.
 
+### Table
+
+```sql
+SELECT account_id, plan, sessions
+FROM {{ ref('fct_account_sessions') }}
+ORDER BY sessions DESC
+LIMIT 10
+
+VISUALISE account_id, plan, sessions
+DRAW table
+LABEL title => 'Most active accounts'
+LABEL account_id => 'Account'
+CONFIG height => 360
+```
+
+A table is its rows, so `VISUALISE` lists the columns to show, in order,
+without roles. `VISUALISE *` shows every column the query returns, in the
+order it returns them. A column the query does not return fails the build with
+the column's name; `x AS`, `y AS` and the other roles are rejected for a
+table, and a column list is rejected for every other chart type, each error
+saying what the chart wanted instead.
+
+`LABEL <column> => '...'` names a column's header; a column without one shows
+its name. `CONFIG height` bounds the table's height and the rows scroll inside
+it; `CONFIG width` bounds its width. `INTERACT` is rejected: a table's rows are
+already readable, and the dashboard lets a reader sort by clicking a header.
+
+A table is not drawn. The build writes `charts/<name>.table.html`, a plain
+`<table>` fragment, beside the usual data JSON and metadata, and never a PNG
+or an SVG. The dashboard shows the fragment in a card; the bundle records the
+table's columns and the fragment's path with `png` and `svg` set to `null`.
+
+Two settings follow from that. [`render.max_rows`](../reference/configuration.md#how-many-rows-a-table-may-list)
+(default `1000`) fails a table that would list more rows, naming the chart,
+the way `render.max_marks` does for a picture. And
+[`export.row_data: exclude`](data-exposure.md) fails a table at validation,
+because a picture can be published without its rows and a table cannot.
+
 ### Numeric columns
 
 A histogram's `x`, a boxplot's `y` and a heatmap's `color` must be integer or
@@ -149,6 +192,7 @@ last one.
 - `subtitle`
 - `x_title`
 - `y_title`
+- a column name, for a `table`: the text its header shows
 
 A label value is quoted with single or double quotes: `LABEL title => 'Revenue'`
 or `LABEL title => "Revenue"`.
@@ -177,6 +221,9 @@ Supported interactions:
 - `legend_filter`: lets users filter by legend values. This requires a `color`
   mapping. It is not supported for `boxplot` or `heatmap` and fails validation
   there.
+
+A `table` takes no `INTERACT` clause; sorting by column is built into the
+dashboard.
 
 Interactive charts still write PNG and SVG artifacts. They also write a Vega-Lite JSON artifact, which dashboard pages embed with the Vega runtime scripts. The exported dashboard is still static HTML, but interactive rendering needs a browser with JavaScript enabled and access to those scripts.
 

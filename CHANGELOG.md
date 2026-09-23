@@ -4,6 +4,46 @@ All notable changes to `glyf` will be documented in this file.
 
 ## Unreleased
 
+### Table chart
+
+- `DRAW table` is the third glyf-only chart type and the first that is not
+  drawn. A table is its rows: `VISUALISE` lists the columns to show, in
+  order and without roles (`VISUALISE region, revenue`), or `VISUALISE *`
+  for every column the query returns. `LABEL <column> => '...'` names a
+  header, `CONFIG height` turns the card into a scroll area, and `INTERACT`
+  is rejected; the dashboard sorts a table by clicking a column instead.
+
+  ```sql
+  SELECT account_id, plan, sessions
+  FROM {{ ref('fct_account_sessions') }}
+  ORDER BY sessions DESC
+  LIMIT 10
+
+  VISUALISE *
+  DRAW table
+  LABEL title => 'Most active accounts'
+  ```
+
+  The build writes `charts/<name>.table.html`, a plain `<table>` fragment,
+  beside the usual data JSON and metadata, and never a PNG or an SVG. The
+  bundle records the table's `fields.columns` and `artifacts.table`, with
+  `png` and `svg` set to `null`. `glyf diff` judges a table by that fragment,
+  which is byte-stable like a PNG, says `the table changed` with the row
+  changes, and shows the two tables side by side; `diff.json` marks the
+  entry `"table": true`.
+
+  Two bounds come with it. `render.max_rows` (default `1000`) fails a table
+  that would list more rows, naming the chart, the way `render.max_marks`
+  does for a picture. And `export.row_data: exclude` fails a table at
+  validation: a picture can be published without its rows and a table
+  cannot. The `product_analytics` example gains a table of its ten most
+  active accounts.
+
+- A `VISUALISE` line that lists columns without roles under a chart with
+  axes, or maps roles under `DRAW table`, now fails saying what that chart
+  wanted instead: `bar maps each column to a role (x, y, color); write
+  'region AS x', or DRAW table to list columns`.
+
 ### What moved, in the chart's terms
 
 - `glyf diff` now explains a changed bar, line or area chart the way the

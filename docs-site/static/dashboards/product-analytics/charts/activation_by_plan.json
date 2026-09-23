@@ -1,17 +1,18 @@
 {
   "chart_type": "line",
-  "compiled_sql_path": "target/glyf/compiled/activation_by_plan.sql",
-  "data_json_path": "target/glyf/data/normalized/activation_by_plan.data.json",
+  "color": "plan",
+  "compiled_sql_path": "compiled/activation_by_plan.sql",
   "interactions": [
     "tooltip",
     "legend_filter"
   ],
-  "metadata_path": "target/glyf/charts/activation_by_plan.json",
+  "metadata_path": "charts/activation_by_plan.json",
   "name": "activation_by_plan",
-  "png_path": "target/glyf/charts/activation_by_plan.png",
-  "svg_path": "target/glyf/charts/activation_by_plan.svg",
+  "png_path": "charts/activation_by_plan.png",
+  "svg_path": "charts/activation_by_plan.svg",
   "title": "Activation by Plan",
-  "vega_json_path": "target/glyf/data/vega/activation_by_plan.vega.json",
   "x": "week",
-  "y": "activated_users"
+  "x_title": "Week",
+  "y": "activated_users",
+  "y_title": "Activated Users"
 }

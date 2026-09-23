@@ -124,7 +124,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-20T18:27:16Z">20 Sep 2026, 18:27 UTC</strong>
+          Refreshed <strong title="2026-09-23T07:23:40Z">23 Sep 2026, 07:23 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -143,7 +143,7 @@
     <path d="m14.5 4-5 16"></path>
   </svg>
 
-          <span>9 charts</span>
+          <span>10 charts</span>
         </div>
       </div>
       <div class="glyf-meta-right">
@@ -177,7 +177,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 20 Sep 2026, 18:27 UTC</span>
+              <span class="glyf-version-option-note">built 23 Sep 2026, 07:23 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -395,15 +395,14 @@ ORDER BY sessions DESC
 
       <div class="glyf-source-item">
         <div class="glyf-source-name">
-          <span>Session Length by Account</span>
+          <span>Most active accounts</span>
           <span class="glyf-source-version">compiled</span>
         </div>
 
-        <pre class="glyf-source-sql"><code>SELECT
-  avg_session_minutes,
-  plan
+        <pre class="glyf-source-sql"><code>SELECT account_id, plan, sessions, avg_session_minutes
 FROM "product_analytics"."main"."fct_account_sessions"
-ORDER BY avg_session_minutes, plan
+ORDER BY sessions DESC, account_id
+LIMIT 10
 </code></pre>
 
       </div>
@@ -418,6 +417,21 @@ ORDER BY avg_session_minutes, plan
   plan,
   sessions
 FROM "product_analytics"."main"."fct_account_sessions"
+</code></pre>
+
+      </div>
+
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Session Length by Account</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
+
+        <pre class="glyf-source-sql"><code>SELECT
+  avg_session_minutes,
+  plan
+FROM "product_analytics"."main"."fct_account_sessions"
+ORDER BY avg_session_minutes, plan
 </code></pre>
 
       </div>
@@ -742,6 +756,146 @@ ORDER BY weekday_number, hour
 
 
 
+          <section class="glyf-section" aria-label="Accounts">
+
+            <div class="glyf-section-head">
+
+              <h2 class="glyf-section-title">Accounts</h2>
+
+
+              <p class="glyf-section-description">The ten most active accounts, as rows rather than a picture.</p>
+
+            </div>
+
+            <div
+              class="glyf-chart-grid"
+              style="--glyf-columns: 2; --glyf-column-template: minmax(0, 60fr) minmax(0, 40fr)"
+            >
+
+
+                  <article class="glyf-card glyf-table-card">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">Most active accounts</div>
+      <div class="glyf-card-subtitle">account_id, plan, sessions, avg_session_minutes</div>
+    </div>
+    <span class="glyf-badge glyf-mono">table</span>
+  </div>
+  <div class="glyf-card-body glyf-table-body">
+    <figure class="glyf-table" data-glyf-table="top_accounts">
+  <div class="glyf-table-scroll" style="max-height: 360px">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col" data-column="account_id" data-type="text" aria-sort="none">Account</th>
+          <th scope="col" data-column="plan" data-type="text" aria-sort="none">plan</th>
+          <th scope="col" data-column="sessions" data-type="number" aria-sort="none" class="glyf-table-num">sessions</th>
+          <th scope="col" data-column="avg_session_minutes" data-type="number" aria-sort="none" class="glyf-table-num">Avg minutes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A1218</td>
+          <td>Team</td>
+          <td class="glyf-table-num">167</td>
+          <td class="glyf-table-num">18.2</td>
+        </tr>
+        <tr>
+          <td>A1213</td>
+          <td>Team</td>
+          <td class="glyf-table-num">140</td>
+          <td class="glyf-table-num">15.5</td>
+        </tr>
+        <tr>
+          <td>A1225</td>
+          <td>Team</td>
+          <td class="glyf-table-num">134</td>
+          <td class="glyf-table-num">11.3</td>
+        </tr>
+        <tr>
+          <td>A1238</td>
+          <td>Team</td>
+          <td class="glyf-table-num">127</td>
+          <td class="glyf-table-num">17.9</td>
+        </tr>
+        <tr>
+          <td>A1223</td>
+          <td>Team</td>
+          <td class="glyf-table-num">122</td>
+          <td class="glyf-table-num">19.7</td>
+        </tr>
+        <tr>
+          <td>A1220</td>
+          <td>Team</td>
+          <td class="glyf-table-num">119</td>
+          <td class="glyf-table-num">24.1</td>
+        </tr>
+        <tr>
+          <td>A1212</td>
+          <td>Team</td>
+          <td class="glyf-table-num">107</td>
+          <td class="glyf-table-num">27.6</td>
+        </tr>
+        <tr>
+          <td>A1229</td>
+          <td>Team</td>
+          <td class="glyf-table-num">104</td>
+          <td class="glyf-table-num">27.9</td>
+        </tr>
+        <tr>
+          <td>A1237</td>
+          <td>Team</td>
+          <td class="glyf-table-num">98</td>
+          <td class="glyf-table-num">15.4</td>
+        </tr>
+        <tr>
+          <td>A1216</td>
+          <td>Team</td>
+          <td class="glyf-table-num">92</td>
+          <td class="glyf-table-num">24.8</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <figcaption class="glyf-table-caption">10 rows</figcaption>
+</figure>
+
+  </div>
+</article>
+
+
+
+                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">Sessions per Account</div>
+      <div class="glyf-card-subtitle">plan -> sessions</div>
+    </div>
+    <span class="glyf-badge glyf-mono">boxplot</span>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+
+    <div
+      class="glyf-interactive-chart"
+      id="chart-sessions_per_account"
+      data-vega-chart="chart-sessions_per_account-spec"
+    ></div>
+    <script type="application/json" id="chart-sessions_per_account-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-dbf8f47a9d5a384dc47278c473cb4570"}, "datasets": {"data-dbf8f47a9d5a384dc47278c473cb4570": [{"plan": "Free", "sessions": 2}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 19}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 23}, {"plan": "Free", "sessions": 24}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 29}, {"plan": "Free", "sessions": 44}, {"plan": "Pro", "sessions": 5}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 9}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 21}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 32}, {"plan": "Pro", "sessions": 33}, {"plan": "Pro", "sessions": 34}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 37}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 42}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 46}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 58}, {"plan": "Pro", "sessions": 64}, {"plan": "Pro", "sessions": 74}, {"plan": "Pro", "sessions": 83}, {"plan": "Pro", "sessions": 91}, {"plan": "Team", "sessions": 20}, {"plan": "Team", "sessions": 22}, {"plan": "Team", "sessions": 26}, {"plan": "Team", "sessions": 27}, {"plan": "Team", "sessions": 32}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 40}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 47}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 54}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 62}, {"plan": "Team", "sessions": 64}, {"plan": "Team", "sessions": 66}, {"plan": "Team", "sessions": 75}, {"plan": "Team", "sessions": 77}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 82}, {"plan": "Team", "sessions": 83}, {"plan": "Team", "sessions": 86}, {"plan": "Team", "sessions": 92}, {"plan": "Team", "sessions": 98}, {"plan": "Team", "sessions": 104}, {"plan": "Team", "sessions": 107}, {"plan": "Team", "sessions": 119}, {"plan": "Team", "sessions": 122}, {"plan": "Team", "sessions": 127}, {"plan": "Team", "sessions": 134}, {"plan": "Team", "sessions": 140}, {"plan": "Team", "sessions": 167}]}, "encoding": {"x": {"axis": {"labelAngle": 0}, "field": "plan", "title": "Plan", "type": "nominal"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "boxplot"}, "title": {"subtitle": "Median, quartiles and outlying accounts for each plan", "text": "Sessions per Account"}, "width": 800}</script>
+    <noscript>
+      <img src="../charts/sessions_per_account.png" alt="Sessions per Account">
+    </noscript>
+
+  </div>
+</article>
+
+
+            </div>
+          </section>
+
+
+
+
+
           <section class="glyf-section" aria-label="Distribution">
 
             <div class="glyf-section-head">
@@ -933,7 +1087,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-20 19:27
+      2026-09-23 08:23
 
     </div>
   </div>
@@ -973,7 +1127,7 @@ takes their quartiles, so neither query aggregates anything itself.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">20 Sep 2026, 18:27 UTC</div>
+              <div class="glyf-version-date">23 Sep 2026, 07:23 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -988,6 +1142,42 @@ takes their quartiles, so neither query aggregates anything itself.
       </div>
     </div>
   </div>
+
+
+  <script>
+    // Click a header to sort a table by that column; click again to reverse.
+    // The rows are the build's; sorting only reorders what is already here.
+    document.querySelectorAll("[data-glyf-table]").forEach((table) => {
+      const body = table.querySelector("tbody");
+      const headers = Array.from(table.querySelectorAll("th[data-column]"));
+      headers.forEach((header, index) => {
+        header.addEventListener("click", () => {
+          const ascending = header.getAttribute("aria-sort") !== "ascending";
+          const numeric = header.dataset.type === "number";
+          const rows = Array.from(body.querySelectorAll("tr"));
+          const key = (row) => {
+            const cell = row.children[index];
+            if (!cell || cell.dataset.empty === "true") {
+              return null;
+            }
+            return numeric ? Number(cell.textContent) : cell.textContent;
+          };
+          rows.sort((a, b) => {
+            const left = key(a);
+            const right = key(b);
+            if (left === null && right === null) return 0;
+            if (left === null) return 1;
+            if (right === null) return -1;
+            const order = numeric ? left - right : String(left).localeCompare(String(right));
+            return ascending ? order : -order;
+          });
+          rows.forEach((row) => body.appendChild(row));
+          headers.forEach((other) => other.setAttribute("aria-sort", "none"));
+          header.setAttribute("aria-sort", ascending ? "ascending" : "descending");
+        });
+      });
+    });
+  </script>
 
 
   <script>

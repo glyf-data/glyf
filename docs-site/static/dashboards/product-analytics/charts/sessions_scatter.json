@@ -1,17 +1,18 @@
 {
   "chart_type": "scatter",
-  "compiled_sql_path": "target/glyf/compiled/sessions_scatter.sql",
-  "data_json_path": "target/glyf/data/normalized/sessions_scatter.data.json",
+  "color": "plan",
+  "compiled_sql_path": "compiled/sessions_scatter.sql",
   "interactions": [
     "tooltip",
     "zoom"
   ],
-  "metadata_path": "target/glyf/charts/sessions_scatter.json",
+  "metadata_path": "charts/sessions_scatter.json",
   "name": "sessions_scatter",
-  "png_path": "target/glyf/charts/sessions_scatter.png",
-  "svg_path": "target/glyf/charts/sessions_scatter.svg",
+  "png_path": "charts/sessions_scatter.png",
+  "svg_path": "charts/sessions_scatter.svg",
   "title": "Sessions vs Active Users",
-  "vega_json_path": "target/glyf/data/vega/sessions_scatter.vega.json",
   "x": "active_users",
-  "y": "sessions"
+  "x_title": "Active Users",
+  "y": "sessions",
+  "y_title": "Sessions"
 }

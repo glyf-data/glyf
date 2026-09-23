@@ -4,6 +4,10 @@ A build renders the same data to the same bytes, so a chart whose PNG differs
 from the last build's is a chart that changed. This module says which charts
 those are, how much of each picture moved, and as far as the builds record it,
 why: a different query, different rows, or a different renderer.
+
+A table has no picture: its rows are the chart, laid out as an HTML fragment
+that is byte-stable in the same way. A table whose fragment differs is a table
+that changed, and what changed is said in the rows' terms alone.
 """
 
 import json
@@ -69,6 +73,8 @@ class ChartDiff:
     name: str
     status: Status
     title: str | None = None
+    # A table: no picture, no pixels, no overlay; the rows are the change.
+    table: bool = False
     changed_pixels: int = 0
     total_pixels: int = 0
     before_size: tuple[int, int] | None = None
@@ -83,6 +89,9 @@ class ChartDiff:
     # overlay can draw; otherwise the pixel picture is all there is.
     overlay_png: bytes | None = field(default=None, repr=False, compare=False)
     marks: MarkChange | None = None
+    # A table's fragment on each side, for the report to show as it was shown.
+    before_table: str | None = field(default=None, repr=False, compare=False)
+    after_table: str | None = field(default=None, repr=False, compare=False)
 
     @property
     def changed_percent(self) -> float:
@@ -144,8 +153,26 @@ def compare_builds(
 
     before_charts = _chart_images(baseline)
     after_charts = _chart_images(current)
+    before_tables = _chart_tables(baseline)
+    after_tables = _chart_tables(current)
     charts = []
-    for name in sorted(before_charts.keys() | after_charts.keys()):
+    for name in sorted(
+        before_charts.keys() | after_charts.keys() | before_tables.keys() | after_tables.keys()
+    ):
+        if name in before_tables or name in after_tables:
+            charts.append(
+                _compare_table(
+                    name,
+                    _title(current if name in after_tables else baseline, name),
+                    before_tables.get(name),
+                    after_tables.get(name),
+                    baseline=baseline,
+                    current=current,
+                    before_record=before_record,
+                    after_record=after_record,
+                )
+            )
+            continue
         old, new = before_charts.get(name), after_charts.get(name)
         title = _title(current if new else baseline, name)
         if old is None:
@@ -220,6 +247,48 @@ def _compare_chart(
         diff_png=bytes(raw["diff_png"]),
         overlay_png=overlay.png if overlay else None,
         marks=overlay.marks if overlay else None,
+    )
+
+
+def _compare_table(
+    name: str,
+    title: str | None,
+    old: Path | None,
+    new: Path | None,
+    *,
+    baseline: Path,
+    current: Path,
+    before_record: dict[str, object],
+    after_record: dict[str, object],
+) -> ChartDiff:
+    """A table judged by its fragment, explained by its rows.
+
+    The fragment is written from the rows and nothing else, so two builds with
+    the same rows write the same bytes, and a byte that differs is a row, a
+    column or a label that did. There is no threshold: a table has no pixels
+    to forgive, and a cell that changed is a change.
+    """
+    before_text = old.read_text(encoding="utf-8") if old is not None else None
+    after_text = new.read_text(encoding="utf-8") if new is not None else None
+    if before_text is None:
+        return ChartDiff(name=name, status="added", title=title, table=True, after_table=after_text)
+    if after_text is None:
+        return ChartDiff(
+            name=name, status="removed", title=title, table=True, before_table=before_text
+        )
+    if before_text == after_text:
+        return ChartDiff(name=name, status="unchanged", title=title, table=True)
+
+    data = _data_change(baseline, current, name)
+    return ChartDiff(
+        name=name,
+        status="changed",
+        title=title,
+        table=True,
+        reasons=_reasons(name, before_record, after_record, data),
+        data=data,
+        before_table=before_text,
+        after_table=after_text,
     )
 
 
@@ -338,6 +407,14 @@ def _all_numbers(values: list[object]) -> bool:
 
 def _chart_images(build_dir: Path) -> dict[str, Path]:
     return {path.stem: path for path in sorted((build_dir / "charts").glob("*.png"))}
+
+
+def _chart_tables(build_dir: Path) -> dict[str, Path]:
+    """The tables a build wrote, by chart name: `charts/<name>.table.html`."""
+    return {
+        path.name[: -len(".table.html")]: path
+        for path in sorted((build_dir / "charts").glob("*.table.html"))
+    }
 
 
 def _title(build_dir: Path, name: str) -> str | None:

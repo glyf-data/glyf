@@ -57,6 +57,13 @@ sections:
       - sessions_per_user
       - sessions_by_plan
 
+  - title: Accounts
+    description: The ten most active accounts, as rows rather than a picture.
+    columns: "60% 40%"
+    items:
+      - chart: top_accounts
+      - chart: sessions_per_account
+
   - title: Distribution
     description: What the weekly totals average away, one row per account.
     columns: 2

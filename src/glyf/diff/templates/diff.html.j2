@@ -32,6 +32,13 @@
   .quiet-list { margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:.4rem; }
   .quiet-list li { padding:.2rem .65rem; border:1px solid var(--rule); border-radius:999px; background:#fff; font-size:.88rem; }
   .none { padding:1.4rem 1.6rem; border:1px solid var(--rule); border-radius:14px; background:#fff; color:var(--ink); }
+  .table-view { overflow:auto; max-height:28rem; border:1px solid #eef2f8; border-radius:6px; }
+  .table-view table { width:100%; border-collapse:collapse; font-size:.85rem; line-height:1.4; }
+  .table-view th, .table-view td { padding:.35rem .7rem; border-bottom:1px solid #eef2f8; text-align:left; white-space:nowrap; }
+  .table-view th { position:sticky; top:0; background:var(--wash); color:var(--quiet); font-size:.78rem; font-weight:600; }
+  .table-view .glyf-table-num { text-align:right; font-variant-numeric:tabular-nums; }
+  .table-view td[data-empty="true"]::before { color:#cbd5e1; content:"\2014"; }
+  .table-view figcaption { padding:.35rem .7rem; color:var(--quiet); font-size:.78rem; }
   a:focus-visible, summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
   summary { cursor:pointer; color:var(--ink); font-weight:600; }
   @media (max-width: 900px) { .views { grid-template-columns:minmax(0,1fr); } .moved { margin-left:0; } }
@@ -58,7 +65,7 @@
     <header>
       <h3>{{ chart.title or chart.name }}</h3>
       <span class="name">{{ chart.name }}</span>
-      <span class="moved">{{ chart.changed_percent | percent }} of the picture moved</span>
+      <span class="moved">{% if chart.table %}the rows changed{% else %}{{ chart.changed_percent | percent }} of the picture moved{% endif %}</span>
     </header>
     <div class="why">
       <strong>Why:</strong> {{ chart.reasons | join('; ') }}.
@@ -66,10 +73,16 @@
       {% if lines %}
       <ul>{% for line in lines %}<li>{{ line }}</li>{% endfor %}</ul>
       {% endif %}
-      {% if chart.before_size != chart.after_size %}
+      {% if not chart.table and chart.before_size != chart.after_size %}
       <ul><li>size {{ chart.before_size[0] }}×{{ chart.before_size[1] }} → {{ chart.after_size[0] }}×{{ chart.after_size[1] }}</li></ul>
       {% endif %}
     </div>
+    {% if chart.table %}
+    <div class="views" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+      <figure><figcaption>Before</figcaption><div class="table-view">{{ chart.before_table | safe }}</div></figure>
+      <figure><figcaption>After</figcaption><div class="table-view">{{ chart.after_table | safe }}</div></figure>
+    </div>
+    {% else %}
     <div class="views">
       <figure><figcaption>Before</figcaption><img src="images/{{ chart.name }}.before.png" alt="{{ chart.title or chart.name }} in the baseline build" loading="lazy"></figure>
       <figure><figcaption>After</figcaption><img src="images/{{ chart.name }}.after.png" alt="{{ chart.title or chart.name }} in this build" loading="lazy"></figure>
@@ -79,6 +92,7 @@
       <figure><figcaption><span class="swatch"></span>What moved</figcaption><img src="images/{{ chart.name }}.diff.png" alt="This build's chart faded back, with every changed pixel marked" loading="lazy"></figure>
       {% endif %}
     </div>
+    {% endif %}
   </section>
   {% endfor %}
   {% endif %}
@@ -88,7 +102,7 @@
   {% for chart in added %}
   <section class="chart" id="{{ chart.name }}">
     <header><h3>{{ chart.title or chart.name }}</h3><span class="name">{{ chart.name }}</span></header>
-    <div class="views pair"><figure><figcaption>New in this build</figcaption><img src="images/{{ chart.name }}.after.png" alt="{{ chart.title or chart.name }}" loading="lazy"></figure></div>
+    <div class="views pair"><figure><figcaption>New in this build</figcaption>{% if chart.table %}<div class="table-view">{{ chart.after_table | safe }}</div>{% else %}<img src="images/{{ chart.name }}.after.png" alt="{{ chart.title or chart.name }}" loading="lazy">{% endif %}</figure></div>
   </section>
   {% endfor %}
   {% endif %}
@@ -98,7 +112,7 @@
   {% for chart in removed %}
   <section class="chart" id="{{ chart.name }}">
     <header><h3>{{ chart.title or chart.name }}</h3><span class="name">{{ chart.name }}</span></header>
-    <div class="views pair"><figure><figcaption>Was in the baseline</figcaption><img src="images/{{ chart.name }}.before.png" alt="{{ chart.title or chart.name }}" loading="lazy"></figure></div>
+    <div class="views pair"><figure><figcaption>Was in the baseline</figcaption>{% if chart.table %}<div class="table-view">{{ chart.before_table | safe }}</div>{% else %}<img src="images/{{ chart.name }}.before.png" alt="{{ chart.title or chart.name }}" loading="lazy">{% endif %}</figure></div>
   </section>
   {% endfor %}
   {% endif %}
