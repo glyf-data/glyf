@@ -100,15 +100,41 @@ const config = {
       footer: {
         style: 'dark',
         links: [
-          {label: 'Docs', to: '/docs/intro'},
-          {label: 'GitHub', href: 'https://github.com/glyf-data/glyf'},
-          {label: 'Support', to: '/docs/resources/support'},
-          {label: 'Community', to: '/docs/resources/community'},
-          {label: 'Slack', href: 'https://glyfdata.com/slack'},
-          {label: 'Contributing', href: 'https://github.com/glyf-data/glyf/blob/main/CONTRIBUTING.md'},
-          {label: 'Apache License', href: 'https://github.com/glyf-data/glyf/blob/main/LICENSE'},
+          {
+            title: 'Product',
+            items: [
+              {label: 'Visual diff', to: '/docs/guides/visual-diff'},
+              {label: 'Data protection', to: '/docs/guides/data-exposure'},
+              {label: 'Lineage', to: '/docs/guides/dbt-integration#lineage-on-the-dashboard'},
+              {label: 'MCP server', to: '/docs/integrations/mcp'},
+              {label: 'Chart types', to: '/docs/guides/visualisation-syntax'},
+              {label: 'Dashboards', to: '/docs/guides/dashboard-yaml'},
+            ],
+          },
+          {
+            title: 'Learn',
+            items: [
+              {label: 'Installation', to: '/docs/get-started/installation'},
+              {label: 'Quickstart', to: '/docs/get-started/quickstart'},
+              {label: 'CLI reference', to: '/docs/reference/cli'},
+              {label: 'Configuration', to: '/docs/reference/configuration'},
+              {label: 'Examples', to: '/docs/examples/gallery'},
+              {label: 'Roadmap', to: '/docs/resources/roadmap'},
+            ],
+          },
+          {
+            title: 'Community',
+            items: [
+              {label: 'GitHub', href: 'https://github.com/glyf-data/glyf'},
+              {label: 'Slack', href: 'https://glyfdata.com/slack'},
+              {label: 'Contributing', href: 'https://github.com/glyf-data/glyf/blob/main/CONTRIBUTING.md'},
+              {label: 'Support', to: '/docs/resources/support'},
+              {label: 'Security', href: 'https://github.com/glyf-data/glyf/blob/main/SECURITY.md'},
+              {label: 'Apache License', href: 'https://github.com/glyf-data/glyf/blob/main/LICENSE'},
+            ],
+          },
         ],
-        copyright: '<strong class="footerBrand">Glyf<span>.</span></strong><span class="footerTagline">Visualization is a build step. Treat it like one.</span>',
+        copyright: '<span class="footerMark" aria-hidden="true">Glyf</span><span class="footerMeta"><span class="footerTagline">Visualization is a build step. Treat it like one.</span><span class="footerLicence">Apache-2.0 · glyf-data</span></span>',
       },
       prism: {
         theme: lightCodeTheme,

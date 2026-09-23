@@ -50,15 +50,15 @@ On macOS and Linux, this installs `uv` if it is missing and then installs
 `glyf` with it:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh
+curl -fsSL https://glyfdata.com/install.sh | sh
 ```
 
 ```bash
 # upgrade an existing installation
-curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh -s -- --update
+curl -fsSL https://glyfdata.com/install.sh | sh -s -- --update
 
 # install an exact version
-curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh -s -- --version 0.13.0
+curl -fsSL https://glyfdata.com/install.sh | sh -s -- --version 0.13.0
 ```
 
 The script never uses `sudo`. It installs into uv's tool directory
@@ -70,7 +70,7 @@ what to add to your `PATH` if that directory is not already on it. Pass
 Piping a script into a shell means trusting its source. To read it first:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh -o install.sh
+curl -fsSL https://glyfdata.com/install.sh -o install.sh
 less install.sh
 sh install.sh
 ```

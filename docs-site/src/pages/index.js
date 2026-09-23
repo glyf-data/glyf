@@ -1359,22 +1359,32 @@ function VisualDiffTerminal({filename}) {
   );
 }
 
+const INSTALL_COMMAND = 'curl -fsSL https://glyfdata.com/install.sh | sh';
+
 function CtaSection() {
+  const [copied, setCopied] = React.useState(false);
+  const copy = () => {
+    const done = () => { setCopied(true); setTimeout(() => setCopied(false), 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(INSTALL_COMMAND).then(done).catch(() => {});
+    }
+  };
   return (
     <section className="ctaBand">
       <div className="container ctaBand__inner">
-        <h2>Turn your dbt project into dashboards.</h2>
-        <p>Install glyf, point it at your dbt project, and build your first dashboard.</p>
+        <p className="ctaBand__eyebrow">Install</p>
         <div className="ctaBand__install">
-          <span aria-hidden="true">$</span>
-          <code>uv tool install glyf-core</code>
+          <span className="ctaBand__prompt" aria-hidden="true">$</span>
+          <code>{INSTALL_COMMAND}</code>
+          <button type="button" className="ctaBand__copy" onClick={copy} aria-label="Copy the install command">
+            {copied ? 'Copied' : 'Copy'}
+          </button>
         </div>
+        <p className="ctaBand__note">macOS and Linux. Windows and every other way to install are in the <Link to="/docs/get-started/installation">installation guide</Link>.</p>
         <div className="ctaBand__actions">
-          <Link className="ctaBand__button ctaBand__button--primary" to="/docs/get-started/quickstart">
-            <span aria-hidden="true">&gt;_</span> Get Started <span aria-hidden="true">&rarr;</span>
-          </Link>
-          <a className="ctaBand__button ctaBand__button--secondary" href="https://github.com/glyf-data/glyf">
-            View on GitHub
+          <a className="ctaBand__button ctaBand__button--star" href="https://github.com/glyf-data/glyf">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4l-5.9 3.2 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>
+            Star on GitHub
           </a>
         </div>
       </div>

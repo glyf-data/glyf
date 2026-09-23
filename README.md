@@ -76,7 +76,7 @@ glyf --version
 never uses `sudo`, and accepts `--update`, `--version X`, and `--help`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh | sh
+curl -fsSL https://glyfdata.com/install.sh | sh
 ```
 
 **Homebrew.** `brew trust` is required. Homebrew 6.0 refuses to load formulae
