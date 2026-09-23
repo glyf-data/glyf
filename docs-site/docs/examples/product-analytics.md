@@ -26,6 +26,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/product-analytics/dashboard
 - Dashboard filters whose values come from a rendered chart artifact (`source(activation_by_plan, plan)`).
 - Built-in macros in `summary` and a project-local macro, `activation_health`, that reads the latest activation rate through `MacroContext`.
 - A histogram and a boxplot over `fct_account_sessions`, which has one row per account, and a weekday-by-hour heatmap over `fct_hourly_activity` ordered by `weekday_number, hour` so the week starts on Monday.
+- A table of the ten most active accounts (`top_accounts.ggsql`): `VISUALISE *` over the same model with `LIMIT 10`, column labels, and a `CONFIG height` that turns the card into a scroll area.
 - Interactive ggsql charts with `tooltip`, `legend_filter`, and `zoom`.
 
 ## Run it
@@ -101,6 +102,13 @@ sections:
     charts:
       - sessions_per_user
       - sessions_by_plan
+
+  - title: Accounts
+    description: The ten most active accounts, as rows rather than a picture.
+    columns: "60% 40%"
+    items:
+      - chart: top_accounts
+      - chart: sessions_per_account
 
   - title: Distribution
     description: What the weekly totals average away, one row per account.

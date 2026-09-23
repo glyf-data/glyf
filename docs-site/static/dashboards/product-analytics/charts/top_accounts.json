@@ -1,0 +1,15 @@
+{
+  "chart_type": "table",
+  "columns": [
+    "account_id",
+    "plan",
+    "sessions",
+    "avg_session_minutes"
+  ],
+  "compiled_sql_path": "compiled/top_accounts.sql",
+  "height": 360,
+  "metadata_path": "charts/top_accounts.json",
+  "name": "top_accounts",
+  "table_html_path": "charts/top_accounts.table.html",
+  "title": "Most active accounts"
+}

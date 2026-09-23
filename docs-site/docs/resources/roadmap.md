@@ -27,6 +27,19 @@ order is the priority.
   <Link to="/docs/guides/visual-diff#what-moved-in-the-charts-terms">Read the guide</Link>
 </div>
 
+<div className="roadmapNext">
+  <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
+  <h3>A table chart</h3>
+  <p>
+    <code>DRAW table</code> shows a query's rows as they are: <code>VISUALISE region, revenue</code>
+    lists the columns, <code>VISUALISE *</code> takes every one, and the dashboard sorts by any
+    column. It is the first chart type glyf does not draw, so <code>glyf diff</code> compares its
+    rows and shows the two tables side by side, and <code>render.max_rows</code> keeps a table
+    from becoming a data export.
+  </p>
+  <Link to="/docs/guides/visualisation-syntax#table">Read the guide</Link>
+</div>
+
 ## Planned
 
 Vote with a 👍 on the issue. The most wanted go first.
@@ -56,7 +69,6 @@ if one of these would change how you work.
 
 <ul className="roadmapList">
   <li><strong>Watch mode.</strong> Rebuild charts and dashboards when a <code>.ggsql</code> file, a dashboard or <code>glyf.yml</code> changes.</li>
-  <li><strong>A table chart.</strong> The first thing an analytics engineer reaches for; a glyf addition to the ggsql format, like the histogram and heatmap.</li>
   <li><strong>Dashboard templates.</strong> Ready-made layouts to start from.</li>
   <li><strong>dbt docs on dashboards.</strong> Model, column and source descriptions from the manifest, shown beside the charts they describe.</li>
   <li><strong>Lineage.</strong> Which models and sources feed each chart, and which charts a changed model touches.</li>

@@ -88,6 +88,7 @@ dashboard:
 | `render.default_width` | `800` | Chart width in pixels when a `.ggsql` file sets none. |
 | `render.default_height` | `400` | Chart height in pixels when a `.ggsql` file sets none. |
 | `render.max_marks` | `500000` | The most marks a chart may draw. See [how many marks a chart may draw](#how-many-marks-a-chart-may-draw). `null` removes the bound. |
+| `render.max_rows` | `1000` | The most rows a `table` may list. See [how many rows a table may list](#how-many-rows-a-table-may-list). `null` removes the bound. |
 | `render.downsample` | `false` | Reduce a large line or area chart to the marks its pixels can show. See [downsampling a large chart](#downsampling-a-large-chart). |
 | `render.downsample_over` | `25000` | Rows a chart may return before downsampling applies to it. |
 
@@ -191,6 +192,30 @@ removes the bound:
 ```yaml
 render:
   max_marks: 750000
+```
+
+## How many rows a table may list
+
+`render.max_rows` fails a [table](../guides/visualisation-syntax.md#table)
+that would list more rows than it allows:
+
+```text
+visualisations/orders.ggsql would list 4812 rows, more than the 1000 glyf will
+put in a table. A table is read a row at a time, and glyf will not show part of
+a result. Aggregate the query, add a LIMIT, or raise render.max_rows.
+```
+
+A picture summarises its rows; a table is read a row at a time, and past a
+page or two it stops being a chart on a dashboard and becomes a data export
+that happens to be HTML, published to everyone who can open the site. The
+bound is the table's `max_marks`: a normal build error naming the chart rather
+than a truncated table nobody knew was truncated. It applies only to tables;
+`execution.max_rows` still bounds what any query may return, and
+`render.max_marks` what any picture may draw.
+
+```yaml
+render:
+  max_rows: 250
 ```
 
 ## Downsampling a large chart

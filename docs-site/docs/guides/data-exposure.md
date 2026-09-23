@@ -112,6 +112,7 @@ drops the values: `plan; sessions` rather than `plan: Pro; sessions: 6610`.
 | `dashboards/*.html` | Encoded columns only, in the inlined Vega spec; SVG labels without values. |
 | `charts/*.svg` | The picture, and which columns each mark came from. |
 | `charts/*.png` | The picture only. |
+| `charts/*.table.html` | A table's listed columns, every row. A table shows its columns by definition, so `minimal` changes nothing for it. |
 | `charts/*.json` | Chart metadata, as before. |
 | `compiled/*.sql` | The chart's SQL, as before. It names columns, not values. |
 | `bundle.json` | As before, plus `security.row_data: "minimal"`. |
@@ -136,6 +137,12 @@ specification, no compiled SQL, no SQL drawer, and no filter values resolved out
 of chart rows. An `INTERACT` chart becomes a static image, and the build says
 which chart was downgraded. The full behaviour is in the
 [configuration reference](../reference/configuration.md#publishing-without-the-rows).
+
+A [table](visualisation-syntax.md#table) cannot be published this way: it is
+its rows, and there is no picture to publish instead. A build with a table and
+`row_data: exclude` fails at validation, naming the chart, so the choice is
+made in the open: set `row_data` to `include` or `minimal`, or leave the table
+out of that build with `--select`.
 
 What still gets published is what you wrote: dashboard titles and descriptions,
 markdown blocks, hand-written filter lists, chart titles, and whatever your

@@ -38,10 +38,12 @@ def run_diff(
 
     for chart in diff.charts:
         if chart.status == "changed":
-            typer.echo(
-                f"~ {chart.name}: {format_percent(chart.changed_percent)} of the picture moved "
-                f"({'; '.join(chart.reasons)})"
+            what = (
+                "the table changed"
+                if chart.table
+                else f"{format_percent(chart.changed_percent)} of the picture moved"
             )
+            typer.echo(f"~ {chart.name}: {what} ({'; '.join(chart.reasons)})")
             # What moved in the rows, under the chart it moved in: a CI log is
             # read more often than the report is downloaded.
             for line in describe_change(chart):

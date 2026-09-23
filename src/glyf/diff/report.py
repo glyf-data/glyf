@@ -31,8 +31,17 @@ def write_report(diff: BuildDiff, output_dir: Path) -> Path:
         shutil.rmtree(output_dir)
     images = output_dir / "images"
     images.mkdir(parents=True)
+    tables = output_dir / "tables"
 
     for chart in diff.charts:
+        if chart.table:
+            # A table's before and after are the fragments themselves, kept
+            # beside the images for anything that wants to show them.
+            for side, fragment in (("before", chart.before_table), ("after", chart.after_table)):
+                if fragment is not None:
+                    tables.mkdir(exist_ok=True)
+                    (tables / f"{chart.name}.{side}.html").write_text(fragment, encoding="utf-8")
+            continue
         if chart.status in ("changed", "removed"):
             shutil.copyfile(
                 diff.baseline / "charts" / f"{chart.name}.png",
@@ -73,6 +82,22 @@ def as_document(diff: BuildDiff) -> dict[str, object]:
 
 def _chart_document(chart: ChartDiff) -> dict[str, object]:
     document: dict[str, object] = {"status": chart.status, "title": chart.title}
+    if chart.table:
+        # No pixels and no marks: a table's change is its rows, and the
+        # fragments are there for a consumer that wants to show them.
+        document["table"] = True
+        if chart.status == "unchanged":
+            return document
+        document["tables"] = {
+            side: f"tables/{chart.name}.{side}.html"
+            for side, fragment in (("before", chart.before_table), ("after", chart.after_table))
+            if fragment is not None
+        }
+        if chart.status != "changed":
+            return document
+        document["reasons"] = list(chart.reasons)
+        _add_data(document, chart)
+        return document
     if chart.status != "changed":
         return document
     document.update(
@@ -91,6 +116,11 @@ def _chart_document(chart: ChartDiff) -> dict[str, object]:
             },
         }
     )
+    _add_data(document, chart)
+    return document
+
+
+def _add_data(document: dict[str, object], chart: ChartDiff) -> None:
     if chart.data is not None:
         document["data"] = {
             "before_rows": chart.data.before_rows,
@@ -109,7 +139,6 @@ def _chart_document(chart: ChartDiff) -> dict[str, object]:
                 for change in chart.data.fields
             ],
         }
-    return document
 
 
 def headline(diff: BuildDiff) -> str:
@@ -132,7 +161,7 @@ def as_markdown(diff: BuildDiff) -> str:
         lines += ["| Chart | Picture | Why | Data |", "| --- | --- | --- | --- |"]
         for chart in changed:
             lines.append(
-                f"| {_label(chart)} | {format_percent(chart.changed_percent)} of pixels "
+                f"| {_label(chart)} | {moved(chart)} "
                 f"| {'; '.join(chart.reasons)} "
                 f"| {'<br>'.join(describe_change(chart)) or 'n/a'} |"
             )
@@ -143,6 +172,13 @@ def as_markdown(diff: BuildDiff) -> str:
             lines.append(f"**{heading}:** " + ", ".join(_label(chart) for chart in charts))
             lines.append("")
     return "\n".join(lines).rstrip("\n") + "\n"
+
+
+def moved(chart: ChartDiff) -> str:
+    """How much of a changed chart moved: a share of its pixels, or its rows."""
+    if chart.table:
+        return "table rows"
+    return f"{format_percent(chart.changed_percent)} of pixels"
 
 
 def describe_change(chart: ChartDiff) -> list[str]:
@@ -257,4 +293,5 @@ def _render_html(diff: BuildDiff) -> str:
         removed=diff.with_status("removed"),
         unchanged=diff.with_status("unchanged"),
         describe_change=describe_change,
+        moved=moved,
     )

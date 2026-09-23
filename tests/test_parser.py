@@ -233,6 +233,7 @@ EXAMPLE_ORDER_BY = {
     "product_analytics/sessions_per_account": False,
     "product_analytics/sessions_per_user": False,
     "product_analytics/sessions_scatter": True,
+    "product_analytics/top_accounts": True,
     "sales_dashboard/channel_revenue": True,
     "sales_dashboard/monthly_revenue": False,
     "sales_dashboard/regional_revenue": True,

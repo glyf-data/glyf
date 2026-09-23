@@ -1,0 +1,11 @@
+SELECT account_id, plan, sessions, avg_session_minutes
+FROM {{ ref('fct_account_sessions') }}
+ORDER BY sessions DESC, account_id
+LIMIT 10
+
+VISUALISE *
+DRAW table
+LABEL title => 'Most active accounts'
+LABEL account_id => 'Account'
+LABEL avg_session_minutes => 'Avg minutes'
+CONFIG height => 360

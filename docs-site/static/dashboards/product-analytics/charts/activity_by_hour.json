@@ -1,16 +1,19 @@
 {
   "chart_type": "heatmap",
-  "compiled_sql_path": "target/glyf/compiled/activity_by_hour.sql",
-  "data_json_path": "target/glyf/data/normalized/activity_by_hour.data.json",
+  "color": "sessions",
+  "compiled_sql_path": "compiled/activity_by_hour.sql",
+  "height": 320,
   "interactions": [
     "tooltip"
   ],
-  "metadata_path": "target/glyf/charts/activity_by_hour.json",
+  "metadata_path": "charts/activity_by_hour.json",
   "name": "activity_by_hour",
-  "png_path": "target/glyf/charts/activity_by_hour.png",
-  "svg_path": "target/glyf/charts/activity_by_hour.svg",
+  "png_path": "charts/activity_by_hour.png",
+  "svg_path": "charts/activity_by_hour.svg",
   "title": "Sessions by Hour",
-  "vega_json_path": "target/glyf/data/vega/activity_by_hour.vega.json",
+  "width": 1100,
   "x": "hour",
-  "y": "weekday"
+  "x_title": "Hour of day (UTC)",
+  "y": "weekday",
+  "y_title": "Weekday"
 }
