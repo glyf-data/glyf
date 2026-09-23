@@ -28,6 +28,11 @@ class GgsqlChart:
     # Set when the SQL did not parse for the chosen dialect. A warning, never
     # an error: the warehouse is the judge of the SQL.
     sql_warning: str | None = None
+    # Every column name the SQL mentions, lower-cased, wherever it appears;
+    # empty when the SQL did not parse. What `glyf impact` reads.
+    sql_columns: tuple[str, ...] = ()
+    # Whether any SELECT uses `*`, reading columns the query never names.
+    sql_selects_star: bool = False
 
     @property
     def title(self) -> str | None:

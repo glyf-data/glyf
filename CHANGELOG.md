@@ -6,6 +6,17 @@ All notable changes to `glyf` will be documented in this file.
 
 ### Added
 
+- `glyf impact <target>` lists the charts and dashboards downstream of a dbt
+  model (`fct_orders`), a source (`raw.orders`) or a column of either
+  (`fct_orders.revenue`). A model or source answer is exact, from the
+  resolved `ref()` and `source()` calls. A column answer says how sure it
+  is on every line: a chart whose SQL names the column `reads` it, shown
+  with the role it is drawn as or `in the SQL`; a chart that selects `*`, or
+  whose SQL did not parse, `may read` it. `--json` prints the report for a
+  script. Next to `glyf diff` it is the review a pull request wants: which
+  charts a change reaches, and what moved in them. Underneath, the Rust
+  core now records every column name a chart's SQL mentions and whether it
+  selects `*`.
 - `glyf validate --execute` runs each chart's SQL against the warehouse with
   `LIMIT 0` and checks the columns it returns against the chart's
   `VISUALISE` mappings, fetching no rows. Plain `glyf validate` reads files

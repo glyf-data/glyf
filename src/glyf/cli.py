@@ -9,6 +9,7 @@ from glyf.commands.dashboard_cmd import run_dashboard
 from glyf.commands.diff_cmd import run_diff
 from glyf.commands.doctor_cmd import run_doctor
 from glyf.commands.export_cmd import run_export
+from glyf.commands.impact_cmd import run_impact
 from glyf.commands.init_cmd import run_init
 from glyf.commands.list_cmd import run_list
 from glyf.commands.render_cmd import run_render
@@ -216,6 +217,26 @@ ExecuteOption = Annotated[
         ),
     ),
 ]
+
+@app.command("impact")
+def impact_command(
+    target: Annotated[
+        str,
+        typer.Argument(
+            help=(
+                "A model (fct_orders), a source (raw.orders) or a column of one "
+                "(fct_orders.revenue)."
+            )
+        ),
+    ],
+    project: ProjectOption = Path("."),
+    config: ConfigOption = None,
+    as_json: Annotated[
+        bool, typer.Option("--json", help="Print the report as JSON for a script.")
+    ] = False,
+) -> None:
+    """List the charts and dashboards downstream of a model, source or column."""
+    run_impact(project, target, config_path=config, as_json=as_json)
 
 
 @app.command("validate")

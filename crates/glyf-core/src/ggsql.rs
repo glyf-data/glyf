@@ -1,10 +1,13 @@
 use regex::Regex;
-use sqlparser::ast::Statement;
+use sqlparser::ast::{
+    visit_statements, Expr, Query, SelectItem, SetExpr, Statement, Visit, Visitor,
+};
 use sqlparser::dialect::{
     BigQueryDialect, Dialect, DuckDbDialect, GenericDialect, SnowflakeDialect,
 };
 use sqlparser::parser::Parser;
 use std::collections::{BTreeMap, BTreeSet};
+use std::ops::ControlFlow;
 use std::sync::OnceLock;
 
 use crate::error::CoreError;
@@ -113,7 +116,12 @@ pub fn parse_ggsql_text(
     if sql.is_empty() {
         return Err(CoreError::Parse("missing SQL query section".to_string()));
     }
-    let (has_order_by, sql_warning) = read_sql(&sql, dialect);
+    let SqlReading {
+        has_order_by,
+        sql_warning,
+        sql_columns,
+        sql_selects_star,
+    } = read_sql(&sql, dialect);
 
     let visualise_line = visual_lines
         .first()
@@ -202,7 +210,63 @@ pub fn parse_ggsql_text(
         interactions,
         has_order_by,
         sql_warning,
+        sql_columns,
+        sql_selects_star,
     })
+}
+
+/// What one pass over the parsed SQL yields.
+struct SqlReading {
+    has_order_by: bool,
+    sql_warning: Option<String>,
+    sql_columns: Vec<String>,
+    sql_selects_star: bool,
+}
+
+/// Collects every column name the query mentions, and whether it selects `*`.
+///
+/// An identifier's last part is the column: `t.margin`, `f.margin` and
+/// `margin` all count as `margin`. That is deliberately loose. A column
+/// renamed in a CTE reaches the chart under another name, and a table alias
+/// can hide which relation a column came from, so the list says "this query
+/// mentions the name", which is the honest claim `glyf impact` can make.
+#[derive(Default)]
+struct ColumnCollector {
+    columns: BTreeSet<String>,
+    selects_star: bool,
+}
+
+impl Visitor for ColumnCollector {
+    type Break = ();
+
+    fn pre_visit_query(&mut self, query: &Query) -> ControlFlow<Self::Break> {
+        if let SetExpr::Select(select) = query.body.as_ref() {
+            if select.projection.iter().any(|item| {
+                matches!(
+                    item,
+                    SelectItem::Wildcard(_) | SelectItem::QualifiedWildcard(_, _)
+                )
+            }) {
+                self.selects_star = true;
+            }
+        }
+        ControlFlow::Continue(())
+    }
+
+    fn pre_visit_expr(&mut self, expr: &Expr) -> ControlFlow<Self::Break> {
+        match expr {
+            Expr::Identifier(ident) => {
+                self.columns.insert(ident.value.to_lowercase());
+            }
+            Expr::CompoundIdentifier(parts) => {
+                if let Some(last) = parts.last() {
+                    self.columns.insert(last.value.to_lowercase());
+                }
+            }
+            _ => {}
+        }
+        ControlFlow::Continue(())
+    }
 }
 
 /// Whether the query orders its own rows, and a warning if it could not be
@@ -215,7 +279,7 @@ pub fn parse_ggsql_text(
 /// warning, never an error: the warehouse is the judge of the SQL, and a
 /// parser can lag a dialect. The chart is then treated as unordered, so glyf
 /// orders its rows itself, the safe side of the 0.8.0 rule.
-fn read_sql(sql: &str, dialect: &str) -> (bool, Option<String>) {
+fn read_sql(sql: &str, dialect: &str) -> SqlReading {
     let plain = normalize_jinja_for_ggsql(sql);
     let dialect_impl: Box<dyn Dialect> = match dialect.to_ascii_lowercase().as_str() {
         "duckdb" => Box::new(DuckDbDialect {}),
@@ -228,15 +292,27 @@ fn read_sql(sql: &str, dialect: &str) -> (bool, Option<String>) {
             let has_order_by = statements
                 .iter()
                 .any(|statement| matches!(statement, Statement::Query(query) if query.order_by.is_some()));
-            (has_order_by, None)
+            let mut collector = ColumnCollector::default();
+            let _ = visit_statements(&statements, |statement| {
+                let _ = statement.visit(&mut collector);
+                ControlFlow::<()>::Continue(())
+            });
+            SqlReading {
+                has_order_by,
+                sql_warning: None,
+                sql_columns: collector.columns.into_iter().collect(),
+                sql_selects_star: collector.selects_star,
+            }
         }
-        Err(err) => (
-            false,
-            Some(format!(
+        Err(err) => SqlReading {
+            has_order_by: false,
+            sql_warning: Some(format!(
                 "SQL did not parse as {dialect}: {}. The warehouse will report the error if it is one; the rows are treated as unordered.",
                 err.to_string().trim_start_matches("sql parser error: ")
             )),
-        ),
+            sql_columns: Vec::new(),
+            sql_selects_star: false,
+        },
     }
 }
 
@@ -783,6 +859,37 @@ mod tests {
         assert!(interact
             .to_string()
             .starts_with("kpi takes no INTERACT clause"));
+    }
+
+    #[test]
+    fn lists_the_columns_the_sql_mentions_and_whether_it_selects_star() {
+        let chart = parse_ggsql_text(
+            "WITH w AS (SELECT week, sum(active_users) AS active_users FROM t GROUP BY 1)\nSELECT w.week, Active_Users, lag(active_users) OVER (ORDER BY week) AS previous FROM w WHERE margin > 0 ORDER BY week DESC\n\nVISUALISE week AS x, active_users AS y\nDRAW line\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap();
+        assert_eq!(chart.sql_columns, vec!["active_users", "margin", "week"]);
+        assert!(!chart.sql_selects_star);
+
+        let star = parse_ggsql_text(
+            "SELECT * FROM (SELECT f.* FROM t f) s\n\nVISUALISE a AS x, b AS y\nDRAW bar\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap();
+        assert!(star.sql_selects_star);
+
+        let broken = parse_ggsql_text(
+            "SELECT a b c FROM t\n\nVISUALISE a AS x, b AS y\nDRAW bar\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap();
+        assert!(broken.sql_columns.is_empty() && !broken.sql_selects_star);
     }
 
     #[test]

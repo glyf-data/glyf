@@ -24,6 +24,7 @@ options are covered in the [installation guide](../get-started/installation.md).
 | `glyf build` | Run the full glyf artifact pipeline and export a static site. |
 | `glyf serve` | Serve the exported static dashboard site locally. |
 | `glyf diff` | Compare this build's charts with an earlier build and report what changed. |
+| `glyf impact` | List the charts and dashboards downstream of a model, a source or a column. |
 
 ## Low-level commands
 
@@ -254,6 +255,38 @@ Validation failed
 
 `--target` picks the dbt profile target to run the queries as, with
 `execution.backend: dbt`.
+
+### `impact`
+
+Use `impact` to see what a change to a dbt model would touch before building
+anything: the charts that read it, and the dashboards those charts are on.
+It takes a model (`fct_orders`), a source (`raw.orders`) or a column of
+either (`fct_orders.revenue`, `raw.orders.amount`).
+
+```bash title="Command"
+uv run glyf impact fct_orders.revenue --project-dir examples/simple_dbt
+```
+
+```text title="Output"
+fct_orders.revenue is read by 3 charts on 2 dashboards (1 may read it)
+  visualisations/revenue.ggsql     revenue AS y        finance, ops
+  visualisations/margin.ggsql      in the SQL          finance
+  visualisations/everything.ggsql  SELECT *, may read  finance
+```
+
+A model or source answer is exact: it comes from the chart's `ref()` and
+`source()` calls, resolved against the manifest. A column answer says how sure
+it is on every line. A chart whose SQL names the column reads it, and the line
+shows the role it is drawn as, or `in the SQL` when it is only filtered or
+computed on. A chart that selects `*` may read it, and so may one whose SQL
+did not parse. A column renamed inside a CTE reaches the chart under another
+name and is not followed; that is the limit of the answer.
+
+`--json` prints the same report for a script: the target, one entry per chart
+with its `certainty` (`reads` or `may read`), `detail` and `dashboards`, and
+the dashboards overall. Pair it with [`glyf diff`](../guides/visual-diff.md)
+in a pull request: `impact` says which charts a model change reaches, `diff`
+says what moved in them.
 
 ### `render`
 
