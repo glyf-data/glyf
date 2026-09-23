@@ -1,0 +1,14 @@
+{% macro render_table_card(chart, title=None, width=None) -%}
+<article class="glyf-card glyf-table-card"{% if width %} style="--glyf-item-width: {{ width }}"{% endif %}>
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">{{ title or chart.metadata.title or chart.metadata.name }}</div>
+      <div class="glyf-card-subtitle">{{ chart.metadata.columns | join(', ') }}</div>
+    </div>
+    <span class="glyf-badge glyf-mono">table</span>
+  </div>
+  <div class="glyf-card-body glyf-table-body">
+    {{ chart.table_html | safe }}
+  </div>
+</article>
+{%- endmacro %}

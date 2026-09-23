@@ -16,7 +16,9 @@ from glyf.ggsql.renderer import (
     prune_to_encoded_columns,
     render_chart,
     strip_svg_row_values,
+    table_columns,
 )
+from glyf.ggsql.table import render_table
 from glyf.manifest.loader import DbtManifest, ManifestError, load_manifest
 from glyf.manifest.resolver import RefResolution, resolve_refs
 from glyf.ordering import is_order_sensitive, order_rows
@@ -231,10 +233,18 @@ def _render_chart_file(path: Path, run: _Run) -> RenderedChart:
 
     _enforce_row_cap(compiled, data, run)
     data = _order(compiled, data, run)
-    # Downsampling comes before the budget: the budget bounds what is drawn,
-    # and what is drawn is what survives this.
-    render_data, plan = _downsample(compiled, data, run)
-    _enforce_mark_budget(compiled, render_data, run)
+    if compiled.chart.is_table:
+        # A table lists its rows as they are: nothing to downsample, and its
+        # bound is on rows, not marks.
+        _enforce_table_budget(compiled, data, run)
+        render_data, plan = data, Downsampling(
+            applied=False, reason="", rows=len(data), marks=len(data)
+        )
+    else:
+        # Downsampling comes before the budget: the budget bounds what is
+        # drawn, and what is drawn is what survives this.
+        render_data, plan = _downsample(compiled, data, run)
+        _enforce_mark_budget(compiled, render_data, run)
     scan_warnings = _scan_values(compiled, data, findings, run)
 
     run.records.append(
@@ -270,6 +280,15 @@ def _compile(path: Path, run: _Run) -> _Compiled:
         raise RenderError(f"{rel_path}: {exc}") from exc
     if chart.sql_warning:
         run.warnings.append(f"{rel_path}: {chart.sql_warning}")
+    if chart.is_table and run.exclude_row_data:
+        # A picture can be published without its rows; a table is its rows.
+        # Say so here, where validate mode also passes, rather than after the
+        # query has run.
+        raise RenderError(
+            f"{rel_path} is a table, and export.row_data: exclude publishes no "
+            "rows. Set export.row_data to include or minimal, or leave the "
+            "table out of this build with --select."
+        )
 
     resolution = resolve_refs(chart.sql, run.manifest)
     missing_refs = [f"ref('{ref}')" for ref in resolution.missing_refs]
@@ -405,6 +424,24 @@ def _enforce_mark_budget(compiled: _Compiled, render_data: QueryResult, run: _Ru
         )
 
 
+def _enforce_table_budget(compiled: _Compiled, data: QueryResult, run: _Run) -> None:
+    """The most rows a table may list.
+
+    A picture summarises its rows; a table is read a row at a time, and past a
+    page or two it stops being a chart on a dashboard and becomes a data export
+    that happens to be HTML. The bound is the table's `max_marks`: a normal
+    build error naming the chart, not a silent truncation.
+    """
+    max_rows = run.render_config.max_rows
+    if max_rows is not None and len(data) > max_rows:
+        raise RenderError(
+            f"{compiled.rel_path} would list {len(data)} rows, more than the "
+            f"{max_rows} glyf will put in a table. A table is read a row at a "
+            "time, and glyf will not show part of a result. Aggregate the query, "
+            "add a LIMIT, or raise render.max_rows."
+        )
+
+
 def _scan_values(
     compiled: _Compiled,
     data: QueryResult,
@@ -447,6 +484,20 @@ def _write_artifacts(
     """Write the rows, draw the chart, and write its metadata."""
     chart, artifacts, root = compiled.chart, compiled.artifacts, run.scan.root
     write_chart_data(root, chart, artifacts, data)
+
+    if chart.is_table:
+        # The chart may have been drawn by an earlier build, before its file
+        # said `DRAW table`; a stale PNG here would be exported as if current.
+        _discard(artifacts.png, artifacts.svg, artifacts.vega_json)
+        try:
+            render_table(chart, data, artifacts.table_html)
+        except ChartRenderError as exc:
+            raise RenderError(f"{compiled.rel_path} table rendering failed: {exc}") from exc
+        write_chart_metadata(
+            root, chart, artifacts, columns=table_columns(chart, data.columns)
+        )
+        return
+    _discard(artifacts.table_html)
 
     if run.exclude_row_data:
         # An SVG carries every row in its per-mark accessibility labels and a

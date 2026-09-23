@@ -1,0 +1,23 @@
+<figure class="glyf-table" data-glyf-table="{{ name }}"{% if width %} style="max-width: {{ width }}px"{% endif %}>
+  <div class="glyf-table-scroll"{% if height %} style="max-height: {{ height }}px"{% endif %}>
+    <table>
+      <thead>
+        <tr>
+          {%- for column in columns %}
+          <th scope="col" data-column="{{ column.name }}" data-type="{{ column.type }}" aria-sort="none"{% if column.type == "number" %} class="glyf-table-num"{% endif %}>{{ column.label }}</th>
+          {%- endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for row in rows %}
+        <tr>
+          {%- for cell in row %}
+          <td{% if cell.numeric %} class="glyf-table-num"{% endif %}{% if cell.empty %} data-empty="true"{% endif %}>{{ cell.text }}</td>
+          {%- endfor %}
+        </tr>
+        {%- endfor %}
+      </tbody>
+    </table>
+  </div>
+  <figcaption class="glyf-table-caption">{{ rows | length }} row{% if rows | length != 1 %}s{% endif %}</figcaption>
+</figure>

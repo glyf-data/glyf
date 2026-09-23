@@ -40,6 +40,11 @@ class RenderConfig:
     downsample: bool = False
     # How many rows a chart may return before downsampling applies to it.
     downsample_over: int = 25_000
+    # The most rows a table may list. A table is read a row at a time, and
+    # past a page or two it is a data export wearing a dashboard's clothes;
+    # the bound turns that into a build error naming the chart, the way
+    # `max_marks` does for a picture. `null` removes it.
+    max_rows: int | None = 1_000
 
 
 @dataclass(frozen=True)
@@ -252,6 +257,7 @@ def _render_config(raw: object) -> RenderConfig:
         max_marks=_optional_positive_int(raw, "max_marks", default=500_000),
         downsample=_bool_value(raw, "downsample", False, section="render"),
         downsample_over=_positive_int(raw, "downsample_over", 25_000),
+        max_rows=_optional_positive_int(raw, "max_rows", default=1_000),
     )
 
 

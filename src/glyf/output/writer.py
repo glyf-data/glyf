@@ -16,6 +16,8 @@ class ChartArtifacts:
     png: Path
     svg: Path
     vega_json: Path
+    # A table's rendering: an HTML fragment instead of a picture.
+    table_html: Path
 
 
 def chart_artifact_paths(
@@ -36,6 +38,7 @@ def chart_artifact_paths(
         png=paths.charts_dir / f"{chart.name}.png",
         svg=paths.charts_dir / f"{chart.name}.svg",
         vega_json=paths.vega_data_dir / f"{chart.name}.vega.json",
+        table_html=paths.charts_dir / f"{chart.name}.table.html",
     )
 
 
@@ -44,19 +47,37 @@ def write_compiled_sql(compiled_path: Path, compiled_sql: str) -> None:
     compiled_path.write_text(compiled_sql.strip() + "\n", encoding="utf-8")
 
 
-def write_chart_metadata(project_root: Path, chart: GgsqlChart, artifacts: ChartArtifacts) -> None:
-    metadata = {
+def write_chart_metadata(
+    project_root: Path,
+    chart: GgsqlChart,
+    artifacts: ChartArtifacts,
+    *,
+    columns: tuple[str, ...] = (),
+) -> None:
+    """Write `charts/<name>.json`.
+
+    A table records the columns it lists (`VISUALISE *` resolved against the
+    rows) and its HTML fragment, in place of the axes and the PNG and SVG a
+    drawn chart has.
+    """
+    metadata: dict[str, object] = {
         "name": chart.name,
         "title": chart.title,
         "chart_type": chart.draw_type,
-        "x": chart.field_for_role("x"),
-        "y": chart.field_for_role("y"),
         "compiled_sql_path": artifacts.compiled_sql.relative_to(project_root).as_posix(),
         "data_json_path": artifacts.data_json.relative_to(project_root).as_posix(),
         "metadata_path": artifacts.metadata_json.relative_to(project_root).as_posix(),
-        "png_path": artifacts.png.relative_to(project_root).as_posix(),
-        "svg_path": artifacts.svg.relative_to(project_root).as_posix(),
     }
+    if chart.is_table:
+        metadata["columns"] = list(columns)
+        metadata["table_html_path"] = artifacts.table_html.relative_to(
+            project_root
+        ).as_posix()
+    else:
+        metadata["x"] = chart.field_for_role("x")
+        metadata["y"] = chart.field_for_role("y")
+        metadata["png_path"] = artifacts.png.relative_to(project_root).as_posix()
+        metadata["svg_path"] = artifacts.svg.relative_to(project_root).as_posix()
     # What `glyf diff` needs to draw the chart over its old self; only when set.
     for key, value in (
         ("color", chart.field_for_role("color")),

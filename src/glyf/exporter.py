@@ -117,10 +117,13 @@ def _remove_orphans(source: Path, destination: Path) -> None:
 # type added later is withheld until someone decides it is publishable --
 # the previous denylist named `*.data.json` and `*.vega.json` and copied
 # everything else, and those files no longer live here anyway.
-PUBLISHABLE_CHART_SUFFIXES = frozenset({".png", ".svg", ".json"})
+PUBLISHABLE_CHART_SUFFIXES = frozenset({".png", ".svg", ".json", ".html"})
 
 # Suffixes that carry the rows themselves rather than a picture of them.
 ROW_DATA_SUFFIXES = (".data.json", ".vega.json")
+# A table's HTML is its rows too, but it is what the chart is; withheld only
+# when the export publishes no rows at all.
+TABLE_SUFFIX = ".table.html"
 
 
 def _copy_chart_artifacts(
@@ -143,6 +146,10 @@ def _copy_chart_artifacts(
         if exclude_row_data and path.suffix == ".svg":
             # Every mark in an SVG carries its row in an accessibility label.
             continue
+        if exclude_row_data and path.name.endswith(TABLE_SUFFIX):
+            # A table is its rows. The build refuses to render one under this
+            # setting; a leftover from another setting must not slip through.
+            continue
         target.parent.mkdir(parents=True, exist_ok=True)
         if path.suffix == ".json":
             _copy_public_chart_metadata(
@@ -162,6 +169,8 @@ def _copy_chart_artifacts(
             stale.unlink()
     if exclude_row_data:
         for stale in destination.rglob("*.svg"):
+            stale.unlink()
+        for stale in destination.rglob(f"*{TABLE_SUFFIX}"):
             stale.unlink()
 
 
@@ -190,6 +199,7 @@ def _copy_public_chart_metadata(
     _rewrite_public_chart_path(payload, "metadata_path", "charts")
     _rewrite_public_chart_path(payload, "png_path", "charts")
     _rewrite_public_chart_path(payload, "svg_path", "charts")
+    _rewrite_public_chart_path(payload, "table_html_path", "charts")
     _rewrite_public_chart_path(payload, "compiled_sql_path", "compiled")
     destination.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",

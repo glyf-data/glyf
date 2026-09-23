@@ -140,8 +140,8 @@ dashboard's `charts` list refers to.
 | Field | Type | Description |
 | --- | --- | --- |
 | `title` | string \| null | The chart's `LABEL title`, if it has one. |
-| `chart_type` | string \| null | The `DRAW` type: `line`, `bar`, `scatter`, `area`, `pie`, `histogram`, `boxplot` or `heatmap`. The aliases `point` and `tile` are recorded as `scatter` and `heatmap`. |
-| `fields` | object | `x` and `y`, the column names bound to those roles. `y` is `null` for a `histogram`, which binds no y column. |
+| `chart_type` | string \| null | The `DRAW` type: `line`, `bar`, `scatter`, `area`, `pie`, `histogram`, `boxplot`, `heatmap` or `table`. The aliases `point` and `tile` are recorded as `scatter` and `heatmap`. |
+| `fields` | object | `x` and `y`, the column names bound to those roles. `y` is `null` for a `histogram`, which binds no y column. A `table` has `columns` instead: the column names it lists, in order. |
 | `artifacts` | object | See below. |
 | `interactions` | array of strings | **Optional.** Present only when the chart declares `INTERACT`. |
 
@@ -152,8 +152,9 @@ Every value is a path or `null`; the keys are always present.
 | Field | Public manifest | Description |
 | --- | --- | --- |
 | `metadata` | path | The chart's own JSON metadata file. |
-| `png` | path | Rendered PNG. |
-| `svg` | path | Rendered SVG. |
+| `png` | path | Rendered PNG. `null` for a `table`, which is not drawn. |
+| `svg` | path | Rendered SVG. `null` for a `table`. |
+| `table` | path | **Tables only.** The `<table>` HTML fragment the dashboard shows. Absent for every other chart type. |
 | `compiled_sql` | path | The compiled SQL behind the chart. |
 | `data` | always `null` | Normalised chart data. Local manifests only. |
 | `vega` | always `null` | Vega specification. Local manifests only, and only for charts with interactions. |

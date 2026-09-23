@@ -22,9 +22,9 @@ from glyf.ggsql.renderer import required_columns
 
 # Chart types whose picture changes with the order of the rows, so the order
 # glyf picked is worth reporting. A line or an area is drawn along its x axis
-# whatever order the rows arrive in.
+# whatever order the rows arrive in. A table's picture is the order.
 _STACKS = frozenset({"bar", "area", "histogram"})
-_ALWAYS_ORDER_SENSITIVE = frozenset({"pie", "heatmap"})
+_ALWAYS_ORDER_SENSITIVE = frozenset({"pie", "heatmap", "table"})
 
 
 @dataclass(frozen=True)

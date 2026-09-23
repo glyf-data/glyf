@@ -835,6 +835,90 @@ html[data-theme="dark"] .glyf-icon-btn[data-tip]:hover::after {
   background: #09090b;
 }
 
+.glyf-table-body {
+  padding: 0;
+}
+
+.glyf-table {
+  margin: 0;
+}
+
+.glyf-table-scroll {
+  overflow: auto;
+}
+
+.glyf-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.glyf-table th,
+.glyf-table td {
+  padding: 8px 14px;
+  border-bottom: 0.5px solid var(--glyf-color-border);
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.glyf-table th {
+  position: sticky;
+  top: 0;
+  background: var(--glyf-color-bg-subtle);
+  color: var(--glyf-color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.glyf-table th::after {
+  display: inline-block;
+  width: 1em;
+  color: var(--glyf-color-text-subtle);
+  content: "";
+}
+
+.glyf-table th[aria-sort="ascending"]::after {
+  content: " \2191";
+}
+
+.glyf-table th[aria-sort="descending"]::after {
+  content: " \2193";
+}
+
+.glyf-table td {
+  color: var(--glyf-color-text);
+}
+
+.glyf-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.glyf-table tbody tr:hover td {
+  background: var(--glyf-color-bg-subtle);
+}
+
+.glyf-table .glyf-table-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.glyf-table td[data-empty="true"]::before {
+  color: var(--glyf-color-text-faint);
+  content: "\2014";
+}
+
+.glyf-table-caption {
+  padding: 8px 14px;
+  border-top: 0.5px solid var(--glyf-color-border);
+  color: var(--glyf-color-text-subtle);
+  font-size: 12px;
+  text-align: left;
+}
+
 .glyf-component-card,
 .glyf-metric-card,
 .glyf-markdown-card {

@@ -1,6 +1,12 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+# A table's columns carry this role: `VISUALISE region, revenue` is a list
+# of columns, not a set of axes. Mirrors `COLUMN_ROLE` in the Rust core.
+COLUMN_ROLE = "column"
+# `VISUALISE *`: every column the query returns. Mirrors `EVERY_COLUMN`.
+EVERY_COLUMN = "*"
+
 
 @dataclass(frozen=True)
 class VisualiseMapping:
@@ -56,3 +62,28 @@ class GgsqlChart:
     @property
     def is_interactive(self) -> bool:
         return bool(self.interactions)
+
+    @property
+    def is_table(self) -> bool:
+        """A table is its rows: no picture is drawn, and no PNG or SVG exists."""
+        return self.draw_type == "table"
+
+    @property
+    def lists_every_column(self) -> bool:
+        """`VISUALISE *`: the columns are whatever the query returns."""
+        return self.is_table and any(
+            mapping.field == EVERY_COLUMN for mapping in self.visualise
+        )
+
+    @property
+    def table_columns(self) -> tuple[str, ...]:
+        """The columns a table names, in order; empty under `VISUALISE *`."""
+        if not self.is_table or self.lists_every_column:
+            return ()
+        return tuple(
+            mapping.field for mapping in self.visualise if mapping.role == COLUMN_ROLE
+        )
+
+    def column_label(self, column: str) -> str:
+        """What a table's header says for a column: its LABEL, or its name."""
+        return self.labels.get(column, column)

@@ -189,13 +189,16 @@ def _chart_payload(
     public: bool,
     exclude_row_data: bool = False,
 ) -> dict[str, object]:
+    is_table = raw.get("chart_type") == "table"
     payload: dict[str, object] = {
         "title": raw.get("title"),
         "chart_type": raw.get("chart_type"),
-        "fields": {
-            "x": raw.get("x"),
-            "y": raw.get("y"),
-        },
+        # A table lists columns; every other chart binds x and y.
+        "fields": (
+            {"columns": raw.get("columns")}
+            if is_table
+            else {"x": raw.get("x"), "y": raw.get("y")}
+        ),
         "artifacts": {
             "metadata": _artifact_path(
                 project_root,
@@ -213,6 +216,10 @@ def _chart_payload(
             ),
         },
     }
+    if is_table:
+        payload["artifacts"]["table"] = _artifact_path(
+            project_root, config, raw.get("table_html_path"), public
+        )
     if exclude_row_data:
         # These are not published under `export.row_data: exclude`; a manifest
         # pointing at them would send a consumer to a 404.
