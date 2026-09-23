@@ -1,8 +1,9 @@
+from dataclasses import replace
 from pathlib import Path
 
 import typer
 
-from glyf.config import ConfigError, load_config
+from glyf.config import ConfigError, apply_run_overrides, load_config
 from glyf.dashboard.loader import load_dashboard
 from glyf.dashboard.macros import (
     DashboardMacroError,
@@ -14,6 +15,7 @@ from glyf.execution.dialect import sql_dialect
 from glyf.ggsql.parser import GgsqlParseError, parse_ggsql_file
 from glyf.manifest.loader import ManifestError, load_manifest
 from glyf.manifest.resolver import resolve_refs
+from glyf.pipeline import RenderError, render_project
 from glyf.project.scanner import scan_project
 
 
@@ -21,9 +23,27 @@ def _rel(path: Path, project: Path) -> str:
     return path.relative_to(project).as_posix()
 
 
-def run_validate(project: Path, config_path: Path | None = None) -> None:
+def run_validate(
+    project: Path,
+    config_path: Path | None = None,
+    *,
+    execute: bool = False,
+    target: str | None = None,
+) -> None:
+    """Check the project's files, and with `execute`, each chart's SQL.
+
+    The structural checks read files and the manifest and touch no
+    warehouse. `execute` then runs every chart's query with `LIMIT 0` on the
+    configured backend and checks the columns it returns against the chart's
+    bindings: the check `glyf build --validate` makes, without the rest of the
+    build. It moves no rows, so it is safe on a runner outside the warehouse's
+    boundary, and it is the only way to know before a build that a renamed
+    column or a broken query is there.
+    """
     try:
         config = load_config(project, config_path)
+        if execute:
+            config = apply_run_overrides(config, target=target, output_dir=None)
     except ConfigError as exc:
         typer.echo("Config error")
         typer.echo(f"  - {exc}")
@@ -113,6 +133,18 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
             typer.echo(f"  - {error}")
         raise typer.Exit(1)
 
+    if execute:
+        # The files are sound; now the warehouse is asked. Its errors carry
+        # the chart's file name, and a warning it prints is one the parser
+        # already gave above, so only errors are reported here.
+        dry_run = replace(config, execution=replace(config.execution, mode="validate"))
+        try:
+            render_project(scan.root, dry_run)
+        except RenderError as exc:
+            typer.echo("Validation failed")
+            typer.echo(f"  - {exc}")
+            raise typer.Exit(1) from exc
+
     for warning in warnings:
         typer.echo(f"! {warning}")
     typer.echo("Validation passed")
@@ -121,3 +153,8 @@ def run_validate(project: Path, config_path: Path | None = None) -> None:
     typer.echo(f"✓ validated GGSQL files ({len(scan.ggsql_files)})")
     typer.echo(f"✓ validated dashboard specs ({len(scan.dashboard_files)})")
     typer.echo("✓ validated dashboard chart refs")
+    if execute:
+        typer.echo(
+            f"✓ ran each chart's SQL against {config.execution.backend} "
+            f"and checked its columns ({len(scan.ggsql_files)} charts, no rows fetched)"
+        )

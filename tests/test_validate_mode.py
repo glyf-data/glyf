@@ -189,3 +189,49 @@ def _write_chart(project: Path, sql: str) -> None:
         "LABEL title => 'Monthly Revenue'\n",
         encoding="utf-8",
     )
+
+
+def test_validate_execute_asks_the_warehouse_and_names_the_chart(tmp_path: Path) -> None:
+    """`glyf validate` alone reads files; `--execute` runs each query with LIMIT 0."""
+    project = copy_basic_project(tmp_path)
+    _write_chart(project, "select month, revenue as takings from {{ ref('fct_orders') }}")
+
+    passive = runner.invoke(app, ["validate", "--project-dir", str(project)])
+    assert passive.exit_code == 0, passive.output
+
+    executed = runner.invoke(app, ["validate", "--project-dir", str(project), "--execute"])
+    assert executed.exit_code == 1
+    assert "Validation failed" in executed.output
+    assert "revenue.ggsql query result missing chart column 'revenue'" in executed.output
+
+
+def test_validate_execute_reports_sql_the_warehouse_rejects(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    _write_chart(project, "select month, no_such_column from {{ ref('fct_orders') }}")
+
+    result = runner.invoke(app, ["validate", "--project-dir", str(project), "--execute"])
+
+    assert result.exit_code == 1
+    assert "revenue.ggsql SQL execution failed" in result.output
+
+
+def test_validate_execute_passes_a_sound_project_without_drawing(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = runner.invoke(app, ["validate", "--project-dir", str(project), "--execute"])
+
+    assert result.exit_code == 0, result.output
+    assert "✓ ran each chart's SQL against duckdb and checked its columns (1 charts, no rows fetched)" in result.output
+    assert not list((project / "target" / "glyf" / "charts").glob("*.png"))
+
+
+def test_validate_execute_needs_the_dbt_backend_for_a_target(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+
+    result = runner.invoke(
+        app, ["validate", "--project-dir", str(project), "--execute", "--target", "prod"]
+    )
+
+    assert result.exit_code == 1
+    assert "Config error" in result.output
+    assert "--target" in result.output

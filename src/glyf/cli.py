@@ -206,10 +206,27 @@ def list_command(project: ProjectOption = Path("."), config: ConfigOption = None
     run_list(project, config)
 
 
+ExecuteOption = Annotated[
+    bool,
+    typer.Option(
+        "--execute",
+        help=(
+            "Also run each chart's SQL against the warehouse with LIMIT 0 and "
+            "check the columns it returns against the chart. Fetches no rows."
+        ),
+    ),
+]
+
+
 @app.command("validate")
-def validate_command(project: ProjectOption = Path("."), config: ConfigOption = None) -> None:
-    """Validate discovered files and manifest refs."""
-    run_validate(project, config)
+def validate_command(
+    project: ProjectOption = Path("."),
+    config: ConfigOption = None,
+    execute: ExecuteOption = False,
+    target: TargetOption = None,
+) -> None:
+    """Validate discovered files and manifest refs; --execute dry-runs the SQL."""
+    run_validate(project, config, execute=execute, target=target)
 
 
 @app.command("render")
