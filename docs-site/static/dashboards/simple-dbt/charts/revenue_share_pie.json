@@ -1,11 +1,23 @@
 {
   "chart_type": "pie",
-  "compiled_sql_path": "target/glyf/compiled/revenue_share_pie.sql",
-  "data_json_path": "target/glyf/data/normalized/revenue_share_pie.data.json",
-  "metadata_path": "target/glyf/charts/revenue_share_pie.json",
+  "compiled_sql_path": "compiled/revenue_share_pie.sql",
+  "lineage": {
+    "models": {
+      "fct_orders": {
+        "parents": [
+          "source:raw.orders"
+        ],
+        "path": "models/fct_orders.sql"
+      }
+    },
+    "sources": [
+      "raw.orders"
+    ]
+  },
+  "metadata_path": "charts/revenue_share_pie.json",
   "name": "revenue_share_pie",
-  "png_path": "target/glyf/charts/revenue_share_pie.png",
-  "svg_path": "target/glyf/charts/revenue_share_pie.svg",
+  "png_path": "charts/revenue_share_pie.png",
+  "svg_path": "charts/revenue_share_pie.svg",
   "title": "Revenue Share",
   "x": "region",
   "y": "revenue"

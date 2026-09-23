@@ -14,6 +14,7 @@ All notable changes to `glyf` will be documented in this file.
 
 ### Changed
 
+- Lineage colours every column: sources grey, models blue, charts green.
 - Lineage opens as a full-screen view with a "Back to dashboard" bar,
   rather than a window over the dashboard, so the graph has the page's
   width. Escape still closes it.

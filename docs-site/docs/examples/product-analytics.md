@@ -22,7 +22,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/product-analytics/dashboard
 
 ## What it demonstrates
 
-- Sections with asymmetric `30% 70%` and `65% 35%` column tracks, metric tiles, and titled charts.
+- A headline row of three: a KPI tile computed from the data beside two hand-written metric tiles, then sections with `65% 35%` and two-column tracks.
 - A KPI tile from the data (`weekly_active_users.ggsql`): the latest week's active users against the week before, with the change and its direction, next to a hand-written metric tile for contrast.
 - Dashboard filters whose values come from a rendered chart artifact (`source(activation_by_plan, plan)`).
 - Built-in macros in `summary` and a project-local macro, `activation_health`, that reads the latest activation rate through `MacroContext`.
@@ -61,27 +61,38 @@ filters:
 
 toolbar:
   visibility: private
+  stars: 24
 
 summary:
+  - "{{ ui.text('Active users grew every week of the quarter, from 1,480 in week 1 to 2,325 in week 12, and the Team plan accounts for most of the growth in sessions per user. Activation holds near a third of active users; Pro converts best. Hourly activity peaks mid-morning on weekdays.', title='Overview') }}"
+  - "{{ alert.info('Written by hand for this demo. An AI-generated summary is on the roadmap.', 'About this summary') }}"
   - "{{ product_owner() }}"
   - "{{ ui.label_value('Generated', time.now('%Y-%m-%d %H:%M')) }}"
-  - "{{ ui.badge('Demo macros', tone='info') }}"
 
 layout:
   columns: "30% 70%"
 
 sections:
-  - title: Usage Overview
-    description: Active user growth and engagement across twelve weeks.
-    columns: "30% 70%"
+  - title: Headline
+    description: Twelve weeks of product usage in three numbers.
+    columns: 3
     items:
       - chart: weekly_active_users
-      - chart: active_users
-        title: Active Users Trend
       - metric:
           label: Sessions
           value: "86.7k"
           note: Total product sessions across all plans
+      - metric:
+          label: Activation rate
+          value: "31%"
+          note: Activated users over active users, week 12
+
+  - title: Usage Overview
+    description: Active user growth and engagement across twelve weeks.
+    columns: 2
+    items:
+      - chart: active_users
+        title: Active Users Trend
       - chart: sessions_scatter
         title: Sessions vs Active Users
 

@@ -1,12 +1,28 @@
 {
   "chart_type": "line",
-  "compiled_sql_path": "target/glyf/compiled/revenue.sql",
-  "data_json_path": "target/glyf/data/normalized/revenue.data.json",
-  "metadata_path": "target/glyf/charts/revenue.json",
+  "compiled_sql_path": "compiled/revenue.sql",
+  "height": 500,
+  "lineage": {
+    "models": {
+      "fct_orders": {
+        "parents": [
+          "source:raw.orders"
+        ],
+        "path": "models/fct_orders.sql"
+      }
+    },
+    "sources": [
+      "raw.orders"
+    ]
+  },
+  "metadata_path": "charts/revenue.json",
   "name": "revenue",
-  "png_path": "target/glyf/charts/revenue.png",
-  "svg_path": "target/glyf/charts/revenue.svg",
+  "png_path": "charts/revenue.png",
+  "svg_path": "charts/revenue.svg",
   "title": "Monthly Revenue",
+  "width": 900,
   "x": "month",
-  "y": "revenue"
+  "x_title": "Month",
+  "y": "revenue",
+  "y_title": "Revenue"
 }

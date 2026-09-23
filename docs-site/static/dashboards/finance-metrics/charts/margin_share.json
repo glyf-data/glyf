@@ -1,16 +1,28 @@
 {
   "chart_type": "pie",
-  "compiled_sql_path": "target/glyf/compiled/margin_share.sql",
-  "data_json_path": "target/glyf/data/normalized/margin_share.data.json",
+  "compiled_sql_path": "compiled/margin_share.sql",
   "interactions": [
     "tooltip"
   ],
-  "metadata_path": "target/glyf/charts/margin_share.json",
+  "lineage": {
+    "models": {
+      "fct_finance": {
+        "parents": [
+          "source:raw.finance"
+        ],
+        "path": "models/fct_finance.sql"
+      }
+    },
+    "sources": [
+      "raw.finance"
+    ]
+  },
+  "metadata_path": "charts/margin_share.json",
   "name": "margin_share",
-  "png_path": "target/glyf/charts/margin_share.png",
-  "svg_path": "target/glyf/charts/margin_share.svg",
+  "png_path": "charts/margin_share.png",
+  "svg_path": "charts/margin_share.svg",
   "title": "Gross Margin Share",
-  "vega_json_path": "target/glyf/data/vega/margin_share.vega.json",
   "x": "department",
-  "y": "gross_margin"
+  "y": "gross_margin",
+  "y_title": "Gross Margin"
 }

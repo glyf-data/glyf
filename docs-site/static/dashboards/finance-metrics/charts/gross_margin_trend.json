@@ -1,16 +1,29 @@
 {
   "chart_type": "area",
-  "compiled_sql_path": "target/glyf/compiled/gross_margin_trend.sql",
-  "data_json_path": "target/glyf/data/normalized/gross_margin_trend.data.json",
+  "compiled_sql_path": "compiled/gross_margin_trend.sql",
   "interactions": [
     "tooltip"
   ],
-  "metadata_path": "target/glyf/charts/gross_margin_trend.json",
+  "lineage": {
+    "models": {
+      "fct_finance": {
+        "parents": [
+          "source:raw.finance"
+        ],
+        "path": "models/fct_finance.sql"
+      }
+    },
+    "sources": [
+      "raw.finance"
+    ]
+  },
+  "metadata_path": "charts/gross_margin_trend.json",
   "name": "gross_margin_trend",
-  "png_path": "target/glyf/charts/gross_margin_trend.png",
-  "svg_path": "target/glyf/charts/gross_margin_trend.svg",
+  "png_path": "charts/gross_margin_trend.png",
+  "svg_path": "charts/gross_margin_trend.svg",
   "title": "Gross Margin Trend",
-  "vega_json_path": "target/glyf/data/vega/gross_margin_trend.vega.json",
   "x": "month",
-  "y": "gross_margin"
+  "x_title": "Month",
+  "y": "gross_margin",
+  "y_title": "Gross Margin"
 }

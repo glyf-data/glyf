@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Macro Showcase</title>
 
-  <link rel="stylesheet" href="../assets/dashboard.css?v=321cffed63">
+  <link rel="stylesheet" href="../assets/dashboard.css?v=e9f6caa9b1">
 
 
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
@@ -138,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-23T21:50:12Z">23 Sep 2026, 21:50 UTC</strong>
+          Refreshed <strong title="2026-09-23T22:22:11Z">23 Sep 2026, 22:22 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -205,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 23 Sep 2026, 21:50 UTC</span>
+              <span class="glyf-version-option-note">built 23 Sep 2026, 22:22 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -349,7 +349,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">Generated</div>
-  <div class="glyf-component-value">2026-09-23 22:50</div>
+  <div class="glyf-component-value">2026-09-23 23:22</div>
 
 
   </div>
@@ -814,7 +814,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">Local time</div>
-  <div class="glyf-component-value">2026-09-23 22:50</div>
+  <div class="glyf-component-value">2026-09-23 23:22</div>
 
   <div class="glyf-component-note">time.now local timezone</div>
 
@@ -828,7 +828,7 @@ GROUP BY 1, 2
   <div class="glyf-card-body">
 
   <div class="glyf-component-label">London time</div>
-  <div class="glyf-component-value">2026-09-23 22:50</div>
+  <div class="glyf-component-value">2026-09-23 23:22</div>
 
   <div class="glyf-component-note">time.now explicit timezone</div>
 
@@ -841,7 +841,7 @@ GROUP BY 1, 2
                   <article class="glyf-card glyf-component-card">
   <div class="glyf-card-body">
 
-  <span class="glyf-badge">Refreshed 22:50</span>
+  <span class="glyf-badge">Refreshed 23:22</span>
 
   </div>
 </article>
@@ -925,6 +925,7 @@ GROUP BY 1, 2
 
     <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
@@ -967,6 +968,7 @@ GROUP BY 1, 2
 
     <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
@@ -1009,7 +1011,7 @@ GROUP BY 1, 2
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-23 22:50
+      2026-09-23 23:22
 
     </div>
   </div>
@@ -1124,7 +1126,7 @@ GROUP BY 1, 2
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">23 Sep 2026, 21:50 UTC</div>
+              <div class="glyf-version-date">23 Sep 2026, 22:22 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -1409,6 +1411,18 @@ GROUP BY 1, 2
         if (still) { still.hidden = pairs.length > 0; }
         if (target.hasAttribute("data-glyf-filter-chart")) { target.hidden = pairs.length === 0; }
         if (pairs.length || target.hasAttribute("data-vega-chart")) vegaEmbed(target, spec, { actions: false, renderer: "svg" });
+        markEmpty(card, pairs.length > 0 && !hasRows(spec, pairs));
+      };
+      const markEmpty = (card, empty) => {
+        card.classList.toggle("is-empty", empty);
+        const mark = card.querySelector("[data-glyf-watermark]");
+        if (mark && empty) mark.textContent = "No data";
+      };
+      // Whether any inlined row survives the filter: Vega draws an empty
+      // chart without saying so.
+      const hasRows = (spec, pairs) => {
+        const datasets = spec.datasets || {};
+        return Object.values(datasets).some((rows) => Array.isArray(rows) && rows.some((row) => pairs.every((p) => String(row[p.field]) === p.value)));
       };
       const filterTable = (card, pairs) => {
         const table = card.querySelector("table");
@@ -1422,6 +1436,7 @@ GROUP BY 1, 2
         });
         const caption = card.querySelector(".glyf-table-caption");
         if (caption) caption.textContent = pairs.length ? `${shown} of ${rows.length} rows` : `${rows.length} row${rows.length === 1 ? "" : "s"}`;
+        markEmpty(card, pairs.length > 0 && shown === 0);
       };
       const apply = () => {
         const pairs = active();
@@ -1433,7 +1448,11 @@ GROUP BY 1, 2
           const chip = card.querySelector("[data-glyf-filter-applied]");
           const note = card.querySelector("[data-glyf-filter-note]");
           if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.value}`).join(", "); }
-          card.classList.toggle("is-unfiltered", pairs.length > 0 && cannot.length > 0 && applies.length === 0);
+          const unfiltered = pairs.length > 0 && cannot.length > 0 && applies.length === 0;
+          card.classList.toggle("is-unfiltered", unfiltered);
+          card.classList.remove("is-empty");
+          const mark = card.querySelector("[data-glyf-watermark]");
+          if (mark) mark.textContent = unfiltered ? "Not filtered" : "";
           if (note) { note.hidden = cannot.length === 0; note.textContent = cannot.length ? `not filtered by ${cannot.map((p) => p.field).join(", ")}` : ""; }
           const first = Object.values(modes).find((m) => m !== "none");
           if (first === "vega") redrawVega(card, applies);

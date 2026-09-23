@@ -17,6 +17,11 @@ order is the priority.
 Vote with a 👍 on the issue. The most wanted go first.
 
 <div className="roadmapGrid">
+  <Link className="roadmapCard" href="https://github.com/glyf-data/glyf/issues">
+    <strong>AI summary of a dashboard</strong>
+    <span>A short summary written at build time from each chart's rows and what changed since the last build, in the dashboard's AI panel. The demo dashboards show a hand-written one today.</span>
+    <em>Discuss on GitHub</em>
+  </Link>
   <Link className="roadmapCard" href="https://github.com/glyf-data/glyf/issues/137">
     <strong>Pipeline alerts</strong>
     <span>Alert conditions declared in dashboard YAML, checked against the query results at build time, and sent to Slack or a webhook.</span>

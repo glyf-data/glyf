@@ -1379,29 +1379,6 @@ function InstallCommand({className = ''}) {
   );
 }
 
-function StarButton({className = ''}) {
-  return (
-    <a className={`starButton ${className}`.trim()} href="https://github.com/glyf-data/glyf">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4l-5.9 3.2 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>
-      Star on GitHub
-    </a>
-  );
-}
-
-function CtaSection() {
-  return (
-    <section className="ctaBand">
-      <div className="container ctaBand__inner">
-        <p className="ctaBand__eyebrow">Install</p>
-        <InstallCommand className="installCommand--dark" />
-        <p className="ctaBand__note">macOS and Linux. Other ways to install are in the <Link to="/docs/get-started/installation">installation guide</Link>.</p>
-        <div className="ctaBand__actions">
-          <StarButton className="starButton--light" />
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export default function Home() {
   return (
@@ -1414,7 +1391,6 @@ export default function Home() {
         <HowItWorks />
         <FeaturesSection />
         <PersonasSection />
-        <CtaSection />
       </main>
     </Layout>
   );

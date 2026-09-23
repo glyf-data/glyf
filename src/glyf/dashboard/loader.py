@@ -39,6 +39,9 @@ class DashboardToolbar:
     enabled: bool = True
     visibility: str = "private"
     actions: tuple[str, ...] = ("share", "visibility")
+    # The count the star button shows. A static page has nowhere to record a
+    # star, so this is what the author says it is.
+    stars: int = 0
 
 
 @dataclass(frozen=True)
@@ -269,10 +272,15 @@ def _parse_toolbar(raw: object) -> DashboardToolbar:
             )
         actions.append(action)
 
+    stars = raw.get("stars", 0)
+    if not isinstance(stars, int) or isinstance(stars, bool) or stars < 0:
+        raise ValueError("expected 'toolbar.stars' to be a non-negative integer")
+
     return DashboardToolbar(
         enabled=enabled,
         visibility=visibility,
         actions=tuple(dict.fromkeys(actions)),
+        stars=stars,
     )
 
 

@@ -1,11 +1,23 @@
 {
   "chart_type": "pie",
-  "compiled_sql_path": "target/glyf/compiled/regional_revenue.sql",
-  "data_json_path": "target/glyf/data/normalized/regional_revenue.data.json",
-  "metadata_path": "target/glyf/charts/regional_revenue.json",
+  "compiled_sql_path": "compiled/regional_revenue.sql",
+  "lineage": {
+    "models": {
+      "fct_sales": {
+        "parents": [
+          "source:raw.sales"
+        ],
+        "path": "models/fct_sales.sql"
+      }
+    },
+    "sources": [
+      "raw.sales"
+    ]
+  },
+  "metadata_path": "charts/regional_revenue.json",
   "name": "regional_revenue",
-  "png_path": "target/glyf/charts/regional_revenue.png",
-  "svg_path": "target/glyf/charts/regional_revenue.svg",
+  "png_path": "charts/regional_revenue.png",
+  "svg_path": "charts/regional_revenue.svg",
   "title": "Regional Revenue Share",
   "x": "region",
   "y": "revenue"

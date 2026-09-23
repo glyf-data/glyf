@@ -1,17 +1,31 @@
 {
   "chart_type": "bar",
-  "compiled_sql_path": "target/glyf/compiled/expenses_by_department.sql",
-  "data_json_path": "target/glyf/data/normalized/expenses_by_department.data.json",
+  "color": "department",
+  "compiled_sql_path": "compiled/expenses_by_department.sql",
   "interactions": [
     "tooltip",
     "legend_filter"
   ],
-  "metadata_path": "target/glyf/charts/expenses_by_department.json",
+  "lineage": {
+    "models": {
+      "fct_finance": {
+        "parents": [
+          "source:raw.finance"
+        ],
+        "path": "models/fct_finance.sql"
+      }
+    },
+    "sources": [
+      "raw.finance"
+    ]
+  },
+  "metadata_path": "charts/expenses_by_department.json",
   "name": "expenses_by_department",
-  "png_path": "target/glyf/charts/expenses_by_department.png",
-  "svg_path": "target/glyf/charts/expenses_by_department.svg",
+  "png_path": "charts/expenses_by_department.png",
+  "svg_path": "charts/expenses_by_department.svg",
   "title": "Expenses by Department",
-  "vega_json_path": "target/glyf/data/vega/expenses_by_department.vega.json",
   "x": "month",
-  "y": "expenses"
+  "x_title": "Month",
+  "y": "expenses",
+  "y_title": "Expenses"
 }

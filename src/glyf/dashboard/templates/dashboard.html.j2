@@ -550,6 +550,18 @@
         if (still) { still.hidden = pairs.length > 0; }
         if (target.hasAttribute("data-glyf-filter-chart")) { target.hidden = pairs.length === 0; }
         if (pairs.length || target.hasAttribute("data-vega-chart")) vegaEmbed(target, spec, { actions: false, renderer: "svg" });
+        markEmpty(card, pairs.length > 0 && !hasRows(spec, pairs));
+      };
+      const markEmpty = (card, empty) => {
+        card.classList.toggle("is-empty", empty);
+        const mark = card.querySelector("[data-glyf-watermark]");
+        if (mark && empty) mark.textContent = "No data";
+      };
+      // Whether any inlined row survives the filter: Vega draws an empty
+      // chart without saying so.
+      const hasRows = (spec, pairs) => {
+        const datasets = spec.datasets || {};
+        return Object.values(datasets).some((rows) => Array.isArray(rows) && rows.some((row) => pairs.every((p) => String(row[p.field]) === p.value)));
       };
       const filterTable = (card, pairs) => {
         const table = card.querySelector("table");
@@ -563,6 +575,7 @@
         });
         const caption = card.querySelector(".glyf-table-caption");
         if (caption) caption.textContent = pairs.length ? `${shown} of ${rows.length} rows` : `${rows.length} row${rows.length === 1 ? "" : "s"}`;
+        markEmpty(card, pairs.length > 0 && shown === 0);
       };
       const apply = () => {
         const pairs = active();
@@ -574,7 +587,11 @@
           const chip = card.querySelector("[data-glyf-filter-applied]");
           const note = card.querySelector("[data-glyf-filter-note]");
           if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.value}`).join(", "); }
-          card.classList.toggle("is-unfiltered", pairs.length > 0 && cannot.length > 0 && applies.length === 0);
+          const unfiltered = pairs.length > 0 && cannot.length > 0 && applies.length === 0;
+          card.classList.toggle("is-unfiltered", unfiltered);
+          card.classList.remove("is-empty");
+          const mark = card.querySelector("[data-glyf-watermark]");
+          if (mark) mark.textContent = unfiltered ? "Not filtered" : "";
           if (note) { note.hidden = cannot.length === 0; note.textContent = cannot.length ? `not filtered by ${cannot.map((p) => p.field).join(", ")}` : ""; }
           const first = Object.values(modes).find((m) => m !== "none");
           if (first === "vega") redrawVega(card, applies);

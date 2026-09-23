@@ -1,16 +1,29 @@
 {
   "chart_type": "boxplot",
-  "compiled_sql_path": "target/glyf/compiled/discount_by_segment.sql",
-  "data_json_path": "target/glyf/data/normalized/discount_by_segment.data.json",
+  "compiled_sql_path": "compiled/discount_by_segment.sql",
   "interactions": [
     "tooltip"
   ],
-  "metadata_path": "target/glyf/charts/discount_by_segment.json",
+  "lineage": {
+    "models": {
+      "fct_invoices": {
+        "parents": [
+          "source:raw.invoices"
+        ],
+        "path": "models/fct_invoices.sql"
+      }
+    },
+    "sources": [
+      "raw.invoices"
+    ]
+  },
+  "metadata_path": "charts/discount_by_segment.json",
   "name": "discount_by_segment",
-  "png_path": "target/glyf/charts/discount_by_segment.png",
-  "svg_path": "target/glyf/charts/discount_by_segment.svg",
+  "png_path": "charts/discount_by_segment.png",
+  "svg_path": "charts/discount_by_segment.svg",
   "title": "Discount by Segment",
-  "vega_json_path": "target/glyf/data/vega/discount_by_segment.vega.json",
   "x": "segment",
-  "y": "discount_pct"
+  "x_title": "Segment",
+  "y": "discount_pct",
+  "y_title": "Discount (%)"
 }

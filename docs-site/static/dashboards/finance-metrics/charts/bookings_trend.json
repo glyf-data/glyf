@@ -1,16 +1,29 @@
 {
   "chart_type": "line",
-  "compiled_sql_path": "target/glyf/compiled/bookings_trend.sql",
-  "data_json_path": "target/glyf/data/normalized/bookings_trend.data.json",
+  "compiled_sql_path": "compiled/bookings_trend.sql",
   "interactions": [
     "tooltip"
   ],
-  "metadata_path": "target/glyf/charts/bookings_trend.json",
+  "lineage": {
+    "models": {
+      "fct_finance": {
+        "parents": [
+          "source:raw.finance"
+        ],
+        "path": "models/fct_finance.sql"
+      }
+    },
+    "sources": [
+      "raw.finance"
+    ]
+  },
+  "metadata_path": "charts/bookings_trend.json",
   "name": "bookings_trend",
-  "png_path": "target/glyf/charts/bookings_trend.png",
-  "svg_path": "target/glyf/charts/bookings_trend.svg",
+  "png_path": "charts/bookings_trend.png",
+  "svg_path": "charts/bookings_trend.svg",
   "title": "Bookings Trend",
-  "vega_json_path": "target/glyf/data/vega/bookings_trend.vega.json",
   "x": "month",
-  "y": "bookings"
+  "x_title": "Month",
+  "y": "bookings",
+  "y_title": "Bookings"
 }

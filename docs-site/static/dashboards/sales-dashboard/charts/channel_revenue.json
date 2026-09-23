@@ -1,12 +1,27 @@
 {
   "chart_type": "bar",
-  "compiled_sql_path": "target/glyf/compiled/channel_revenue.sql",
-  "data_json_path": "target/glyf/data/normalized/channel_revenue.data.json",
-  "metadata_path": "target/glyf/charts/channel_revenue.json",
+  "color": "channel",
+  "compiled_sql_path": "compiled/channel_revenue.sql",
+  "lineage": {
+    "models": {
+      "fct_sales": {
+        "parents": [
+          "source:raw.sales"
+        ],
+        "path": "models/fct_sales.sql"
+      }
+    },
+    "sources": [
+      "raw.sales"
+    ]
+  },
+  "metadata_path": "charts/channel_revenue.json",
   "name": "channel_revenue",
-  "png_path": "target/glyf/charts/channel_revenue.png",
-  "svg_path": "target/glyf/charts/channel_revenue.svg",
+  "png_path": "charts/channel_revenue.png",
+  "svg_path": "charts/channel_revenue.svg",
   "title": "Channel Revenue",
   "x": "month",
-  "y": "revenue"
+  "x_title": "Month",
+  "y": "revenue",
+  "y_title": "Revenue"
 }
