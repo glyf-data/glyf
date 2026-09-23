@@ -17,6 +17,7 @@ SUPPORTED_CHART_TYPES = {
     "histogram",
     "boxplot",
     "heatmap",
+    "table",
 }
 SUPPORTED_CONFIG_KEYS = {"width", "height"}
 SUPPORTED_INTERACTIONS = {"tooltip", "zoom", "legend_filter"}

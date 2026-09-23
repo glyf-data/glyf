@@ -14,8 +14,9 @@ use crate::resolver::{ref_regex, source_regex};
 /// glyf's chart language: what each draw type takes. This is the single
 /// source of truth for validation; the renderer draws exactly these roles.
 ///
-/// ggsql is the file format; pie, histogram and boxplot are glyf's additions
-/// to it. glyf validates the chart block; sqlparser reads the SQL (`read_sql`).
+/// ggsql is the file format; pie, histogram, boxplot and table are glyf's
+/// additions to it. glyf validates the chart block; sqlparser reads the SQL
+/// (`read_sql`).
 struct DrawSpec {
     /// The name glyf reports and the renderer dispatches on.
     draw_type: &'static str,
@@ -28,6 +29,13 @@ const XY: &[&str] = &["x", "y"];
 const XY_COLOR: &[&str] = &["x", "y", "color"];
 const ALL_INTERACTIONS: &[&str] = &["legend_filter", "tooltip", "zoom"];
 const CONFIG_KEYS: &[&str] = &["width", "height"];
+
+/// The role a table's columns carry. A table has no axes: `VISUALISE` lists
+/// the columns to show, in order, and every one of them is a column.
+pub const COLUMN_ROLE: &str = "column";
+/// `VISUALISE *`: every column the query returns, in the order it returns
+/// them. Stored as the field of a table's single mapping.
+pub const EVERY_COLUMN: &str = "*";
 
 fn draw_spec(draw: &str) -> Option<DrawSpec> {
     let xy = |draw_type| DrawSpec {
@@ -63,12 +71,20 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
             allowed: XY_COLOR,
             interactions: &["tooltip", "zoom"],
         },
+        // A table is the rows themselves: columns without roles, and nothing
+        // an interaction could bind to.
+        "table" => DrawSpec {
+            draw_type: "table",
+            required: &[],
+            allowed: &[COLUMN_ROLE],
+            interactions: &[],
+        },
         _ => return None,
     })
 }
 
 /// The draw types glyf accepts, for error messages.
-const SUPPORTED_DRAWS: &str = "area, bar, boxplot, heatmap, histogram, line, pie, scatter";
+const SUPPORTED_DRAWS: &str = "area, bar, boxplot, heatmap, histogram, line, pie, scatter, table";
 
 /// Parse a `.ggsql` file: the SQL, then the chart block.
 ///
@@ -264,19 +280,33 @@ fn normalize_jinja_for_ggsql(text: &str) -> String {
         .to_string()
 }
 
+/// The `VISUALISE` line, before the draw type is known.
+///
+/// Both shapes parse here: `month AS x, revenue AS y` for a chart with axes,
+/// and `region, revenue` or `*` for a table. Which shape the draw type takes
+/// is `validate_roles`'s question, once `DRAW` has been read.
 fn parse_visualise(line: &str) -> Result<Vec<VisualiseMapping>, CoreError> {
     let raw = strip_keyword(line, "VISUALISE")
         .or_else(|| strip_keyword(line, "VISUALIZE"))
         .ok_or_else(|| CoreError::Parse("missing VISUALISE section".to_string()))?;
     let mut mappings = Vec::new();
     for raw_mapping in raw.split(',') {
-        let parts = mapping_regex().captures(raw_mapping).ok_or_else(|| {
-            CoreError::Parse(format!("invalid VISUALISE mapping: {}", raw_mapping.trim()))
-        })?;
-        mappings.push(VisualiseMapping {
-            field: parts.get(1).unwrap().as_str().to_string(),
-            role: parts.get(2).unwrap().as_str().to_string(),
-        });
+        if let Some(parts) = mapping_regex().captures(raw_mapping) {
+            mappings.push(VisualiseMapping {
+                field: parts.get(1).unwrap().as_str().to_string(),
+                role: parts.get(2).unwrap().as_str().to_string(),
+            });
+        } else if let Some(parts) = column_regex().captures(raw_mapping) {
+            mappings.push(VisualiseMapping {
+                field: parts.get(1).unwrap().as_str().to_string(),
+                role: COLUMN_ROLE.to_string(),
+            });
+        } else {
+            return Err(CoreError::Parse(format!(
+                "invalid VISUALISE mapping: {}",
+                raw_mapping.trim()
+            )));
+        }
     }
     if mappings.is_empty() {
         return Err(CoreError::Parse(
@@ -288,7 +318,18 @@ fn parse_visualise(line: &str) -> Result<Vec<VisualiseMapping>, CoreError> {
 
 fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(), CoreError> {
     let draw = spec.draw_type;
+    if draw == "table" {
+        return validate_table_columns(visualise);
+    }
     let takes = spec.allowed.join(", ");
+    if let Some(bare) = visualise.iter().find(|mapping| mapping.role == COLUMN_ROLE) {
+        // `VISUALISE month, revenue` reads as a column list, which only a
+        // table takes; say what this chart wants instead of "invalid mapping".
+        return Err(CoreError::Parse(format!(
+            "{draw} maps each column to a role ({takes}); write '{} AS x', or DRAW table to list columns",
+            bare.field
+        )));
+    }
     // Say why, not just that: a histogram computes its own y.
     if draw == "histogram" && visualise.iter().any(|mapping| mapping.role == "y") {
         return Err(CoreError::Parse(
@@ -324,9 +365,44 @@ fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(),
     Ok(())
 }
 
+/// A table's `VISUALISE` is a list of columns, or `*` alone.
+fn validate_table_columns(visualise: &[VisualiseMapping]) -> Result<(), CoreError> {
+    if let Some(mapping) = visualise.iter().find(|mapping| mapping.role != COLUMN_ROLE) {
+        return Err(CoreError::Parse(format!(
+            "table lists its columns without roles; write 'VISUALISE {}, ...' or 'VISUALISE *', not '{} AS {}'",
+            mapping.field, mapping.field, mapping.role
+        )));
+    }
+    if visualise
+        .iter()
+        .any(|mapping| mapping.field == EVERY_COLUMN)
+        && visualise.len() > 1
+    {
+        return Err(CoreError::Parse(
+            "VISUALISE * already lists every column; write it alone".to_string(),
+        ));
+    }
+    let mut seen = BTreeSet::new();
+    for mapping in visualise {
+        if !seen.insert(mapping.field.as_str()) {
+            return Err(CoreError::Parse(format!(
+                "table lists column '{}' twice",
+                mapping.field
+            )));
+        }
+    }
+    Ok(())
+}
+
 fn validate_interactions(spec: &DrawSpec, interactions: &[String]) -> Result<(), CoreError> {
     for interaction in interactions {
         if !spec.interactions.contains(&interaction.as_str()) {
+            if spec.draw_type == "table" {
+                return Err(CoreError::Parse(
+                    "table takes no INTERACT clause: its rows are the picture, and every column is already readable"
+                        .to_string(),
+                ));
+            }
             return Err(CoreError::Parse(format!(
                 "{interaction} interaction is not supported for {} charts",
                 spec.draw_type
@@ -377,6 +453,12 @@ fn unquote(value: String) -> String {
 fn mapping_regex() -> &'static Regex {
     static REGEX: OnceLock<Regex> = OnceLock::new();
     REGEX.get_or_init(|| Regex::new(r"^\s*([A-Za-z_][\w.]*)\s+AS\s+([A-Za-z_][\w]*)\s*$").unwrap())
+}
+
+/// A bare column name, or `*`: what a table's `VISUALISE` lists.
+fn column_regex() -> &'static Regex {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    REGEX.get_or_init(|| Regex::new(r"^\s*([A-Za-z_][\w.]*|\*)\s*$").unwrap())
 }
 
 #[cfg(test)]
@@ -499,6 +581,126 @@ mod tests {
     }
 
     #[test]
+    fn parses_a_table_as_a_role_less_column_list() {
+        let chart = parse_ggsql_text(
+            "SELECT region, revenue, margin FROM {{ ref('fct_finance') }} ORDER BY revenue DESC LIMIT 25\n\nVISUALISE region, revenue, margin\nDRAW table\nLABEL revenue => \"Revenue (USD)\"\nCONFIG height => 400\n",
+            "top_regions",
+            None,
+            "duckdb",
+        )
+        .unwrap();
+
+        assert_eq!(chart.draw_type, "table");
+        assert_eq!(
+            chart
+                .visualise
+                .iter()
+                .map(|mapping| (mapping.field.as_str(), mapping.role.as_str()))
+                .collect::<Vec<_>>(),
+            vec![
+                ("region", "column"),
+                ("revenue", "column"),
+                ("margin", "column")
+            ]
+        );
+        assert_eq!(chart.labels.get("revenue").unwrap(), "Revenue (USD)");
+        assert_eq!(chart.config.get("height"), Some(&400));
+        assert!(chart.has_order_by);
+    }
+
+    #[test]
+    fn a_table_can_list_every_column_with_a_star() {
+        let chart = parse_ggsql_text(
+            "SELECT * FROM t\n\nVISUALISE *\nDRAW table\n",
+            "everything",
+            None,
+            "duckdb",
+        )
+        .unwrap();
+
+        assert_eq!(chart.visualise.len(), 1);
+        assert_eq!(chart.visualise[0].field, "*");
+        assert_eq!(chart.visualise[0].role, "column");
+
+        let error = parse_ggsql_text(
+            "SELECT * FROM t\n\nVISUALISE *, region\nDRAW table\n",
+            "everything",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert_eq!(
+            error.to_string(),
+            "VISUALISE * already lists every column; write it alone"
+        );
+    }
+
+    #[test]
+    fn a_table_rejects_roles_and_a_chart_rejects_a_column_list() {
+        let table = parse_ggsql_text(
+            "SELECT region, revenue FROM t\n\nVISUALISE region AS x, revenue AS y\nDRAW table\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert_eq!(
+            table.to_string(),
+            "table lists its columns without roles; write 'VISUALISE region, ...' or 'VISUALISE *', not 'region AS x'"
+        );
+
+        let bar = parse_ggsql_text(
+            "SELECT region, revenue FROM t\n\nVISUALISE region, revenue\nDRAW bar\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert_eq!(
+            bar.to_string(),
+            "bar maps each column to a role (x, y, color); write 'region AS x', or DRAW table to list columns"
+        );
+    }
+
+    #[test]
+    fn a_table_rejects_a_repeated_column_and_any_interaction() {
+        let twice = parse_ggsql_text(
+            "SELECT region FROM t\n\nVISUALISE region, region\nDRAW table\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert_eq!(twice.to_string(), "table lists column 'region' twice");
+
+        let interact = parse_ggsql_text(
+            "SELECT region FROM t\n\nVISUALISE region\nDRAW table\nINTERACT tooltip\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert!(
+            interact
+                .to_string()
+                .starts_with("table takes no INTERACT clause"),
+            "{interact}"
+        );
+    }
+
+    #[test]
+    fn a_bare_word_that_is_not_a_column_is_still_an_invalid_mapping() {
+        let error = parse_ggsql_text(
+            "SELECT a FROM t\n\nVISUALISE a b\nDRAW table\n",
+            "c",
+            None,
+            "duckdb",
+        )
+        .unwrap_err();
+        assert_eq!(error.to_string(), "invalid VISUALISE mapping: a b");
+    }
+
+    #[test]
     fn names_the_supported_chart_types_on_an_unknown_draw() {
         let error = parse_ggsql_text(
             "SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW donut\n",
@@ -510,7 +712,7 @@ mod tests {
 
         assert_eq!(
             error.to_string(),
-            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, line, pie, scatter"
+            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, line, pie, scatter, table"
         );
     }
 

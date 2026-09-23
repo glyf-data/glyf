@@ -96,6 +96,14 @@ def generate_dashboards(
                     raise DashboardGenerationError(
                         f"dashboard '{dashboard.name}' could not load chart artifact '{chart_name}'"
                     )
+                if exclude_row_data and artifact.metadata.is_table:
+                    # The build refuses this combination too; this catches a
+                    # table rendered under one setting and published under
+                    # another.
+                    raise DashboardGenerationError(
+                        f"dashboard '{dashboard.name}' shows table '{chart_name}', "
+                        "and export.row_data: exclude publishes no rows"
+                    )
                 chart_artifacts[chart_name] = artifact
             except ChartArtifactError as exc:
                 rel_path = dashboard_path.relative_to(scan.root).as_posix()

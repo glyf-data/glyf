@@ -65,7 +65,11 @@ def run_render(
         typer.echo("- skipped chart artifacts (validate mode)")
         return
     typer.echo("\u2713 executed SQL")
-    typer.echo("\u2713 rendered PNG/SVG")
+    tables = sum(1 for rendered in result.charts if rendered.chart.is_table)
+    if tables < chart_count:
+        typer.echo("\u2713 rendered PNG/SVG")
+    if tables:
+        typer.echo(f"\u2713 wrote table HTML ({tables})")
     typer.echo("\u2713 wrote metadata")
 
 

@@ -1,6 +1,7 @@
 {%- import "components/icons.j2" as icons -%}
 {%- import "components/toolbar.j2" as toolbar -%}
 {%- import "components/chart_card.j2" as chart_cards -%}
+{%- import "components/table_card.j2" as table_cards -%}
 {%- import "components/component_card.j2" as component_cards -%}
 {%- import "components/source_drawer.j2" as source_drawer -%}
 {%- import "components/ai_panel.j2" as ai_panel -%}
@@ -188,7 +189,9 @@
               style="--glyf-columns: {{ section_columns }}{% if column_template %}; --glyf-column-template: {{ column_template }}{% endif %}"
             >
               {% for item in section.items %}
-                {% if item.kind == "chart" and item.chart %}
+                {% if item.kind == "chart" and item.chart and chart_artifacts[item.chart].metadata.is_table %}
+                  {{ table_cards.render_table_card(chart_artifacts[item.chart], item.title, item.width) }}
+                {% elif item.kind == "chart" and item.chart %}
                   {{ chart_cards.render_chart_card(chart_artifacts[item.chart], dashboard_config, chart_theme, item.title, item.width) }}
                 {% elif item.kind == "component" and item.component_spec %}
                   {{ component_cards.render_component_card(item.component_spec, item.width) }}
@@ -205,7 +208,11 @@
         <section class="glyf-section" aria-label="Charts">
           <div class="glyf-chart-grid" data-auto-columns="true">
             {% for chart in charts %}
+            {% if chart.metadata.is_table %}
+            {{ table_cards.render_table_card(chart) }}
+            {% else %}
             {{ chart_cards.render_chart_card(chart, dashboard_config, chart_theme) }}
+            {% endif %}
             {% endfor %}
           </div>
         </section>
@@ -241,6 +248,42 @@
     </div>
   </div>
 
+  {% if has_tables %}
+  <script>
+    // Click a header to sort a table by that column; click again to reverse.
+    // The rows are the build's; sorting only reorders what is already here.
+    document.querySelectorAll("[data-glyf-table]").forEach((table) => {
+      const body = table.querySelector("tbody");
+      const headers = Array.from(table.querySelectorAll("th[data-column]"));
+      headers.forEach((header, index) => {
+        header.addEventListener("click", () => {
+          const ascending = header.getAttribute("aria-sort") !== "ascending";
+          const numeric = header.dataset.type === "number";
+          const rows = Array.from(body.querySelectorAll("tr"));
+          const key = (row) => {
+            const cell = row.children[index];
+            if (!cell || cell.dataset.empty === "true") {
+              return null;
+            }
+            return numeric ? Number(cell.textContent) : cell.textContent;
+          };
+          rows.sort((a, b) => {
+            const left = key(a);
+            const right = key(b);
+            if (left === null && right === null) return 0;
+            if (left === null) return 1;
+            if (right === null) return -1;
+            const order = numeric ? left - right : String(left).localeCompare(String(right));
+            return ascending ? order : -order;
+          });
+          rows.forEach((row) => body.appendChild(row));
+          headers.forEach((other) => other.setAttribute("aria-sort", "none"));
+          header.setAttribute("aria-sort", ascending ? "ascending" : "descending");
+        });
+      });
+    });
+  </script>
+  {% endif %}
   {% if has_interactive_charts %}
   <script>
     document.querySelectorAll("[data-vega-chart]").forEach((container) => {

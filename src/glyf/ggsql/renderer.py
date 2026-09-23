@@ -71,10 +71,23 @@ def _render_altair_chart(
 
 
 def required_columns(chart: GgsqlChart) -> tuple[str, ...]:
-    """The columns a chart's VISUALISE clause binds, in encoding order."""
+    """The columns a chart's VISUALISE clause binds, in encoding order.
+
+    For a table, the columns it lists; `VISUALISE *` binds nothing by name,
+    so it requires nothing and `table_columns` resolves it against the rows.
+    """
+    if chart.is_table:
+        return chart.table_columns
     roles = ("x", "y", "color")
     fields = [chart.field_for_role(role) for role in roles]
     return tuple(dict.fromkeys(field for field in fields if field is not None))
+
+
+def table_columns(chart: GgsqlChart, columns: tuple[str, ...]) -> tuple[str, ...]:
+    """The columns a table shows, resolved against a result's columns."""
+    if chart.lists_every_column:
+        return tuple(columns)
+    return chart.table_columns
 
 
 def prune_to_encoded_columns(chart: GgsqlChart, data: QueryResult) -> QueryResult:
@@ -84,8 +97,11 @@ def prune_to_encoded_columns(chart: GgsqlChart, data: QueryResult) -> QueryResul
     inlined Vega `datasets` block lists only these columns, and so do the
     tooltips. Values are untouched -- the chart must agree with the warehouse.
     A column the chart binds but the result lacks is left for `build_chart`
-    to report.
+    to report. A table under `VISUALISE *` shows every column, so there is
+    nothing to prune.
     """
+    if chart.lists_every_column:
+        return data
     available = set(data.columns)
     keep = [field for field in required_columns(chart) if field in available]
     if len(keep) == len(data.columns):
@@ -241,6 +257,10 @@ def build_chart(
 ) -> alt.Chart:
     config = config or RenderConfig()
     frame = _coerce_query_result(data).to_arrow()
+    if chart.is_table:
+        raise ChartRenderError(
+            "a table is not drawn; glyf.ggsql.table writes it from its rows"
+        )
     chart_type = CHART_TYPES.get(chart.draw_type)
     if chart_type is None:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")

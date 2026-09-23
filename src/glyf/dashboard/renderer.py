@@ -89,6 +89,7 @@ class DashboardRenderer:
             chart_artifacts=themed_chart_artifacts,
             charts=themed_charts,
             has_interactive_charts=any(chart.vega_spec is not None for chart in themed_charts),
+            has_tables=any(chart.metadata.is_table for chart in themed_charts),
             dashboard_config=config.dashboard,
             dashboard_theme=resolved_theme,
             chart_theme=resolved_chart_theme,

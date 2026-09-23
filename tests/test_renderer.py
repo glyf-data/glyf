@@ -306,6 +306,8 @@ def test_every_chart_type_the_parser_accepts_can_be_drawn() -> None:
     """The parser's list and the renderer's table are two statements of one fact.
 
     A type added to one and not the other parses and then fails to render, or
-    is drawable and never reachable.
+    is drawable and never reachable. The table is the one type that is not
+    drawn: `glyf.ggsql.table` writes it from its rows, and the pipeline
+    branches before the renderer is reached.
     """
-    assert set(CHART_TYPES) == SUPPORTED_CHART_TYPES
+    assert set(CHART_TYPES) | {"table"} == SUPPORTED_CHART_TYPES
