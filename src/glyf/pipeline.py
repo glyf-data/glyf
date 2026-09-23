@@ -549,7 +549,13 @@ def _write_artifacts(
     if run.prune_row_data and artifacts.svg.exists():
         strip_svg_row_values(artifacts.svg, chart)
 
-    write_chart_metadata(root, chart, artifacts, lineage=compiled.lineage)
+    write_chart_metadata(
+        root,
+        chart,
+        artifacts,
+        lineage=compiled.lineage,
+        vega=not run.exclude_row_data,
+    )
 
 
 def _prune_unselected_artifacts(

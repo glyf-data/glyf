@@ -232,8 +232,10 @@ in [Dashboard Macros](/docs/guides/dashboard-macros).
 
 ## Filters
 
-Filters are static controls in the generated page: they show the filter
-vocabulary for the dashboard but do not filter the charts at runtime.
+A filter names a column. On the page it is a select with `All` and the
+filter's values, and choosing a value redraws every chart on the dashboard
+whose rows carry that column, in the browser, from the rows the page already
+holds. Nothing is fetched and no server is involved.
 
 Hardcoded values:
 
@@ -254,6 +256,34 @@ filters:
 `source(chart, field)` reads the distinct values from the normalized chart data
 artifact written by `glyf render`. That keeps the filter list aligned with the
 chart output instead of duplicating values in YAML.
+
+What a filter does to each kind of card:
+
+- A drawn chart is redrawn from its Vega specification with the filter applied,
+  and a chip on the card names the value, `plan = Pro`.
+- A table hides the rows that do not match and says `4 of 25 rows`.
+- A kpi is one aggregated number and cannot be recomputed, so it is dimmed.
+- A chart whose rows do not carry the column is dimmed, with a note saying
+  which filter does not apply to it. A chart that looked filtered and was not
+  would be worse than one that says so.
+
+By default a filter applies to every chart that carries its column. `charts`
+narrows it to a list:
+
+```yaml
+filters:
+  - field: plan
+    values: source(activation_by_plan, plan)
+    charts: [activation_by_plan, sessions_by_plan]
+```
+
+Filtering works on the rows the page publishes, so it follows
+[`export.row_data`](./data-exposure.md). Under `include`, any column of a
+chart's result can be filtered. Under `minimal`, only the columns a chart
+encodes are published, so a filter on any other column does not apply to it.
+Under `exclude`, no rows are published and the filters are shown as labels
+only. Filter selections are not written to the URL, so a link never carries a
+value.
 
 ## Tags
 

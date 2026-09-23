@@ -6,6 +6,19 @@ All notable changes to `glyf` will be documented in this file.
 
 ### Dashboard
 
+- Filters filter. A dashboard filter is now a select, and choosing a value
+  redraws every chart whose rows carry the column, in the browser, from the
+  rows the page already holds: a drawn chart from its Vega specification
+  with the filter as a transform, a table by hiding rows, with a chip on
+  the card naming the value. A kpi cannot be recomputed and a chart without
+  the column cannot be filtered; both dim and say which filter does not
+  apply, rather than sitting still and looking filtered. `filters[].charts`
+  narrows a filter to named charts. It follows `export.row_data`: any column
+  under `include`, encoded columns under `minimal`, labels only under
+  `exclude`. Selections are not written to the URL. To make this possible
+  every drawn chart now keeps its Vega specification
+  (`data/vega/<name>.vega.json`, internal, never exported), not only
+  interactive ones; the bundle's `artifacts.vega` reflects that.
 - Every page has a light-and-dark switch in its top-right actions. The
   choice is remembered in the reader's browser, the frame follows at once,
   and charts follow too when `chart_theme` is `auto`: static SVGs get the

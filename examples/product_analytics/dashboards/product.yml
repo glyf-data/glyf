@@ -9,8 +9,8 @@ tags:
 filters:
   - field: plan
     values: source(activation_by_plan, plan)
-  - field: team
-    values: [product, lifecycle]
+  - field: week
+    values: source(active_users, week)
 
 toolbar:
   visibility: private

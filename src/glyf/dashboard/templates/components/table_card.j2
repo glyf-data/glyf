@@ -1,14 +1,19 @@
-{% macro render_table_card(chart, title=None, width=None) -%}
-<article class="glyf-card glyf-table-card"{% if width %} style="--glyf-item-width: {{ width }}"{% endif %}>
+{% macro render_table_card(chart, title=None, width=None, filters=None) -%}
+{% set filter_modes = filters.modes(chart.metadata.name) if filters else "" %}
+<article class="glyf-card glyf-table-card" data-glyf-chart="{{ chart.metadata.name }}"{% if filter_modes %} data-glyf-filters="{{ filter_modes }}"{% endif %}{% if width %} style="--glyf-item-width: {{ width }}"{% endif %}>
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">{{ title or chart.metadata.title or chart.metadata.name }}</div>
       <div class="glyf-card-subtitle">{{ chart.metadata.columns | join(', ') }}</div>
     </div>
-    <span class="glyf-badge glyf-mono">table</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">table</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-table-body">
     {{ chart.table_html | safe }}
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 {%- endmacro %}

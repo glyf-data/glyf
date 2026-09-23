@@ -138,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-23T21:09:14Z">23 Sep 2026, 21:09 UTC</strong>
+          Refreshed <strong title="2026-09-23T21:18:13Z">23 Sep 2026, 21:18 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -205,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 23 Sep 2026, 21:09 UTC</span>
+              <span class="glyf-version-option-note">built 23 Sep 2026, 21:18 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -216,106 +216,67 @@
       </div>
     </div>
 
-    <div class="glyf-control-bar">
+    <div class="glyf-control-bar" data-glyf-filter-bar>
       <span class="glyf-control-label">Filters</span>
 
 
-        <div class="glyf-filter-menu" data-glyf-filter-menu>
-          <button
-            class="glyf-filter-button"
-            type="button"
-            aria-expanded="false"
-            data-glyf-filter-button
-            title="source(activation_by_plan, plan)"
-          >
+        <label class="glyf-filter-select" data-glyf-filter="plan">
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
 
-            <span class="glyf-filter-field">plan</span>
+          <span class="glyf-filter-field">plan</span>
+          <select class="glyf-filter-control" id="glyf-filter-plan" data-glyf-filter-select="plan" aria-label="Filter by plan">
+            <option value="">All</option>
 
-            <span class="glyf-filter-inline-sep">/</span>
-            <span class="glyf-filter-inline-values">3 values</span>
+            <option value="Team">Team</option>
 
-            <span class="glyf-filter-value">source</span>
+            <option value="Free">Free</option>
 
-  <svg class="glyf-filter-button-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m6 9 6 6 6-6"></path>
-  </svg>
+            <option value="Pro">Pro</option>
 
-          </button>
-          <div class="glyf-filter-popover" role="menu" aria-label="plan values" data-glyf-filter-popover>
-            <div class="glyf-filter-popover-head">
-              <div class="glyf-filter-popover-title">plan</div>
-              <div class="glyf-filter-popover-note">source(activation_by_plan, plan)</div>
-            </div>
-            <div class="glyf-filter-options">
+          </select>
+        </label>
 
-
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">Team</span>
-                </button>
-
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">Free</span>
-                </button>
-
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">Pro</span>
-                </button>
-
-
-            </div>
-          </div>
-        </div>
-
-        <div class="glyf-filter-menu" data-glyf-filter-menu>
-          <button
-            class="glyf-filter-button"
-            type="button"
-            aria-expanded="false"
-            data-glyf-filter-button
-            title="product, lifecycle"
-          >
+        <label class="glyf-filter-select" data-glyf-filter="week">
 
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
 
-            <span class="glyf-filter-field">team</span>
+          <span class="glyf-filter-field">week</span>
+          <select class="glyf-filter-control" id="glyf-filter-week" data-glyf-filter-select="week" aria-label="Filter by week">
+            <option value="">All</option>
 
-            <span class="glyf-filter-inline-sep">/</span>
-            <span class="glyf-filter-inline-values">2 values</span>
+            <option value="2026-W01">2026-W01</option>
 
-            <span class="glyf-filter-value">static</span>
+            <option value="2026-W02">2026-W02</option>
 
-  <svg class="glyf-filter-button-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m6 9 6 6 6-6"></path>
-  </svg>
+            <option value="2026-W03">2026-W03</option>
 
-          </button>
-          <div class="glyf-filter-popover" role="menu" aria-label="team values" data-glyf-filter-popover>
-            <div class="glyf-filter-popover-head">
-              <div class="glyf-filter-popover-title">team</div>
-              <div class="glyf-filter-popover-note">static values</div>
-            </div>
-            <div class="glyf-filter-options">
+            <option value="2026-W04">2026-W04</option>
 
+            <option value="2026-W05">2026-W05</option>
 
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">product</span>
-                </button>
+            <option value="2026-W06">2026-W06</option>
 
-                <button class="glyf-filter-option" type="button" role="menuitem" disabled>
-                  <span class="glyf-filter-option-title">lifecycle</span>
-                </button>
+            <option value="2026-W07">2026-W07</option>
 
+            <option value="2026-W08">2026-W08</option>
 
-            </div>
-          </div>
-        </div>
+            <option value="2026-W09">2026-W09</option>
 
+            <option value="2026-W10">2026-W10</option>
+
+            <option value="2026-W11">2026-W11</option>
+
+            <option value="2026-W12">2026-W12</option>
+
+          </select>
+        </label>
+
+        <button class="glyf-filter-clear" type="button" data-glyf-filter-clear hidden>Clear</button>
 
       <span class="glyf-static-note">
 
@@ -528,7 +489,8 @@ ORDER BY weekday_number, hour
             >
 
 
-                  <article class="glyf-card glyf-kpi-card">
+
+<article class="glyf-card glyf-kpi-card" data-glyf-chart="weekly_active_users" data-glyf-filters="plan:none week:none">
   <div class="glyf-card-body">
     <div class="glyf-kpi-label">Weekly active users</div>
     <figure class="glyf-kpi" data-glyf-kpi="weekly_active_users">
@@ -539,18 +501,25 @@ ORDER BY weekday_number, hour
   </div>
 </figure>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="active_users" data-glyf-filters="plan:none week:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Active Users Trend</div>
       <div class="glyf-card-subtitle">week -> active_users</div>
     </div>
-    <span class="glyf-badge glyf-mono">area</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">area</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -564,6 +533,7 @@ ORDER BY weekday_number, hour
       <img src="../charts/active_users.png" alt="Active Users Trend">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
@@ -581,13 +551,19 @@ ORDER BY weekday_number, hour
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_scatter" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions vs Active Users</div>
       <div class="glyf-card-subtitle">active_users -> sessions</div>
     </div>
-    <span class="glyf-badge glyf-mono">scatter</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">scatter</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -601,6 +577,7 @@ ORDER BY weekday_number, hour
       <img src="../charts/sessions_scatter.png" alt="Sessions vs Active Users">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
@@ -678,13 +655,19 @@ ORDER BY weekday_number, hour
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="activation_by_plan" data-glyf-filters="plan:vega week:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Activation by Plan</div>
       <div class="glyf-card-subtitle">week -> activated_users</div>
     </div>
-    <span class="glyf-badge glyf-mono">line</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">line</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -698,18 +681,25 @@ ORDER BY weekday_number, hour
       <img src="../charts/activation_by_plan.png" alt="Activation by Plan">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="activation_rate_by_plan" data-glyf-filters="plan:vega week:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Activation Rate by Plan</div>
       <div class="glyf-card-subtitle">week -> activation_rate</div>
     </div>
-    <span class="glyf-badge glyf-mono">line</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">line</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -723,6 +713,7 @@ ORDER BY weekday_number, hour
       <img src="../charts/activation_rate_by_plan.png" alt="Activation Rate by Plan">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
@@ -751,13 +742,19 @@ ORDER BY weekday_number, hour
             >
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_per_user" data-glyf-filters="plan:none week:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions per Active User</div>
       <div class="glyf-card-subtitle">week -> sessions_per_user</div>
     </div>
-    <span class="glyf-badge glyf-mono">bar</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">bar</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -771,18 +768,25 @@ ORDER BY weekday_number, hour
       <img src="../charts/sessions_per_user.png" alt="Sessions per Active User">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_by_plan" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions by Plan</div>
       <div class="glyf-card-subtitle">plan -> sessions</div>
     </div>
-    <span class="glyf-badge glyf-mono">pie</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">pie</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -796,6 +800,7 @@ ORDER BY weekday_number, hour
       <img src="../charts/sessions_by_plan.png" alt="Sessions by Plan">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
@@ -824,13 +829,17 @@ ORDER BY weekday_number, hour
             >
 
 
-                  <article class="glyf-card glyf-table-card">
+
+<article class="glyf-card glyf-table-card" data-glyf-chart="top_accounts" data-glyf-filters="plan:table week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Most active accounts</div>
       <div class="glyf-card-subtitle">account_id, plan, sessions, avg_session_minutes</div>
     </div>
-    <span class="glyf-badge glyf-mono">table</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">table</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-table-body">
     <figure class="glyf-table" data-glyf-table="top_accounts">
@@ -911,18 +920,25 @@ ORDER BY weekday_number, hour
   <figcaption class="glyf-table-caption">10 rows</figcaption>
 </figure>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_per_account" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions per Account</div>
       <div class="glyf-card-subtitle">plan -> sessions</div>
     </div>
-    <span class="glyf-badge glyf-mono">boxplot</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">boxplot</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -936,6 +952,7 @@ ORDER BY weekday_number, hour
       <img src="../charts/sessions_per_account.png" alt="Sessions per Account">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
@@ -964,13 +981,19 @@ ORDER BY weekday_number, hour
             >
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="session_length_distribution" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Session Length by Account</div>
       <div class="glyf-card-subtitle">avg_session_minutes</div>
     </div>
-    <span class="glyf-badge glyf-mono">histogram</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">histogram</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -984,18 +1007,25 @@ ORDER BY weekday_number, hour
       <img src="../charts/session_length_distribution.png" alt="Session Length by Account">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_per_account" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions per Account</div>
       <div class="glyf-card-subtitle">plan -> sessions</div>
     </div>
-    <span class="glyf-badge glyf-mono">boxplot</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">boxplot</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -1009,6 +1039,7 @@ ORDER BY weekday_number, hour
       <img src="../charts/sessions_per_account.png" alt="Sessions per Account">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
@@ -1063,13 +1094,19 @@ takes their quartiles, so neither query aggregates anything itself.
             >
 
 
-                  <article class="glyf-card glyf-chart-card" data-chart-theme="light">
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="activity_by_hour" data-glyf-filters="plan:none week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions by Hour</div>
       <div class="glyf-card-subtitle">hour -> weekday</div>
     </div>
-    <span class="glyf-badge glyf-mono">heatmap</span>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <span class="glyf-badge glyf-mono">heatmap</span>
+    </div>
   </div>
   <div class="glyf-card-body glyf-chart-body">
 
@@ -1083,6 +1120,7 @@ takes their quartiles, so neither query aggregates anything itself.
       <img src="../charts/activity_by_hour.png" alt="Sessions by Hour">
     </noscript>
 
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
   </div>
 </article>
 
@@ -1138,7 +1176,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-23 22:09
+      2026-09-23 22:18
 
     </div>
   </div>
@@ -1317,7 +1355,7 @@ takes their quartiles, so neither query aggregates anything itself.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">23 Sep 2026, 21:09 UTC</div>
+              <div class="glyf-version-date">23 Sep 2026, 21:18 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -1573,6 +1611,13 @@ takes their quartiles, so neither query aggregates anything itself.
       };
       const darkVega = { background: "#09090b", view: { stroke: "#3f3f46", fill: "#09090b" }, axis: { labelColor: "#f4f4f5", titleColor: "#f4f4f5", domainColor: "#a1a1aa", tickColor: "#a1a1aa", gridColor: "#27272a" }, legend: { labelColor: "#f4f4f5", titleColor: "#f4f4f5" }, title: { color: "#f4f4f5", subtitleColor: "#d4d4d8" } };
       const lightVega = { background: "#ffffff", view: { stroke: "#d9e2ec", fill: "#ffffff" }, axis: { labelColor: "#000000", titleColor: "#000000", domainColor: "#888888", tickColor: "#888888", gridColor: "#dddddd" }, legend: { labelColor: "#000000", titleColor: "#000000" }, title: { color: "#000000", subtitleColor: "#52525b" } };
+      window.glyfVegaTheme = (spec, dark) => {
+        const palette = dark ? darkVega : lightVega;
+        spec.background = palette.background;
+        spec.config = spec.config || {};
+        ["view", "axis", "legend", "title"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
+        return spec;
+      };
       const themeCharts = (dark) => {
         if (!chartsFollow) return;
         document.querySelectorAll(".glyf-chart-card").forEach((card) => {
@@ -1584,12 +1629,7 @@ takes their quartiles, so neither query aggregates anything itself.
           document.querySelectorAll("[data-vega-chart]").forEach((container) => {
             const specElement = document.getElementById(container.dataset.vegaChart);
             if (!specElement) return;
-            const spec = JSON.parse(specElement.textContent);
-            const palette = dark ? darkVega : lightVega;
-            spec.background = palette.background;
-            spec.config = spec.config || {};
-            ["view", "axis", "legend", "title"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
-            vegaEmbed(container, spec, { actions: false, renderer: "svg" });
+            vegaEmbed(container, window.glyfVegaTheme(JSON.parse(specElement.textContent), dark), { actions: false, renderer: "svg" });
           });
         }
 
@@ -1604,9 +1644,73 @@ takes their quartiles, so neither query aggregates anything itself.
           root.setAttribute("data-theme", dark ? "dark" : "light");
           try { localStorage.setItem("glyf-theme", dark ? "dark" : "light"); } catch (e) {}
           themeCharts(dark);
+          if (window.glyfApplyFilters) window.glyfApplyFilters();
         });
       }
     })();
+
+
+    (function () {
+      // A filter redraws every chart it can, from the rows the page carries,
+      // and dims the ones it cannot: a chart that looks filtered and is not
+      // would be worse than one that says so.
+      const selects = Array.from(document.querySelectorAll("[data-glyf-filter-select]"));
+      const clearButton = document.querySelector("[data-glyf-filter-clear]");
+      const cards = Array.from(document.querySelectorAll("[data-glyf-chart]"));
+      const active = () => selects.filter((s) => s.value !== "").map((s) => ({ field: s.dataset.glyfFilterSelect, value: s.value }));
+      const modesOf = (card) => Object.fromEntries((card.dataset.glyfFilters || "").split(" ").filter(Boolean).map((pair) => pair.split(":")));
+      const vegaSpecOf = (card) => {
+        const el = card.querySelector('script[type="application/json"]');
+        return el ? JSON.parse(el.textContent) : null;
+      };
+      const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
+      const filterExpr = (pairs) => pairs.map((p) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(p.value)}`).join(" && ");
+      const redrawVega = (card, pairs) => {
+        const spec = vegaSpecOf(card);
+        const target = card.querySelector("[data-glyf-filter-chart], [data-vega-chart]");
+        if (!spec || !target || typeof vegaEmbed !== "function") return;
+        if (pairs.length) spec.transform = [{ filter: filterExpr(pairs) }].concat(spec.transform || []);
+        if (window.glyfVegaTheme) window.glyfVegaTheme(spec, isDark());
+        const still = card.querySelector("[data-glyf-still]");
+        if (still) { still.hidden = pairs.length > 0; }
+        if (target.hasAttribute("data-glyf-filter-chart")) { target.hidden = pairs.length === 0; }
+        if (pairs.length || target.hasAttribute("data-vega-chart")) vegaEmbed(target, spec, { actions: false, renderer: "svg" });
+      };
+      const filterTable = (card, pairs) => {
+        const table = card.querySelector("table");
+        if (!table) return;
+        const headers = Array.from(table.querySelectorAll("th[data-column]")).map((th) => th.dataset.column);
+        const rows = Array.from(table.querySelectorAll("tbody tr"));
+        let shown = 0;
+        rows.forEach((row) => {
+          const ok = pairs.every((p) => { const i = headers.indexOf(p.field); return i >= 0 && row.children[i] && row.children[i].textContent === p.value; });
+          row.hidden = !ok; if (ok) shown += 1;
+        });
+        const caption = card.querySelector(".glyf-table-caption");
+        if (caption) caption.textContent = pairs.length ? `${shown} of ${rows.length} rows` : `${rows.length} row${rows.length === 1 ? "" : "s"}`;
+      };
+      const apply = () => {
+        const pairs = active();
+        if (clearButton) clearButton.hidden = pairs.length === 0;
+        cards.forEach((card) => {
+          const modes = modesOf(card);
+          const applies = pairs.filter((p) => modes[p.field] && modes[p.field] !== "none");
+          const cannot = pairs.filter((p) => !modes[p.field] || modes[p.field] === "none");
+          const chip = card.querySelector("[data-glyf-filter-applied]");
+          const note = card.querySelector("[data-glyf-filter-note]");
+          if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.value}`).join(", "); }
+          card.classList.toggle("is-unfiltered", pairs.length > 0 && cannot.length > 0 && applies.length === 0);
+          if (note) { note.hidden = cannot.length === 0; note.textContent = cannot.length ? `not filtered by ${cannot.map((p) => p.field).join(", ")}` : ""; }
+          const first = Object.values(modes).find((m) => m !== "none");
+          if (first === "vega") redrawVega(card, applies);
+          else if (first === "table") filterTable(card, applies);
+        });
+      };
+      selects.forEach((s) => s.addEventListener("change", apply));
+      if (clearButton) clearButton.addEventListener("click", () => { selects.forEach((s) => { s.value = ""; }); apply(); });
+      window.glyfApplyFilters = apply;
+    })();
+
 
     document.querySelectorAll("[data-glyf-filter-menu]").forEach((menu) => {
       const button = menu.querySelector("[data-glyf-filter-button]");

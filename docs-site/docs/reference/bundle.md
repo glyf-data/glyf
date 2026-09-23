@@ -158,7 +158,7 @@ Every value is a path or `null`; the keys are always present.
 | `kpi` | path | **KPIs only.** The tile fragment the dashboard shows. Absent for every other chart type. |
 | `compiled_sql` | path | The compiled SQL behind the chart. |
 | `data` | always `null` | Normalised chart data. Local manifests only. |
-| `vega` | always `null` | Vega specification. Local manifests only, and only for charts with interactions. |
+| `vega` | always `null` | Vega specification. Local manifests only, for every drawn chart. |
 
 Check for `null`, not for a missing key: `data` and `vega` stay in a public
 manifest and are set to `null` rather than being removed.
@@ -208,7 +208,7 @@ can ignore `source` entirely.
 | `security.internal_artifacts_included` | `true` | `false` |
 | `security.internal_artifacts` | `["data/normalized", "data/vega"]` | `[]` |
 | `charts[].artifacts.data` | path | `null` |
-| `charts[].artifacts.vega` | path, when the chart has interactions | `null` |
+| `charts[].artifacts.vega` | path, for a drawn chart | `null` |
 
 Nothing else differs. The public manifest does not *reference* the normalised
 data or the Vega specs that stay under `target/glyf/`.
