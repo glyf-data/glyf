@@ -1,5 +1,10 @@
 # AI Assistants
 
+An agent that speaks the Model Context Protocol can use the project directly
+through [`glyf mcp`](../integrations/mcp.md): list charts, read a chart's spec,
+ask which charts a model change reaches, and validate an edit. The brief below
+is for an assistant that can only read files and run shell commands.
+
 Coding assistants do well at drafting `.ggsql` charts and dashboard YAML for a
 glyf project, because everything they need is in files: the dbt manifest,
 `glyf.yml`, and the chart and dashboard directories. The CLI validates the

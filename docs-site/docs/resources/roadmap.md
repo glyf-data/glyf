@@ -16,15 +16,17 @@ order is the priority.
 
 <div className="roadmapNext">
   <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
-  <h3>Impact, and a validate that asks the warehouse</h3>
+  <h3>Impact, a validate that asks the warehouse, and an MCP server</h3>
   <p>
     <code>glyf impact fct_finance.margin</code> lists the charts and dashboards a model, a source or
     a column change reaches, saying on each line how sure it is. Next to <code>glyf diff</code> it
     is the review a pull request wants: which charts this touches, and what moved in them.
     <code>glyf validate --execute</code> runs each chart's SQL with <code>LIMIT 0</code> and checks
-    its columns, so a renamed column fails in CI rather than at build.
+    its columns, so a renamed column fails in CI rather than at build. And <code>glyf mcp</code>
+    serves all of it to an AI agent over the Model Context Protocol: list, read, impact, validate
+    and diff, never a build and never a row.
   </p>
-  <Link to="/docs/reference/cli#impact">Read the reference</Link>
+  <Link to="/docs/integrations/mcp">Read the guide</Link>
 </div>
 
 ## Planned
@@ -35,11 +37,6 @@ Vote with a 👍 on the issue. The most wanted go first.
   <Link className="roadmapCard" href="https://github.com/glyf-data/glyf/issues/137">
     <strong>Pipeline alerts</strong>
     <span>Alert conditions declared in dashboard YAML, checked against the query results at build time, and sent to Slack or a webhook.</span>
-    <em>Discuss on GitHub</em>
-  </Link>
-  <Link className="roadmapCard" href="https://github.com/glyf-data/glyf/issues/138">
-    <strong>MCP server for agents</strong>
-    <span>Let an AI agent list charts, read what a chart depends on, and see the effect of a change before proposing it.</span>
     <em>Discuss on GitHub</em>
   </Link>
   <Link className="roadmapCard" href="https://github.com/glyf-data/glyf/issues/139">

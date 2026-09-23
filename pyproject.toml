@@ -41,6 +41,9 @@ dependencies = [
 trino = ["trino>=0.330"]
 snowflake = ["adbc-driver-snowflake>=1.11.0"]
 bigquery = ["adbc-driver-bigquery>=1.11.0"]
+mcp = [
+    "mcp>=1.2",
+]
 
 [project.scripts]
 glyf = "glyf.cli:app"
@@ -61,6 +64,7 @@ dev = [
     "polars>=1.42.1",
     "pytest>=8.0",
     "pytest-cov>=7.1.0",
+    "mcp>=1.2",
 ]
 
 [build-system]

@@ -9,6 +9,7 @@
 - GitHub Pages or any static host for published output.
 - CI artifact uploads for review before publishing.
 - Internal documentation portals or static servers for private team sharing.
+- An [MCP server](./mcp.md) that lets an AI agent list charts, trace a model change to the charts it reaches, and validate an edit.
 
 Planned integrations are listed on the [roadmap](../resources/roadmap.md).
 

@@ -168,6 +168,8 @@ def _how_read(target: ImpactTarget, chart) -> tuple[str, str] | None:
         for mapping in chart.visualise:
             if mapping.field.lower() == column:
                 return "reads", f"{mapping.field} AS {mapping.role}"
+        if chart.lists_every_column:
+            return "reads", "listed by *"
         return "reads", "in the SQL"
     if chart.sql_selects_star:
         return "may read", "SELECT *"

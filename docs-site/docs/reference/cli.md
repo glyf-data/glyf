@@ -25,6 +25,7 @@ options are covered in the [installation guide](../get-started/installation.md).
 | `glyf serve` | Serve the exported static dashboard site locally. |
 | `glyf diff` | Compare this build's charts with an earlier build and report what changed. |
 | `glyf impact` | List the charts and dashboards downstream of a model, a source or a column. |
+| `glyf mcp` | Serve the project to an AI agent over MCP. |
 
 ## Low-level commands
 
@@ -287,6 +288,18 @@ with its `certainty` (`reads` or `may read`), `detail` and `dashboards`, and
 the dashboards overall. Pair it with [`glyf diff`](../guides/visual-diff.md)
 in a pull request: `impact` says which charts a model change reaches, `diff`
 says what moved in them.
+
+### `mcp`
+
+Use `mcp` to serve the project to an AI agent over the Model Context
+Protocol on stdio. The agent host starts it. It needs the `mcp` extra
+(`glyf-core[mcp]`) and exposes six tools: `list_charts`, `list_dashboards`,
+`get_chart`, `impact`, `validate` and `diff`. It never runs a build or fetches
+rows. See [the MCP server](../integrations/mcp.md).
+
+```bash title="Command"
+glyf mcp --project-dir .
+```
 
 ### `render`
 

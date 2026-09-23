@@ -42,6 +42,7 @@ const sidebars = {
       doc('integrations/github-actions', 'play'),
       doc('integrations/static-hosting', 'globe'),
       doc('integrations/embedded-analytics', 'embed'),
+      doc('integrations/mcp', 'sparkles'),
     ]),
     group('AI Context', [
       doc('ai-context/overview', 'sparkles'),

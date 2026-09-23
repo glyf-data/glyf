@@ -6,6 +6,17 @@ All notable changes to `glyf` will be documented in this file.
 
 ### Added
 
+- `glyf mcp` serves a project to an AI agent over the Model Context Protocol
+  on stdio, with the `mcp` extra (`glyf-core[mcp]`). Six tools, each built on
+  a function the CLI already uses: `list_charts`, `list_dashboards`,
+  `get_chart`, `impact`, `validate` (with `execute` for the `LIMIT 0` dry
+  run) and `diff`. The server never runs a build and never fetches rows;
+  its instructions tell the agent to call `impact` before proposing a model
+  change and `validate` after editing a chart. `glyf validate`'s checks now
+  live in `glyf.validation.validate_project`, which the command prints and
+  the server returns.
+- `glyf impact` says `listed by *` for a column a `VISUALISE *` table shows,
+  instead of `in the SQL`.
 - `glyf impact <target>` lists the charts and dashboards downstream of a dbt
   model (`fct_orders`), a source (`raw.orders`) or a column of either
   (`fct_orders.revenue`). A model or source answer is exact, from the

@@ -36,12 +36,13 @@ const featureSections = [
     label: 'AI',
     title: 'Agents that understand your chart graph.',
     description:
-      'Glyf will expose a spec graph over MCP so agents can reason about model-to-chart dependencies, assess downstream impact, and open informed pull requests.',
+      'glyf mcp serves a project to an agent over the Model Context Protocol: the charts, what each one draws, which charts a model or column change reaches, and whether an edit still validates. It never runs a build and never fetches rows.',
     items: [
       {
         name: 'Agent-ready MCP server',
-        desc: 'Agents will list charts, fetch specs, and query upstream model dependencies. impact_of_model() will return every downstream chart affected by a schema change.',
-        status: 'soon',
+        desc: 'Six tools built on the CLI\'s own functions: list charts and dashboards, read a chart\'s spec, impact for a model or column, validate with a LIMIT 0 dry run, and diff between two builds. An agent can name every downstream chart in the pull request it opens.',
+        status: 'live',
+        links: [['Set it up', '/docs/integrations/mcp']],
         reverse: false,
         visual: 'mcpImpact',
         filename: 'MCP session — Claude Agent ↔ Glyf',
@@ -614,15 +615,23 @@ function FeatureMcpTrace({variant}) {
       </div>
       <div className="featureMcpLine">
         <span className="featureMcpRole featureMcpRole--agent">agent</span>
-        <span className="featureMcpMessage">impact_of_model("orders")</span>
+        <span className="featureMcpMessage">impact("fct_orders.revenue")</span>
       </div>
       <div className="featureMcpLine">
         <span className="featureMcpRole featureMcpRole--glyf">glyf</span>
-        <span className="featureMcpMessage featureMcpMessage--dim">→ affects 4 charts: revenue_weekly, mrr_breakdown, ltv_by_cohort, arpu</span>
+        <span className="featureMcpMessage featureMcpMessage--dim">→ read by 4 charts on 2 dashboards: revenue_weekly (revenue AS y), mrr_breakdown, ltv_by_cohort, arpu (SELECT *, may read)</span>
+      </div>
+      <div className="featureMcpLine">
+        <span className="featureMcpRole featureMcpRole--agent">agent</span>
+        <span className="featureMcpMessage">validate(execute=true)</span>
+      </div>
+      <div className="featureMcpLine">
+        <span className="featureMcpRole featureMcpRole--glyf">glyf</span>
+        <span className="featureMcpMessage featureMcpMessage--dim">→ ok: 13 charts, SQL run with LIMIT 0, no rows fetched</span>
       </div>
       <div className="featureMcpLine">
         <span className="featureMcpRole featureMcpRole--result">result</span>
-        <span className="featureMcpMessage featureMcpMessage--dim">agent opens PR annotating all downstream charts automatically</span>
+        <span className="featureMcpMessage featureMcpMessage--dim">agent opens the PR naming every downstream chart</span>
       </div>
     </div>
   );
