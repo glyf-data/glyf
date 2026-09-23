@@ -32,6 +32,9 @@ class ChartMetadata:
     value: str | None = None
     compare: str | None = None
     kpi_html_path: Path | None = None
+    # `{"models": {name: {"parents": [...], "path": ...}}, "sources": [...]}`;
+    # empty for metadata written before lineage was recorded.
+    lineage: dict[str, object] | None = None
 
     @property
     def is_table(self) -> bool:
@@ -195,6 +198,7 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         value=raw["value"] if is_kpi else None,
         compare=compare if is_kpi else None,
         kpi_html_path=project_root / raw["kpi_html_path"] if is_kpi else None,
+        lineage=raw["lineage"] if isinstance(raw.get("lineage"), dict) else None,
     )
 
 

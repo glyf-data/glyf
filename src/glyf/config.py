@@ -65,6 +65,10 @@ class DashboardConfig:
     theme: str = "light"
     embed_charts: bool = True
     show_compiled_sql: bool = True
+    # The Lineage view: the sources, models and charts behind a dashboard.
+    # It names warehouse tables, so `export.row_data: exclude` withholds it
+    # the way it withholds the compiled SQL.
+    show_lineage: bool = True
 
 
 @dataclass(frozen=True)
@@ -376,6 +380,7 @@ def _dashboard_config(raw: object) -> DashboardConfig:
         show_compiled_sql=_bool_value(
             raw, "show_compiled_sql", True, section="dashboard"
         ),
+        show_lineage=_bool_value(raw, "show_lineage", True, section="dashboard"),
     )
 
 

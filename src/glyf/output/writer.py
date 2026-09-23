@@ -56,6 +56,7 @@ def write_chart_metadata(
     artifacts: ChartArtifacts,
     *,
     columns: tuple[str, ...] = (),
+    lineage: dict[str, object] | None = None,
 ) -> None:
     """Write `charts/<name>.json`.
 
@@ -95,6 +96,10 @@ def write_chart_metadata(
     ):
         if value is not None:
             metadata[key] = value
+    if lineage is not None:
+        # The models and sources behind the chart, so a dashboard can draw
+        # lineage from artifacts alone.
+        metadata["lineage"] = lineage
     if chart.is_interactive:
         metadata["interactions"] = list(chart.interactions)
         metadata["vega_json_path"] = artifacts.vega_json.relative_to(

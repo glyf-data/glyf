@@ -124,7 +124,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-23T08:00:57Z">23 Sep 2026, 08:00 UTC</strong>
+          Refreshed <strong title="2026-09-23T20:29:02Z">23 Sep 2026, 20:29 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -159,6 +159,20 @@
           Source
         </button>
 
+
+        <button class="glyf-source-toggle" type="button" id="glyf-lineage-button" data-glyf-lineage-button aria-pressed="false">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6" cy="6" r="3"></circle>
+    <circle cx="18" cy="12" r="3"></circle>
+    <circle cx="6" cy="18" r="3"></circle>
+    <path d="M9 6h3a3 3 0 0 1 3 3v0a3 3 0 0 0 3 3"></path>
+    <path d="M9 18h3a3 3 0 0 0 3-3v0a3 3 0 0 1 3-3"></path>
+  </svg>
+
+          Lineage
+        </button>
+
         <div class="glyf-version-menu" data-glyf-version-menu>
           <button
             class="glyf-version-button"
@@ -177,7 +191,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 23 Sep 2026, 08:00 UTC</span>
+              <span class="glyf-version-option-note">built 23 Sep 2026, 20:29 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -476,7 +490,138 @@ ORDER BY weekday_number, hour
 </aside>
 
 
-      <main class="glyf-content">
+
+      <section class="glyf-lineage" id="glyf-lineage-view" aria-label="Lineage" hidden>
+  <div class="glyf-lineage-head">
+    <div class="glyf-lineage-title">Lineage</div>
+    <div class="glyf-lineage-summary glyf-mono">3 sources · 3 models · 11 charts</div>
+  </div>
+
+  <div class="glyf-lineage-colheads">
+    <div class="glyf-lineage-colhead">Sources</div>
+    <div class="glyf-lineage-colhead">Models</div>
+    <div class="glyf-lineage-colhead">Charts on this dashboard</div>
+  </div>
+  <div class="glyf-lineage-wrap" data-glyf-lineage>
+    <svg class="glyf-lineage-svg" viewBox="0 0 1068 672" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
+      <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
+        <g class="glyf-lineage-edges">
+          <path d="M264,278.0 C339.0,278.0 339.0,278.0 414,278.0" data-from="source:raw.product_usage" data-to="model:fct_product_usage"/>
+          <path d="M264,336.0 C339.0,336.0 339.0,336.0 414,336.0" data-from="source:raw.account_sessions" data-to="model:fct_account_sessions"/>
+          <path d="M264,394.0 C339.0,394.0 339.0,394.0 414,394.0" data-from="source:raw.hourly_activity" data-to="model:fct_hourly_activity"/>
+          <path d="M654,278.0 C729.0,278.0 729.0,46.0 804,46.0" data-from="model:fct_product_usage" data-to="chart:weekly_active_users"/>
+          <path d="M654,278.0 C729.0,278.0 729.0,104.0 804,104.0" data-from="model:fct_product_usage" data-to="chart:active_users"/>
+          <path d="M654,278.0 C729.0,278.0 729.0,162.0 804,162.0" data-from="model:fct_product_usage" data-to="chart:sessions_scatter"/>
+          <path d="M654,278.0 C729.0,278.0 729.0,220.0 804,220.0" data-from="model:fct_product_usage" data-to="chart:activation_by_plan"/>
+          <path d="M654,278.0 C729.0,278.0 729.0,278.0 804,278.0" data-from="model:fct_product_usage" data-to="chart:activation_rate_by_plan"/>
+          <path d="M654,278.0 C729.0,278.0 729.0,336.0 804,336.0" data-from="model:fct_product_usage" data-to="chart:sessions_per_user"/>
+          <path d="M654,278.0 C729.0,278.0 729.0,394.0 804,394.0" data-from="model:fct_product_usage" data-to="chart:sessions_by_plan"/>
+          <path d="M654,336.0 C729.0,336.0 729.0,452.0 804,452.0" data-from="model:fct_account_sessions" data-to="chart:top_accounts"/>
+          <path d="M654,336.0 C729.0,336.0 729.0,510.0 804,510.0" data-from="model:fct_account_sessions" data-to="chart:sessions_per_account"/>
+          <path d="M654,336.0 C729.0,336.0 729.0,568.0 804,568.0" data-from="model:fct_account_sessions" data-to="chart:session_length_distribution"/>
+          <path d="M654,394.0 C729.0,394.0 729.0,626.0 804,626.0" data-from="model:fct_hourly_activity" data-to="chart:activity_by_hour"/>
+        </g>
+        <g class="glyf-lineage-nodes">
+          <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.product_usage" data-tip="raw table, read through source()" transform="translate(24,256.0)" tabindex="0" role="button" aria-label="raw.product_usage, source">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">raw.product_usage</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.account_sessions" data-tip="raw table, read through source()" transform="translate(24,314.0)" tabindex="0" role="button" aria-label="raw.account_sessions, source">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">raw.account_sessions</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.hourly_activity" data-tip="raw table, read through source()" transform="translate(24,372.0)" tabindex="0" role="button" aria-label="raw.hourly_activity, source">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">raw.hourly_activity</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_product_usage" data-tip="models/fct_product_usage.sql" transform="translate(414,256.0)" tabindex="0" role="button" aria-label="fct_product_usage, model">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">fct_product_usage</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_account_sessions" data-tip="models/fct_account_sessions.sql" transform="translate(414,314.0)" tabindex="0" role="button" aria-label="fct_account_sessions, model">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">fct_account_sessions</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_hourly_activity" data-tip="models/fct_hourly_activity.sql" transform="translate(414,372.0)" tabindex="0" role="button" aria-label="fct_hourly_activity, model">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">fct_hourly_activity</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:weekly_active_users" data-tip="binds active_users AS value, previous AS compare" transform="translate(804,24.0)" tabindex="0" role="button" aria-label="Weekly active users, kpi">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Weekly active users</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">kpi</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:active_users" data-tip="binds week AS x, active_users AS y" transform="translate(804,82.0)" tabindex="0" role="button" aria-label="Active Users, area">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Active Users</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">area</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_scatter" data-tip="binds active_users AS x, sessions AS y" transform="translate(804,140.0)" tabindex="0" role="button" aria-label="Sessions vs Active Users, scatter">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Sessions vs Active Users</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">scatter</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activation_by_plan" data-tip="binds week AS x, activated_users AS y" transform="translate(804,198.0)" tabindex="0" role="button" aria-label="Activation by Plan, line">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Activation by Plan</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">line</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activation_rate_by_plan" data-tip="binds week AS x, activation_rate AS y" transform="translate(804,256.0)" tabindex="0" role="button" aria-label="Activation Rate by Plan, line">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Activation Rate by Plan</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">line</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_per_user" data-tip="binds week AS x, sessions_per_user AS y" transform="translate(804,314.0)" tabindex="0" role="button" aria-label="Sessions per Active User, bar">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Sessions per Active User</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">bar</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_by_plan" data-tip="binds plan AS x, sessions AS y" transform="translate(804,372.0)" tabindex="0" role="button" aria-label="Sessions by Plan, pie">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Sessions by Plan</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">pie</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:top_accounts" data-tip="lists account_id, plan, sessions, avg_session_minutes" transform="translate(804,430.0)" tabindex="0" role="button" aria-label="Most active accounts, table">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Most active accounts</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">table</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_per_account" data-tip="binds plan AS x, sessions AS y" transform="translate(804,488.0)" tabindex="0" role="button" aria-label="Sessions per Account, boxplot">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Sessions per Account</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">boxplot</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:session_length_distribution" data-tip="binds avg_session_minutes AS x" transform="translate(804,546.0)" tabindex="0" role="button" aria-label="Session Length by Account, histogram">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Session Length by Account</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">histogram</text>
+          </g>
+          <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activity_by_hour" data-tip="binds hour AS x, weekday AS y" transform="translate(804,604.0)" tabindex="0" role="button" aria-label="Sessions by Hour, heatmap">
+            <rect width="240" height="44" rx="7"/>
+            <text class="glyf-lineage-node-title" x="12" y="18">Sessions by Hour</text>
+            <text class="glyf-lineage-node-sub" x="12" y="34">heatmap</text>
+          </g>
+        </g>
+      </g>
+    </svg>
+    <div class="glyf-lineage-controls" aria-label="Zoom">
+      <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="in" aria-label="Zoom in">+</button>
+      <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="out" aria-label="Zoom out">&minus;</button>
+      <button type="button" class="glyf-lineage-zoom" data-glyf-zoom="reset" aria-label="Reset view">&#8690;</button>
+    </div>
+    <div class="glyf-lineage-tip" role="tooltip" hidden></div>
+  </div>
+  <p class="glyf-lineage-hint">Click a node to trace what feeds it and what it feeds; click again or press Escape to clear. Hover a node for what it binds or reads. Drag to move the canvas; scroll or use the buttons to zoom.</p>
+
+</section>
+
+      <main class="glyf-content" id="glyf-charts-view">
 
 
 
@@ -1110,7 +1255,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-23 09:00
+      2026-09-23 21:29
 
     </div>
   </div>
@@ -1150,7 +1295,7 @@ takes their quartiles, so neither query aggregates anything itself.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">23 Sep 2026, 08:00 UTC</div>
+              <div class="glyf-version-date">23 Sep 2026, 20:29 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -1212,6 +1357,102 @@ takes their quartiles, so neither query aggregates anything itself.
       const spec = JSON.parse(specElement.textContent);
       vegaEmbed(container, spec, { actions: false, renderer: "svg" });
     });
+  </script>
+
+
+  <script>
+    (function () {
+      // The Lineage view swaps in for the chart grid; the button toggles it back.
+      const button = document.querySelector("[data-glyf-lineage-button]");
+      const view = document.getElementById("glyf-lineage-view");
+      const charts = document.getElementById("glyf-charts-view");
+      if (!button || !view || !charts) return;
+      button.addEventListener("click", () => {
+        const open = view.hidden;
+        view.hidden = !open;
+        charts.hidden = open;
+        button.classList.toggle("is-active", open);
+        button.setAttribute("aria-pressed", open ? "true" : "false");
+      });
+
+      const wrap = view.querySelector("[data-glyf-lineage]");
+      const svg = wrap.querySelector("svg");
+      const canvas = wrap.querySelector("[data-glyf-lineage-canvas]");
+      const nodes = Array.from(wrap.querySelectorAll("[data-node]"));
+      const edges = Array.from(wrap.querySelectorAll("path[data-from]"));
+
+      // Tracing: light the node, everything upstream and everything downstream.
+      const up = new Map(), down = new Map();
+      edges.forEach((edge) => {
+        const a = edge.dataset.from, b = edge.dataset.to;
+        (down.get(a) || down.set(a, []).get(a)).push(b);
+        (up.get(b) || up.set(b, []).get(b)).push(a);
+      });
+      let current = null;
+      const walk = (start, map, seen) => (map.get(start) || []).forEach((n) => { if (!seen.has(n)) { seen.add(n); walk(n, map, seen); } });
+      const clear = () => { current = null; wrap.classList.remove("has-focus"); nodes.concat(edges).forEach((el) => el.classList.remove("is-lit")); };
+      const trace = (id) => {
+        if (current === id) return clear();
+        current = id;
+        const lit = new Set([id]); walk(id, up, lit); walk(id, down, lit);
+        wrap.classList.add("has-focus");
+        nodes.forEach((n) => n.classList.toggle("is-lit", lit.has(n.dataset.node)));
+        edges.forEach((e) => e.classList.toggle("is-lit", lit.has(e.dataset.from) && lit.has(e.dataset.to)));
+      };
+      nodes.forEach((node) => {
+        node.addEventListener("click", () => trace(node.dataset.node));
+        node.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); trace(node.dataset.node); } });
+      });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape") clear(); });
+
+      // Pan and zoom: one transform on the canvas group.
+      const state = { x: 0, y: 0, k: 1 };
+      const apply = () => canvas.setAttribute("transform", `translate(${state.x},${state.y}) scale(${state.k})`);
+      const scale = () => { const box = svg.getBoundingClientRect(); const vb = svg.viewBox.baseVal; return { box, sx: vb.width / box.width, sy: vb.height / box.height }; };
+      const zoomBy = (factor, cx, cy) => {
+        const k = Math.min(3, Math.max(0.4, state.k * factor));
+        const { box, sx, sy } = scale();
+        const px = (cx - box.left) * sx, py = (cy - box.top) * sy;
+        state.x = px - (px - state.x) * (k / state.k);
+        state.y = py - (py - state.y) * (k / state.k);
+        state.k = k; apply();
+      };
+      wrap.addEventListener("wheel", (event) => { event.preventDefault(); zoomBy(event.deltaY < 0 ? 1.12 : 1 / 1.12, event.clientX, event.clientY); }, { passive: false });
+      wrap.querySelectorAll("[data-glyf-zoom]").forEach((control) => control.addEventListener("click", () => {
+        const { box } = scale(); const cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+        if (control.dataset.glyfZoom === "in") zoomBy(1.25, cx, cy);
+        else if (control.dataset.glyfZoom === "out") zoomBy(1 / 1.25, cx, cy);
+        else { state.x = 0; state.y = 0; state.k = 1; apply(); }
+      }));
+      let drag = null;
+      wrap.addEventListener("pointerdown", (event) => {
+        if (event.target.closest("[data-node], button")) return;
+        drag = { x: event.clientX, y: event.clientY, vx: state.x, vy: state.y };
+        wrap.classList.add("is-panning"); wrap.setPointerCapture(event.pointerId);
+      });
+      wrap.addEventListener("pointermove", (event) => {
+        if (!drag) return;
+        const { sx, sy } = scale();
+        state.x = drag.vx + (event.clientX - drag.x) * sx;
+        state.y = drag.vy + (event.clientY - drag.y) * sy;
+        apply();
+      });
+      const endDrag = () => { drag = null; wrap.classList.remove("is-panning"); };
+      wrap.addEventListener("pointerup", endDrag); wrap.addEventListener("pointercancel", endDrag);
+
+      // The tooltip carries what the node does not: a model's file, a chart's bindings.
+      const tip = wrap.querySelector(".glyf-lineage-tip");
+      nodes.forEach((node) => {
+        const show = () => {
+          tip.textContent = node.dataset.tip || ""; tip.hidden = !tip.textContent;
+          const r = node.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+          tip.style.left = `${r.left - w.left}px`; tip.style.top = `${r.bottom - w.top + 6}px`;
+        };
+        const hide = () => { tip.hidden = true; };
+        node.addEventListener("pointerenter", show); node.addEventListener("pointerleave", hide);
+        node.addEventListener("focus", show); node.addEventListener("blur", hide);
+      });
+    })();
   </script>
 
   <script>

@@ -8,6 +8,7 @@ from glyf.config import GlyfConfig
 from glyf.dashboard.artifacts import ChartArtifact
 from glyf.dashboard.assets import AssetManager, DashboardAssets
 from glyf.dashboard.chart_theme import apply_chart_theme, resolve_chart_theme
+from glyf.dashboard.lineage import build_lineage
 from glyf.dashboard.loader import Dashboard
 from glyf.dashboard.theme import DEFAULT_THEME, Theme
 
@@ -90,6 +91,7 @@ class DashboardRenderer:
             charts=themed_charts,
             has_interactive_charts=any(chart.vega_spec is not None for chart in themed_charts),
             has_tables=any(chart.metadata.is_table for chart in themed_charts),
+            lineage=build_lineage(charts) if config.dashboard.show_lineage else None,
             dashboard_config=config.dashboard,
             dashboard_theme=resolved_theme,
             chart_theme=resolved_chart_theme,

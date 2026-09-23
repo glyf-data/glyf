@@ -94,6 +94,23 @@ fn manifest_relation(unique_id: &str, raw: &Value) -> Option<ManifestRelation> {
             .and_then(Value::as_str)
             .map(str::to_string),
         pii_columns: pii_columns(obj),
+        parents: obj
+            .get("depends_on")
+            .and_then(|deps| deps.get("nodes"))
+            .and_then(Value::as_array)
+            .map(|nodes| {
+                nodes
+                    .iter()
+                    .filter_map(Value::as_str)
+                    .map(str::to_string)
+                    .collect()
+            })
+            .unwrap_or_default(),
+        path: obj
+            .get("original_file_path")
+            .and_then(Value::as_str)
+            .filter(|value| !value.is_empty())
+            .map(str::to_string),
     })
 }
 
@@ -196,6 +213,34 @@ mod tests {
         assert_eq!(manifest.sources[0].relation_name, "main.raw_orders");
         assert!(manifest.nodes[0].pii_columns.is_empty());
         assert!(manifest.generated_at.is_none());
+    }
+
+    #[test]
+    fn reads_each_nodes_parents_and_file() {
+        let manifest = load_manifest_json_text(
+            r#"{"nodes": {
+                "model.p.fct_orders": {"name": "fct_orders", "resource_type": "model", "relation_name": "main.fct_orders", "original_file_path": "models/fct_orders.sql", "depends_on": {"macros": [], "nodes": ["model.p.stg_orders", "source.p.raw.orders"]}},
+                "model.p.stg_orders": {"name": "stg_orders", "resource_type": "model", "relation_name": "main.stg_orders"}
+            }, "sources": {}}"#,
+            "manifest.json",
+        )
+        .unwrap();
+        let fct = manifest
+            .nodes
+            .iter()
+            .find(|n| n.name == "fct_orders")
+            .unwrap();
+        assert_eq!(
+            fct.parents,
+            vec!["model.p.stg_orders", "source.p.raw.orders"]
+        );
+        assert_eq!(fct.path.as_deref(), Some("models/fct_orders.sql"));
+        let stg = manifest
+            .nodes
+            .iter()
+            .find(|n| n.name == "stg_orders")
+            .unwrap();
+        assert!(stg.parents.is_empty() && stg.path.is_none());
     }
 
     #[test]

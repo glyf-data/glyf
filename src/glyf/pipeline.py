@@ -20,6 +20,7 @@ from glyf.ggsql.renderer import (
 )
 from glyf.ggsql.kpi import render_kpi
 from glyf.ggsql.table import render_table
+from glyf.lineage import chart_lineage
 from glyf.manifest.loader import DbtManifest, ManifestError, load_manifest
 from glyf.manifest.resolver import RefResolution, resolve_refs
 from glyf.ordering import is_order_sensitive, order_rows
@@ -116,6 +117,8 @@ class _Compiled:
     artifacts: ChartArtifacts
     # The file as the user would type it, for every message about this chart.
     rel_path: str
+    # The models and sources behind the chart, for its metadata.
+    lineage: dict[str, object]
 
 
 def render_project(
@@ -314,6 +317,7 @@ def _compile(path: Path, run: _Run) -> _Compiled:
         resolution=resolution,
         artifacts=artifacts,
         rel_path=rel_path,
+        lineage=chart_lineage(resolution, run.manifest),
     )
 
 
@@ -503,7 +507,11 @@ def _write_artifacts(
                 f"{compiled.rel_path} {chart.draw_type} rendering failed: {exc}"
             ) from exc
         write_chart_metadata(
-            root, chart, artifacts, columns=table_columns(chart, data.columns)
+            root,
+            chart,
+            artifacts,
+            columns=table_columns(chart, data.columns),
+            lineage=compiled.lineage,
         )
         return
     _discard(artifacts.table_html, artifacts.kpi_html)
@@ -541,7 +549,7 @@ def _write_artifacts(
     if run.prune_row_data and artifacts.svg.exists():
         strip_svg_row_values(artifacts.svg, chart)
 
-    write_chart_metadata(root, chart, artifacts)
+    write_chart_metadata(root, chart, artifacts, lineage=compiled.lineage)
 
 
 def _prune_unselected_artifacts(

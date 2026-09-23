@@ -196,6 +196,8 @@ def _copy_public_chart_metadata(
         payload.pop("svg_path", None)
         payload.pop("compiled_sql_path", None)
         payload.pop("interactions", None)
+        # Names the warehouse tables the chart was built from, like the SQL.
+        payload.pop("lineage", None)
     _rewrite_public_chart_path(payload, "metadata_path", "charts")
     _rewrite_public_chart_path(payload, "png_path", "charts")
     _rewrite_public_chart_path(payload, "svg_path", "charts")

@@ -2,6 +2,22 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Every dashboard has a **Lineage** button beside **Source**. It swaps the
+  chart grid for a graph of the raw sources, the dbt models and the
+  dashboard's charts, with a line for each read. Click a node to light
+  everything upstream and downstream of it; hover for what a chart binds or
+  which file a model is; drag to pan and scroll to zoom. The graph is built
+  from the chart artifacts: at build time each chart's metadata records the
+  models its SQL references and, from the manifest's `depends_on`, every
+  model behind them back to the sources, so an exported site carries its
+  lineage with no manifest. `dashboard.show_lineage: false` turns the view
+  off, and `export.row_data: exclude` withholds it and the `lineage`
+  metadata key, the way it withholds the compiled SQL.
+
 ## 0.11.0 - 2026-09-23
 
 ### Added

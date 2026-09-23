@@ -8,6 +8,19 @@
   ],
   "compiled_sql_path": "compiled/top_accounts.sql",
   "height": 360,
+  "lineage": {
+    "models": {
+      "fct_account_sessions": {
+        "parents": [
+          "source:raw.account_sessions"
+        ],
+        "path": "models/fct_account_sessions.sql"
+      }
+    },
+    "sources": [
+      "raw.account_sessions"
+    ]
+  },
   "metadata_path": "charts/top_accounts.json",
   "name": "top_accounts",
   "table_html_path": "charts/top_accounts.table.html",

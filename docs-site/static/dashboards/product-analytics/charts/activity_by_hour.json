@@ -6,6 +6,19 @@
   "interactions": [
     "tooltip"
   ],
+  "lineage": {
+    "models": {
+      "fct_hourly_activity": {
+        "parents": [
+          "source:raw.hourly_activity"
+        ],
+        "path": "models/fct_hourly_activity.sql"
+      }
+    },
+    "sources": [
+      "raw.hourly_activity"
+    ]
+  },
   "metadata_path": "charts/activity_by_hour.json",
   "name": "activity_by_hour",
   "png_path": "charts/activity_by_hour.png",

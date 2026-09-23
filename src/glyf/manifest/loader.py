@@ -19,6 +19,10 @@ class ManifestRelation:
     # Columns the dbt project classifies as PII in `schema.yml`, by
     # `meta: {pii: true}` or a `pii` tag.
     pii_columns: tuple[str, ...] = ()
+    # The nodes this one reads, as unique ids from `depends_on.nodes`.
+    parents: tuple[str, ...] = ()
+    # The file dbt read it from, `original_file_path`.
+    path: str | None = None
 
 
 @dataclass(frozen=True)
@@ -56,6 +60,12 @@ class DbtManifest:
     def node_for_ref(self, name: str) -> ManifestRelation | None:
         for node in self.refable_nodes:
             if node.name == name:
+                return node
+        return None
+
+    def node_by_id(self, unique_id: str) -> ManifestRelation | None:
+        for node in (*self.nodes, *self.sources):
+            if node.unique_id == unique_id:
                 return node
         return None
 
@@ -104,6 +114,8 @@ def _relation_from_core(raw: object) -> ManifestRelation:
         package_name=_optional_str(raw, "package_name"),
         source_name=_optional_str(raw, "source_name"),
         pii_columns=tuple(str(item) for item in _optional_list(raw, "pii_columns")),
+        parents=tuple(str(item) for item in _optional_list(raw, "parents")),
+        path=_optional_str(raw, "path"),
     )
 
 

@@ -6,6 +6,19 @@
     "tooltip",
     "legend_filter"
   ],
+  "lineage": {
+    "models": {
+      "fct_product_usage": {
+        "parents": [
+          "source:raw.product_usage"
+        ],
+        "path": "models/fct_product_usage.sql"
+      }
+    },
+    "sources": [
+      "raw.product_usage"
+    ]
+  },
   "metadata_path": "charts/activation_rate_by_plan.json",
   "name": "activation_rate_by_plan",
   "png_path": "charts/activation_rate_by_plan.png",

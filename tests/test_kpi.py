@@ -104,6 +104,7 @@ def test_a_kpi_is_written_as_a_tile_not_a_picture(tmp_path: Path) -> None:
         "data_json_path": "target/glyf/data/normalized/revenue_kpi.data.json",
         "metadata_path": "target/glyf/charts/revenue_kpi.json",
         "kpi_html_path": "target/glyf/charts/revenue_kpi.kpi.html",
+        "lineage": {"models": {"fct_orders": {"parents": [], "path": None}}, "sources": []},
     }
 
 

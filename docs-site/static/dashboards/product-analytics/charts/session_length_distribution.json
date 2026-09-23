@@ -6,6 +6,19 @@
     "tooltip",
     "legend_filter"
   ],
+  "lineage": {
+    "models": {
+      "fct_account_sessions": {
+        "parents": [
+          "source:raw.account_sessions"
+        ],
+        "path": "models/fct_account_sessions.sql"
+      }
+    },
+    "sources": [
+      "raw.account_sessions"
+    ]
+  },
   "metadata_path": "charts/session_length_distribution.json",
   "name": "session_length_distribution",
   "png_path": "charts/session_length_distribution.png",

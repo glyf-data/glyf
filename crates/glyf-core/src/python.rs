@@ -64,6 +64,8 @@ fn relations_to_python(py: Python<'_>, relations: Vec<ManifestRelation>) -> PyRe
         item.set_item("package_name", relation.package_name)?;
         item.set_item("source_name", relation.source_name)?;
         item.set_item("pii_columns", relation.pii_columns)?;
+        item.set_item("parents", relation.parents)?;
+        item.set_item("path", relation.path)?;
         list.append(item)?;
     }
     Ok(list.into_any().unbind())
@@ -113,9 +115,11 @@ fn relation_from_python_map(
         resource_type: required(&mut item, "resource_type")?,
         package_name: item.remove("package_name").flatten(),
         source_name: item.remove("source_name").flatten(),
-        // Ref resolution never consults the classification, so the Python
-        // side does not send it back across.
+        // Ref resolution never consults the classification, the parents or
+        // the file, so the Python side does not send them back across.
         pii_columns: Vec::new(),
+        parents: Vec::new(),
+        path: None,
     })
 }
 
