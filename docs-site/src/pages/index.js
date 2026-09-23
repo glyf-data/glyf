@@ -464,8 +464,33 @@ function HeroArrow({className}) {
 function HeroDiagram() {
   const logoUrl = useBaseUrl('/img/glyf-logo-v4.svg');
   const hostedDashboardUrl = useBaseUrl('/dashboards/sales-dashboard/dashboards/sales.html');
+  const liveDashboardUrl = useBaseUrl('/dashboards/product-analytics/dashboards/product.html');
+  const [liveOpen, setLiveOpen] = React.useState(false);
+  React.useEffect(() => {
+    if (!liveOpen) return undefined;
+    const onKey = (event) => { if (event.key === 'Escape') setLiveOpen(false); };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+  }, [liveOpen]);
+  const openLive = (event) => {
+    // A phone gets the demo as a page of its own; the overlay needs room.
+    if (window.matchMedia && window.matchMedia('(max-width: 720px)').matches) return;
+    event.preventDefault();
+    setLiveOpen(true);
+  };
   return (
     <figure className="glyfHeroDiagram" aria-label="dbt models, YAML layouts, and Python macros go through glyf build and ship as dashboards, embedded analytics, and hosted dashboards">
+      {liveOpen ? (
+        <div className="liveDashboard" role="dialog" aria-modal="true" aria-label="A live glyf dashboard">
+          <div className="liveDashboard__bar">
+            <button type="button" className="liveDashboard__back" onClick={() => setLiveOpen(false)}>&larr; Back</button>
+            <span className="liveDashboard__title">Product Analytics <span>built by glyf from a dbt project</span></span>
+            <a className="liveDashboard__open" href={liveDashboardUrl} target="_blank" rel="noopener">Open in a new tab &#8599;</a>
+          </div>
+          <iframe className="liveDashboard__frame" src={liveDashboardUrl} title="Product analytics dashboard, built by glyf" />
+        </div>
+      ) : null}
       <div className="glyfHeroFlow">
         <div className="glyfHeroInputs">
           {heroInputs.map((item) => (
@@ -492,11 +517,11 @@ function HeroDiagram() {
         </svg>
         <div className="glyfHeroOutputs">
           <div className="glyfHeroSlot glyfHeroSlot--tall">
-            <Link className="glyfHeroCard glyfHeroOutput glyfHeroOutput--dashboards" to="/docs/examples/gallery">
+            <a className="glyfHeroCard glyfHeroOutput glyfHeroOutput--dashboards glyfHeroOutput--live" href={liveDashboardUrl} onClick={openLive}>
               <span className="glyfHeroOutputHead">
                 <span className="glyfHeroIcon"><SmallChartIcon type="bars" /></span>
                 <strong>Dashboards</strong>
-                <span className="glyfHeroChevron"><HeroGlyph type="chevron" /></span>
+                <span className="glyfHeroLiveHint">View live <span aria-hidden="true">&rarr;</span></span>
               </span>
               <span className="glyfHeroMini">
                 <span className="glyfHeroMiniLabel">Revenue <span className="glyfHeroMiniBadge">Rendered</span></span>
@@ -513,7 +538,7 @@ function HeroDiagram() {
                   ))}
                 </span>
               </span>
-            </Link>
+            </a>
           </div>
           <div className="glyfHeroSlot">
             <Link className="glyfHeroCard glyfHeroOutput" to="/docs/integrations/embedded-analytics">
