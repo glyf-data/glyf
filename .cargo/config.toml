@@ -1,3 +1,10 @@
-[env]
-GGSQL_SKIP_GENERATE = "1"
+# Homebrew rewrites the extension module's install name to an absolute path
+# under the Cellar when it installs the wheel, and that only fits if the
+# Mach-O header was linked with room to spare. rustc leaves a few dozen bytes;
+# `-headerpad_max_install_names` leaves a kilobyte. 0.10.0's brew install died
+# on exactly this, and 0.9.0's passed by 8 bytes of luck.
+[target.aarch64-apple-darwin]
+rustflags = ["-C", "link-arg=-Wl,-headerpad_max_install_names"]
 
+[target.x86_64-apple-darwin]
+rustflags = ["-C", "link-arg=-Wl,-headerpad_max_install_names"]
