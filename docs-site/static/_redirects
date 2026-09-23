@@ -3,3 +3,7 @@
 # A Slack invite expires. Everything that links to the community links here, so
 # a new invite is a change to this one line and a docs deploy.
 /slack  https://join.slack.com/t/glyfdata/shared_invite/zt-4akb60nzo-pBJEeDFpsR3A3nT~BWpG4w  302
+
+# The installer, served from the domain so the command reads as ours. One
+# source of truth: the file in the repository, which this points at.
+/install.sh  https://raw.githubusercontent.com/glyf-data/glyf/main/install.sh  302
