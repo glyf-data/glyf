@@ -31,16 +31,16 @@ def write_report(diff: BuildDiff, output_dir: Path) -> Path:
         shutil.rmtree(output_dir)
     images = output_dir / "images"
     images.mkdir(parents=True)
-    tables = output_dir / "tables"
+    fragments = output_dir / "fragments"
 
     for chart in diff.charts:
-        if chart.table:
-            # A table's before and after are the fragments themselves, kept
-            # beside the images for anything that wants to show them.
-            for side, fragment in (("before", chart.before_table), ("after", chart.after_table)):
-                if fragment is not None:
-                    tables.mkdir(exist_ok=True)
-                    (tables / f"{chart.name}.{side}.html").write_text(fragment, encoding="utf-8")
+        if chart.is_fragment:
+            # A table's or a kpi's before and after are the fragments
+            # themselves, kept beside the images for anything that wants to
+            # show them.
+            for side, fragment in _sides(chart):
+                fragments.mkdir(exist_ok=True)
+                (fragments / f"{chart.name}.{side}.html").write_text(fragment, encoding="utf-8")
             continue
         if chart.status in ("changed", "removed"):
             shutil.copyfile(
@@ -82,16 +82,14 @@ def as_document(diff: BuildDiff) -> dict[str, object]:
 
 def _chart_document(chart: ChartDiff) -> dict[str, object]:
     document: dict[str, object] = {"status": chart.status, "title": chart.title}
-    if chart.table:
-        # No pixels and no marks: a table's change is its rows, and the
-        # fragments are there for a consumer that wants to show them.
-        document["table"] = True
+    if chart.is_fragment:
+        # No pixels and no marks: a table's or a kpi's change is its rows, and
+        # the fragments are there for a consumer that wants to show them.
+        document["table" if chart.table else "kpi"] = True
         if chart.status == "unchanged":
             return document
-        document["tables"] = {
-            side: f"tables/{chart.name}.{side}.html"
-            for side, fragment in (("before", chart.before_table), ("after", chart.after_table))
-            if fragment is not None
+        document["fragments"] = {
+            side: f"fragments/{chart.name}.{side}.html" for side, _ in _sides(chart)
         }
         if chart.status != "changed":
             return document
@@ -178,7 +176,17 @@ def moved(chart: ChartDiff) -> str:
     """How much of a changed chart moved: a share of its pixels, or its rows."""
     if chart.table:
         return "table rows"
+    if chart.kpi:
+        return "kpi value"
     return f"{format_percent(chart.changed_percent)} of pixels"
+
+
+def _sides(chart: ChartDiff) -> list[tuple[str, str]]:
+    return [
+        (side, fragment)
+        for side, fragment in (("before", chart.before_fragment), ("after", chart.after_fragment))
+        if fragment is not None
+    ]
 
 
 def describe_change(chart: ChartDiff) -> list[str]:

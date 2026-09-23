@@ -190,15 +190,19 @@ def _chart_payload(
     exclude_row_data: bool = False,
 ) -> dict[str, object]:
     is_table = raw.get("chart_type") == "table"
+    is_kpi = raw.get("chart_type") == "kpi"
+    # A table lists columns and a kpi binds a value; every other chart
+    # binds x and y.
+    if is_table:
+        fields: dict[str, object] = {"columns": raw.get("columns")}
+    elif is_kpi:
+        fields = {"value": raw.get("value"), "compare": raw.get("compare")}
+    else:
+        fields = {"x": raw.get("x"), "y": raw.get("y")}
     payload: dict[str, object] = {
         "title": raw.get("title"),
         "chart_type": raw.get("chart_type"),
-        # A table lists columns; every other chart binds x and y.
-        "fields": (
-            {"columns": raw.get("columns")}
-            if is_table
-            else {"x": raw.get("x"), "y": raw.get("y")}
-        ),
+        "fields": fields,
         "artifacts": {
             "metadata": _artifact_path(
                 project_root,
@@ -219,6 +223,10 @@ def _chart_payload(
     if is_table:
         payload["artifacts"]["table"] = _artifact_path(
             project_root, config, raw.get("table_html_path"), public
+        )
+    if is_kpi:
+        payload["artifacts"]["kpi"] = _artifact_path(
+            project_root, config, raw.get("kpi_html_path"), public
         )
     if exclude_row_data:
         # These are not published under `export.row_data: exclude`; a manifest

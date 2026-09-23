@@ -1,0 +1,10 @@
+{
+  "chart_type": "kpi",
+  "compare": "previous",
+  "compiled_sql_path": "compiled/weekly_active_users.sql",
+  "kpi_html_path": "charts/weekly_active_users.kpi.html",
+  "metadata_path": "charts/weekly_active_users.json",
+  "name": "weekly_active_users",
+  "title": "Weekly active users",
+  "value": "active_users"
+}

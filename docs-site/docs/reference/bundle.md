@@ -140,8 +140,8 @@ dashboard's `charts` list refers to.
 | Field | Type | Description |
 | --- | --- | --- |
 | `title` | string \| null | The chart's `LABEL title`, if it has one. |
-| `chart_type` | string \| null | The `DRAW` type: `line`, `bar`, `scatter`, `area`, `pie`, `histogram`, `boxplot`, `heatmap` or `table`. The aliases `point` and `tile` are recorded as `scatter` and `heatmap`. |
-| `fields` | object | `x` and `y`, the column names bound to those roles. `y` is `null` for a `histogram`, which binds no y column. A `table` has `columns` instead: the column names it lists, in order. |
+| `chart_type` | string \| null | The `DRAW` type: `line`, `bar`, `scatter`, `area`, `pie`, `histogram`, `boxplot`, `heatmap`, `table` or `kpi`. The aliases `point` and `tile` are recorded as `scatter` and `heatmap`. |
+| `fields` | object | `x` and `y`, the column names bound to those roles. `y` is `null` for a `histogram`, which binds no y column. A `table` has `columns` instead: the column names it lists, in order. A `kpi` has `value` and `compare`, the latter `null` when unmapped. |
 | `artifacts` | object | See below. |
 | `interactions` | array of strings | **Optional.** Present only when the chart declares `INTERACT`. |
 
@@ -152,9 +152,10 @@ Every value is a path or `null`; the keys are always present.
 | Field | Public manifest | Description |
 | --- | --- | --- |
 | `metadata` | path | The chart's own JSON metadata file. |
-| `png` | path | Rendered PNG. `null` for a `table`, which is not drawn. |
-| `svg` | path | Rendered SVG. `null` for a `table`. |
+| `png` | path | Rendered PNG. `null` for a `table` or a `kpi`, which are not drawn. |
+| `svg` | path | Rendered SVG. `null` for a `table` or a `kpi`. |
 | `table` | path | **Tables only.** The `<table>` HTML fragment the dashboard shows. Absent for every other chart type. |
+| `kpi` | path | **KPIs only.** The tile fragment the dashboard shows. Absent for every other chart type. |
 | `compiled_sql` | path | The compiled SQL behind the chart. |
 | `data` | always `null` | Normalised chart data. Local manifests only. |
 | `vega` | always `null` | Vega specification. Local manifests only, and only for charts with interactions. |

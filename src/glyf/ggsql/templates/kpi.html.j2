@@ -1,0 +1,11 @@
+<figure class="glyf-kpi" data-glyf-kpi="{{ name }}">
+  <div class="glyf-kpi-value">{{ tile.value_text }}</div>
+  {%- if tile.comparison %}
+  <div class="glyf-kpi-compare{% if tile.comparison.direction %} glyf-kpi-compare--{{ tile.comparison.direction }}{% endif %}">
+    {%- if tile.comparison.direction %}
+    <span class="glyf-kpi-delta">{% if tile.comparison.direction == "up" %}&#9650;{% elif tile.comparison.direction == "down" %}&#9660;{% else %}&#8212;{% endif %} {{ tile.comparison.delta_text }}{% if tile.comparison.percent_text %} ({{ tile.comparison.percent_text }}){% endif %}</span>
+    {%- endif %}
+    <span class="glyf-kpi-compare-label">{{ compare_label }} {{ tile.comparison.compare_text }}</span>
+  </div>
+  {%- endif %}
+</figure>

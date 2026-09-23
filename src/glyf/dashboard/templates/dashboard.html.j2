@@ -2,6 +2,7 @@
 {%- import "components/toolbar.j2" as toolbar -%}
 {%- import "components/chart_card.j2" as chart_cards -%}
 {%- import "components/table_card.j2" as table_cards -%}
+{%- import "components/kpi_card.j2" as kpi_cards -%}
 {%- import "components/component_card.j2" as component_cards -%}
 {%- import "components/source_drawer.j2" as source_drawer -%}
 {%- import "components/ai_panel.j2" as ai_panel -%}
@@ -191,6 +192,8 @@
               {% for item in section.items %}
                 {% if item.kind == "chart" and item.chart and chart_artifacts[item.chart].metadata.is_table %}
                   {{ table_cards.render_table_card(chart_artifacts[item.chart], item.title, item.width) }}
+                {% elif item.kind == "chart" and item.chart and chart_artifacts[item.chart].metadata.is_kpi %}
+                  {{ kpi_cards.render_kpi_card(chart_artifacts[item.chart], item.title, item.width) }}
                 {% elif item.kind == "chart" and item.chart %}
                   {{ chart_cards.render_chart_card(chart_artifacts[item.chart], dashboard_config, chart_theme, item.title, item.width) }}
                 {% elif item.kind == "component" and item.component_spec %}
@@ -210,6 +213,8 @@
             {% for chart in charts %}
             {% if chart.metadata.is_table %}
             {{ table_cards.render_table_card(chart) }}
+            {% elif chart.metadata.is_kpi %}
+            {{ kpi_cards.render_kpi_card(chart) }}
             {% else %}
             {{ chart_cards.render_chart_card(chart, dashboard_config, chart_theme) }}
             {% endif %}

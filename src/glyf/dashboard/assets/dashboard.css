@@ -919,6 +919,57 @@ html[data-theme="dark"] .glyf-icon-btn[data-tip]:hover::after {
   text-align: left;
 }
 
+.glyf-kpi-card {
+  min-height: 100%;
+}
+
+.glyf-kpi-label {
+  color: var(--glyf-color-text-subtle);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.glyf-kpi {
+  margin: 0;
+}
+
+.glyf-kpi-value {
+  margin-top: var(--glyf-space-1);
+  color: var(--glyf-color-text);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.glyf-kpi-compare {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--glyf-space-2);
+  align-items: baseline;
+  margin-top: var(--glyf-space-2);
+  color: var(--glyf-color-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.glyf-kpi-delta {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.glyf-kpi-compare--up .glyf-kpi-delta {
+  color: var(--glyf-color-green);
+}
+
+.glyf-kpi-compare--down .glyf-kpi-delta {
+  color: var(--glyf-color-red);
+}
+
+.glyf-kpi-compare-label {
+  color: var(--glyf-color-text-subtle);
+}
+
 .glyf-component-card,
 .glyf-metric-card,
 .glyf-markdown-card {

@@ -78,7 +78,7 @@ def required_columns(chart: GgsqlChart) -> tuple[str, ...]:
     """
     if chart.is_table:
         return chart.table_columns
-    roles = ("x", "y", "color")
+    roles = ("value", "compare") if chart.is_kpi else ("x", "y", "color")
     fields = [chart.field_for_role(role) for role in roles]
     return tuple(dict.fromkeys(field for field in fields if field is not None))
 
@@ -257,9 +257,9 @@ def build_chart(
 ) -> alt.Chart:
     config = config or RenderConfig()
     frame = _coerce_query_result(data).to_arrow()
-    if chart.is_table:
+    if not chart.has_picture:
         raise ChartRenderError(
-            "a table is not drawn; glyf.ggsql.table writes it from its rows"
+            f"a {chart.draw_type} is not drawn; glyf.ggsql.{chart.draw_type} writes it from its rows"
         )
     chart_type = CHART_TYPES.get(chart.draw_type)
     if chart_type is None:

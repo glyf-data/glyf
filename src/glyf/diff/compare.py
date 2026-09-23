@@ -5,9 +5,9 @@ from the last build's is a chart that changed. This module says which charts
 those are, how much of each picture moved, and as far as the builds record it,
 why: a different query, different rows, or a different renderer.
 
-A table has no picture: its rows are the chart, laid out as an HTML fragment
-that is byte-stable in the same way. A table whose fragment differs is a table
-that changed, and what changed is said in the rows' terms alone.
+A table or a kpi has no picture: the rows are the chart, laid out as an HTML
+fragment that is byte-stable in the same way. One whose fragment differs is a
+chart that changed, and what changed is said in the rows' terms alone.
 """
 
 import json
@@ -73,8 +73,10 @@ class ChartDiff:
     name: str
     status: Status
     title: str | None = None
-    # A table: no picture, no pixels, no overlay; the rows are the change.
+    # A table or a kpi: no picture, no pixels, no overlay; the rows are the
+    # change. At most one of these is set.
     table: bool = False
+    kpi: bool = False
     changed_pixels: int = 0
     total_pixels: int = 0
     before_size: tuple[int, int] | None = None
@@ -89,9 +91,14 @@ class ChartDiff:
     # overlay can draw; otherwise the pixel picture is all there is.
     overlay_png: bytes | None = field(default=None, repr=False, compare=False)
     marks: MarkChange | None = None
-    # A table's fragment on each side, for the report to show as it was shown.
-    before_table: str | None = field(default=None, repr=False, compare=False)
-    after_table: str | None = field(default=None, repr=False, compare=False)
+    # A table's or a kpi's fragment on each side, for the report to show it
+    # as it was shown.
+    before_fragment: str | None = field(default=None, repr=False, compare=False)
+    after_fragment: str | None = field(default=None, repr=False, compare=False)
+
+    @property
+    def is_fragment(self) -> bool:
+        return self.table or self.kpi
 
     @property
     def changed_percent(self) -> float:
@@ -153,19 +160,24 @@ def compare_builds(
 
     before_charts = _chart_images(baseline)
     after_charts = _chart_images(current)
-    before_tables = _chart_tables(baseline)
-    after_tables = _chart_tables(current)
+    before_fragments = _chart_fragments(baseline)
+    after_fragments = _chart_fragments(current)
     charts = []
     for name in sorted(
-        before_charts.keys() | after_charts.keys() | before_tables.keys() | after_tables.keys()
+        before_charts.keys()
+        | after_charts.keys()
+        | before_fragments.keys()
+        | after_fragments.keys()
     ):
-        if name in before_tables or name in after_tables:
+        if name in before_fragments or name in after_fragments:
+            kind, _ = after_fragments.get(name) or before_fragments[name]
             charts.append(
-                _compare_table(
+                _compare_fragment(
                     name,
-                    _title(current if name in after_tables else baseline, name),
-                    before_tables.get(name),
-                    after_tables.get(name),
+                    _title(current if name in after_fragments else baseline, name),
+                    kind,
+                    before_fragments.get(name),
+                    after_fragments.get(name),
                     baseline=baseline,
                     current=current,
                     before_record=before_record,
@@ -250,45 +262,49 @@ def _compare_chart(
     )
 
 
-def _compare_table(
+def _compare_fragment(
     name: str,
     title: str | None,
-    old: Path | None,
-    new: Path | None,
+    kind: str,
+    old: tuple[str, Path] | None,
+    new: tuple[str, Path] | None,
     *,
     baseline: Path,
     current: Path,
     before_record: dict[str, object],
     after_record: dict[str, object],
 ) -> ChartDiff:
-    """A table judged by its fragment, explained by its rows.
+    """A table or a kpi judged by its fragment, explained by its rows.
 
     The fragment is written from the rows and nothing else, so two builds with
     the same rows write the same bytes, and a byte that differs is a row, a
-    column or a label that did. There is no threshold: a table has no pixels
-    to forgive, and a cell that changed is a change.
+    column or a label that did. There is no threshold: there are no pixels to
+    forgive, and a cell that changed is a change.
     """
-    before_text = old.read_text(encoding="utf-8") if old is not None else None
-    after_text = new.read_text(encoding="utf-8") if new is not None else None
+    kinds = {"table": kind == "table", "kpi": kind == "kpi"}
+    before_text = old[1].read_text(encoding="utf-8") if old is not None else None
+    after_text = new[1].read_text(encoding="utf-8") if new is not None else None
     if before_text is None:
-        return ChartDiff(name=name, status="added", title=title, table=True, after_table=after_text)
+        return ChartDiff(
+            name=name, status="added", title=title, after_fragment=after_text, **kinds
+        )
     if after_text is None:
         return ChartDiff(
-            name=name, status="removed", title=title, table=True, before_table=before_text
+            name=name, status="removed", title=title, before_fragment=before_text, **kinds
         )
     if before_text == after_text:
-        return ChartDiff(name=name, status="unchanged", title=title, table=True)
+        return ChartDiff(name=name, status="unchanged", title=title, **kinds)
 
     data = _data_change(baseline, current, name)
     return ChartDiff(
         name=name,
         status="changed",
         title=title,
-        table=True,
         reasons=_reasons(name, before_record, after_record, data),
         data=data,
-        before_table=before_text,
-        after_table=after_text,
+        before_fragment=before_text,
+        after_fragment=after_text,
+        **kinds,
     )
 
 
@@ -409,12 +425,18 @@ def _chart_images(build_dir: Path) -> dict[str, Path]:
     return {path.stem: path for path in sorted((build_dir / "charts").glob("*.png"))}
 
 
-def _chart_tables(build_dir: Path) -> dict[str, Path]:
-    """The tables a build wrote, by chart name: `charts/<name>.table.html`."""
-    return {
-        path.name[: -len(".table.html")]: path
-        for path in sorted((build_dir / "charts").glob("*.table.html"))
-    }
+# The charts a build writes as HTML rather than draws, by their file suffix.
+FRAGMENT_KINDS = ("table", "kpi")
+
+
+def _chart_fragments(build_dir: Path) -> dict[str, tuple[str, Path]]:
+    """The tables and kpis a build wrote, by chart name, with their kind."""
+    fragments = {}
+    for kind in FRAGMENT_KINDS:
+        suffix = f".{kind}.html"
+        for path in sorted((build_dir / "charts").glob(f"*{suffix}")):
+            fragments[path.name[: -len(suffix)]] = (kind, path)
+    return fragments
 
 
 def _title(build_dir: Path, name: str) -> str | None:

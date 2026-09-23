@@ -23,6 +23,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/product-analytics/dashboard
 ## What it demonstrates
 
 - Sections with asymmetric `30% 70%` and `65% 35%` column tracks, metric tiles, and titled charts.
+- A KPI tile from the data (`weekly_active_users.ggsql`): the latest week's active users against the week before, with the change and its direction, next to a hand-written metric tile for contrast.
 - Dashboard filters whose values come from a rendered chart artifact (`source(activation_by_plan, plan)`).
 - Built-in macros in `summary` and a project-local macro, `activation_health`, that reads the latest activation rate through `MacroContext`.
 - A histogram and a boxplot over `fct_account_sessions`, which has one row per account, and a weekday-by-hour heatmap over `fct_hourly_activity` ordered by `weekday_number, hour` so the week starts on Monday.
@@ -74,10 +75,7 @@ sections:
     description: Active user growth and engagement across twelve weeks.
     columns: "30% 70%"
     items:
-      - metric:
-          label: Weekly active users
-          value: "2.3k"
-          note: Week 12, up from 1.5k in week 1
+      - chart: weekly_active_users
       - chart: active_users
         title: Active Users Trend
       - metric:

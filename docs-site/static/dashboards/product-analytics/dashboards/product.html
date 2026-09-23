@@ -124,7 +124,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-23T07:23:40Z">23 Sep 2026, 07:23 UTC</strong>
+          Refreshed <strong title="2026-09-23T08:00:57Z">23 Sep 2026, 08:00 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -143,7 +143,7 @@
     <path d="m14.5 4-5 16"></path>
   </svg>
 
-          <span>10 charts</span>
+          <span>11 charts</span>
         </div>
       </div>
       <div class="glyf-meta-right">
@@ -177,7 +177,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 23 Sep 2026, 07:23 UTC</span>
+              <span class="glyf-version-option-note">built 23 Sep 2026, 08:00 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -306,6 +306,25 @@
   <div class="glyf-source-drawer-inner">
     <div class="glyf-drawer-section">
       <div class="glyf-drawer-heading">Chart sources</div>
+
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Weekly active users</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
+
+        <pre class="glyf-source-sql"><code>WITH weekly AS (
+  SELECT week, sum(active_users) AS active_users
+  FROM "product_analytics"."main"."fct_product_usage"
+  GROUP BY 1
+)
+SELECT active_users, lag(active_users) OVER (ORDER BY week) AS previous
+FROM weekly
+ORDER BY week DESC
+LIMIT 1
+</code></pre>
+
+      </div>
 
       <div class="glyf-source-item">
         <div class="glyf-source-name">
@@ -481,12 +500,16 @@ ORDER BY weekday_number, hour
             >
 
 
-                  <article class="glyf-card glyf-metric-card">
+                  <article class="glyf-card glyf-kpi-card">
   <div class="glyf-card-body">
-    <div class="glyf-metric-label">Weekly active users</div>
-    <div class="glyf-metric-value">2.3k</div>
-
-    <div class="glyf-metric-note">Week 12, up from 1.5k in week 1</div>
+    <div class="glyf-kpi-label">Weekly active users</div>
+    <figure class="glyf-kpi" data-glyf-kpi="weekly_active_users">
+  <div class="glyf-kpi-value">2,325</div>
+  <div class="glyf-kpi-compare glyf-kpi-compare--up">
+    <span class="glyf-kpi-delta">&#9650; +65 (+2.9%)</span>
+    <span class="glyf-kpi-compare-label">vs last week 2,260</span>
+  </div>
+</figure>
 
   </div>
 </article>
@@ -1087,7 +1110,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-23 08:23
+      2026-09-23 09:00
 
     </div>
   </div>
@@ -1127,7 +1150,7 @@ takes their quartiles, so neither query aggregates anything itself.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">23 Sep 2026, 07:23 UTC</div>
+              <div class="glyf-version-date">23 Sep 2026, 08:00 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>

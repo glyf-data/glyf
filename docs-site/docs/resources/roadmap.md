@@ -29,13 +29,13 @@ order is the priority.
 
 <div className="roadmapNext">
   <span className="roadmapStatus roadmapStatus--merged">Merged, not yet released</span>
-  <h3>A table chart</h3>
+  <h3>A table chart and a KPI tile</h3>
   <p>
     <code>DRAW table</code> shows a query's rows as they are: <code>VISUALISE region, revenue</code>
     lists the columns, <code>VISUALISE *</code> takes every one, and the dashboard sorts by any
-    column. It is the first chart type glyf does not draw, so <code>glyf diff</code> compares its
-    rows and shows the two tables side by side, and <code>render.max_rows</code> keeps a table
-    from becoming a data export.
+    column. <code>DRAW kpi</code> shows one number with the change against a comparison value.
+    Neither is drawn, so <code>glyf diff</code> compares their rows and shows before and after
+    side by side, and <code>render.max_rows</code> keeps a table from becoming a data export.
   </p>
   <Link to="/docs/guides/visualisation-syntax#table">Read the guide</Link>
 </div>

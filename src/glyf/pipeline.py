@@ -18,6 +18,7 @@ from glyf.ggsql.renderer import (
     strip_svg_row_values,
     table_columns,
 )
+from glyf.ggsql.kpi import render_kpi
 from glyf.ggsql.table import render_table
 from glyf.manifest.loader import DbtManifest, ManifestError, load_manifest
 from glyf.manifest.resolver import RefResolution, resolve_refs
@@ -233,10 +234,11 @@ def _render_chart_file(path: Path, run: _Run) -> RenderedChart:
 
     _enforce_row_cap(compiled, data, run)
     data = _order(compiled, data, run)
-    if compiled.chart.is_table:
-        # A table lists its rows as they are: nothing to downsample, and its
-        # bound is on rows, not marks.
-        _enforce_table_budget(compiled, data, run)
+    if not compiled.chart.has_picture:
+        # A table lists its rows as they are and a kpi is one of them:
+        # nothing to downsample, and a table's bound is on rows, not marks.
+        if compiled.chart.is_table:
+            _enforce_table_budget(compiled, data, run)
         render_data, plan = data, Downsampling(
             applied=False, reason="", rows=len(data), marks=len(data)
         )
@@ -485,19 +487,26 @@ def _write_artifacts(
     chart, artifacts, root = compiled.chart, compiled.artifacts, run.scan.root
     write_chart_data(root, chart, artifacts, data)
 
-    if chart.is_table:
+    if not chart.has_picture:
         # The chart may have been drawn by an earlier build, before its file
         # said `DRAW table`; a stale PNG here would be exported as if current.
         _discard(artifacts.png, artifacts.svg, artifacts.vega_json)
         try:
-            render_table(chart, data, artifacts.table_html)
+            if chart.is_table:
+                _discard(artifacts.kpi_html)
+                render_table(chart, data, artifacts.table_html)
+            else:
+                _discard(artifacts.table_html)
+                render_kpi(chart, data, artifacts.kpi_html)
         except ChartRenderError as exc:
-            raise RenderError(f"{compiled.rel_path} table rendering failed: {exc}") from exc
+            raise RenderError(
+                f"{compiled.rel_path} {chart.draw_type} rendering failed: {exc}"
+            ) from exc
         write_chart_metadata(
             root, chart, artifacts, columns=table_columns(chart, data.columns)
         )
         return
-    _discard(artifacts.table_html)
+    _discard(artifacts.table_html, artifacts.kpi_html)
 
     if run.exclude_row_data:
         # An SVG carries every row in its per-mark accessibility labels and a

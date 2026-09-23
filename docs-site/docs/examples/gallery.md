@@ -46,7 +46,7 @@ Each example is a small dbt project with seeds, models, ggsql visualisations, an
     <div className="exampleCard__body">
       <h3><a href="https://github.com/glyf-data/glyf/tree/main/examples/product_analytics">Product Analytics</a></h3>
       <p>Product usage and activation metrics by plan.</p>
-      <p><strong>Includes:</strong> Ten charts including a histogram, a boxplot, a weekday-by-hour heatmap and a table, plus project macros.</p>
+      <p><strong>Includes:</strong> Eleven charts including a histogram, a boxplot, a weekday-by-hour heatmap, a table and a KPI tile, plus project macros.</p>
       <p className="exampleCard__links">
         <Link to="/docs/examples/product-analytics">Docs</Link>
         <Link to="pathname:///dashboards/product-analytics/dashboards/product.html">Rendered dashboard</Link>

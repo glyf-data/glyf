@@ -1,0 +1,8 @@
+{% macro render_kpi_card(chart, title=None, width=None) -%}
+<article class="glyf-card glyf-kpi-card"{% if width %} style="--glyf-item-width: {{ width }}"{% endif %}>
+  <div class="glyf-card-body">
+    <div class="glyf-kpi-label">{{ title or chart.metadata.title or chart.metadata.name }}</div>
+    {{ chart.kpi_html | safe }}
+  </div>
+</article>
+{%- endmacro %}

@@ -142,8 +142,10 @@ and a fragment that differs is a table that changed. There is no percentage
 and no threshold for it: `glyf diff` says `the table changed`, gives the row
 changes above, and the report shows the two tables side by side. In
 `diff.json` a table's entry carries `"table": true`, no pixel counts, and a
-`tables` object pointing at `tables/<name>.before.html` and
-`tables/<name>.after.html`.
+`fragments` object pointing at `fragments/<name>.before.html` and
+`fragments/<name>.after.html`. A [kpi](visualisation-syntax.md#kpi) is
+treated the same way: `glyf diff` says `the value changed`, the entry
+carries `"kpi": true`, and the report shows the two tiles side by side.
 
 ## In a pull request
 

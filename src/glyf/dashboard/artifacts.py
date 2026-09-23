@@ -28,10 +28,18 @@ class ChartMetadata:
     # A table's columns, in the order it lists them, and its HTML fragment.
     columns: tuple[str, ...] = ()
     table_html_path: Path | None = None
+    # A kpi's value and comparison columns, and its HTML fragment.
+    value: str | None = None
+    compare: str | None = None
+    kpi_html_path: Path | None = None
 
     @property
     def is_table(self) -> bool:
         return self.chart_type == "table"
+
+    @property
+    def is_kpi(self) -> bool:
+        return self.chart_type == "kpi"
 
 
 @dataclass(frozen=True)
@@ -49,6 +57,8 @@ class ChartArtifact:
     vega_spec: object | None = None
     # The `<table>` fragment a table chart is shown as.
     table_html: str | None = None
+    # The tile fragment a kpi chart is shown as.
+    kpi_html: str | None = None
 
 
 def load_chart_artifact(
@@ -86,10 +96,15 @@ def load_chart_artifact(
             raise ChartArtifactError(f"invalid Vega-Lite JSON for '{chart_name}'") from exc
 
     table_html = None
+    kpi_html = None
     if metadata.is_table:
         if metadata.table_html_path is None or not metadata.table_html_path.exists():
             raise ChartArtifactError(f"missing table artifact for '{chart_name}'")
         table_html = metadata.table_html_path.read_text(encoding="utf-8")
+    elif metadata.is_kpi:
+        if metadata.kpi_html_path is None or not metadata.kpi_html_path.exists():
+            raise ChartArtifactError(f"missing kpi artifact for '{chart_name}'")
+        kpi_html = metadata.kpi_html_path.read_text(encoding="utf-8")
     elif svg is None and (metadata.png_path is None or not metadata.png_path.exists()):
         raise ChartArtifactError(f"missing SVG or PNG artifact for '{chart_name}'")
 
@@ -100,6 +115,7 @@ def load_chart_artifact(
         data=data_artifact,
         vega_spec=vega_spec,
         table_html=table_html,
+        kpi_html=kpi_html,
     )
 
 
@@ -108,11 +124,14 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         raise ChartArtifactError(f"invalid chart metadata for '{chart_name}'")
 
     is_table = raw.get("chart_type") == "table"
+    is_kpi = raw.get("chart_type") == "kpi"
     required = {"name", "chart_type", "compiled_sql_path", "data_json_path"}
     if is_table:
         # A table has no axes and no picture: it records its columns and the
         # fragment that lays them out.
         required |= {"table_html_path"}
+    elif is_kpi:
+        required |= {"value", "kpi_html_path"}
     else:
         required |= {"x", "png_path", "svg_path"}
     missing = sorted(key for key in required if not isinstance(raw.get(key), str))
@@ -136,8 +155,12 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
     y = raw.get("y")
     if y is not None and not isinstance(y, str):
         raise ChartArtifactError(f"chart metadata for '{chart_name}' has invalid y")
-    if y is None and raw["chart_type"] not in {"histogram", "table"}:
+    if y is None and raw["chart_type"] not in {"histogram", "table", "kpi"}:
         raise ChartArtifactError(f"chart metadata for '{chart_name}' missing y")
+
+    compare = raw.get("compare")
+    if compare is not None and not isinstance(compare, str):
+        raise ChartArtifactError(f"chart metadata for '{chart_name}' has invalid compare")
 
     interactions = raw.get("interactions", [])
     if not isinstance(interactions, list) or not all(
@@ -157,18 +180,21 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         name=raw["name"],
         title=title,
         chart_type=raw["chart_type"],
-        x=None if is_table else raw["x"],
+        x=None if is_table or is_kpi else raw["x"],
         y=y,
         compiled_sql_path=project_root / raw["compiled_sql_path"],
         data_json_path=project_root / raw["data_json_path"],
-        png_path=None if is_table else project_root / raw["png_path"],
-        svg_path=None if is_table else project_root / raw["svg_path"],
+        png_path=None if is_table or is_kpi else project_root / raw["png_path"],
+        svg_path=None if is_table or is_kpi else project_root / raw["svg_path"],
         interactions=tuple(interactions),
         vega_json_path=project_root / vega_json_path
         if vega_json_path is not None
         else None,
         columns=tuple(columns) if is_table else (),
         table_html_path=project_root / raw["table_html_path"] if is_table else None,
+        value=raw["value"] if is_kpi else None,
+        compare=compare if is_kpi else None,
+        kpi_html_path=project_root / raw["kpi_html_path"] if is_kpi else None,
     )
 
 
