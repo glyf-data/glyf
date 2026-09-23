@@ -2,6 +2,18 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `glyf validate --execute` runs each chart's SQL against the warehouse with
+  `LIMIT 0` and checks the columns it returns against the chart's
+  `VISUALISE` mappings, fetching no rows. Plain `glyf validate` reads files
+  and cannot tell whether a query runs, so a renamed column surfaced only at
+  `glyf build`; now it fails validation, naming the chart, with the
+  warehouse's own message. `--target` picks the dbt profile target. This is
+  the check `glyf build --validate` makes, without the rest of the build.
+
 ## 0.10.1 - 2026-09-23
 
 ### Fixed

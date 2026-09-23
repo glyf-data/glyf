@@ -223,6 +223,38 @@ Validation passed
 ✓ validated dashboard chart refs
 ```
 
+Those checks read files and never touch the warehouse, so they cannot tell
+whether a query runs or whether the column a chart binds is one the query
+returns. `--execute` asks: it runs each chart's SQL with `LIMIT 0` on the
+configured backend and checks the returned columns against the chart's
+`VISUALISE` mappings. No rows are fetched, so it is safe on a runner outside
+the warehouse's boundary. It is the check `glyf build --validate` makes,
+without the rest of the build.
+
+```bash title="Command"
+uv run glyf validate --project-dir examples/simple_dbt --execute
+```
+
+```text title="Output"
+Validation passed
+✓ validated project structure
+✓ loaded manifest
+✓ validated GGSQL files (5)
+✓ validated dashboard specs (1)
+✓ validated dashboard chart refs
+✓ ran each chart's SQL against duckdb and checked its columns (5 charts, no rows fetched)
+```
+
+A failure names the chart and carries the warehouse's own message:
+
+```text title="Output"
+Validation failed
+  - visualisations/revenue.ggsql query result missing chart column 'revenue'
+```
+
+`--target` picks the dbt profile target to run the queries as, with
+`execution.backend: dbt`.
+
 ### `render`
 
 Use `render` to compile chart SQL, execute queries, and write chart artifacts.
