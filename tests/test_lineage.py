@@ -17,30 +17,32 @@ from glyf.dashboard.lineage import build_lineage
 from glyf.exporter import export_site
 from glyf.manifest.loader import load_manifest
 from glyf.pipeline import render_project
-from tests.helpers import copy_basic_project, copy_simple_dbt_project, _write_manifest
+from tests.helpers import copy_basic_project, _write_manifest
 
 
 def _project(tmp_path: Path) -> Path:
-    """A project whose manifest records parents: fct_orders <- stg_orders <- raw.orders."""
-    project = copy_simple_dbt_project(tmp_path)
+    """The basic project with a manifest that records parents:
+    fct_orders <- stg_orders <- raw.orders. Only fct_orders is queried, and it
+    exists as a seed, so the build runs anywhere the basic project does."""
+    project = copy_basic_project(tmp_path)
     _write_manifest(
         project,
         {
             "nodes": {
-                "model.simple_dbt.fct_orders": {
-                    "resource_type": "model", "package_name": "simple_dbt", "name": "fct_orders",
+                "model.basic.fct_orders": {
+                    "resource_type": "model", "package_name": "basic", "name": "fct_orders",
                     "relation_name": "main.fct_orders", "original_file_path": "models/fct_orders.sql",
-                    "depends_on": {"macros": [], "nodes": ["model.simple_dbt.stg_orders"]},
+                    "depends_on": {"macros": [], "nodes": ["model.basic.stg_orders"]},
                 },
-                "model.simple_dbt.stg_orders": {
-                    "resource_type": "model", "package_name": "simple_dbt", "name": "stg_orders",
+                "model.basic.stg_orders": {
+                    "resource_type": "model", "package_name": "basic", "name": "stg_orders",
                     "relation_name": "main.stg_orders", "original_file_path": "models/stg_orders.sql",
-                    "depends_on": {"macros": [], "nodes": ["source.simple_dbt.raw.orders"]},
+                    "depends_on": {"macros": [], "nodes": ["source.basic.raw.orders"]},
                 },
             },
             "sources": {
-                "source.simple_dbt.raw.orders": {
-                    "resource_type": "source", "package_name": "simple_dbt", "source_name": "raw",
+                "source.basic.raw.orders": {
+                    "resource_type": "source", "package_name": "basic", "source_name": "raw",
                     "name": "orders", "relation_name": "main.raw_orders",
                 }
             },
@@ -56,9 +58,9 @@ def test_the_manifest_loader_reads_parents_and_files(tmp_path: Path) -> None:
 
     fct = manifest.node_for_ref("fct_orders")
     assert fct is not None
-    assert fct.parents == ("model.simple_dbt.stg_orders",)
+    assert fct.parents == ("model.basic.stg_orders",)
     assert fct.path == "models/fct_orders.sql"
-    assert manifest.node_by_id("source.simple_dbt.raw.orders").name == "orders"
+    assert manifest.node_by_id("source.basic.raw.orders").name == "orders"
 
 
 def test_a_chart_records_its_lineage_back_to_the_raw_tables(tmp_path: Path) -> None:
