@@ -124,6 +124,28 @@ def test_a_triggered_alert_says_so_and_a_written_one_does_not(tmp_path: Path) ->
     assert "revenue.revenue = " in html, "alert.threshold names its rule"
 
 
+def test_card_text_is_escaped_not_run(tmp_path: Path) -> None:
+    """Text reaches the page as text: a card can quote markup, not inject it."""
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    _write(
+        project / "dashboards" / "executive.yml",
+        "name: executive\ntitle: <b>Exec</b>\n"
+        "sections:\n  - items:\n"
+        "      - markdown:\n          text: \"<script>alert(1)</script>\"\n"
+        "      - chart: revenue\n",
+    )
+
+    generate_dashboards(project)
+    html = _html(project)
+
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;alert(1)&lt;/script&gt;" in html
+    assert "<b>Exec</b>" not in html
+    # What the page means to be markup still is.
+    assert "<style>" in html and "<svg" in html
+
+
 def test_owner_defaults_to_the_data_team(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     render_project(project)
