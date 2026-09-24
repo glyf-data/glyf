@@ -1,4 +1,4 @@
--- One row per agent run in the Acme Logistics workspace.
+-- One row per agent run in the Glyf Data workspace.
 select
   run_id,
   cast(started_at as timestamp) as started_at,

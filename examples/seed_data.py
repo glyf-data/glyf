@@ -54,7 +54,7 @@ SEGMENTS = {
 
 
 # Clanker is an AI agent platform; its insights page shows one customer
-# workspace, Acme Logistics, what its agents did over six weeks. Its own seed,
+# workspace, Glyf Data, what its agents did over six weeks. Its own seed,
 # so changing it leaves the other examples' files as they are.
 CLANKER_SEED = 42
 CLANKER_START = date(2026, 8, 10)
