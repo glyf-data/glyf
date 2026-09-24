@@ -55,6 +55,12 @@ def write_bundle_manifest(
         ),
         "dashboards": _dashboards_payload(scan.root, config, dashboards),
     }
+    if dashboards is None:
+        _inherit_filter_values(
+            payload["dashboards"],
+            inherited.get("dashboards"),
+            withhold=public and config.export.excludes_row_data,
+        )
     if public and config.export.embed and not config.export.excludes_row_data:
         # Said in the manifest so a consumer knows before it fetches anything
         # that the specs, and the rows they carry, are published.
@@ -74,6 +80,32 @@ def write_bundle_manifest(
         encoding="utf-8",
     )
     return target_path
+
+
+def _inherit_filter_values(
+    dashboards: dict[str, Any], built: object, *, withhold: bool
+) -> None:
+    """Fill `source(chart, field)` filter values from the bundle the build wrote.
+
+    `glyf export` reads the dashboards' YAML, where a sourced filter has no
+    values yet; `glyf dashboard` resolved them from the chart rows and wrote
+    them to the local bundle. Under `row_data: exclude` they are rows, so the
+    public bundle keeps them empty.
+    """
+    if withhold or not isinstance(built, dict):
+        return
+    for name, dashboard in dashboards.items():
+        source = built.get(name)
+        if not isinstance(source, dict) or not isinstance(dashboard, dict):
+            continue
+        resolved = {
+            item.get("field"): item.get("values")
+            for item in source.get("filters", [])
+            if isinstance(item, dict) and isinstance(item.get("values"), list)
+        }
+        for item in dashboard.get("filters", []):
+            if "source" in item and not item["values"] and resolved.get(item["field"]):
+                item["values"] = list(resolved[item["field"]])
 
 
 def _read_existing_bundle(path: Path) -> dict[str, Any]:

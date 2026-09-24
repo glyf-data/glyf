@@ -6,7 +6,7 @@ ORDER BY week, model
 VISUALISE week AS x, spend_usd AS y, model AS color
 DRAW area
 LABEL title => 'Spend by model'
-LABEL subtitle => 'clank-ultra is a sixth of the runs and most of the bill'
+LABEL subtitle => 'clank-ultra is an eighth of the runs and most of the bill'
 LABEL x_title => 'Week'
 LABEL y_title => 'USD'
 INTERACT tooltip, legend_filter

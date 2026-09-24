@@ -90,3 +90,40 @@ def test_every_bundle_matches_the_published_schema(tmp_path: Path, export: Expor
 def test_the_docs_site_serves_the_same_schema() -> None:
     served = Path("docs-site/static/schema/bundle.v1.schema.json")
     assert served.read_text(encoding="utf-8") == SCHEMA_PATH.read_text(encoding="utf-8")
+
+
+def test_the_public_bundle_carries_sourced_filter_values(tmp_path: Path) -> None:
+    """A JS app draws its filter controls from these; empty ones draw nothing."""
+    project = copy_basic_project(tmp_path)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\ntitle: Executive\nfilters:\n  - field: month\n"
+        "    values: source(revenue, month)\n    control: radio\ncharts:\n  - revenue\n",
+        encoding="utf-8",
+    )
+    render_project(project)
+    generate_dashboards(project)
+    export_site(project)
+
+    site = project / "target" / "glyf" / "site"
+    bundle = json.loads((site / "bundle.json").read_text(encoding="utf-8"))
+    (month,) = bundle["dashboards"]["executive"]["filters"]
+    assert month["values"] == ["2026-01", "2026-02", "2026-03", "2026-04"]
+    assert month["control"] == "radio"
+
+
+def test_exclude_keeps_sourced_filter_values_out_of_the_public_bundle(tmp_path: Path) -> None:
+    project = copy_basic_project(tmp_path)
+    (project / "dashboards" / "executive.yml").write_text(
+        "name: executive\ntitle: Executive\nfilters:\n  - field: month\n"
+        "    values: source(revenue, month)\ncharts:\n  - revenue\n",
+        encoding="utf-8",
+    )
+    config = replace(GlyfConfig(), export=ExportConfig(row_data="exclude"))
+    render_project(project, config)
+    generate_dashboards(project, config)
+    export_site(project, config=config)
+
+    bundle = json.loads(
+        (project / "target" / "glyf" / "site" / "bundle.json").read_text(encoding="utf-8")
+    )
+    assert bundle["dashboards"]["executive"]["filters"][0]["values"] == []
