@@ -511,6 +511,45 @@ html[data-theme="dark"] .glyf-badge-amber { border-color: #78350f; }
   border-radius: 3px;
 }
 
+/* Radio and toggle filters: the values as buttons after the field label.
+   A radio keeps one on; toggles keep any number on. */
+.glyf-filter-option-button {
+  padding: 0 11px;
+  border: 0;
+  border-left: 0.5px solid var(--glyf-color-border);
+  background: transparent;
+  color: var(--glyf-color-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.glyf-filter-option-button:first-of-type {
+  border-left: 0;
+}
+
+.glyf-filter-option-button:hover {
+  color: var(--glyf-color-text);
+  background: var(--glyf-color-bg-muted);
+}
+
+.glyf-filter-option-button.is-on {
+  background: var(--glyf-color-blue-bg);
+  color: var(--glyf-color-blue);
+  font-weight: 600;
+}
+
+.glyf-filter-group--toggle .glyf-filter-option-button.is-on::before {
+  content: "\2713";
+  margin-right: 5px;
+}
+
+.glyf-filter-option-button:focus-visible {
+  outline: 2px solid var(--glyf-color-blue);
+  outline-offset: -2px;
+}
+
 .glyf-filter-clear {
   height: 30px;
   padding: 0 10px;
@@ -1542,9 +1581,36 @@ html[data-theme="dark"] .glyf-lineage-node--chart rect {
 .glyf-status--info,
 .glyf-status--neutral { --glyf-status-color: var(--glyf-color-blue); border-left-color: var(--glyf-color-blue); }
 
-.glyf-status--success { background: linear-gradient(90deg, var(--glyf-color-green-bg), var(--glyf-color-bg) 60%); }
-.glyf-status--warning { background: linear-gradient(90deg, var(--glyf-color-amber-bg), var(--glyf-color-bg) 60%); }
-.glyf-status--error { background: linear-gradient(90deg, var(--glyf-color-red-bg), var(--glyf-color-bg) 60%); }
+.glyf-status--success { background: var(--glyf-color-green-bg); }
+.glyf-status--warning { background: var(--glyf-color-amber-bg); }
+.glyf-status--error { background: var(--glyf-color-red-bg); }
+
+/* An alert raised by the data at build time, not written by hand. */
+.glyf-status-head .glyf-trigger-badge {
+  margin-left: auto;
+}
+
+.glyf-trigger-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--glyf-space-2);
+}
+
+.glyf-trigger-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-color: var(--glyf-status-color, var(--glyf-color-blue-border));
+  background: var(--glyf-color-bg);
+  color: var(--glyf-status-color, var(--glyf-color-blue));
+  font-weight: 600;
+  cursor: help;
+}
+
+.glyf-trigger-icon {
+  width: 12px;
+  height: 12px;
+}
 
 .glyf-component-note,
 .glyf-metric-note,

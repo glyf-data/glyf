@@ -115,6 +115,7 @@
       <span class="glyf-control-label">Filters</span>
       {% if dashboard.filters and filters.live %}
         {% for filter in dashboard.filters %}
+        {% if filter.control == "select" %}
         <label class="glyf-filter-select" data-glyf-filter="{{ filter.field }}">
           <span class="glyf-filter-field">{{ icons.icon("filter") }}{{ filter.field }}</span>
           <select class="glyf-filter-control" id="glyf-filter-{{ filter.field }}" data-glyf-filter-select="{{ filter.field }}" aria-label="Filter by {{ filter.field }}">
@@ -124,6 +125,18 @@
             {% endfor %}
           </select>
         </label>
+        {% else %}
+        {# radio: one value or All; toggle: any number of values, none meaning all. #}
+        <div class="glyf-filter-select glyf-filter-group glyf-filter-group--{{ filter.control }}" data-glyf-filter="{{ filter.field }}" data-glyf-filter-group="{{ filter.control }}" role="group" aria-label="Filter by {{ filter.field }}">
+          <span class="glyf-filter-field">{{ icons.icon("filter") }}{{ filter.field }}</span>
+          {% if filter.control == "radio" %}
+          <button class="glyf-filter-option-button is-on" type="button" data-glyf-filter-option="" aria-pressed="true">All</button>
+          {% endif %}
+          {% for value in filter.values %}
+          <button class="glyf-filter-option-button" type="button" data-glyf-filter-option="{{ value }}" aria-pressed="false">{{ value }}</button>
+          {% endfor %}
+        </div>
+        {% endif %}
         {% endfor %}
         <button class="glyf-filter-clear" type="button" data-glyf-filter-clear hidden>Clear</button>
       {% elif dashboard.filters %}
@@ -621,17 +634,27 @@
       // A filter redraws every chart it can, from the rows the page carries,
       // and dims the ones it cannot: a chart that looks filtered and is not
       // would be worse than one that says so.
-      const selects = Array.from(document.querySelectorAll("[data-glyf-filter-select]"));
+      // Each filter is a field and the values it keeps: one from a dropdown or
+      // a radio group, any number from toggles. No value means no filter.
+      const boxes = Array.from(document.querySelectorAll("[data-glyf-filter]"));
       const clearButton = document.querySelector("[data-glyf-filter-clear]");
       const cards = Array.from(document.querySelectorAll("[data-glyf-chart]"));
-      const active = () => selects.filter((s) => s.value !== "").map((s) => ({ field: s.dataset.glyfFilterSelect, value: s.value }));
+      const optionsOf = (box) => Array.from(box.querySelectorAll("[data-glyf-filter-option]"));
+      const valuesOf = (box) => {
+        const select = box.querySelector("[data-glyf-filter-select]");
+        if (select) return select.value === "" ? [] : [select.value];
+        return optionsOf(box).filter((b) => b.classList.contains("is-on") && b.dataset.glyfFilterOption !== "").map((b) => b.dataset.glyfFilterOption);
+      };
+      const active = () => boxes.map((box) => ({ field: box.dataset.glyfFilter, values: valuesOf(box) })).filter((p) => p.values.length > 0);
+      const keeps = (p, value) => p.values.includes(String(value));
+      const setOption = (button, on) => { button.classList.toggle("is-on", on); button.setAttribute("aria-pressed", on ? "true" : "false"); };
       const modesOf = (card) => Object.fromEntries((card.dataset.glyfFilters || "").split(" ").filter(Boolean).map((pair) => pair.split(":")));
       const vegaSpecOf = (card) => {
         const el = card.querySelector('script[type="application/json"]');
         return el ? JSON.parse(el.textContent) : null;
       };
       const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
-      const filterExpr = (pairs) => pairs.map((p) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(p.value)}`).join(" && ");
+      const filterExpr = (pairs) => pairs.map((p) => "(" + p.values.map((v) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(v)}`).join(" || ") + ")").join(" && ");
       const redrawVega = (card, pairs) => {
         const spec = vegaSpecOf(card);
         const target = card.querySelector("[data-glyf-filter-chart], [data-vega-chart]");
@@ -653,7 +676,7 @@
       // chart without saying so.
       const hasRows = (spec, pairs) => {
         const datasets = spec.datasets || {};
-        return Object.values(datasets).some((rows) => Array.isArray(rows) && rows.some((row) => pairs.every((p) => String(row[p.field]) === p.value)));
+        return Object.values(datasets).some((rows) => Array.isArray(rows) && rows.some((row) => pairs.every((p) => keeps(p, row[p.field]))));
       };
       const filterTable = (card, pairs) => {
         const table = card.querySelector("table");
@@ -662,7 +685,7 @@
         const rows = Array.from(table.querySelectorAll("tbody tr"));
         let shown = 0;
         rows.forEach((row) => {
-          const ok = pairs.every((p) => { const i = headers.indexOf(p.field); return i >= 0 && row.children[i] && row.children[i].textContent === p.value; });
+          const ok = pairs.every((p) => { const i = headers.indexOf(p.field); return i >= 0 && row.children[i] && keeps(p, row.children[i].textContent); });
           row.hidden = !ok; if (ok) shown += 1;
         });
         const caption = card.querySelector(".glyf-table-caption");
@@ -672,14 +695,14 @@
       const apply = () => {
         const pairs = active();
         if (clearButton) clearButton.hidden = pairs.length === 0;
-        selects.forEach((s) => { const box = s.closest("[data-glyf-filter]"); if (box) box.classList.toggle("is-set", s.value !== ""); });
+        boxes.forEach((box) => box.classList.toggle("is-set", valuesOf(box).length > 0));
         cards.forEach((card) => {
           const modes = modesOf(card);
           const applies = pairs.filter((p) => modes[p.field] && modes[p.field] !== "none");
           const cannot = pairs.filter((p) => !modes[p.field] || modes[p.field] === "none");
           const chip = card.querySelector("[data-glyf-filter-applied]");
           const note = card.querySelector("[data-glyf-filter-note]");
-          if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.value}`).join(", "); }
+          if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.values.join(" or ")}`).join(", "); }
           const unfiltered = pairs.length > 0 && cannot.length > 0 && applies.length === 0;
           card.classList.toggle("is-unfiltered", unfiltered);
           card.classList.remove("is-empty");
@@ -691,8 +714,22 @@
           else if (first === "table") filterTable(card, applies);
         });
       };
-      selects.forEach((s) => s.addEventListener("change", apply));
-      if (clearButton) clearButton.addEventListener("click", () => { selects.forEach((s) => { s.value = ""; }); apply(); });
+      boxes.forEach((box) => {
+        const select = box.querySelector("[data-glyf-filter-select]");
+        if (select) { select.addEventListener("change", apply); return; }
+        const radio = box.dataset.glyfFilterGroup === "radio";
+        optionsOf(box).forEach((button) => button.addEventListener("click", () => {
+          if (radio) optionsOf(box).forEach((other) => setOption(other, other === button));
+          else setOption(button, !button.classList.contains("is-on"));
+          apply();
+        }));
+      });
+      const reset = (box) => {
+        const select = box.querySelector("[data-glyf-filter-select]");
+        if (select) { select.value = ""; return; }
+        optionsOf(box).forEach((button) => setOption(button, button.dataset.glyfFilterOption === ""));
+      };
+      if (clearButton) clearButton.addEventListener("click", () => { boxes.forEach(reset); apply(); });
       window.glyfApplyFilters = apply;
     })();
     {% endif %}

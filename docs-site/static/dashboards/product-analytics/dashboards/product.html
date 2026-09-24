@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Product Analytics</title>
 
-  <link rel="stylesheet" href="../assets/dashboard.css?v=fdbc876f25">
+  <link rel="stylesheet" href="../assets/dashboard.css?v=aee48092c2">
 
 
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
@@ -138,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-24T08:06:56Z">24 Sep 2026, 08:06 UTC</strong>
+          Refreshed <strong title="2026-09-24T20:27:23Z">24 Sep 2026, 20:27 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -205,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 24 Sep 2026, 08:06 UTC</span>
+              <span class="glyf-version-option-note">built 24 Sep 2026, 20:27 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -220,23 +220,25 @@
       <span class="glyf-control-label">Filters</span>
 
 
-        <label class="glyf-filter-select" data-glyf-filter="plan">
+
+
+        <div class="glyf-filter-select glyf-filter-group glyf-filter-group--toggle" data-glyf-filter="plan" data-glyf-filter-group="toggle" role="group" aria-label="Filter by plan">
           <span class="glyf-filter-field">
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
   plan</span>
-          <select class="glyf-filter-control" id="glyf-filter-plan" data-glyf-filter-select="plan" aria-label="Filter by plan">
-            <option value="">All</option>
 
-            <option value="Team">Team</option>
 
-            <option value="Free">Free</option>
+          <button class="glyf-filter-option-button" type="button" data-glyf-filter-option="Team" aria-pressed="false">Team</button>
 
-            <option value="Pro">Pro</option>
+          <button class="glyf-filter-option-button" type="button" data-glyf-filter-option="Free" aria-pressed="false">Free</button>
 
-          </select>
-        </label>
+          <button class="glyf-filter-option-button" type="button" data-glyf-filter-option="Pro" aria-pressed="false">Pro</button>
+
+        </div>
+
+
 
         <label class="glyf-filter-select" data-glyf-filter="week">
           <span class="glyf-filter-field">
@@ -273,6 +275,7 @@
 
           </select>
         </label>
+
 
         <button class="glyf-filter-clear" type="button" data-glyf-filter-clear hidden>Clear</button>
 
@@ -799,11 +802,18 @@ ORDER BY weekday_number, hour
 
 
     <span>Activation health</span>
+
+  <span class="glyf-badge glyf-trigger-badge" title="Triggered by the data when glyf built this page: latest-week average 37.4% < 40% target">
+
+  <svg class="glyf-trigger-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+  </svg>
+  Auto-triggered
+  </span>
+
   </div>
   <div class="glyf-status-value">37.4%</div>
   <p class="glyf-status-text">Activation needs attention: below its 40% target.</p>
-
-  <p class="glyf-component-footnote">Average of the plans' rates in the latest week, worked out by activation_health() when glyf builds.</p>
 
 
   </div>
@@ -816,21 +826,19 @@ ORDER BY weekday_number, hour
   <div class="glyf-card-body">
 
 
-  <div class="glyf-card-title">Release notes</div>
+  <div class="glyf-card-title">Reading activation</div>
 
   <ul class="glyf-list">
 
-    <li>W06: onboarding checklist shipped to every plan.</li>
+    <li>Activated means the user finished onboarding in that week.</li>
 
-    <li>W09: Pro trial extended from 14 to 21 days.</li>
+    <li>The rate is activated over active users within each plan, so Team, the smallest at about 330 users, swings the most.</li>
 
-    <li>W11: spring campaign; its cohort lifted activation for a week.</li>
+    <li>The 40% target is the Growth team's for this quarter, checked against the average of the three plans' rates.</li>
 
-    <li>W12: activated users back down 3% as the campaign cohort ended.</li>
+    <li>Free users who upgrade mid-week count toward the plan they end the week on.</li>
 
   </ul>
-
-  <p class="glyf-component-footnote">Written by hand in dashboards/macros.py and returned by a macro, not queried.</p>
 
 
   </div>
@@ -1559,13 +1567,14 @@ takes their quartiles, so neither query aggregates anything itself.
 
   <div>
     <div class="glyf-ai-section-label">Overview</div>
-    <div class="glyf-ai-summary-block">Active users grew every week of the quarter, from 1,480 in week 1 to 2,325 in week 12, and the Team plan accounts for most of the growth in sessions per user. Activation holds near a third of active users; Pro converts best. Hourly activity peaks mid-morning on weekdays.</div>
+    <div class="glyf-ai-summary-block">Active users grew every week of the quarter, from 1,480 in week 1 to 2,325 in week 12, and the Team plan accounts for most of the growth in sessions per user. Activation holds near a third of active users; Team converts best, at close to 60%. Hourly activity peaks mid-morning on weekdays.</div>
   </div>
 
 
 
   <div>
     <div class="glyf-ai-section-label">About this summary</div>
+
 
   <div class="glyf-alert glyf-tone-info">
     <span class="glyf-alert-mark">
@@ -1605,7 +1614,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-24 09:06
+      2026-09-24 21:27
 
     </div>
   </div>
@@ -1787,7 +1796,7 @@ takes their quartiles, so neither query aggregates anything itself.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">24 Sep 2026, 08:06 UTC</div>
+              <div class="glyf-version-date">24 Sep 2026, 20:27 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -2179,17 +2188,27 @@ takes their quartiles, so neither query aggregates anything itself.
       // A filter redraws every chart it can, from the rows the page carries,
       // and dims the ones it cannot: a chart that looks filtered and is not
       // would be worse than one that says so.
-      const selects = Array.from(document.querySelectorAll("[data-glyf-filter-select]"));
+      // Each filter is a field and the values it keeps: one from a dropdown or
+      // a radio group, any number from toggles. No value means no filter.
+      const boxes = Array.from(document.querySelectorAll("[data-glyf-filter]"));
       const clearButton = document.querySelector("[data-glyf-filter-clear]");
       const cards = Array.from(document.querySelectorAll("[data-glyf-chart]"));
-      const active = () => selects.filter((s) => s.value !== "").map((s) => ({ field: s.dataset.glyfFilterSelect, value: s.value }));
+      const optionsOf = (box) => Array.from(box.querySelectorAll("[data-glyf-filter-option]"));
+      const valuesOf = (box) => {
+        const select = box.querySelector("[data-glyf-filter-select]");
+        if (select) return select.value === "" ? [] : [select.value];
+        return optionsOf(box).filter((b) => b.classList.contains("is-on") && b.dataset.glyfFilterOption !== "").map((b) => b.dataset.glyfFilterOption);
+      };
+      const active = () => boxes.map((box) => ({ field: box.dataset.glyfFilter, values: valuesOf(box) })).filter((p) => p.values.length > 0);
+      const keeps = (p, value) => p.values.includes(String(value));
+      const setOption = (button, on) => { button.classList.toggle("is-on", on); button.setAttribute("aria-pressed", on ? "true" : "false"); };
       const modesOf = (card) => Object.fromEntries((card.dataset.glyfFilters || "").split(" ").filter(Boolean).map((pair) => pair.split(":")));
       const vegaSpecOf = (card) => {
         const el = card.querySelector('script[type="application/json"]');
         return el ? JSON.parse(el.textContent) : null;
       };
       const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
-      const filterExpr = (pairs) => pairs.map((p) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(p.value)}`).join(" && ");
+      const filterExpr = (pairs) => pairs.map((p) => "(" + p.values.map((v) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(v)}`).join(" || ") + ")").join(" && ");
       const redrawVega = (card, pairs) => {
         const spec = vegaSpecOf(card);
         const target = card.querySelector("[data-glyf-filter-chart], [data-vega-chart]");
@@ -2211,7 +2230,7 @@ takes their quartiles, so neither query aggregates anything itself.
       // chart without saying so.
       const hasRows = (spec, pairs) => {
         const datasets = spec.datasets || {};
-        return Object.values(datasets).some((rows) => Array.isArray(rows) && rows.some((row) => pairs.every((p) => String(row[p.field]) === p.value)));
+        return Object.values(datasets).some((rows) => Array.isArray(rows) && rows.some((row) => pairs.every((p) => keeps(p, row[p.field]))));
       };
       const filterTable = (card, pairs) => {
         const table = card.querySelector("table");
@@ -2220,7 +2239,7 @@ takes their quartiles, so neither query aggregates anything itself.
         const rows = Array.from(table.querySelectorAll("tbody tr"));
         let shown = 0;
         rows.forEach((row) => {
-          const ok = pairs.every((p) => { const i = headers.indexOf(p.field); return i >= 0 && row.children[i] && row.children[i].textContent === p.value; });
+          const ok = pairs.every((p) => { const i = headers.indexOf(p.field); return i >= 0 && row.children[i] && keeps(p, row.children[i].textContent); });
           row.hidden = !ok; if (ok) shown += 1;
         });
         const caption = card.querySelector(".glyf-table-caption");
@@ -2230,14 +2249,14 @@ takes their quartiles, so neither query aggregates anything itself.
       const apply = () => {
         const pairs = active();
         if (clearButton) clearButton.hidden = pairs.length === 0;
-        selects.forEach((s) => { const box = s.closest("[data-glyf-filter]"); if (box) box.classList.toggle("is-set", s.value !== ""); });
+        boxes.forEach((box) => box.classList.toggle("is-set", valuesOf(box).length > 0));
         cards.forEach((card) => {
           const modes = modesOf(card);
           const applies = pairs.filter((p) => modes[p.field] && modes[p.field] !== "none");
           const cannot = pairs.filter((p) => !modes[p.field] || modes[p.field] === "none");
           const chip = card.querySelector("[data-glyf-filter-applied]");
           const note = card.querySelector("[data-glyf-filter-note]");
-          if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.value}`).join(", "); }
+          if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.values.join(" or ")}`).join(", "); }
           const unfiltered = pairs.length > 0 && cannot.length > 0 && applies.length === 0;
           card.classList.toggle("is-unfiltered", unfiltered);
           card.classList.remove("is-empty");
@@ -2249,8 +2268,22 @@ takes their quartiles, so neither query aggregates anything itself.
           else if (first === "table") filterTable(card, applies);
         });
       };
-      selects.forEach((s) => s.addEventListener("change", apply));
-      if (clearButton) clearButton.addEventListener("click", () => { selects.forEach((s) => { s.value = ""; }); apply(); });
+      boxes.forEach((box) => {
+        const select = box.querySelector("[data-glyf-filter-select]");
+        if (select) { select.addEventListener("change", apply); return; }
+        const radio = box.dataset.glyfFilterGroup === "radio";
+        optionsOf(box).forEach((button) => button.addEventListener("click", () => {
+          if (radio) optionsOf(box).forEach((other) => setOption(other, other === button));
+          else setOption(button, !button.classList.contains("is-on"));
+          apply();
+        }));
+      });
+      const reset = (box) => {
+        const select = box.querySelector("[data-glyf-filter-select]");
+        if (select) { select.value = ""; return; }
+        optionsOf(box).forEach((button) => setOption(button, button.dataset.glyfFilterOption === ""));
+      };
+      if (clearButton) clearButton.addEventListener("click", () => { boxes.forEach(reset); apply(); });
       window.glyfApplyFilters = apply;
     })();
 

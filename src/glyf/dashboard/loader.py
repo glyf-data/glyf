@@ -20,6 +20,7 @@ _TOOLBAR_VISIBILITIES = {"public", "private"}
 _DASHBOARD_THEMES = {"light", "dark"}
 _CHART_THEMES = {"auto", "light", "dark"}
 _METRIC_TRENDS = {"down", "flat", "up"}
+_FILTER_CONTROLS = {"radio", "select", "toggle"}
 
 
 @dataclass(frozen=True)
@@ -72,6 +73,9 @@ class DashboardFilter:
     # The charts the filter applies to. Empty means every chart on the
     # dashboard whose rows carry the field.
     charts: tuple[str, ...] = ()
+    # `select` (a dropdown), `radio` (buttons, one value at a time) or
+    # `toggle` (buttons, any number of values at once).
+    control: str = "select"
 
     @property
     def is_sourced(self) -> bool:
@@ -345,6 +349,12 @@ def _parse_filters(raw: object) -> tuple[DashboardFilter, ...]:
         ):
             raise ValueError(f"expected 'filters[{index}].charts' to be a list of chart names")
         applies_to = tuple(dict.fromkeys(name.strip() for name in charts_raw))
+        control = item.get("control", "select")
+        if control not in _FILTER_CONTROLS:
+            raise ValueError(
+                f"expected 'filters[{index}].control' to be one of: "
+                f"{', '.join(sorted(_FILTER_CONTROLS))}"
+            )
         values = item.get("values")
         if isinstance(values, list):
             parsed_values = tuple(
@@ -359,6 +369,7 @@ def _parse_filters(raw: object) -> tuple[DashboardFilter, ...]:
                     field=field.strip(),
                     values=tuple(dict.fromkeys(parsed_values)),
                     charts=applies_to,
+                    control=control,
                 )
             )
             continue
@@ -374,6 +385,7 @@ def _parse_filters(raw: object) -> tuple[DashboardFilter, ...]:
                     source_chart=source_match.group("chart"),
                     source_field=source_match.group("field"),
                     charts=applies_to,
+                    control=control,
                 )
             )
             continue

@@ -58,6 +58,7 @@ tags:
 filters:
   - field: plan
     values: source(activation_by_plan, plan)
+    control: toggle
   - field: week
     values: source(active_users, week)
 
@@ -66,7 +67,7 @@ toolbar:
   stars: 24
 
 summary:
-  - "{{ ui.text('Active users grew every week of the quarter, from 1,480 in week 1 to 2,325 in week 12, and the Team plan accounts for most of the growth in sessions per user. Activation holds near a third of active users; Pro converts best. Hourly activity peaks mid-morning on weekdays.', title='Overview') }}"
+  - "{{ ui.text('Active users grew every week of the quarter, from 1,480 in week 1 to 2,325 in week 12, and the Team plan accounts for most of the growth in sessions per user. Activation holds near a third of active users; Team converts best, at close to 60%. Hourly activity peaks mid-morning on weekdays.', title='Overview') }}"
   - "{{ alert.info('Written by hand for this demo. An AI-generated summary is on the roadmap.', 'About this summary') }}"
   - "{{ product_owner() }}"
   - "{{ ui.label_value('Generated', time.now('%Y-%m-%d %H:%M')) }}"

@@ -11,10 +11,11 @@ def message(
     tone: str = "info",
     metric: object | None = None,
     note: object | None = None,
+    trigger: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
     return components.alert(
-        value, title=title, tone=tone, metric=metric, note=note, width=width
+        value, title=title, tone=tone, metric=metric, note=note, trigger=trigger, width=width
     )
 
 
@@ -24,10 +25,11 @@ def info(
     *,
     metric: object | None = None,
     note: object | None = None,
+    trigger: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
     return message(
-        value, title=title, tone="info", metric=metric, note=note, width=width
+        value, title=title, tone="info", metric=metric, note=note, trigger=trigger, width=width
     )
 
 
@@ -37,10 +39,11 @@ def success(
     *,
     metric: object | None = None,
     note: object | None = None,
+    trigger: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
     return message(
-        value, title=title, tone="success", metric=metric, note=note, width=width
+        value, title=title, tone="success", metric=metric, note=note, trigger=trigger, width=width
     )
 
 
@@ -50,10 +53,11 @@ def warning(
     *,
     metric: object | None = None,
     note: object | None = None,
+    trigger: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
     return message(
-        value, title=title, tone="warning", metric=metric, note=note, width=width
+        value, title=title, tone="warning", metric=metric, note=note, trigger=trigger, width=width
     )
 
 
@@ -63,8 +67,9 @@ def error(
     *,
     metric: object | None = None,
     note: object | None = None,
+    trigger: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
     return message(
-        value, title=title, tone="error", metric=metric, note=note, width=width
+        value, title=title, tone="error", metric=metric, note=note, trigger=trigger, width=width
     )
