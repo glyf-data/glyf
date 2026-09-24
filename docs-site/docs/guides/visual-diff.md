@@ -118,6 +118,27 @@ one mark per x value and series, and reports what it finds first:
 counterpart in this build, all of them in the Partners series. The other
 counts are `new`, `higher` and `lower`. A line or area chart says `points`.
 
+When the axes themselves moved, that comes first, because a moved axis moves
+every mark on the page. In the sales example, one channel's February revenue
+jumping tenfold rescales the y axis, and every other bar shrinks on the page
+although its value did not change:
+
+```text
+~ channel_revenue: 42.7% of the picture moved (the rows changed)
+    y axis 0–30.4k → 0–154k
+    bars: 1 higher
+    sum of revenue 74,000 → 204,500 (+176.4%)
+```
+
+Nearly half the picture moved, and the report boxes only February: the rest
+is scale.
+
+The y range is what the chart has to show, zero included: the tallest stack
+for a stacked bar or area, the highest and lowest value for a line. It is
+reported when either end moves by a tenth of the range or more; a smaller
+shift barely changes the picture. An x value only one build has is named
+too, as in `x axis: 2026-04 added, 2025-04 dropped`.
+
 The report draws the same thing: this build's marks in colour, the baseline's
 in grey behind them, and a magenta box around each x value where a mark went,
 appeared or changed height. In the example above every month is boxed, and
