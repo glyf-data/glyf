@@ -58,6 +58,14 @@ if one of these would change how you work.
 <ol className="roadmapTimeline">
   <li>
     <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.17.0">0.17.0</Link>
+      <time dateTime="2026-09-24">24 September 2026</time>
+    </div>
+    <strong>Charts that hold still, and diffs that say when the scale moved</strong>
+    <p>glyf settles the ties an <code>ORDER BY</code> leaves, so a chart and a <code>LIMIT</code> come back the same every build. <code>glyf diff</code> names a rescaled axis before the marks that moved. <Link to="/docs/guides/visualisation-syntax#ties">Read about ties</Link>.</p>
+  </li>
+  <li>
+    <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.16.0">0.16.0</Link>
       <time dateTime="2026-09-24">24 September 2026</time>
     </div>

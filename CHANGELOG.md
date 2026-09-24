@@ -2,6 +2,28 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## 0.17.0 - 2026-09-24
+
+### Added
+
+- `glyf diff` says when a chart's axes moved, before the marks that moved:
+  `y axis 0–30.4k → 0–154k` when either end of the y range shifts by a
+  tenth or more, and `x axis: 2026-04 added, 2025-04 dropped`. A rescaled
+  axis moves every mark on the page; this says which part of a change is
+  scale. The JSON report carries the ranges and the sentence.
+
+### Changed
+
+- glyf settles the ties a query's `ORDER BY` leaves. The query's other
+  output columns are appended to its outermost `ORDER BY`, after the
+  author's keys, so the order asked for holds and a `LIMIT` keeps the same
+  rows every build. The compiled SQL shows the query as it ran; the build
+  record hashes it as written, so upgrading is not a query change.
+  `SELECT *` is settled after the rows come back instead, and a warehouse
+  that refuses the tiebreak runs the query as written, with a warning.
+  A chart whose rows tied may draw its tied rows in a new, now fixed,
+  order the first time it is built with this version.
+
 ## 0.16.0 - 2026-09-24
 
 ### Added
