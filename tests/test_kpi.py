@@ -22,6 +22,7 @@ from glyf.dashboard.generator import generate_dashboards
 from glyf.diff import compare_builds, write_report
 from glyf.exporter import export_site
 from glyf.ggsql.kpi import format_number
+from glyf.ggsql.kpi import build_tile
 from glyf.ggsql.parser import GgsqlParseError, parse_ggsql
 from glyf.pipeline import RenderError, render_project
 from tests.helpers import copy_basic_project
@@ -299,3 +300,18 @@ def _dashboard_with(project: Path, *charts: str) -> None:
 
 def _fragment(project: Path, name: str) -> str:
     return (project / "target" / "glyf" / "charts" / f"{name}.kpi.html").read_text(encoding="utf-8")
+
+
+def test_a_delta_is_as_precise_as_the_numbers_it_compares() -> None:
+    """89.9 - 92.3 is -2.3999999999999915 in floating point; the tile says -2.4."""
+    chart = parse_ggsql(
+        "SELECT 1\n\nVISUALISE rate AS value, previous AS compare\nDRAW kpi\n", name="k"
+    )
+
+    tile = build_tile(chart, {"rate": 89.9, "previous": 92.3})
+    spend = build_tile(chart, {"rate": 263.85, "previous": 215.62})
+    whole = build_tile(chart, {"rate": 21.8, "previous": 20})
+
+    assert tile.comparison is not None and tile.comparison.delta_text == "-2.4"
+    assert spend.comparison is not None and spend.comparison.delta_text == "+48.23"
+    assert whole.comparison is not None and whole.comparison.delta_text == "+1.8"
