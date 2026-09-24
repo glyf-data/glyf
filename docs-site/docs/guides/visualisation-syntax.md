@@ -1,3 +1,5 @@
+import ChartTypeCard from '@site/src/components/ChartTypeCard';
+
 # Visualisation Syntax
 
 A `.ggsql` file contains SQL followed by a small chart block.
@@ -43,6 +45,207 @@ A `table` takes no roles at all: its `VISUALISE` is a list of columns. See
 
 ## Chart types
 
+Every type below is drawn from the [product analytics example](/docs/examples/product-analytics).
+Switch a card to **Code** to see the `.ggsql` file that drew it, as it is in
+the repository.
+
+<div className="chartTypeGrid">
+
+<ChartTypeCard type="line" title="Line" anchor="line" example="examples/product_analytics/visualisations/activation_rate_by_plan.ggsql" summary="A value over an ordered x, one line per colour. Shows trend and turning points.">
+
+```sql
+SELECT
+  week,
+  plan,
+  round(sum(activated_users) * 100.0 / nullif(sum(active_users), 0), 1) as activation_rate
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1, 2
+
+VISUALISE week AS x, activation_rate AS y, plan AS color
+DRAW line
+LABEL title => 'Activation Rate by Plan'
+LABEL x_title => 'Week'
+LABEL y_title => 'Activation Rate (%)'
+INTERACT tooltip, legend_filter
+```
+
+</ChartTypeCard>
+
+<ChartTypeCard type="bar" title="Bar" anchor="bar" example="examples/product_analytics/visualisations/sessions_per_user.ggsql" summary="One bar per x value, stacked by colour. Compares amounts across categories or periods.">
+
+```sql
+SELECT
+  week,
+  round(sum(sessions) * 1.0 / nullif(sum(active_users), 0), 2) as sessions_per_user
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1
+
+VISUALISE week AS x, sessions_per_user AS y
+DRAW bar
+LABEL title => 'Sessions per Active User'
+LABEL x_title => 'Week'
+LABEL y_title => 'Sessions per User'
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
+<ChartTypeCard type="area" title="Area" anchor="area" example="examples/product_analytics/visualisations/active_users.ggsql" summary="A line with the space under it filled, stacked by colour. Shows volume and its make-up over time.">
+
+```sql
+SELECT week, sum(active_users) as active_users
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1
+
+VISUALISE week AS x, active_users AS y
+DRAW area
+LABEL title => 'Active Users'
+LABEL x_title => 'Week'
+LABEL y_title => 'Users'
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
+<ChartTypeCard type="scatter" title="Scatter" anchor="scatter" example="examples/product_analytics/visualisations/sessions_scatter.ggsql" summary="One point per row. Shows how two numbers move together, and the rows that do not.">
+
+```sql
+SELECT active_users, sessions, plan
+FROM {{ ref('fct_product_usage') }}
+ORDER BY plan, active_users
+
+VISUALISE active_users AS x, sessions AS y, plan AS color
+DRAW scatter
+LABEL title => 'Sessions vs Active Users'
+LABEL x_title => 'Active Users'
+LABEL y_title => 'Sessions'
+INTERACT tooltip, zoom
+```
+
+</ChartTypeCard>
+
+<ChartTypeCard type="pie" title="Pie" anchor="pie" example="examples/product_analytics/visualisations/sessions_by_plan.ggsql" summary="One slice per x value, sized by y. Shows the share of a whole, for a handful of parts.">
+
+```sql
+SELECT
+  plan,
+  sum(sessions) as sessions
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1
+ORDER BY sessions DESC
+
+VISUALISE plan AS x, sessions AS y
+DRAW pie
+LABEL title => 'Sessions by Plan'
+LABEL y_title => 'Sessions'
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
+<ChartTypeCard type="histogram" title="Histogram" anchor="histogram" example="examples/product_analytics/visualisations/session_length_distribution.ggsql" summary="Rows counted into bins of x. Shows the shape of a distribution.">
+
+```sql
+SELECT
+  avg_session_minutes,
+  plan
+FROM {{ ref('fct_account_sessions') }}
+ORDER BY avg_session_minutes, plan
+
+VISUALISE avg_session_minutes AS x, plan AS color
+DRAW histogram
+LABEL title => 'Session Length by Account'
+LABEL subtitle => 'One row per account, binned by average session length'
+LABEL x_title => 'Average session (minutes)'
+LABEL y_title => 'Accounts'
+INTERACT tooltip, legend_filter
+```
+
+</ChartTypeCard>
+
+<ChartTypeCard type="boxplot" title="Boxplot" anchor="boxplot" example="examples/product_analytics/visualisations/sessions_per_account.ggsql" summary="Quartiles of y for each x, outliers as points. Compares spreads, not just averages.">
+
+```sql
+SELECT
+  plan,
+  sessions
+FROM {{ ref('fct_account_sessions') }}
+
+VISUALISE plan AS x, sessions AS y
+DRAW boxplot
+LABEL title => 'Sessions per Account'
+LABEL subtitle => 'Median, quartiles and outlying accounts for each plan'
+LABEL x_title => 'Plan'
+LABEL y_title => 'Sessions'
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
+<ChartTypeCard type="heatmap" title="Heatmap" anchor="heatmap" example="examples/product_analytics/visualisations/activity_by_hour.ggsql" summary="One shaded cell per x and y pair. Shows patterns across two categories at once.">
+
+```sql
+SELECT
+  weekday,
+  hour,
+  sessions
+FROM {{ ref('fct_hourly_activity') }}
+ORDER BY weekday_number, hour
+
+VISUALISE hour AS x, weekday AS y, sessions AS color
+DRAW heatmap
+LABEL title => 'Sessions by Hour'
+LABEL subtitle => 'Two working-day peaks; weekends run at a fifth of the volume'
+LABEL x_title => 'Hour of day (UTC)'
+LABEL y_title => 'Weekday'
+CONFIG width => 1100
+CONFIG height => 320
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
+<ChartTypeCard type="table" title="Table" anchor="table" example="examples/product_analytics/visualisations/top_accounts.ggsql" summary="The rows themselves, one column per listed column. For when the exact values matter.">
+
+```sql
+SELECT account_id, plan, sessions, avg_session_minutes
+FROM {{ ref('fct_account_sessions') }}
+ORDER BY sessions DESC, account_id
+LIMIT 10
+
+VISUALISE *
+DRAW table
+LABEL title => 'Most active accounts'
+LABEL account_id => 'Account'
+LABEL avg_session_minutes => 'Avg minutes'
+CONFIG height => 360
+```
+
+</ChartTypeCard>
+
+<ChartTypeCard type="kpi" title="KPI" anchor="kpi" example="examples/product_analytics/visualisations/weekly_activated_users.ggsql" summary="One number as a tile, with its change against a comparison. For a headline.">
+
+```sql
+WITH weekly AS (
+  SELECT week, sum(activated_users) AS activated_users
+  FROM {{ ref('fct_product_usage') }}
+  GROUP BY 1
+)
+SELECT activated_users, lag(activated_users) OVER (ORDER BY week) AS previous
+FROM weekly
+ORDER BY week DESC
+LIMIT 1
+
+VISUALISE activated_users AS value, previous AS compare
+DRAW kpi
+LABEL title => 'Activated users'
+LABEL compare => 'vs last week'
+```
+
+</ChartTypeCard>
+
+</div>
+
 | `DRAW` | Draws | Roles | From |
 | --- | --- | --- | --- |
 | `line` | One line per `color` value. | `x`, `y`, optional `color` | ggsql |
@@ -57,6 +260,99 @@ A `table` takes no roles at all: its `VISUALISE` is a list of columns. See
 | `kpi` | One number as a tile, with the change against a comparison value. Not drawn. | `value`, optional `compare` | glyf |
 
 Any other `DRAW` value fails validation with `unsupported chart type`.
+
+### Line
+
+```sql
+SELECT week, plan, active_users
+FROM {{ ref('fct_product_usage') }}
+
+VISUALISE week AS x, active_users AS y, plan AS color
+DRAW line
+```
+
+The query returns one row per point: here, one per week and plan. Each `color`
+value gets its own line, joined in `x` order, with a dot on every row so a
+single week stands out. Without `color` there is one line.
+
+Use a line when `x` is ordered, usually time, and the question is how a value
+moves. A text `x` such as `2026-W01` is drawn as evenly spaced categories;
+a date or number is drawn to scale.
+
+### Bar
+
+```sql
+SELECT week, plan, sessions
+FROM {{ ref('fct_product_usage') }}
+
+VISUALISE week AS x, sessions AS y, plan AS color
+DRAW bar
+```
+
+Each `x` value gets one bar as tall as `y`. With `color`, each bar is split
+into one segment per colour value, stacked, so the bar's height is the total
+and the segments are its parts. Segments stack in the order the query returns
+the rows; see [Row order](#row-order).
+
+Several rows for the same `x` and colour are stacked too, not summed into one
+segment, so aggregate in SQL with `GROUP BY` when each bar should be one row.
+
+### Area
+
+```sql
+SELECT week, plan, active_users
+FROM {{ ref('fct_product_usage') }}
+
+VISUALISE week AS x, active_users AS y, plan AS color
+DRAW area
+```
+
+A line with the space beneath it filled. With `color`, the areas stack: the
+top edge is the total, and each band's thickness is one colour's share of it.
+Use an area over a line when the total matters as much as the parts; use a
+line when the parts should be compared against each other, since stacked
+bands are hard to compare except at the bottom.
+
+### Scatter
+
+```sql
+SELECT active_users, sessions, plan
+FROM {{ ref('fct_product_usage') }}
+ORDER BY plan, active_users
+
+VISUALISE active_users AS x, sessions AS y, plan AS color
+DRAW scatter
+```
+
+One point per row, placed by two numbers. `point` is accepted as an alias.
+Both axes include zero and are padded, so a point on the edge of the data is
+drawn whole rather than cut in half by the axis.
+
+Points that land on the same spot are drawn in row order, the later one on
+top, so a scatter needs an `ORDER BY` that settles every row; see
+[Row order](#row-order). `INTERACT zoom` suits a dense scatter; on a dashboard
+the zoom starts locked so scrolling moves the page.
+
+### Pie
+
+```sql
+SELECT plan, sum(sessions) AS sessions
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1
+ORDER BY sessions DESC
+
+VISUALISE plan AS x, sessions AS y
+DRAW pie
+```
+
+One slice per row: `x` names it and `y` sizes it, as a share of the sum of
+`y`. The slices are coloured by `x`, or by `color` when one is mapped. A pie
+is a glyf addition, not in ggsql.
+
+A pie reads well with a handful of slices and badly with many or near-equal
+ones; a bar shows the same numbers more precisely. Slices go round in the
+order the query returns them, so `ORDER BY` the size to read them largest
+first.
 
 ### Histogram
 
