@@ -138,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-24T20:53:18Z">24 Sep 2026, 20:53 UTC</strong>
+          Refreshed <strong title="2026-09-24T21:32:29Z">24 Sep 2026, 21:32 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -205,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 24 Sep 2026, 20:53 UTC</span>
+              <span class="glyf-version-option-note">built 24 Sep 2026, 21:32 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -310,7 +310,7 @@
 )
 SELECT active_users, lag(active_users) OVER (ORDER BY week) AS previous
 FROM weekly
-ORDER BY week DESC
+ORDER BY week DESC, active_users, previous
 LIMIT 1
 </code></pre>
 
@@ -329,7 +329,7 @@ LIMIT 1
 )
 SELECT sessions, lag(sessions) OVER (ORDER BY week) AS previous
 FROM weekly
-ORDER BY week DESC
+ORDER BY week DESC, sessions, previous
 LIMIT 1
 </code></pre>
 
@@ -348,7 +348,7 @@ LIMIT 1
 )
 SELECT activated_users, lag(activated_users) OVER (ORDER BY week) AS previous
 FROM weekly
-ORDER BY week DESC
+ORDER BY week DESC, activated_users, previous
 LIMIT 1
 </code></pre>
 
@@ -375,7 +375,7 @@ GROUP BY 1
 
         <pre class="glyf-source-sql"><code>SELECT active_users, sessions, plan
 FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
-ORDER BY plan, active_users
+ORDER BY plan, active_users, sessions
 </code></pre>
 
       </div>
@@ -435,7 +435,7 @@ GROUP BY 1
   sum(sessions) as sessions
 FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
 GROUP BY 1
-ORDER BY sessions DESC
+ORDER BY sessions DESC, plan
 </code></pre>
 
       </div>
@@ -448,7 +448,7 @@ ORDER BY sessions DESC
 
         <pre class="glyf-source-sql"><code>SELECT account_id, plan, sessions, avg_session_minutes
 FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
-ORDER BY sessions DESC, account_id
+ORDER BY sessions DESC, account_id, plan, avg_session_minutes
 LIMIT 10
 </code></pre>
 
@@ -494,7 +494,7 @@ ORDER BY avg_session_minutes, plan
   hour,
   sessions
 FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_hourly_activity&#34;
-ORDER BY weekday_number, hour
+ORDER BY weekday_number, hour, weekday, sessions
 </code></pre>
 
       </div>
@@ -1614,7 +1614,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-24 21:53
+      2026-09-24 22:32
 
     </div>
   </div>
@@ -1796,7 +1796,7 @@ takes their quartiles, so neither query aggregates anything itself.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">24 Sep 2026, 20:53 UTC</div>
+              <div class="glyf-version-date">24 Sep 2026, 21:32 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>

@@ -9,6 +9,11 @@ for one, so the same project can draw a different chart on every build.
 Where the query asks, glyf keeps that order exactly. Where it does not, glyf
 picks one: there is no intent to override, and an arbitrary order that holds
 still is worth more than an arbitrary order that does not.
+
+Where the query asks only in part, `ORDER BY department` with two rows in one
+department, glyf settles the tie and nothing else. The Rust core appends the
+query's other columns to its ORDER BY before it runs (`order_tiebreak`), and
+`settle_ties` does the same after it runs when the SQL could not be edited.
 """
 
 from dataclasses import dataclass
@@ -17,7 +22,7 @@ import pyarrow as pa
 import pyarrow.compute as pc
 
 from glyf.execution.result import QueryResult
-from glyf.ggsql.models import GgsqlChart
+from glyf.ggsql.models import GgsqlChart, OrderTiebreak
 from glyf.ggsql.renderer import required_columns
 
 # Chart types whose picture changes with the order of the rows, so the order
@@ -75,6 +80,90 @@ def order_rows(chart: GgsqlChart, data: QueryResult) -> tuple[QueryResult, RowOr
     )
     reported = tuple(encoded) or tuple(keys[:1])
     return QueryResult.from_arrow(ordered), RowOrder(applied=True, columns=reported)
+
+
+@dataclass(frozen=True)
+class TieSettlement:
+    """Whether the query's own keys left ties, and how glyf settled them."""
+
+    tied: bool
+    # `sql` when the warehouse settled them from the tiebreak glyf added,
+    # `rows` when glyf settled them after the rows came back.
+    by: str = ""
+    keys: tuple[str, ...] = ()
+    added: tuple[str, ...] = ()
+    limited: bool = False
+
+    def describe(self, rel_path: str) -> str:
+        keys = ", ".join(self.keys)
+        if self.by == "sql":
+            return (
+                f"{rel_path}: rows tie on its ORDER BY {keys}, so glyf added "
+                f"{', '.join(self.added)} to settle them the same way every build. "
+                "Add them to the ORDER BY to choose the tiebreak yourself."
+            )
+        message = (
+            f"{rel_path}: rows tie on its ORDER BY {keys}; glyf settled them by "
+            "the other columns after they came back."
+        )
+        if self.limited:
+            message += (
+                " It cannot choose which rows the LIMIT keeps, because the query "
+                "selects *: name its columns and glyf will add them to the ORDER BY."
+            )
+        return message
+
+
+def settle_ties(
+    data: QueryResult, tiebreak: OrderTiebreak, *, applied: bool
+) -> tuple[QueryResult, TieSettlement]:
+    """The rows with every tie their ORDER BY left settled, the order untouched.
+
+    A tie is a run of consecutive rows equal on the author's keys. Runs stay
+    where the warehouse put them; only the rows inside a run are sorted, by
+    the other columns. With the tiebreak already in the SQL (`applied`) the
+    runs come back sorted and this only finds them.
+    """
+    table = data.to_arrow()
+    by_name = {name.lower(): name for name in table.column_names}
+    keys = [by_name.get(key.lower()) for key in tiebreak.keys]
+    if not keys or any(key is None for key in keys) or table.num_rows < 2:
+        return data, TieSettlement(tied=False)
+    key_columns = [table.column(key).to_pylist() for key in keys if key is not None]
+    whole_rows = list(zip(*(column.to_pylist() for column in table.columns)))
+    runs: list[int] = []
+    run = 0
+    # Rows equal on the keys and on everything else draw the same mark, so
+    # their order cannot show; only a tie between different rows counts.
+    tied = False
+    previous: tuple[object, ...] | None = None
+    for index, row in enumerate(zip(*key_columns)):
+        if previous is not None and row != previous:
+            run += 1
+        elif previous is not None and whole_rows[index] != whole_rows[index - 1]:
+            tied = True
+        runs.append(run)
+        previous = row
+    settlement = TieSettlement(
+        tied=tied,
+        by="sql" if applied else "rows",
+        keys=tuple(tiebreak.keys),
+        added=tiebreak.added,
+        limited=tiebreak.limited,
+    )
+    if not tied or applied:
+        return data, settlement
+    rest = [
+        name
+        for name in table.column_names
+        if name not in keys and _is_sortable(table.schema.field(name).type)
+    ]
+    ranked = table.append_column("__glyf_run", pa.array(runs, pa.int64()))
+    order = pc.sort_indices(
+        ranked,
+        sort_keys=[("__glyf_run", "ascending"), *[(name, "ascending") for name in rest]],
+    )
+    return QueryResult.from_arrow(table.take(order)), settlement
 
 
 def is_order_sensitive(chart: GgsqlChart) -> bool:

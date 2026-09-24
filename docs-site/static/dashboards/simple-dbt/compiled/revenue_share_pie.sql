@@ -1,4 +1,4 @@
 SELECT region, sum(revenue) as revenue
 FROM "simple_dbt"."main"."fct_orders"
 GROUP BY 1
-ORDER BY revenue DESC
+ORDER BY revenue DESC, region

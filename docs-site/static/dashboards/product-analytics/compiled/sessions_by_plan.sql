@@ -3,4 +3,4 @@ SELECT
   sum(sessions) as sessions
 FROM "product_analytics"."main"."fct_product_usage"
 GROUP BY 1
-ORDER BY sessions DESC
+ORDER BY sessions DESC, plan

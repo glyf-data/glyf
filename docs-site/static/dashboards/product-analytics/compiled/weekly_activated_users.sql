@@ -5,5 +5,5 @@ WITH weekly AS (
 )
 SELECT activated_users, lag(activated_users) OVER (ORDER BY week) AS previous
 FROM weekly
-ORDER BY week DESC
+ORDER BY week DESC, activated_users, previous
 LIMIT 1
