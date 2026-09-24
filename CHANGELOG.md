@@ -2,6 +2,31 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## 0.15.0 - 2026-09-24
+
+### Added
+
+- Every dashboard chart card has download (a PNG of the chart as shown,
+  theme and filters included) and full-screen tools beside its type badge.
+- A chart with `INTERACT zoom` gets a zoom lock and a reset. It starts
+  locked, so scrolling the page no longer zooms the chart by accident.
+- `metric` items take `delta` and `trend` (`up`, `down` or `flat`), shown
+  in green, red or grey with an arrow, like a kpi tile.
+- An alert macro given `metric=` renders as a status card led by the
+  number; alerts, text and lists take a `note` footnote.
+- `owner` in dashboard YAML names the owner shown under the header.
+
+### Changed
+
+- Headline numbers on kpi, metric and status cards are larger (40px).
+- A dashboard filter reads as a label then a value: the field name is a
+  muted segment and the selection is bold, with more room between filters.
+
+### Fixed
+
+- Points on the edge of a scatter chart are no longer cut in half when the
+  chart zooms: its scales are padded.
+
 ## 0.14.0 - 2026-09-24
 
 ### Added

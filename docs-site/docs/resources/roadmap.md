@@ -58,6 +58,14 @@ if one of these would change how you work.
 <ol className="roadmapTimeline">
   <li>
     <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.15.0">0.15.0</Link>
+      <time dateTime="2026-09-24">24 September 2026</time>
+    </div>
+    <strong>Chart tools, and cards that show a fall as clearly as a rise</strong>
+    <p>Every chart can be downloaded as a PNG or opened full screen, and a zooming chart starts with its zoom locked. Metric tiles show a coloured change, an alert can lead with its number as a status card, and a dashboard names its owner. <Link to="/docs/guides/dashboard-yaml#chart-tools">Read the guide</Link>.</p>
+  </li>
+  <li>
+    <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.14.0">0.14.0</Link>
       <time dateTime="2026-09-24">24 September 2026</time>
     </div>
