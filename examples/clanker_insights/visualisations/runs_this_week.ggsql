@@ -1,0 +1,9 @@
+SELECT runs, lag(runs) OVER (ORDER BY week) AS previous
+FROM {{ ref('fct_weekly_usage') }}
+ORDER BY week DESC
+LIMIT 1
+
+VISUALISE runs AS value, previous AS compare
+DRAW kpi
+LABEL title => 'Agent runs'
+LABEL compare => 'vs last week'

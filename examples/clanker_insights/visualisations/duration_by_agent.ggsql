@@ -1,0 +1,10 @@
+SELECT agent, model, duration_s
+FROM {{ ref('fct_agent_runs') }}
+
+VISUALISE agent AS x, duration_s AS y
+DRAW boxplot
+LABEL title => 'Run time by agent'
+LABEL subtitle => 'Quartiles and outlying runs'
+LABEL x_title => 'Agent'
+LABEL y_title => 'Seconds'
+INTERACT tooltip

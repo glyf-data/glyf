@@ -45,7 +45,26 @@ normalised chart data or the Vega specs that `glyf dashboard` keeps under
 differences field by field.
 
 The manifest omits those *paths*; the exported dashboards still carry the chart
-rows in their HTML. If the published site should contain no row data, build it
+rows in their HTML.
+
+## Draw charts live: `export.embed`
+
+A picture is enough for a report. An application that wants tooltips, zoom,
+its own theme or filters needs the chart's Vega specification, which the
+public site withholds by default. Opt in:
+
+```yaml title="glyf.yml"
+export:
+  embed: true
+```
+
+`glyf export` then publishes each drawn chart's spec at
+`charts/<name>.vega.json`, `bundle.json` points `charts[].artifacts.vega` at
+it, and `security.embedded_specs` is `true`. A spec carries the rows the chart
+was drawn from, the same rows the dashboard pages already inline, so combine
+it with `export.row_data: minimal` to publish only the columns each chart
+encodes. It cannot be combined with `row_data: exclude`, which publishes no
+rows. If the published site should contain no row data, build it
 with `export.row_data: exclude`. [What a published site
 exposes](../guides/data-exposure.md) covers what that changes. If an
 application needs interactive Vega rendering or row-level access control,

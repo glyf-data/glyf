@@ -1,0 +1,24 @@
+WITH grid AS (
+  SELECT weekday, weekday_number, hour
+  FROM (SELECT DISTINCT weekday, weekday_number FROM {{ ref('fct_agent_runs') }}) AS days
+  CROSS JOIN range(24) AS hours(hour)
+),
+counted AS (
+  SELECT weekday_number, hour, count(*) AS runs
+  FROM {{ ref('fct_agent_runs') }}
+  GROUP BY 1, 2
+)
+SELECT grid.weekday, grid.weekday_number, grid.hour, coalesce(counted.runs, 0) AS runs
+FROM grid
+LEFT JOIN counted USING (weekday_number, hour)
+ORDER BY grid.weekday_number, grid.hour
+
+VISUALISE hour AS x, weekday AS y, runs AS color
+DRAW heatmap
+LABEL title => 'When agents run'
+LABEL subtitle => 'Weekday by hour, UTC'
+LABEL x_title => 'Hour of day (UTC)'
+LABEL y_title => 'Weekday'
+CONFIG width => 1100
+CONFIG height => 300
+INTERACT tooltip

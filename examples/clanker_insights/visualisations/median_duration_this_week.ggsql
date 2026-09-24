@@ -1,0 +1,9 @@
+SELECT median_duration_s, lag(median_duration_s) OVER (ORDER BY week) AS previous
+FROM {{ ref('fct_weekly_usage') }}
+ORDER BY week DESC
+LIMIT 1
+
+VISUALISE median_duration_s AS value, previous AS compare
+DRAW kpi
+LABEL title => 'Median run time (s)'
+LABEL compare => 'vs last week'

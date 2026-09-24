@@ -1,0 +1,9 @@
+SELECT success_rate, lag(success_rate) OVER (ORDER BY week) AS previous
+FROM {{ ref('fct_weekly_usage') }}
+ORDER BY week DESC
+LIMIT 1
+
+VISUALISE success_rate AS value, previous AS compare
+DRAW kpi
+LABEL title => 'Success rate (%)'
+LABEL compare => 'vs last week'

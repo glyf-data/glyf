@@ -82,6 +82,11 @@ class ExportConfig:
     # and the local bundle; `public` also publishes it, which means publishing
     # the warehouse identity and the selectors.
     provenance: str = "local"
+    # Publish each drawn chart's Vega spec in the site, at
+    # `charts/<name>.vega.json`, and point `bundle.json` at it, so an
+    # application can draw the chart live with glyf-js. It carries the same
+    # rows the dashboard pages already inline, pruned under `minimal`.
+    embed: bool = False
 
     @property
     def publishes_provenance(self) -> bool:
@@ -299,7 +304,14 @@ def _export_config(raw: object) -> ExportConfig:
         raise ConfigError(
             f"Invalid config: 'export.provenance' must be one of {allowed}"
         )
-    return ExportConfig(row_data=row_data, provenance=provenance)
+    embed = _bool_value(raw, "embed", False, section="export")
+    if embed and row_data == "exclude":
+        raise ConfigError(
+            "Invalid config: 'export.embed' publishes each chart's Vega spec, "
+            "which carries its rows, and 'export.row_data: exclude' publishes "
+            "none. Use row_data: minimal to embed only the encoded columns."
+        )
+    return ExportConfig(row_data=row_data, provenance=provenance, embed=embed)
 
 
 def _privacy_config(raw: object) -> PrivacyConfig:

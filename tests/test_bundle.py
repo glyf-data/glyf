@@ -62,7 +62,7 @@ DASHBOARD_KEYS = {
     "title",
 }
 
-FILTER_KEYS = {"field", "values"}
+FILTER_KEYS = {"field", "values", "control"}
 FILTER_SOURCE_KEYS = {"chart", "field"}
 
 

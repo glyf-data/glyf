@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://glyfdata.com/schema/bundle.v1.schema.json",
+  "title": "glyf bundle manifest, bundle_version 1",
+  "description": "bundle.json, the contract between a glyf build and what consumes it. Fields may be added within a version, so every object allows properties it does not list. See https://glyfdata.com/docs/reference/bundle.",
+  "type": "object",
+  "required": ["bundle_version", "mode", "charts", "dashboards"],
+  "properties": {
+    "bundle_version": { "const": "1" },
+    "glyf_version": { "type": "string" },
+    "project": { "type": "string" },
+    "mode": { "enum": ["local_artifact", "public_site"] },
+    "generated_at": { "type": ["string", "null"] },
+    "paths": { "$ref": "#/$defs/paths" },
+    "security": { "$ref": "#/$defs/security" },
+    "build": { "type": "object" },
+    "charts": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/chart" }
+    },
+    "dashboards": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/dashboard" }
+    }
+  },
+  "$defs": {
+    "path": { "type": ["string", "null"] },
+    "paths": {
+      "type": "object",
+      "properties": {
+        "index": { "type": "string" },
+        "dashboards": { "type": "string" },
+        "charts": { "type": "string" },
+        "compiled": { "type": "string" },
+        "assets": { "type": "string" },
+        "data": {
+          "type": "object",
+          "properties": {
+            "normalized": { "type": "string" },
+            "vega": { "type": "string" }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "required": ["public_export", "internal_artifacts_included", "internal_artifacts"],
+      "properties": {
+        "public_export": { "type": "boolean" },
+        "internal_artifacts_included": { "type": "boolean" },
+        "internal_artifacts": { "type": "array", "items": { "type": "string" } },
+        "browser_visible_data": { "type": "string" },
+        "row_data": { "enum": ["minimal", "excluded"] },
+        "embedded_specs": { "type": "boolean" }
+      }
+    },
+    "chart": {
+      "type": "object",
+      "required": ["chart_type", "fields", "artifacts"],
+      "properties": {
+        "title": { "type": ["string", "null"] },
+        "chart_type": {
+          "enum": [
+            "line", "bar", "scatter", "area", "pie", "histogram",
+            "boxplot", "heatmap", "table", "kpi", null
+          ]
+        },
+        "fields": {
+          "type": "object",
+          "properties": {
+            "x": { "type": ["string", "null"] },
+            "y": { "type": ["string", "null"] },
+            "columns": { "type": ["array", "null"], "items": { "type": "string" } },
+            "value": { "type": ["string", "null"] },
+            "compare": { "type": ["string", "null"] }
+          }
+        },
+        "artifacts": {
+          "type": "object",
+          "required": ["metadata", "png", "svg", "compiled_sql", "data", "vega"],
+          "properties": {
+            "metadata": { "$ref": "#/$defs/path" },
+            "png": { "$ref": "#/$defs/path" },
+            "svg": { "$ref": "#/$defs/path" },
+            "compiled_sql": { "$ref": "#/$defs/path" },
+            "data": { "$ref": "#/$defs/path" },
+            "vega": { "$ref": "#/$defs/path" },
+            "table": { "$ref": "#/$defs/path" },
+            "kpi": { "$ref": "#/$defs/path" }
+          }
+        },
+        "interactions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "dashboard": {
+      "type": "object",
+      "required": ["title", "path", "charts", "filters"],
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "path": { "type": "string" },
+        "theme": { "type": ["string", "null"] },
+        "chart_theme": { "type": ["string", "null"] },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "charts": { "type": "array", "items": { "type": "string" } },
+        "filters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field", "values"],
+            "properties": {
+              "field": { "type": "string" },
+              "values": { "type": "array", "items": { "type": "string" } },
+              "control": { "enum": ["select", "radio", "toggle"] },
+              "source": {
+                "type": "object",
+                "required": ["chart", "field"],
+                "properties": {
+                  "chart": { "type": "string" },
+                  "field": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "source": { "type": "string" }
+      }
+    }
+  }
+}

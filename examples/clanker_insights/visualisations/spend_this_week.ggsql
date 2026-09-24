@@ -1,0 +1,9 @@
+SELECT spend_usd, lag(spend_usd) OVER (ORDER BY week) AS previous
+FROM {{ ref('fct_weekly_usage') }}
+ORDER BY week DESC
+LIMIT 1
+
+VISUALISE spend_usd AS value, previous AS compare
+DRAW kpi
+LABEL title => 'Spend (USD)'
+LABEL compare => 'vs last week'

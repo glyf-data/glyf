@@ -53,6 +53,11 @@ def export_site(
     else:
         # A wider earlier export may have published it into this directory.
         shutil.rmtree(paths.site_dir / "compiled", ignore_errors=True)
+    _publish_vega_specs(
+        paths.vega_data_dir,
+        paths.site_dir / "charts",
+        embed=config.export.embed and not exclude_row_data,
+    )
     copy_dashboard_assets(paths.root, paths.site_dir)
     write_bundle_manifest(
         scan.root,
@@ -67,6 +72,31 @@ def export_site(
         _write_zip(paths.site_dir, zip_path)
 
     return ExportResult(scan=scan, site_dir=paths.site_dir, zip_path=zip_path)
+
+
+# Where an embeddable Vega spec is published, beside the chart's picture.
+VEGA_SPEC_SUFFIX = ".vega.json"
+
+
+def _publish_vega_specs(source: Path, destination: Path, *, embed: bool) -> None:
+    """Publish each drawn chart's Vega spec under `export.embed`, or none.
+
+    The spec is what the build drew from: pruned to the encoded columns under
+    `row_data: minimal`, and never written under `exclude`. Without `embed`,
+    a spec an earlier export published is removed rather than left to be
+    served under a bundle that no longer mentions it.
+    """
+    destination.mkdir(parents=True, exist_ok=True)
+    for stale in destination.glob(f"*{VEGA_SPEC_SUFFIX}"):
+        stale.unlink()
+    if not embed or not source.is_dir():
+        return
+    for spec in sorted(source.glob(f"*{VEGA_SPEC_SUFFIX}")):
+        name = spec.name[: -len(VEGA_SPEC_SUFFIX)]
+        # Only a chart this export publishes: a spec another selection left
+        # under target/glyf/ is another audience's.
+        if (destination / f"{name}.json").exists():
+            shutil.copy2(spec, destination / spec.name)
 
 
 def _ensure_generated_outputs(root: Path) -> None:

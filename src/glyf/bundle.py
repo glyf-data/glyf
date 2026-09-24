@@ -55,6 +55,20 @@ def write_bundle_manifest(
         ),
         "dashboards": _dashboards_payload(scan.root, config, dashboards),
     }
+    if dashboards is None:
+        _inherit_filter_values(
+            payload["dashboards"],
+            inherited.get("dashboards"),
+            withhold=public and config.export.excludes_row_data,
+        )
+    if public and config.export.embed and not config.export.excludes_row_data:
+        # Said in the manifest so a consumer knows before it fetches anything
+        # that the specs, and the rows they carry, are published.
+        payload["security"]["embedded_specs"] = True
+        payload["security"]["browser_visible_data"] += (
+            " Each drawn chart's Vega specification is published for embedding"
+            " (export.embed), with the rows it was drawn from."
+        )
     record = read_build_record(paths.root / "build.json")
     if record is not None and (not public or config.export.publishes_provenance):
         # The record names the warehouse identity the queries ran as and the
@@ -66,6 +80,32 @@ def write_bundle_manifest(
         encoding="utf-8",
     )
     return target_path
+
+
+def _inherit_filter_values(
+    dashboards: dict[str, Any], built: object, *, withhold: bool
+) -> None:
+    """Fill `source(chart, field)` filter values from the bundle the build wrote.
+
+    `glyf export` reads the dashboards' YAML, where a sourced filter has no
+    values yet; `glyf dashboard` resolved them from the chart rows and wrote
+    them to the local bundle. Under `row_data: exclude` they are rows, so the
+    public bundle keeps them empty.
+    """
+    if withhold or not isinstance(built, dict):
+        return
+    for name, dashboard in dashboards.items():
+        source = built.get(name)
+        if not isinstance(source, dict) or not isinstance(dashboard, dict):
+            continue
+        resolved = {
+            item.get("field"): item.get("values")
+            for item in source.get("filters", [])
+            if isinstance(item, dict) and isinstance(item.get("values"), list)
+        }
+        for item in dashboard.get("filters", []):
+            if "source" in item and not item["values"] and resolved.get(item["field"]):
+                item["values"] = list(resolved[item["field"]])
 
 
 def _read_existing_bundle(path: Path) -> dict[str, Any]:
@@ -252,8 +292,25 @@ def _chart_payload(
         )
     else:
         payload["artifacts"]["data"] = None
-        payload["artifacts"]["vega"] = None
+        payload["artifacts"]["vega"] = _embedded_vega_path(
+            project_root, config, raw.get("name"), exclude_row_data=exclude_row_data
+        )
     return payload
+
+
+def _embedded_vega_path(
+    project_root: Path,
+    config: GlyfConfig,
+    name: object,
+    *,
+    exclude_row_data: bool,
+) -> str | None:
+    """The published Vega spec under `export.embed`, when export wrote one."""
+    if not config.export.embed or exclude_row_data or not isinstance(name, str):
+        return None
+    relative = f"charts/{name}.vega.json"
+    site_dir = artifact_paths(project_root, config).site_dir
+    return relative if (site_dir / relative).exists() else None
 
 
 def _artifact_path(
@@ -353,6 +410,7 @@ def _filter_payload(filter_spec: DashboardFilter) -> dict[str, object]:
     payload: dict[str, object] = {
         "field": filter_spec.field,
         "values": list(filter_spec.values),
+        "control": filter_spec.control,
     }
     if filter_spec.is_sourced:
         payload["source"] = {

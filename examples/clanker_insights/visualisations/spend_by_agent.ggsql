@@ -1,0 +1,12 @@
+SELECT agent, model, round(sum(cost_usd), 2) AS spend_usd
+FROM {{ ref('fct_agent_runs') }}
+GROUP BY 1, 2
+ORDER BY agent, model
+
+VISUALISE agent AS x, spend_usd AS y, model AS color
+DRAW bar
+LABEL title => 'Spend by agent'
+LABEL subtitle => 'Six weeks, split by the model each agent ran on'
+LABEL x_title => 'Agent'
+LABEL y_title => 'USD'
+INTERACT tooltip, legend_filter

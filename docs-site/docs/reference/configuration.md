@@ -31,6 +31,7 @@ render:
 export:
   row_data: include
   provenance: local
+  embed: false
 
 privacy:
   pii_columns: []
@@ -66,6 +67,7 @@ dashboard:
 | `execution.profiles_dir` | dbt's search order | `dbt` backend only. Where to find `profiles.yml`, instead of `DBT_PROFILES_DIR`, the project directory, then `~/.dbt`. |
 | `execution.mode` | `full` | `full` runs the queries and draws the charts. `validate` runs each with `limit 0` and draws nothing. See [validate mode](#validate-mode). |
 | `execution.max_rows` | unset | Fail the build if a chart's query returns more than this many rows. Unset means no limit. |
+| `export.embed` | `false` | Publish each drawn chart's Vega spec in the site, at `charts/<name>.vega.json`, and point `bundle.json` at it, so an application can draw the chart live with glyf-js. See [Embedded analytics](../integrations/embedded-analytics.md). Not allowed with `row_data: exclude`. |
 | `export.provenance` | `local` | Where the build provenance record goes. `local` keeps it in `build.json` and the local `bundle.json`; `public` also publishes it, which publishes the warehouse identity and the selectors. See [what a build records about itself](#what-a-build-records-about-itself). |
 | `export.row_data` | `include` | `minimal` publishes only the columns each chart encodes. See [publishing only what the chart shows](#publishing-only-what-the-chart-shows). `exclude` publishes rendered PNGs only, with no chart rows, Vega specs or compiled SQL. See [publishing without the rows](#publishing-without-the-rows). |
 
