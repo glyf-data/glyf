@@ -1,8 +1,10 @@
+{% import "components/icons.j2" as icons %}
 {% macro render_chart_card(chart, dashboard_config, chart_theme, title=None, width=None, filters=None) -%}
 {% set interactive = chart.vega_spec and chart.metadata.interactions %}
 {% set filter_modes = filters.modes(chart.metadata.name) if filters else "" %}
 {% set filterable = filters and chart.metadata.name in filters.vega_charts %}
-<article class="glyf-card glyf-chart-card" data-chart-theme="{{ chart_theme }}" data-glyf-chart="{{ chart.metadata.name }}"{% if filter_modes %} data-glyf-filters="{{ filter_modes }}"{% endif %}{% if width %} style="--glyf-item-width: {{ width }}"{% endif %}>
+{% set zoomable = interactive and "zoom" in chart.metadata.interactions %}
+<article class="glyf-card glyf-chart-card"{% if zoomable %} data-glyf-zoom-locked{% endif %} data-chart-theme="{{ chart_theme }}" data-glyf-chart="{{ chart.metadata.name }}"{% if filter_modes %} data-glyf-filters="{{ filter_modes }}"{% endif %}{% if width %} style="--glyf-item-width: {{ width }}"{% endif %}>
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">{{ title or chart.metadata.title or chart.metadata.name }}</div>
@@ -10,6 +12,24 @@
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+        {% if zoomable %}
+        <button class="glyf-chart-tool is-active" type="button" data-glyf-zoom-lock aria-pressed="true" aria-label="Zoom locked; click to zoom with the scroll wheel" title="Zoom locked: scrolling moves the page. Click to zoom with the wheel.">
+          {{ icons.icon("lock", "glyf-lock-icon glyf-lock-icon--locked") }}
+          {{ icons.icon("unlock", "glyf-lock-icon glyf-lock-icon--open") }}
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-zoom-reset aria-label="Reset zoom" title="Reset zoom">
+          {{ icons.icon("reset") }}
+        </button>
+        {% endif %}
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+          {{ icons.icon("download") }}
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+          {{ icons.icon("maximize", "glyf-expand-icon glyf-expand-icon--open") }}
+          {{ icons.icon("minimize", "glyf-expand-icon glyf-expand-icon--close") }}
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">{{ chart.metadata.chart_type }}</span>
     </div>
   </div>

@@ -66,7 +66,7 @@
         </div>
         <div class="glyf-meta-item">
           {{ icons.icon("user") }}
-          Owner <strong>data team</strong>
+          Owner <strong>{{ dashboard.owner or "data team" }}</strong>
         </div>
         <div class="glyf-meta-item glyf-mono">
           {{ icons.icon("code") }}
@@ -116,8 +116,7 @@
       {% if dashboard.filters and filters.live %}
         {% for filter in dashboard.filters %}
         <label class="glyf-filter-select" data-glyf-filter="{{ filter.field }}">
-          {{ icons.icon("filter") }}
-          <span class="glyf-filter-field">{{ filter.field }}</span>
+          <span class="glyf-filter-field">{{ icons.icon("filter") }}{{ filter.field }}</span>
           <select class="glyf-filter-control" id="glyf-filter-{{ filter.field }}" data-glyf-filter-select="{{ filter.field }}" aria-label="Filter by {{ filter.field }}">
             <option value="">All</option>
             {% for value in filter.values %}
@@ -524,6 +523,99 @@
       }
     })();
 
+    (function () {
+      // Each chart's own tools: zoom lock, reset, download, full screen.
+      const cards = Array.from(document.querySelectorAll(".glyf-chart-card"));
+      const visibleSvg = (card) => Array.from(card.querySelectorAll(".glyf-chart-body svg")).find((svg) => svg.getClientRects().length > 0);
+
+      {% if has_interactive_charts %}
+      // A chart that zooms takes the wheel from the page, so it starts locked:
+      // scrolling moves the page until the reader unlocks it. The events stop
+      // at the card on their way down, before the chart hears them.
+      const blocked = ["wheel", "mousedown", "pointerdown", "touchstart", "dblclick"];
+      cards.filter((card) => card.hasAttribute("data-glyf-zoom-locked")).forEach((card) => {
+        blocked.forEach((type) => card.addEventListener(type, (event) => {
+          if (card.hasAttribute("data-glyf-zoom-locked") && event.target.closest(".glyf-chart-body")) event.stopPropagation();
+        }, { capture: true, passive: true }));
+        const lock = card.querySelector("[data-glyf-zoom-lock]");
+        lock.addEventListener("click", () => {
+          const locked = !card.hasAttribute("data-glyf-zoom-locked");
+          card.toggleAttribute("data-glyf-zoom-locked", locked);
+          lock.classList.toggle("is-active", locked);
+          lock.setAttribute("aria-pressed", locked ? "true" : "false");
+          lock.setAttribute("aria-label", locked ? "Zoom locked; click to zoom with the scroll wheel" : "Zoom unlocked; click to lock");
+          lock.title = locked ? "Zoom locked: scrolling moves the page. Click to zoom with the wheel." : "Zoom unlocked: scroll to zoom, drag to pan. Click to lock.";
+        });
+        // Reset is a fresh draw: the spec as built, with the page's theme
+        // and any filter the reader has set.
+        card.querySelector("[data-glyf-zoom-reset]").addEventListener("click", () => {
+          if (window.glyfApplyFilters && card.dataset.glyfFilters) return window.glyfApplyFilters();
+          const target = card.querySelector("[data-vega-chart]");
+          const specElement = target && document.getElementById(target.dataset.vegaChart);
+          if (!specElement || typeof vegaEmbed !== "function") return;
+          const spec = JSON.parse(specElement.textContent);
+          const root = document.documentElement;
+          const themed = root.dataset.glyfChartFollows !== "false" && window.glyfVegaTheme ? window.glyfVegaTheme(spec, root.getAttribute("data-theme") === "dark") : spec;
+          vegaEmbed(target, themed, { actions: false, renderer: "svg" });
+        });
+      });
+      {% endif %}
+
+      // The chart as the reader sees it, theme and filters included, at twice
+      // its size so it stays sharp on a slide.
+      cards.forEach((card) => {
+        const button = card.querySelector("[data-glyf-chart-download]");
+        if (!button) return;
+        button.addEventListener("click", () => {
+          const name = card.dataset.glyfChart || "chart";
+          const save = (href) => { const a = document.createElement("a"); a.href = href; a.download = `${name}.png`; document.body.appendChild(a); a.click(); a.remove(); };
+          const svg = visibleSvg(card);
+          if (!svg) {
+            const img = card.querySelector(".glyf-chart-body img");
+            if (img) save(img.src);
+            return;
+          }
+          const copy = svg.cloneNode(true);
+          copy.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+          // An image cannot reach the page's web font; fall back to a sans, not a serif.
+          copy.querySelectorAll("[font-family]").forEach((el) => el.setAttribute("font-family", `${el.getAttribute("font-family")}, Helvetica, Arial, sans-serif`));
+          const box = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width ? svg.viewBox.baseVal : svg.getBoundingClientRect();
+          const width = Math.round(box.width), height = Math.round(box.height);
+          copy.setAttribute("width", width); copy.setAttribute("height", height);
+          const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)], { type: "image/svg+xml" }));
+          const image = new Image();
+          image.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = width * 2; canvas.height = height * 2;
+            const context = canvas.getContext("2d");
+            context.fillStyle = getComputedStyle(card.querySelector(".glyf-chart-body")).backgroundColor || "#ffffff";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.scale(2, 2); context.drawImage(image, 0, 0, width, height);
+            URL.revokeObjectURL(url);
+            save(canvas.toDataURL("image/png"));
+          };
+          image.src = url;
+        });
+      });
+
+      // Full screen is the card over the whole window, like Lineage.
+      let expanded = null;
+      const setExpanded = (card, open) => {
+        const button = card.querySelector("[data-glyf-chart-expand]");
+        card.classList.toggle("is-expanded", open);
+        document.body.style.overflow = open ? "hidden" : "";
+        button.setAttribute("aria-pressed", open ? "true" : "false");
+        button.setAttribute("aria-label", open ? "Exit full screen" : "Full screen");
+        button.title = open ? "Exit full screen (Esc)" : "Full screen";
+        expanded = open ? card : null;
+      };
+      cards.forEach((card) => {
+        const button = card.querySelector("[data-glyf-chart-expand]");
+        if (button) button.addEventListener("click", () => setExpanded(card, !card.classList.contains("is-expanded")));
+      });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape" && expanded) setExpanded(expanded, false); });
+    })();
+
     {% if filters.live %}
     (function () {
       // A filter redraws every chart it can, from the rows the page carries,
@@ -580,6 +672,7 @@
       const apply = () => {
         const pairs = active();
         if (clearButton) clearButton.hidden = pairs.length === 0;
+        selects.forEach((s) => { const box = s.closest("[data-glyf-filter]"); if (box) box.classList.toggle("is-set", s.value !== ""); });
         cards.forEach((card) => {
           const modes = modesOf(card);
           const applies = pairs.filter((p) => modes[p.field] && modes[p.field] !== "none");

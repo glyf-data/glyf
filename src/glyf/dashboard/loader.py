@@ -19,6 +19,7 @@ _TOOLBAR_ACTIONS = {"share", "visibility"}
 _TOOLBAR_VISIBILITIES = {"public", "private"}
 _DASHBOARD_THEMES = {"light", "dark"}
 _CHART_THEMES = {"auto", "light", "dark"}
+_METRIC_TRENDS = {"down", "flat", "up"}
 
 
 @dataclass(frozen=True)
@@ -55,6 +56,10 @@ class DashboardItem:
     label: str | None = None
     value: str | None = None
     note: str | None = None
+    # A metric's change, as the author writes it ("-1.7 pts"), and which way
+    # it went: `up`, `down` or `flat`, which colours it.
+    delta: str | None = None
+    trend: str | None = None
     width: int | None = None
 
 
@@ -98,6 +103,7 @@ class Dashboard:
     theme: str | None = None
     chart_theme: str | None = None
     description: str | None = None
+    owner: str | None = None
     layout: str | None = None
     layout_config: DashboardLayout = DashboardLayout()
     toolbar: DashboardToolbar = DashboardToolbar()
@@ -137,6 +143,7 @@ def load_dashboard(path: Path) -> Dashboard:
     name = raw.get("name")
     title = raw.get("title", name)
     description = raw.get("description")
+    owner = raw.get("owner")
     theme = raw.get("theme")
     chart_theme = raw.get("chart_theme")
     layout_raw = raw.get("layout")
@@ -153,6 +160,8 @@ def load_dashboard(path: Path) -> Dashboard:
         raise ValueError("expected non-empty 'title'")
     if description is not None and not isinstance(description, str):
         raise ValueError("expected 'description' to be a string")
+    if owner is not None and not isinstance(owner, str):
+        raise ValueError("expected 'owner' to be a string")
     if theme is not None:
         if not isinstance(theme, str) or theme not in _DASHBOARD_THEMES:
             joined = ", ".join(sorted(_DASHBOARD_THEMES))
@@ -179,6 +188,7 @@ def load_dashboard(path: Path) -> Dashboard:
         theme=theme,
         chart_theme=chart_theme,
         description=description,
+        owner=owner,
         layout=layout_config.kind if layout_raw is not None else None,
         layout_config=layout_config,
         toolbar=toolbar,
@@ -476,11 +486,23 @@ def _parse_metric_item(raw: dict[object, object], label: str) -> DashboardItem:
         raise ValueError(f"expected {label}.metric.label to be a non-empty string")
     if not isinstance(value, str) or not value:
         raise ValueError(f"expected {label}.metric.value to be a non-empty string")
+    delta = _optional_string(metric.get("delta"), f"{label}.metric.delta")
+    trend = metric.get("trend")
+    if trend is not None:
+        if not isinstance(trend, str) or trend not in _METRIC_TRENDS:
+            joined = ", ".join(sorted(_METRIC_TRENDS))
+            raise ValueError(f"expected '{label}.metric.trend' to be one of: {joined}")
+        if delta is None:
+            raise ValueError(
+                f"expected '{label}.metric.trend' to come with a '{label}.metric.delta'"
+            )
     return DashboardItem(
         kind="metric",
         label=label_value,
         value=value,
         note=_optional_string(metric.get("note"), f"{label}.metric.note"),
+        delta=delta,
+        trend=trend,
         width=_optional_positive_int(metric.get("width"), f"{label}.metric.width"),
     )
 

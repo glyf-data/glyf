@@ -46,12 +46,14 @@ def text(
     value: object,
     *,
     title: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
     return ComponentSpec(
         kind="text",
         title=_optional_text(title, "title"),
         text=_required_text(value, "text"),
+        note=_optional_text(note, "note"),
         width=_optional_positive_int(width, "width"),
     )
 
@@ -61,13 +63,18 @@ def alert(
     *,
     title: object | None = None,
     tone: str = "info",
+    metric: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
+    """A message in a tone; with `metric`, a card led by the number it is about."""
     return ComponentSpec(
         kind="alert",
         title=_optional_text(title, "title"),
         text=_required_text(value, "text"),
         tone=_tone(tone),
+        value=_optional_text(metric, "metric"),
+        note=_optional_text(note, "note"),
         width=_optional_positive_int(width, "width"),
     )
 
@@ -76,6 +83,7 @@ def values_list(
     values: object,
     *,
     title: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
     if not isinstance(values, (list, tuple)):
@@ -86,6 +94,7 @@ def values_list(
         kind="list",
         title=_optional_text(title, "title"),
         items=tuple(_required_text(item, "values[]") for item in values),
+        note=_optional_text(note, "note"),
         width=_optional_positive_int(width, "width"),
     )
 

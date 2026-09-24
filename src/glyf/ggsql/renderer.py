@@ -19,6 +19,8 @@ HISTOGRAM_MAX_BINS = 30
 _HISTOGRAM_BINS = alt.Bin(maxbins=HISTOGRAM_MAX_BINS)
 BOXPLOT_MIN_SIZE = 6
 BOXPLOT_MAX_SIZE = 80
+# Pixels of room past the outermost point, on both axes of a scatter.
+SCATTER_PADDING = 12
 
 
 class ChartRenderError(ValueError):
@@ -167,6 +169,16 @@ def _encode_xy(drawing: _Drawing) -> dict[str, object]:
     return encoding
 
 
+def _encode_scatter(drawing: _Drawing) -> dict[str, object]:
+    # Clipped marks cut a point on the domain's edge in half, and a chart
+    # that zooms clips; the padding keeps the outermost points whole. A nice
+    # domain would round the padding out to a whole tick, below zero.
+    encoding = _encode_xy(drawing)
+    for channel in ("x", "y"):
+        encoding[channel] = encoding[channel].scale(padding=SCATTER_PADDING, nice=False)
+    return encoding
+
+
 def _encode_pie(drawing: _Drawing) -> dict[str, object]:
     chart = drawing.chart
     return {
@@ -229,7 +241,7 @@ def _encode_boxplot(drawing: _Drawing) -> dict[str, object]:
 CHART_TYPES: dict[str, _ChartType] = {
     "line": _ChartType(_encode_xy, lambda base, _: base.mark_line(point=True)),
     "bar": _ChartType(_encode_xy, lambda base, _: base.mark_bar()),
-    "scatter": _ChartType(_encode_xy, lambda base, _: base.mark_circle(size=80)),
+    "scatter": _ChartType(_encode_scatter, lambda base, _: base.mark_circle(size=80)),
     "area": _ChartType(_encode_xy, lambda base, _: base.mark_area(opacity=0.7)),
     "pie": _ChartType(_encode_pie, lambda base, _: base.mark_arc()),
     "histogram": _ChartType(

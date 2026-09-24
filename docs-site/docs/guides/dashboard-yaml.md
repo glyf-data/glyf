@@ -175,7 +175,7 @@ Each section item is one of four kinds:
 | `chart` | `- chart: revenue` | Can also be a bare string in `items` or `charts`. |
 | `component` | `- component: "{{ ui.badge('Ready') }}"` | Macro expression returning a typed component. |
 | `markdown` | `- markdown: "Text"` | Can be a string or mapping with `title` and `text`. |
-| `metric` | `- metric: { label: Revenue, value: $7.6k }` | Optional `note` and `width`. |
+| `metric` | `- metric: { label: Revenue, value: $7.6k }` | Optional `delta`, `trend`, `note` and `width`. |
 
 ## Field definitions
 
@@ -186,6 +186,7 @@ Each section item is one of four kinds:
 | `name` | Output filename stem. |
 | `title` | Dashboard page title. |
 | `description` | Optional intro text. |
+| `owner` | Optional team or person shown as the dashboard's owner in the bar under the header. Defaults to `data team`. |
 | `theme` | Optional dashboard UI theme. Supported values: `light`, `dark`. |
 | `chart_theme` | Optional chart appearance theme. Supported values: `auto`, `light`, `dark`. |
 | `tags` | Optional list of short labels shown in the dashboard header. |
@@ -220,7 +221,17 @@ Each section item is one of four kinds:
 | `items[].metric.label` | Metric tile label. |
 | `items[].metric.value` | Metric tile value. |
 | `items[].metric.note` | Optional supporting text. |
+| `items[].metric.delta` | Optional change, written as it should read: `"-1.7 pts vs last week"`. |
+| `items[].metric.trend` | Optional direction of the delta, `up`, `down` or `flat`: green, red or grey, with an arrow. Needs a `delta`. |
 | `items[].width` | Optional width hint on `chart`, `component`, or `metric` items. |
+
+### Chart tools
+
+Every chart card carries a small row of tools beside its type badge:
+
+- **Download** saves the chart as a PNG, as it looks on the page: in the current theme and with any filter applied, at twice its size.
+- **Full screen** opens the chart over the whole window; Escape or the same button closes it.
+- **Zoom lock** and **reset** appear on charts with `INTERACT zoom`. Such a chart starts locked, so scrolling the page never zooms it by accident; unlock it to zoom with the wheel and pan by dragging, and reset to go back to the chart as built.
 
 ## Dashboard macros
 

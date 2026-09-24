@@ -22,13 +22,13 @@ Rendered dashboard: <Link to="pathname:///dashboards/product-analytics/dashboard
 
 ## What it demonstrates
 
-- A headline row of three: a KPI tile computed from the data beside two hand-written metric tiles, then sections with `65% 35%` and two-column tracks.
-- A KPI tile from the data (`weekly_active_users.ggsql`): the latest week's active users against the week before, with the change and its direction, next to a hand-written metric tile for contrast.
+- Dark by default (`theme: dark`) and an `owner` in the bar under the header.
+- A headline row of four: three KPI tiles computed from the data (`weekly_active_users`, `weekly_sessions`, `weekly_activated_users`), each the latest week against the one before with the change in green or red, beside a hand-written metric tile with a `delta` and `trend: down`.
 - Dashboard filters whose values come from a rendered chart artifact (`source(activation_by_plan, plan)`).
-- Built-in macros in `summary` and a project-local macro, `activation_health`, that reads the latest activation rate through `MacroContext`.
+- Built-in macros in `summary` and two project-local macros: `activation_health` reads the latest activation rates through `MacroContext` and returns a status card led by the number, and `product_notes` returns hand-written release notes, to show that a macro can carry fixed text as well as values from the build.
 - A histogram and a boxplot over `fct_account_sessions`, which has one row per account, and a weekday-by-hour heatmap over `fct_hourly_activity` ordered by `weekday_number, hour` so the week starts on Monday.
 - A table of the ten most active accounts (`top_accounts.ggsql`): `VISUALISE *` over the same model with `LIMIT 10`, column labels, and a `CONFIG height` that turns the card into a scroll area.
-- Interactive ggsql charts with `tooltip`, `legend_filter`, and `zoom`.
+- Interactive ggsql charts with `tooltip`, `legend_filter`, and `zoom`; the zooming scatter starts with its zoom locked, and every chart card has download and full-screen tools.
 
 ## Run it
 
@@ -42,12 +42,14 @@ uv run glyf serve
 
 ## Dashboard YAML
 
-This is `dashboards/product.yml` as shipped in the example. `product_owner()` and `activation_health()` are defined in `dashboards/macros.py` beside it.
+This is `dashboards/product.yml` as shipped in the example. `product_owner()`, `product_notes()` and `activation_health()` are defined in `dashboards/macros.py` beside it.
 
 ```yaml
 name: product
 title: Product Analytics
 description: Product usage and activation metrics by plan.
+owner: Growth team
+theme: dark
 tags:
   - product
   - activation
@@ -74,17 +76,17 @@ layout:
 
 sections:
   - title: Headline
-    description: Twelve weeks of product usage in three numbers.
-    columns: 3
+    description: Week 12 against week 11, in four numbers.
+    columns: 4
     items:
       - chart: weekly_active_users
-      - metric:
-          label: Sessions
-          value: "86.7k"
-          note: Total product sessions across all plans
+      - chart: weekly_sessions
+      - chart: weekly_activated_users
       - metric:
           label: Activation rate
-          value: "31%"
+          value: "28.5%"
+          delta: "-1.7 pts vs last week"
+          trend: down
           note: Activated users over active users, week 12
 
   - title: Usage Overview
@@ -100,8 +102,8 @@ sections:
     description: Compare activated users and activation rates by plan.
     columns: 2
     items:
-      - component: "{{ activation_health(chart='activation_rate_by_plan', field='activation_rate', threshold=80) }}"
-      - component: "{{ ui.list(source('activation_by_plan', 'plan'), title='Tracked plans') }}"
+      - component: "{{ activation_health(chart='activation_rate_by_plan', field='activation_rate', threshold=40) }}"
+      - component: "{{ product_notes() }}"
       - chart: activation_by_plan
       - chart: activation_rate_by_plan
 

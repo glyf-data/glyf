@@ -375,30 +375,133 @@ html[data-theme="dark"] .glyf-badge-amber { border-color: #78350f; }
   flex-shrink: 0;
 }
 
-.glyf-filter-select {
+/* A chart's tools sit beside its type badge. */
+.glyf-chart-tools {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 30px;
-  padding: 0 6px 0 10px;
-  border: 0.5px solid var(--glyf-color-border);
+  gap: 2px;
+  margin-right: var(--glyf-space-1);
+}
+
+.glyf-chart-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0.5px solid transparent;
   border-radius: var(--glyf-radius-sm);
-  background: var(--glyf-color-bg);
+  background: transparent;
+  color: var(--glyf-color-text-subtle);
+  cursor: pointer;
+}
+
+.glyf-chart-tool:hover,
+.glyf-chart-tool:focus-visible {
+  border-color: var(--glyf-color-border);
+  background: var(--glyf-color-bg-muted);
+  color: var(--glyf-color-text);
+}
+
+.glyf-chart-tool.is-active {
   color: var(--glyf-color-text-muted);
+}
+
+.glyf-chart-tool svg {
+  width: 15px;
+  height: 15px;
+}
+
+.glyf-chart-tool:not(.is-active) .glyf-lock-icon--locked,
+.glyf-chart-tool.is-active .glyf-lock-icon--open,
+.glyf-chart-tool[aria-pressed="false"] .glyf-expand-icon--close,
+.glyf-chart-tool[aria-pressed="true"] .glyf-expand-icon--open {
+  display: none;
+}
+
+.glyf-chart-tool[data-glyf-zoom-lock]:not(.is-active) {
+  border-color: var(--glyf-color-blue-border);
+  background: var(--glyf-color-blue-bg);
+  color: var(--glyf-color-blue);
+}
+
+/* Full screen: the card over the whole window, the chart as wide as it goes. */
+.glyf-chart-card.is-expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  border: 0;
+}
+
+.glyf-chart-card.is-expanded .glyf-chart-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  padding: var(--glyf-space-5);
+}
+
+.glyf-chart-card.is-expanded .glyf-chart-body svg,
+.glyf-chart-card.is-expanded .glyf-chart-body img {
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 120px);
+  margin: 0 auto;
+}
+
+/* A filter reads as two parts: what it filters, muted, then what it is set
+   to, in full weight. The field is a label, not a value. */
+.glyf-filter-select {
+  display: inline-flex;
+  align-items: stretch;
+  height: 32px;
+  overflow: hidden;
+  border: 0.5px solid var(--glyf-color-border-strong);
+  border-radius: var(--glyf-radius-md);
+  background: var(--glyf-color-bg);
   font-size: 13px;
 }
 
 .glyf-filter-select:focus-within {
+  border-color: var(--glyf-color-blue);
+}
+
+.glyf-filter-select .glyf-filter-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border-right: 0.5px solid var(--glyf-color-border-strong);
+  background: var(--glyf-color-bg-muted);
+  color: var(--glyf-color-text-subtle);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.glyf-filter-select.is-set {
   border-color: var(--glyf-color-blue-border);
 }
 
+.glyf-filter-select.is-set .glyf-filter-field {
+  background: var(--glyf-color-blue-bg);
+  color: var(--glyf-color-blue);
+}
+
 .glyf-filter-control {
+  min-width: 84px;
   border: 0;
   background: transparent;
   color: var(--glyf-color-text);
   font-size: 13px;
-  font-weight: 500;
-  padding: 2px 4px;
+  font-weight: 600;
+  padding: 0 8px 0 10px;
   cursor: pointer;
 }
 
@@ -640,10 +743,16 @@ html[data-theme="dark"] .glyf-theme-icon--light {
 }
 
 .glyf-control-label {
-  margin-right: 2px;
-  color: var(--glyf-color-text-muted);
-  font-size: 12px;
+  margin-right: var(--glyf-space-1);
+  color: var(--glyf-color-text-subtle);
+  font-size: 11px;
   font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.glyf-control-bar[data-glyf-filter-bar] {
+  gap: var(--glyf-space-3);
 }
 
 .glyf-filter-chip,
@@ -1082,9 +1191,10 @@ html[data-theme="dark"] .glyf-theme-icon--light {
 .glyf-kpi-value {
   margin-top: var(--glyf-space-1);
   color: var(--glyf-color-text);
-  font-size: 28px;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1367,14 +1477,74 @@ html[data-theme="dark"] .glyf-lineage-node--chart rect {
   font-weight: 500;
 }
 
-.glyf-component-value,
-.glyf-metric-value {
+.glyf-component-value {
   margin-top: var(--glyf-space-1);
   color: var(--glyf-color-text);
   font-size: 22px;
   font-weight: 600;
   line-height: 1.2;
 }
+
+/* A headline number is read from across the room, as on a wall display. */
+.glyf-metric-value,
+.glyf-status-value {
+  margin-top: var(--glyf-space-1);
+  color: var(--glyf-color-text);
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.glyf-component-footnote {
+  margin: var(--glyf-space-3) 0 0;
+  padding-top: var(--glyf-space-2);
+  border-top: 0.5px dashed var(--glyf-color-border-strong);
+  color: var(--glyf-color-text-subtle);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* An alert with a number: a card led by the number, edged in its tone. */
+.glyf-status-card {
+  border-left-width: 3px;
+}
+
+.glyf-status-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--glyf-status-color, var(--glyf-color-text-muted));
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.glyf-status-head .glyf-alert-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.glyf-status-value {
+  color: var(--glyf-status-color, var(--glyf-color-text));
+}
+
+.glyf-status-text {
+  margin: var(--glyf-space-1) 0 0;
+  color: var(--glyf-color-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.glyf-status--success { --glyf-status-color: var(--glyf-color-green); border-left-color: var(--glyf-color-green); }
+.glyf-status--warning { --glyf-status-color: var(--glyf-color-amber); border-left-color: var(--glyf-color-amber); }
+.glyf-status--error { --glyf-status-color: var(--glyf-color-red); border-left-color: var(--glyf-color-red); }
+.glyf-status--info,
+.glyf-status--neutral { --glyf-status-color: var(--glyf-color-blue); border-left-color: var(--glyf-color-blue); }
+
+.glyf-status--success { background: linear-gradient(90deg, var(--glyf-color-green-bg), var(--glyf-color-bg) 60%); }
+.glyf-status--warning { background: linear-gradient(90deg, var(--glyf-color-amber-bg), var(--glyf-color-bg) 60%); }
+.glyf-status--error { background: linear-gradient(90deg, var(--glyf-color-red-bg), var(--glyf-color-bg) 60%); }
 
 .glyf-component-note,
 .glyf-metric-note,

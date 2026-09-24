@@ -46,9 +46,9 @@ UI macros return general-purpose dashboard components.
 | Macro | Returns |
 | --- | --- |
 | `ui.label_value(label, value, note=None, width=None)` | Compact key/value block |
-| `ui.text(value, title=None, width=None)` | Text block |
-| `ui.list(values, title=None, width=None)` | List component |
-| `ui.listofvalues(values, title=None, width=None)` | Alias of `ui.list(...)` |
+| `ui.text(value, title=None, note=None, width=None)` | Text block |
+| `ui.list(values, title=None, note=None, width=None)` | List component |
+| `ui.listofvalues(values, title=None, note=None, width=None)` | Alias of `ui.list(...)` |
 | `ui.badge(label, tone='neutral', width=None)` | Badge |
 | `ui.link(label, href, title=None, width=None)` | Link block |
 
@@ -71,11 +71,11 @@ Alert macros render status-oriented callouts.
 
 | Macro | Returns |
 | --- | --- |
-| `alert.message(value, title=None, tone='info', width=None)` | Generic alert |
-| `alert.info(value, title=None, width=None)` | Informational alert |
-| `alert.success(value, title=None, width=None)` | Success alert |
-| `alert.warning(value, title=None, width=None)` | Warning alert |
-| `alert.error(value, title=None, width=None)` | Error alert |
+| `alert.message(value, title=None, tone='info', metric=None, note=None, width=None)` | Generic alert |
+| `alert.info(value, title=None, metric=None, note=None, width=None)` | Informational alert |
+| `alert.success(value, title=None, metric=None, note=None, width=None)` | Success alert |
+| `alert.warning(value, title=None, metric=None, note=None, width=None)` | Warning alert |
+| `alert.error(value, title=None, metric=None, note=None, width=None)` | Error alert |
 | `alert.threshold(chart, field, value, op='lt', title=None, ...)` | Artifact-aware threshold alert |
 | `echo(value, title=None)` | Alias of `alert.info(...)` |
 
@@ -90,6 +90,19 @@ sections:
       - component: "{{ alert.warning('Threshold exceeded.', 'Freshness') }}"
       - component: "{{ alert.error('Missing source data.', 'Incident') }}"
       - component: "{{ alert.threshold('active_users', 'active_users', 4200, op='lt', title='Active users threshold') }}"
+```
+
+An alert given a `metric` becomes a status card: the number large, in the
+alert's tone, the message under it, and the card edged in the same colour.
+`note` adds a footnote under a dashed rule, on alerts, text and lists alike;
+use it to say where a number came from.
+
+```yaml
+sections:
+  - title: Health
+    items:
+      - component: "{{ alert.warning('Below its 40% target.', 'Activation health', metric='37.4%', note='Average of the plans in the latest week.') }}"
+      - component: "{{ ui.list(['W06: checklist shipped.', 'W09: trial extended.'], title='Release notes', note='Written by hand, not queried.') }}"
 ```
 
 `alert.threshold(...)` reads the latest value from the named chart artifact and
@@ -191,7 +204,17 @@ from glyf.dashboard.macros import MacroContext
 
 
 def product_owner() -> c.ComponentSpec:
-    return c.label_value("Owner", "Product Analytics")
+    return c.label_value("Owner", "Growth team")
+
+
+def product_notes() -> c.ComponentSpec:
+    # Nothing here is queried: a macro can return fixed text as readily as a
+    # number from the build, which is how a dashboard carries notes.
+    return c.values_list(
+        ["W06: onboarding checklist shipped.", "W09: Pro trial extended to 21 days."],
+        title="Release notes",
+        note="Written by hand in dashboards/macros.py, not queried.",
+    )
 
 
 def activation_health(
@@ -202,9 +225,9 @@ def activation_health(
     threshold: float = 80.0,
 ) -> c.ComponentSpec:
     latest_rate = float(ctx.latest_value(chart, field))
-    if latest_rate >= threshold:
-        return c.alert("Activation is tracking above target.", title="Health", tone="success")
-    return c.alert("Activation needs attention.", title="Health", tone="warning")
+    tone = "success" if latest_rate >= threshold else "warning"
+    message = "On track." if tone == "success" else f"Below its {threshold:g}% target."
+    return c.alert(message, title="Activation health", tone=tone, metric=f"{latest_rate:.1f}%")
 ```
 
 Used in YAML:
@@ -216,7 +239,8 @@ summary:
 sections:
   - title: Activation
     items:
-      - component: "{{ activation_health(chart='activation_rate_by_plan', field='activation_rate', threshold=80) }}"
+      - component: "{{ activation_health(chart='activation_rate_by_plan', field='activation_rate', threshold=40) }}"
+      - component: "{{ product_notes() }}"
 ```
 
 If the first argument is named `ctx`, Glyf injects a `MacroContext` during
