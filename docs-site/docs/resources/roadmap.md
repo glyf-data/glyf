@@ -58,6 +58,14 @@ if one of these would change how you work.
 <ol className="roadmapTimeline">
   <li>
     <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.18.0">0.18.0</Link>
+      <time dateTime="2026-09-25">25 September 2026</time>
+    </div>
+    <strong>Charts you can embed in your own product</strong>
+    <p><code>export.embed</code> publishes each chart's Vega spec so an application can draw it live with glyf-js, with its own theme and filters, and <code>bundle.json</code> now has a published JSON Schema. See it in <Link href="https://clanker.glyfdata.com">the Clanker demo</Link>, or <Link to="/docs/integrations/embedded-analytics">read the guide</Link>.</p>
+  </li>
+  <li>
+    <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.17.0">0.17.0</Link>
       <time dateTime="2026-09-24">24 September 2026</time>
     </div>

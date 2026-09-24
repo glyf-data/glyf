@@ -2,6 +2,34 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## 0.18.0 - 2026-09-25
+
+### Added
+
+- `export.embed: true` publishes each drawn chart's Vega spec in the
+  exported site, at `charts/<name>.vega.json`, and points `bundle.json` at
+  it, so an application can draw the charts live with glyf-js: tooltips,
+  its own theme, filters. `security.embedded_specs` says so. A spec carries
+  the rows the chart was drawn from, only the encoded columns under
+  `row_data: minimal`; `embed` with `row_data: exclude` is refused.
+- A JSON Schema for `bundle.json`, version 1, at
+  `schemas/bundle.v1.schema.json` and
+  `glyfdata.com/schema/bundle.v1.schema.json`. Every bundle glyf writes is
+  tested against it.
+- Dashboard filters in `bundle.json` carry their `control`: `select`,
+  `radio` or `toggle`.
+- `examples/clanker_insights`: the customer-facing insights of a made-up AI
+  agent platform, built with `export.embed` for the glyf-js demo at
+  clanker.glyfdata.com.
+
+### Fixed
+
+- A KPI tile's change is rounded to the precision of the two numbers it
+  compares: `89.9` against `92.3` reads `-2.4`, not `-2.3999999999999915`.
+- The exported `bundle.json` lists the values of a `source(chart, field)`
+  filter. They were empty, although the bundle reference promises them;
+  under `row_data: exclude` they stay out, as they are rows.
+
 ## 0.17.0 - 2026-09-24
 
 ### Added
