@@ -33,6 +33,10 @@ SUPPORTED = frozenset({"bar", "line", "area"})
 
 MAX_NAMED = 4
 
+# How far an end of the y axis must move, as a share of the larger range,
+# before the sentence says so. Less than this and the redraw barely shows.
+AXIS_SHIFT = 0.10
+
 Row = dict[str, object]
 Key = tuple[str, str | None]
 
@@ -50,6 +54,13 @@ class MarkChange:
     new_series: tuple[str, ...] = ()
     # The x values whose marks moved, in the chart's own order.
     changed_x: tuple[str, ...] = ()
+    # The span the y axis has to cover in each build, zero included, as the
+    # renderer draws it: stacked totals for a stacked chart.
+    y_before: tuple[float, float] | None = None
+    y_after: tuple[float, float] | None = None
+    # x categories only one build has, in the chart's own order.
+    x_gone: tuple[str, ...] = ()
+    x_new: tuple[str, ...] = ()
 
     @property
     def any(self) -> bool:
@@ -68,6 +79,60 @@ class MarkChange:
         if self.lower:
             parts.append(f"{self.lower} lower")
         return f"{noun}: " + ", ".join(parts) if parts else f"{noun}: unchanged"
+
+    @property
+    def y_rescaled(self) -> bool:
+        """Whether an end of the y axis moved enough to redraw every mark."""
+        if self.y_before is None or self.y_after is None:
+            return False
+        span = max(
+            self.y_before[1] - self.y_before[0], self.y_after[1] - self.y_after[0]
+        )
+        if span <= 0:
+            return False
+        return any(
+            abs(after - before) / span >= AXIS_SHIFT
+            for before, after in zip(self.y_before, self.y_after)
+        )
+
+    def describe_axes(self) -> str | None:
+        """The axes' own change: `y axis 0–60k → 0–400k; x axis: 2026-04 added`.
+
+        A rescaled y axis moves every mark on the page, so a reviewer sees
+        boxes and shifts everywhere; this says which part of that is scale.
+        """
+        parts = []
+        if self.y_rescaled and self.y_before and self.y_after:
+            parts.append(f"y axis {_span(self.y_before)} → {_span(self.y_after)}")
+        x_parts = []
+        if self.x_new:
+            x_parts.append(_listed_x(self.x_new) + " added")
+        if self.x_gone:
+            x_parts.append(_listed_x(self.x_gone) + " dropped")
+        if x_parts:
+            parts.append("x axis: " + ", ".join(x_parts))
+        return "; ".join(parts) if parts else None
+
+
+def _span(bounds: tuple[float, float]) -> str:
+    return f"{compact(bounds[0])}–{compact(bounds[1])}"
+
+
+def compact(value: float) -> str:
+    """A number as an axis would label it: 400000 is 400k, 1250000 is 1.25M."""
+    for size, suffix in ((1e9, "B"), (1e6, "M"), (1e3, "k")):
+        if abs(value) >= size:
+            return f"{value / size:.3g}{suffix}"
+    if value == int(value):
+        return str(int(value))
+    return f"{value:.3g}"
+
+
+def _listed_x(values: tuple[str, ...]) -> str:
+    shown = ", ".join(values[:MAX_NAMED])
+    if len(values) > MAX_NAMED:
+        shown += f" and {len(values) - MAX_NAMED} more"
+    return shown
 
 
 def _named(series: tuple[str, ...]) -> str:
@@ -110,7 +175,9 @@ def build_overlay(
     if not before or not after:
         return None
     x_order = _x_order(before_rows, after_rows, x)
-    marks = _mark_change(draw_type, before, after, x_order=x_order)
+    marks = _mark_change(
+        draw_type, before, after, x_order=x_order, stacked=color is not None and draw_type != "line"
+    )
     chart = _draw(draw_type, metadata, x, y, color, before, after, marks, x_order, config)
     buffer = io.BytesIO()
     chart.save(buffer, format="png")
@@ -154,6 +221,7 @@ def _mark_change(
     after: dict[Key, float],
     *,
     x_order: list[str],
+    stacked: bool = False,
 ) -> MarkChange:
     gone = [key for key in before if key not in after]
     new = [key for key in after if key not in before]
@@ -163,6 +231,8 @@ def _mark_change(
     before_series = {series for _, series in before if series is not None}
     after_series = {series for _, series in after if series is not None}
     changed_x = {x for x, _ in [*gone, *new, *higher, *lower]}
+    before_x = {x for x, _ in before}
+    after_x = {x for x, _ in after}
     return MarkChange(
         draw_type=draw_type,
         gone=len(gone),
@@ -172,7 +242,33 @@ def _mark_change(
         gone_series=tuple(sorted(before_series - after_series)),
         new_series=tuple(sorted(after_series - before_series)),
         changed_x=tuple(x for x in x_order if x in changed_x),
+        y_before=_y_span(before, stacked=stacked),
+        y_after=_y_span(after, stacked=stacked),
+        x_gone=tuple(x for x in x_order if x in before_x and x not in after_x),
+        x_new=tuple(x for x in x_order if x in after_x and x not in before_x),
     )
+
+
+def _y_span(values: dict[Key, float], *, stacked: bool) -> tuple[float, float] | None:
+    """The y range the chart has to show, zero included as the renderer does.
+
+    Stacked marks reach their total at each x, positives up and negatives down;
+    unstacked ones reach their own value.
+    """
+    if not values:
+        return None
+    if stacked:
+        ups: dict[str, float] = {}
+        downs: dict[str, float] = {}
+        for (x, _), value in values.items():
+            if value >= 0:
+                ups[x] = ups.get(x, 0.0) + value
+            else:
+                downs[x] = downs.get(x, 0.0) + value
+        ends = [*ups.values(), *downs.values()]
+    else:
+        ends = list(values.values())
+    return (min(0.0, *ends), max(0.0, *ends))
 
 
 def _draw(

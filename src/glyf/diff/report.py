@@ -192,8 +192,12 @@ def _sides(chart: ChartDiff) -> list[tuple[str, str]]:
 def describe_change(chart: ChartDiff) -> list[str]:
     """What moved, in the chart's terms first and then in the rows'."""
     lines = []
-    if chart.marks is not None and chart.marks.any:
-        lines.append(chart.marks.describe())
+    if chart.marks is not None:
+        axes = chart.marks.describe_axes()
+        if axes:
+            lines.append(axes)
+        if chart.marks.any:
+            lines.append(chart.marks.describe())
     lines.extend(describe_data(chart.data))
     return lines
 
@@ -254,6 +258,12 @@ def _marks_document(chart: ChartDiff) -> dict[str, object] | None:
         "gone_series": list(marks.gone_series),
         "new_series": list(marks.new_series),
         "changed_x": list(marks.changed_x),
+        "y_before": list(marks.y_before) if marks.y_before else None,
+        "y_after": list(marks.y_after) if marks.y_after else None,
+        "y_rescaled": marks.y_rescaled,
+        "x_gone": list(marks.x_gone),
+        "x_new": list(marks.x_new),
+        "axes": marks.describe_axes(),
         "summary": marks.describe(),
     }
 

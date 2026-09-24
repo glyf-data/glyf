@@ -10,6 +10,7 @@ from typer.testing import CliRunner
 from glyf.cli import app
 from glyf.diff import DiffError, compare_builds, write_report
 from glyf.diff.compare import resolve_build_dir
+from glyf.diff.report import describe_change
 from glyf.pipeline import render_project
 from tests.helpers import copy_basic_project
 
@@ -275,6 +276,21 @@ def test_a_dropped_category_is_drawn_and_said_in_the_charts_terms(tmp_path: Path
     assert chart.marks is not None
     assert chart.marks.describe() == "bars: 3 gone (west), 1 higher"
     assert chart.marks.changed_x == ("2026-01", "2026-02", "2026-03")
+
+
+def test_a_spike_that_rescales_the_axis_is_named_as_scale(tmp_path: Path) -> None:
+    """One month jumps; the rest shrink on the page but did not change."""
+    baseline, project = _baseline_and_project(tmp_path)
+    (project / "seeds" / "fct_orders.csv").write_text(
+        SEEDS.replace("2400", "24000"), encoding="utf-8"
+    )
+
+    diff = compare_builds(baseline, _build(project))
+
+    (chart,) = diff.with_status("changed")
+    lines = describe_change(chart)
+    assert lines[0].startswith("y axis 0–") and "→ 0–24k" in lines[0], lines
+    assert lines[1] == "points: 1 higher"
 
 
 def test_a_chart_the_overlay_cannot_draw_keeps_the_pixel_picture(tmp_path: Path) -> None:
