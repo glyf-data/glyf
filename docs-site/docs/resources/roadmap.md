@@ -58,6 +58,14 @@ if one of these would change how you work.
 <ol className="roadmapTimeline">
   <li>
     <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.16.0">0.16.0</Link>
+      <time dateTime="2026-09-24">24 September 2026</time>
+    </div>
+    <strong>Filters as buttons, and alerts that say the data raised them</strong>
+    <p>A filter can be a row of radio buttons or toggles that compare several values at once. An alert raised at build time is marked auto-triggered and names its rule, and dashboard pages now escape every piece of text they show. <Link to="/docs/guides/dashboard-yaml#filters">Read the guide</Link>.</p>
+  </li>
+  <li>
+    <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.15.0">0.15.0</Link>
       <time dateTime="2026-09-24">24 September 2026</time>
     </div>
