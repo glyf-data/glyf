@@ -1,0 +1,23 @@
+{
+  "chart_type": "kpi",
+  "compare": "previous",
+  "compiled_sql_path": "compiled/weekly_sessions.sql",
+  "kpi_html_path": "charts/weekly_sessions.kpi.html",
+  "lineage": {
+    "models": {
+      "fct_product_usage": {
+        "parents": [
+          "source:raw.product_usage"
+        ],
+        "path": "models/fct_product_usage.sql"
+      }
+    },
+    "sources": [
+      "raw.product_usage"
+    ]
+  },
+  "metadata_path": "charts/weekly_sessions.json",
+  "name": "weekly_sessions",
+  "title": "Weekly sessions",
+  "value": "sessions"
+}

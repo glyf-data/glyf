@@ -1,0 +1,14 @@
+WITH weekly AS (
+  SELECT week, sum(sessions) AS sessions
+  FROM {{ ref('fct_product_usage') }}
+  GROUP BY 1
+)
+SELECT sessions, lag(sessions) OVER (ORDER BY week) AS previous
+FROM weekly
+ORDER BY week DESC
+LIMIT 1
+
+VISUALISE sessions AS value, previous AS compare
+DRAW kpi
+LABEL title => 'Weekly sessions'
+LABEL compare => 'vs last week'
