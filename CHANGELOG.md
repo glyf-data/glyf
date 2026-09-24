@@ -2,6 +2,28 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## 0.16.0 - 2026-09-24
+
+### Added
+
+- A dashboard filter takes `control`: `select` (the default dropdown),
+  `radio` (a row of buttons, one value or All) or `toggle` (buttons that
+  keep any number of values on; a chart keeps the rows matching any of
+  them, and its chip reads `plan = Pro or Team`).
+- Alerts take `trigger=`, the rule that raised them at build time. The
+  card shows an "Auto-triggered" pill whose tooltip names the rule;
+  `alert.threshold` sets it.
+
+### Changed
+
+- Status cards are a solid tint of their tone instead of a gradient.
+
+### Fixed
+
+- Dashboard and index pages escape text. The templates were never
+  autoescaped, so a title, card text, a filter value or compiled SQL
+  reached the page as markup; a `<script>` in any of them would run.
+
 ## 0.15.0 - 2026-09-24
 
 ### Added
