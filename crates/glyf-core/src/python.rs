@@ -10,6 +10,7 @@ use crate::imagediff::diff_png as diff_png_bytes;
 use crate::manifest::load_manifest_json_text;
 use crate::models::{DbtManifest, GgsqlChart, ManifestRelation, RefResolution};
 use crate::resolver::resolve_refs_text;
+use crate::tiebreak::order_tiebreak as order_tiebreak_text;
 
 pub(crate) fn register(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_function(wrap_pyfunction!(parse_ggsql, module)?)?;
@@ -17,6 +18,7 @@ pub(crate) fn register(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_function(wrap_pyfunction!(resolve_refs, module)?)?;
     module.add_function(wrap_pyfunction!(validate_dashboard_json, module)?)?;
     module.add_function(wrap_pyfunction!(diff_png, module)?)?;
+    module.add_function(wrap_pyfunction!(order_tiebreak, module)?)?;
     Ok(())
 }
 
@@ -178,5 +180,17 @@ fn diff_png(py: Python<'_>, before: &[u8], after: &[u8], tolerance: u8) -> PyRes
     dict.set_item("changed_pixels", diff.changed_pixels)?;
     dict.set_item("total_pixels", diff.total_pixels)?;
     dict.set_item("diff_png", PyBytes::new(py, &diff.diff_png))?;
+    Ok(dict.into_any().unbind())
+}
+
+#[pyfunction]
+fn order_tiebreak(py: Python<'_>, sql: &str, dialect: &str) -> PyResult<Py<PyAny>> {
+    let tiebreak = order_tiebreak_text(sql, dialect);
+    let dict = PyDict::new(py);
+    dict.set_item("sql", tiebreak.sql)?;
+    dict.set_item("added", tiebreak.added)?;
+    dict.set_item("keys", tiebreak.keys)?;
+    dict.set_item("reason", tiebreak.reason)?;
+    dict.set_item("limited", tiebreak.limited)?;
     Ok(dict.into_any().unbind())
 }

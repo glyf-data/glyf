@@ -505,15 +505,68 @@ query does not, and says which columns it used:
   ORDER BY to choose the order yourself.
 ```
 
-Add an `ORDER BY` and glyf keeps that order exactly, untouched. An `ORDER BY`
-inside a CTE, a subquery or a window function orders that, not the rows the
-chart draws, so it does not count.
+Add an `ORDER BY` and glyf keeps that order. An `ORDER BY` inside a CTE, a
+subquery or a window function orders that, not the rows the chart draws, so
+it does not count.
 
-An `ORDER BY` has to decide every pair of rows to settle the picture. `ORDER BY
-department, expenses` leaves two rows with the same department and the same
-expenses in either order, and a scatter then draws one point over the other
-differently from build to build. Add columns until no two rows tie.
-[`glyf diff`](visual-diff.md) names this case when it finds it.
+#### Ties
+
+An `ORDER BY` can leave ties. `ORDER BY department` says nothing about two
+rows in the same department, so the warehouse may return them either way
+round: a scatter then draws one point over the other differently from build
+to build, and a table swaps two rows. Under a `LIMIT` it is worse, because
+the tie decides which rows come back at all. `ORDER BY sessions DESC LIMIT 10`
+with three accounts tied for tenth place keeps whichever one the warehouse
+reaches first.
+
+So glyf settles ties. Before the query runs, it adds the query's other
+columns to the end of its outermost `ORDER BY`:
+
+```sql
+SELECT account_id, plan, sessions
+FROM {{ ref('fct_account_sessions') }}
+ORDER BY sessions DESC   -- as written
+LIMIT 10
+```
+
+runs as
+
+```sql
+ORDER BY sessions DESC, account_id, plan
+LIMIT 10
+```
+
+Your keys come first and are untouched, so the order you asked for holds.
+The added columns only decide between rows your keys call equal, and because
+they are in the SQL, the same ten rows make the cut every build. A column you
+already order by, by name, alias or position, is not added again, and a query
+whose `ORDER BY` names every column runs exactly as written.
+
+The compiled SQL in `target/glyf/compiled/` and the dashboard's source view
+show the query as it ran, tiebreak included. The build record hashes the
+query as you wrote it, so a glyf upgrade that adds a tiebreak does not read as
+a query change in [`glyf diff`](visual-diff.md). When the rows did tie, the
+build says so:
+
+```text
+! visualisations/top_accounts.ggsql: rows tie on its ORDER BY sessions, so glyf
+  added account_id, plan to settle them the same way every build. Add them to
+  the ORDER BY to choose the tiebreak yourself.
+```
+
+Rows equal in every column are not a tie: they draw the same mark, so their
+order cannot show.
+
+Three cases are handled differently:
+
+- `SELECT *`: glyf cannot name the columns before the query runs, so it
+  settles the ties after the rows come back instead, by the other columns.
+  That keeps the order still but cannot choose which rows a `LIMIT` keeps,
+  and the build says so. Name the columns to get the tiebreak in the SQL.
+- A `UNION` or other set operation is left as written.
+- A column the warehouse cannot order by, such as a `STRUCT` in BigQuery,
+  makes the rewritten query fail. glyf then runs the query as written and
+  warns that its ties may change order between builds.
 
 Only the chart types above are reported, because only they show the order.
 Every chart is ordered either way, so that a build can be compared against the

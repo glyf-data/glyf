@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from glyf import _core
-from glyf.ggsql.models import GgsqlChart, VisualiseMapping
+from glyf.ggsql.models import GgsqlChart, OrderTiebreak, VisualiseMapping
 
 
 class GgsqlParseError(ValueError):
@@ -44,6 +44,24 @@ def parse_ggsql(
     except ValueError as exc:
         raise GgsqlParseError(str(exc)) from exc
     return _chart_from_core(raw)
+
+
+def order_tiebreak(sql: str, *, dialect: str = "generic") -> OrderTiebreak:
+    """How to settle the ties a compiled query's outer ORDER BY leaves.
+
+    The Rust core appends the query's other output columns to that ORDER BY,
+    after the author's keys, so the order asked for holds and rows it calls
+    equal come back the same way every build. A query without an ORDER BY
+    gets an empty answer: glyf orders those rows itself.
+    """
+    raw = _core.order_tiebreak(sql, dialect)
+    return OrderTiebreak(
+        sql=_optional_str(raw, "sql"),
+        added=tuple(str(value) for value in _required_list(raw, "added")),
+        keys=tuple(str(value) for value in _required_list(raw, "keys")),
+        reason=_optional_str(raw, "reason"),
+        limited=bool(raw.get("limited", False)),
+    )
 
 
 def _chart_from_core(raw: dict[str, object]) -> GgsqlChart:

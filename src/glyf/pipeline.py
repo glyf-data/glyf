@@ -8,8 +8,8 @@ from glyf.downsample import Downsampling, downsample_m4, plan_downsampling
 from glyf.execution import QueryResult, SqlExecutionError, execute_sql
 from glyf.execution.dialect import sql_dialect
 from glyf.execution.limits import wrap_row_limit
-from glyf.ggsql.models import GgsqlChart
-from glyf.ggsql.parser import GgsqlParseError, parse_ggsql_file
+from glyf.ggsql.models import GgsqlChart, OrderTiebreak
+from glyf.ggsql.parser import GgsqlParseError, order_tiebreak, parse_ggsql_file
 from glyf.ggsql.renderer import (
     ChartRenderError,
     missing_columns,
@@ -23,7 +23,7 @@ from glyf.ggsql.table import render_table
 from glyf.lineage import chart_lineage
 from glyf.manifest.loader import DbtManifest, ManifestError, load_manifest
 from glyf.manifest.resolver import RefResolution, resolve_refs
-from glyf.ordering import is_order_sensitive, order_rows
+from glyf.ordering import is_order_sensitive, order_rows, settle_ties
 from glyf.output.paths import artifact_paths
 from glyf.output.writer import (
     ChartArtifacts,
@@ -119,6 +119,15 @@ class _Compiled:
     rel_path: str
     # The models and sources behind the chart, for its metadata.
     lineage: dict[str, object]
+    # What glyf sends: `sql` with the ties its ORDER BY leaves settled, when
+    # it leaves any glyf can settle. `sql` stays the query as written, which
+    # is what the build record hashes, so upgrading glyf is not a query change.
+    run_sql: str = ""
+    tiebreak: OrderTiebreak = field(default_factory=OrderTiebreak)
+
+    @property
+    def tiebroken(self) -> bool:
+        return self.run_sql != self.sql
 
 
 def render_project(
@@ -214,7 +223,7 @@ def _render_chart_file(path: Path, run: _Run) -> RenderedChart:
     be skipped by choosing a different one.
     """
     compiled = _compile(path, run)
-    data = _fetch_rows(compiled, run)
+    compiled, data = _fetch_rows(compiled, run)
     data, findings = _apply_pii_policy(compiled, data, run)
     redacted = (
         tuple(finding.name for finding in findings)
@@ -269,7 +278,7 @@ def _render_chart_file(path: Path, run: _Run) -> RenderedChart:
 def _rendered(compiled: _Compiled, data: QueryResult) -> RenderedChart:
     return RenderedChart(
         chart=compiled.chart,
-        compiled_sql=compiled.sql,
+        compiled_sql=compiled.run_sql,
         data=data,
         artifacts=compiled.artifacts,
     )
@@ -307,10 +316,18 @@ def _compile(path: Path, run: _Run) -> _Compiled:
 
     artifacts = chart_artifact_paths(root, chart, run.config)
     cleanup_legacy_chart_artifacts(root, chart, run.config)
-    # The compiled SQL on disk is always the query as written; the bounds
-    # `_fetch_rows` adds exist for this run, not for the artifact someone reads
-    # later.
-    write_compiled_sql(artifacts.compiled_sql, resolution.sql)
+    # A partial ORDER BY gets the rest of the query's columns as tiebreak
+    # keys, in the warehouse, so a LIMIT keeps the same rows every build.
+    tiebreak = (
+        order_tiebreak(resolution.sql, dialect=run.dialect)
+        if chart.has_order_by
+        else OrderTiebreak()
+    )
+    run_sql = tiebreak.sql or resolution.sql
+    # The compiled SQL on disk is the query glyf runs every build, tiebreak
+    # included; the bounds `_fetch_rows` adds exist for this run, not for the
+    # artifact someone reads later.
+    write_compiled_sql(artifacts.compiled_sql, run_sql)
     return _Compiled(
         chart=chart,
         sql=resolution.sql,
@@ -318,20 +335,42 @@ def _compile(path: Path, run: _Run) -> _Compiled:
         artifacts=artifacts,
         rel_path=rel_path,
         lineage=chart_lineage(resolution, run.manifest),
+        run_sql=run_sql,
+        tiebreak=tiebreak,
     )
 
 
-def _fetch_rows(compiled: _Compiled, run: _Run) -> QueryResult:
+def _fetch_rows(compiled: _Compiled, run: _Run) -> tuple[_Compiled, QueryResult]:
     execution = run.config.execution
-    try:
+
+    def execute(sql: str) -> QueryResult:
         return execute_sql(
             run.scan.root,
-            _bounded_sql(compiled.sql, execution),
+            _bounded_sql(sql, execution),
             executor=execution.backend,
             config=execution,
         )
+
+    try:
+        return compiled, execute(compiled.run_sql)
+    except SqlExecutionError as exc:
+        if not compiled.tiebroken:
+            raise RenderError(f"{compiled.rel_path} SQL execution failed: {exc}") from exc
+        tiebreak_error = exc
+    # The warehouse refused the tiebreak, say a column it cannot order by. The
+    # query as written still runs; its ties stay as the warehouse returns them.
+    try:
+        data = execute(compiled.sql)
     except SqlExecutionError as exc:
         raise RenderError(f"{compiled.rel_path} SQL execution failed: {exc}") from exc
+    run.warnings.append(
+        f"{compiled.rel_path}: the warehouse could not order by the tiebreak glyf "
+        f"added ({', '.join(compiled.tiebreak.added)}), so the query ran as "
+        f"written and rows its ORDER BY ties may change order between builds: "
+        f"{tiebreak_error}"
+    )
+    write_compiled_sql(compiled.artifacts.compiled_sql, compiled.sql)
+    return replace(compiled, run_sql=compiled.sql, tiebreak=OrderTiebreak()), data
 
 
 def _apply_pii_policy(
@@ -369,6 +408,13 @@ def _order(compiled: _Compiled, data: QueryResult, run: _Run) -> QueryResult:
     chose no order is rendered from whatever order the warehouse happened to
     return, which is not the same order next build.
     """
+    if compiled.chart.has_order_by:
+        data, settlement = settle_ties(data, compiled.tiebreak, applied=compiled.tiebroken)
+        if settlement.tied and (
+            is_order_sensitive(compiled.chart) or settlement.limited
+        ):
+            run.warnings.append(settlement.describe(compiled.rel_path))
+        return data
     data, row_order = order_rows(compiled.chart, data)
     if row_order.applied:
         if is_order_sensitive(compiled.chart):

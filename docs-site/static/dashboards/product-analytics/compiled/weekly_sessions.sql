@@ -5,5 +5,5 @@ WITH weekly AS (
 )
 SELECT sessions, lag(sessions) OVER (ORDER BY week) AS previous
 FROM weekly
-ORDER BY week DESC
+ORDER BY week DESC, sessions, previous
 LIMIT 1

@@ -281,12 +281,7 @@ impl Visitor for ColumnCollector {
 /// orders its rows itself, the safe side of the 0.8.0 rule.
 fn read_sql(sql: &str, dialect: &str) -> SqlReading {
     let plain = normalize_jinja_for_ggsql(sql);
-    let dialect_impl: Box<dyn Dialect> = match dialect.to_ascii_lowercase().as_str() {
-        "duckdb" => Box::new(DuckDbDialect {}),
-        "snowflake" => Box::new(SnowflakeDialect {}),
-        "bigquery" => Box::new(BigQueryDialect {}),
-        _ => Box::new(GenericDialect {}),
-    };
+    let dialect_impl = sql_dialect(dialect);
     match Parser::parse_sql(dialect_impl.as_ref(), &plain) {
         Ok(statements) => {
             let has_order_by = statements
@@ -313,6 +308,16 @@ fn read_sql(sql: &str, dialect: &str) -> SqlReading {
             sql_columns: Vec::new(),
             sql_selects_star: false,
         },
+    }
+}
+
+/// The sqlparser dialect for a warehouse name; anything unknown is generic.
+pub(crate) fn sql_dialect(dialect: &str) -> Box<dyn Dialect> {
+    match dialect.to_ascii_lowercase().as_str() {
+        "duckdb" => Box::new(DuckDbDialect {}),
+        "snowflake" => Box::new(SnowflakeDialect {}),
+        "bigquery" => Box::new(BigQueryDialect {}),
+        _ => Box::new(GenericDialect {}),
     }
 }
 

@@ -140,7 +140,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-24T20:53:23Z">24 Sep 2026, 20:53 UTC</strong>
+          Refreshed <strong title="2026-09-24T21:32:30Z">24 Sep 2026, 21:32 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -207,7 +207,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 24 Sep 2026, 20:53 UTC</span>
+              <span class="glyf-version-option-note">built 24 Sep 2026, 21:32 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -307,7 +307,7 @@ GROUP BY 1
         <pre class="glyf-source-sql"><code>SELECT department, sum(gross_margin) as gross_margin
 FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
 GROUP BY 1
-ORDER BY gross_margin DESC
+ORDER BY gross_margin DESC, department
 </code></pre>
 
       </div>
@@ -321,7 +321,7 @@ ORDER BY gross_margin DESC
         <pre class="glyf-source-sql"><code>SELECT month, department, sum(expenses) as expenses
 FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
 GROUP BY 1, 2
-ORDER BY month, department
+ORDER BY month, department, expenses
 </code></pre>
 
       </div>
@@ -352,7 +352,7 @@ GROUP BY 1
   department,
   round(gross_margin * 100.0 / nullif(bookings, 0), 1) as margin_rate
 FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
-ORDER BY month, department
+ORDER BY month, department, margin_rate
 </code></pre>
 
       </div>
@@ -1108,7 +1108,7 @@ FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-24 21:53
+      2026-09-24 22:32
 
     </div>
   </div>
@@ -1258,7 +1258,7 @@ FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">24 Sep 2026, 20:53 UTC</div>
+              <div class="glyf-version-date">24 Sep 2026, 21:32 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>

@@ -1,4 +1,4 @@
 SELECT region, sum(revenue) as revenue
 FROM "sales_dashboard"."main"."fct_sales"
 GROUP BY 1
-ORDER BY revenue DESC
+ORDER BY revenue DESC, region

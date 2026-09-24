@@ -9,6 +9,26 @@ EVERY_COLUMN = "*"
 
 
 @dataclass(frozen=True)
+class OrderTiebreak:
+    """What glyf can do about the ties a query's ORDER BY leaves.
+
+    Worked out by the Rust core from the compiled SQL; see `order_tiebreak`.
+    """
+
+    # The query with the other output columns appended to its ORDER BY, when
+    # glyf could add them.
+    sql: str | None = None
+    # Those columns, by name (`column 3` for an unnamed one).
+    added: tuple[str, ...] = ()
+    # The author's keys as result column names, when every key is one.
+    keys: tuple[str, ...] = ()
+    # Why the SQL could not be given a tiebreak.
+    reason: str | None = None
+    # A LIMIT or FETCH: ties then decide which rows come back.
+    limited: bool = False
+
+
+@dataclass(frozen=True)
 class VisualiseMapping:
     field: str
     role: str
