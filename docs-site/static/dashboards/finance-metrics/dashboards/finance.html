@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Finance Metrics</title>
 
-  <link rel="stylesheet" href="../assets/dashboard.css?v=fdbc876f25">
+  <link rel="stylesheet" href="../assets/dashboard.css?v=aee48092c2">
 
 
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
@@ -140,7 +140,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-24T08:06:51Z">24 Sep 2026, 08:06 UTC</strong>
+          Refreshed <strong title="2026-09-24T20:27:28Z">24 Sep 2026, 20:27 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -207,7 +207,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 24 Sep 2026, 08:06 UTC</span>
+              <span class="glyf-version-option-note">built 24 Sep 2026, 20:27 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -220,6 +220,7 @@
 
     <div class="glyf-control-bar" data-glyf-filter-bar>
       <span class="glyf-control-label">Filters</span>
+
 
 
         <label class="glyf-filter-select" data-glyf-filter="department">
@@ -242,23 +243,27 @@
           </select>
         </label>
 
-        <label class="glyf-filter-select" data-glyf-filter="segment">
+
+
+
+        <div class="glyf-filter-select glyf-filter-group glyf-filter-group--radio" data-glyf-filter="segment" data-glyf-filter-group="radio" role="group" aria-label="Filter by segment">
           <span class="glyf-filter-field">
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
   segment</span>
-          <select class="glyf-filter-control" id="glyf-filter-segment" data-glyf-filter-select="segment" aria-label="Filter by segment">
-            <option value="">All</option>
 
-            <option value="SMB">SMB</option>
+          <button class="glyf-filter-option-button is-on" type="button" data-glyf-filter-option="" aria-pressed="true">All</button>
 
-            <option value="Mid-market">Mid-market</option>
 
-            <option value="Enterprise">Enterprise</option>
+          <button class="glyf-filter-option-button" type="button" data-glyf-filter-option="SMB" aria-pressed="false">SMB</button>
 
-          </select>
-        </label>
+          <button class="glyf-filter-option-button" type="button" data-glyf-filter-option="Mid-market" aria-pressed="false">Mid-market</button>
+
+          <button class="glyf-filter-option-button" type="button" data-glyf-filter-option="Enterprise" aria-pressed="false">Enterprise</button>
+
+        </div>
+
 
         <button class="glyf-filter-clear" type="button" data-glyf-filter-clear hidden>Clear</button>
 
@@ -1038,6 +1043,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 <article class="glyf-card glyf-component-card">
   <div class="glyf-card-body">
 
+
   <div class="glyf-alert glyf-tone-warning">
     <span class="glyf-alert-mark">
 
@@ -1102,7 +1108,7 @@ FROM "finance_metrics"."main"."fct_invoices"
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-24 09:06
+      2026-09-24 21:27
 
     </div>
   </div>
@@ -1252,7 +1258,7 @@ FROM "finance_metrics"."main"."fct_invoices"
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">24 Sep 2026, 08:06 UTC</div>
+              <div class="glyf-version-date">24 Sep 2026, 20:27 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -1609,17 +1615,27 @@ FROM "finance_metrics"."main"."fct_invoices"
       // A filter redraws every chart it can, from the rows the page carries,
       // and dims the ones it cannot: a chart that looks filtered and is not
       // would be worse than one that says so.
-      const selects = Array.from(document.querySelectorAll("[data-glyf-filter-select]"));
+      // Each filter is a field and the values it keeps: one from a dropdown or
+      // a radio group, any number from toggles. No value means no filter.
+      const boxes = Array.from(document.querySelectorAll("[data-glyf-filter]"));
       const clearButton = document.querySelector("[data-glyf-filter-clear]");
       const cards = Array.from(document.querySelectorAll("[data-glyf-chart]"));
-      const active = () => selects.filter((s) => s.value !== "").map((s) => ({ field: s.dataset.glyfFilterSelect, value: s.value }));
+      const optionsOf = (box) => Array.from(box.querySelectorAll("[data-glyf-filter-option]"));
+      const valuesOf = (box) => {
+        const select = box.querySelector("[data-glyf-filter-select]");
+        if (select) return select.value === "" ? [] : [select.value];
+        return optionsOf(box).filter((b) => b.classList.contains("is-on") && b.dataset.glyfFilterOption !== "").map((b) => b.dataset.glyfFilterOption);
+      };
+      const active = () => boxes.map((box) => ({ field: box.dataset.glyfFilter, values: valuesOf(box) })).filter((p) => p.values.length > 0);
+      const keeps = (p, value) => p.values.includes(String(value));
+      const setOption = (button, on) => { button.classList.toggle("is-on", on); button.setAttribute("aria-pressed", on ? "true" : "false"); };
       const modesOf = (card) => Object.fromEntries((card.dataset.glyfFilters || "").split(" ").filter(Boolean).map((pair) => pair.split(":")));
       const vegaSpecOf = (card) => {
         const el = card.querySelector('script[type="application/json"]');
         return el ? JSON.parse(el.textContent) : null;
       };
       const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
-      const filterExpr = (pairs) => pairs.map((p) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(p.value)}`).join(" && ");
+      const filterExpr = (pairs) => pairs.map((p) => "(" + p.values.map((v) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(v)}`).join(" || ") + ")").join(" && ");
       const redrawVega = (card, pairs) => {
         const spec = vegaSpecOf(card);
         const target = card.querySelector("[data-glyf-filter-chart], [data-vega-chart]");
@@ -1641,7 +1657,7 @@ FROM "finance_metrics"."main"."fct_invoices"
       // chart without saying so.
       const hasRows = (spec, pairs) => {
         const datasets = spec.datasets || {};
-        return Object.values(datasets).some((rows) => Array.isArray(rows) && rows.some((row) => pairs.every((p) => String(row[p.field]) === p.value)));
+        return Object.values(datasets).some((rows) => Array.isArray(rows) && rows.some((row) => pairs.every((p) => keeps(p, row[p.field]))));
       };
       const filterTable = (card, pairs) => {
         const table = card.querySelector("table");
@@ -1650,7 +1666,7 @@ FROM "finance_metrics"."main"."fct_invoices"
         const rows = Array.from(table.querySelectorAll("tbody tr"));
         let shown = 0;
         rows.forEach((row) => {
-          const ok = pairs.every((p) => { const i = headers.indexOf(p.field); return i >= 0 && row.children[i] && row.children[i].textContent === p.value; });
+          const ok = pairs.every((p) => { const i = headers.indexOf(p.field); return i >= 0 && row.children[i] && keeps(p, row.children[i].textContent); });
           row.hidden = !ok; if (ok) shown += 1;
         });
         const caption = card.querySelector(".glyf-table-caption");
@@ -1660,14 +1676,14 @@ FROM "finance_metrics"."main"."fct_invoices"
       const apply = () => {
         const pairs = active();
         if (clearButton) clearButton.hidden = pairs.length === 0;
-        selects.forEach((s) => { const box = s.closest("[data-glyf-filter]"); if (box) box.classList.toggle("is-set", s.value !== ""); });
+        boxes.forEach((box) => box.classList.toggle("is-set", valuesOf(box).length > 0));
         cards.forEach((card) => {
           const modes = modesOf(card);
           const applies = pairs.filter((p) => modes[p.field] && modes[p.field] !== "none");
           const cannot = pairs.filter((p) => !modes[p.field] || modes[p.field] === "none");
           const chip = card.querySelector("[data-glyf-filter-applied]");
           const note = card.querySelector("[data-glyf-filter-note]");
-          if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.value}`).join(", "); }
+          if (chip) { chip.hidden = applies.length === 0; chip.textContent = applies.map((p) => `${p.field} = ${p.values.join(" or ")}`).join(", "); }
           const unfiltered = pairs.length > 0 && cannot.length > 0 && applies.length === 0;
           card.classList.toggle("is-unfiltered", unfiltered);
           card.classList.remove("is-empty");
@@ -1679,8 +1695,22 @@ FROM "finance_metrics"."main"."fct_invoices"
           else if (first === "table") filterTable(card, applies);
         });
       };
-      selects.forEach((s) => s.addEventListener("change", apply));
-      if (clearButton) clearButton.addEventListener("click", () => { selects.forEach((s) => { s.value = ""; }); apply(); });
+      boxes.forEach((box) => {
+        const select = box.querySelector("[data-glyf-filter-select]");
+        if (select) { select.addEventListener("change", apply); return; }
+        const radio = box.dataset.glyfFilterGroup === "radio";
+        optionsOf(box).forEach((button) => button.addEventListener("click", () => {
+          if (radio) optionsOf(box).forEach((other) => setOption(other, other === button));
+          else setOption(button, !button.classList.contains("is-on"));
+          apply();
+        }));
+      });
+      const reset = (box) => {
+        const select = box.querySelector("[data-glyf-filter-select]");
+        if (select) { select.value = ""; return; }
+        optionsOf(box).forEach((button) => setOption(button, button.dataset.glyfFilterOption === ""));
+      };
+      if (clearButton) clearButton.addEventListener("click", () => { boxes.forEach(reset); apply(); });
       window.glyfApplyFilters = apply;
     })();
 
