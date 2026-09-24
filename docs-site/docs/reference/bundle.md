@@ -93,6 +93,7 @@ is missing, it falls back to the modification time of the generated
 | `internal_artifacts` | array of strings | Which directories those are. Empty in a public manifest. |
 | `browser_visible_data` | string | Prose note on what publishing the described site exposes to a browser. |
 | `row_data` | string | **Optional.** `"minimal"` when the site was built with `export.row_data: minimal`, `"excluded"` under `export.row_data: exclude`; absent otherwise. |
+| `embedded_specs` | boolean | **Optional.** `true` when the site was exported with `export.embed`, so `charts[].artifacts.vega` points at published Vega specs; absent otherwise. |
 
 ## `build`
 
@@ -158,10 +159,15 @@ Every value is a path or `null`; the keys are always present.
 | `kpi` | path | **KPIs only.** The tile fragment the dashboard shows. Absent for every other chart type. |
 | `compiled_sql` | path | The compiled SQL behind the chart. |
 | `data` | always `null` | Normalised chart data. Local manifests only. |
-| `vega` | always `null` | Vega specification. Local manifests only, for every drawn chart. |
+| `vega` | `null`, or a path under `export.embed` | Vega specification, for every drawn chart. In a public manifest only when the site was exported with `export.embed`: `charts/<name>.vega.json`, carrying the rows the chart was drawn from (only the encoded columns under `row_data: minimal`). |
 
 Check for `null`, not for a missing key: `data` and `vega` stay in a public
 manifest and are set to `null` rather than being removed.
+
+A machine-readable version of this page is published as a JSON Schema at
+[`glyfdata.com/schema/bundle.v1.schema.json`](pathname:///schema/bundle.v1.schema.json).
+Every bundle glyf writes is tested against it, and glyf-js tests against it
+too.
 
 Under `export.row_data: exclude` (see
 [the configuration reference](./configuration.md#publishing-without-the-rows)),
@@ -194,6 +200,7 @@ An object keyed by dashboard name: the `name` in its YAML.
 | --- | --- | --- |
 | `field` | string | Label shown in the dashboard's control row. |
 | `values` | array of strings | The filter's values, always resolved. |
+| `control` | string | How the dashboard draws it: `select`, `radio` or `toggle`. |
 | `source` | object | **Optional.** Present when the YAML used `source(chart, field)`; records the `chart` and `field` the values came from. |
 
 `values` is populated either way, so a consumer that only renders the controls
@@ -208,7 +215,7 @@ can ignore `source` entirely.
 | `security.internal_artifacts_included` | `true` | `false` |
 | `security.internal_artifacts` | `["data/normalized", "data/vega"]` | `[]` |
 | `charts[].artifacts.data` | path | `null` |
-| `charts[].artifacts.vega` | path, for a drawn chart | `null` |
+| `charts[].artifacts.vega` | path, for a drawn chart | `null`, or a path under `export.embed` |
 
 Nothing else differs. The public manifest does not *reference* the normalised
 data or the Vega specs that stay under `target/glyf/`.

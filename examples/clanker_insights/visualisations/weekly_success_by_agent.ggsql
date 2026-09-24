@@ -1,0 +1,15 @@
+SELECT
+  week,
+  agent,
+  round(100.0 * count(*) FILTER (WHERE outcome = 'succeeded') / count(*), 1) AS success_rate
+FROM {{ ref('fct_agent_runs') }}
+GROUP BY 1, 2
+ORDER BY week, agent
+
+VISUALISE week AS x, success_rate AS y, agent AS color
+DRAW line
+LABEL title => 'Success rate by agent'
+LABEL subtitle => 'Code Reviewer dipped in W37 after a tools deploy'
+LABEL x_title => 'Week'
+LABEL y_title => 'Succeeded (%)'
+INTERACT tooltip, legend_filter

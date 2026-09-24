@@ -55,6 +55,14 @@ def write_bundle_manifest(
         ),
         "dashboards": _dashboards_payload(scan.root, config, dashboards),
     }
+    if public and config.export.embed and not config.export.excludes_row_data:
+        # Said in the manifest so a consumer knows before it fetches anything
+        # that the specs, and the rows they carry, are published.
+        payload["security"]["embedded_specs"] = True
+        payload["security"]["browser_visible_data"] += (
+            " Each drawn chart's Vega specification is published for embedding"
+            " (export.embed), with the rows it was drawn from."
+        )
     record = read_build_record(paths.root / "build.json")
     if record is not None and (not public or config.export.publishes_provenance):
         # The record names the warehouse identity the queries ran as and the
@@ -252,8 +260,25 @@ def _chart_payload(
         )
     else:
         payload["artifacts"]["data"] = None
-        payload["artifacts"]["vega"] = None
+        payload["artifacts"]["vega"] = _embedded_vega_path(
+            project_root, config, raw.get("name"), exclude_row_data=exclude_row_data
+        )
     return payload
+
+
+def _embedded_vega_path(
+    project_root: Path,
+    config: GlyfConfig,
+    name: object,
+    *,
+    exclude_row_data: bool,
+) -> str | None:
+    """The published Vega spec under `export.embed`, when export wrote one."""
+    if not config.export.embed or exclude_row_data or not isinstance(name, str):
+        return None
+    relative = f"charts/{name}.vega.json"
+    site_dir = artifact_paths(project_root, config).site_dir
+    return relative if (site_dir / relative).exists() else None
 
 
 def _artifact_path(
@@ -353,6 +378,7 @@ def _filter_payload(filter_spec: DashboardFilter) -> dict[str, object]:
     payload: dict[str, object] = {
         "field": filter_spec.field,
         "values": list(filter_spec.values),
+        "control": filter_spec.control,
     }
     if filter_spec.is_sourced:
         payload["source"] = {

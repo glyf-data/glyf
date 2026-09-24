@@ -1,0 +1,7 @@
+clanker_insights:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: target/clanker_insights.duckdb
+      schema: main

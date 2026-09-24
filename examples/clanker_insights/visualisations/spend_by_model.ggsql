@@ -1,0 +1,12 @@
+SELECT week, model, round(sum(cost_usd), 2) AS spend_usd
+FROM {{ ref('fct_agent_runs') }}
+GROUP BY 1, 2
+ORDER BY week, model
+
+VISUALISE week AS x, spend_usd AS y, model AS color
+DRAW area
+LABEL title => 'Spend by model'
+LABEL subtitle => 'clank-ultra is a sixth of the runs and most of the bill'
+LABEL x_title => 'Week'
+LABEL y_title => 'USD'
+INTERACT tooltip, legend_filter

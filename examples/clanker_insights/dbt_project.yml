@@ -1,0 +1,6 @@
+name: clanker_insights
+version: "1.0"
+profile: clanker_insights
+
+model-paths: ["models"]
+seed-paths: ["seeds"]

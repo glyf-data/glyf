@@ -11,6 +11,9 @@ dashboard YAML.
   a boxplot over per-account rows and a weekday-by-hour heatmap.
 - `finance_metrics`: bookings, expenses, margin and collections over twelve
   months. Uses all eight chart types.
+- `clanker_insights`: what one customer's AI agents did on Clanker, a made-up
+  agent platform: runs, success, spend by model, run time, failures. Built with
+  `export.embed` for the glyf-js customer-facing demo app.
 
 ## Run an example
 
@@ -31,7 +34,7 @@ Open `target/glyf/site/index.html`.
 
 ## Seed data
 
-The seeds of `finance_metrics` and `product_analytics` are synthetic and are
+The seeds of `finance_metrics`, `product_analytics` and `clanker_insights` are synthetic and are
 written by `seed_data.py`. The generator is seeded, so it rewrites the same
 files byte for byte:
 

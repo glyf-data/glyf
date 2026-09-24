@@ -22,7 +22,7 @@ def test_committed_seeds_match_the_generator(tmp_path: Path) -> None:
     seed_data.main(tmp_path)
 
     generated = sorted(tmp_path.rglob("*.csv"))
-    assert len(generated) == 5
+    assert len(generated) == 6
     for path in generated:
         committed = EXAMPLES / path.relative_to(tmp_path)
         assert committed.read_text(encoding="utf-8") == path.read_text(

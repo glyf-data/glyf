@@ -1,0 +1,19 @@
+SELECT
+  error,
+  agent,
+  count(*) AS failures,
+  strftime(max(started_at), '%Y-%m-%d %H:%M') AS last_seen
+FROM {{ ref('fct_agent_runs') }}
+WHERE outcome = 'failed'
+GROUP BY 1, 2
+ORDER BY failures DESC, error, agent
+LIMIT 12
+
+VISUALISE error, agent, failures, last_seen
+DRAW table
+LABEL title => 'Failures by cause'
+LABEL error => 'Cause'
+LABEL agent => 'Agent'
+LABEL failures => 'Failures'
+LABEL last_seen => 'Last seen (UTC)'
+CONFIG height => 380

@@ -1,0 +1,17 @@
+SELECT
+  strftime(run_date, '%m-%d') AS day,
+  outcome,
+  agent,
+  count(*) AS runs
+FROM {{ ref('fct_agent_runs') }}
+GROUP BY 1, 2, 3
+ORDER BY day, outcome, agent
+
+VISUALISE day AS x, runs AS y, outcome AS color
+DRAW bar
+LABEL title => 'Runs per day'
+LABEL subtitle => 'Weekends run at about a third of the weekday volume'
+LABEL x_title => 'Day'
+LABEL y_title => 'Runs'
+CONFIG width => 1100
+INTERACT tooltip, legend_filter

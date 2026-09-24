@@ -1,0 +1,23 @@
+visualisations_path: visualisations
+dashboards_path: dashboards
+output_path: target/glyf
+compiled_path: target/glyf/compiled
+charts_path: target/glyf/charts
+dashboards_output_path: target/glyf/dashboards
+site_path: target/glyf/site
+
+render:
+  formats: [svg, png]
+  default_width: 800
+  default_height: 400
+
+dashboard:
+  theme: dark
+  embed_charts: true
+  show_compiled_sql: true
+
+# Publish each chart's Vega spec, so the Clanker app can draw it live with
+# glyf-js. The data is synthetic; a real workspace would pair this with
+# row_data: minimal or a per-customer build.
+export:
+  embed: true

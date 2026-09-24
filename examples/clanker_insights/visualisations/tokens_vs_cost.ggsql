@@ -1,0 +1,11 @@
+SELECT run_id, tokens, cost_usd, model, agent
+FROM {{ ref('fct_agent_runs') }}
+ORDER BY model, tokens, run_id
+
+VISUALISE tokens AS x, cost_usd AS y, model AS color
+DRAW scatter
+LABEL title => 'Tokens and cost per run'
+LABEL subtitle => 'Each model is its own price line'
+LABEL x_title => 'Tokens'
+LABEL y_title => 'USD'
+INTERACT tooltip, zoom

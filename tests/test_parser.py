@@ -215,6 +215,19 @@ def test_parse_ggsql_reads_the_outer_order_by_only() -> None:
 
 
 EXAMPLE_ORDER_BY = {
+    "clanker_insights/daily_runs_by_outcome": True,
+    "clanker_insights/duration_by_agent": False,
+    "clanker_insights/median_duration_this_week": True,
+    "clanker_insights/recent_failures": True,
+    "clanker_insights/runs_by_hour": True,
+    "clanker_insights/runs_by_trigger": True,
+    "clanker_insights/runs_this_week": True,
+    "clanker_insights/spend_by_agent": True,
+    "clanker_insights/spend_by_model": True,
+    "clanker_insights/spend_this_week": True,
+    "clanker_insights/success_rate_this_week": True,
+    "clanker_insights/tokens_vs_cost": True,
+    "clanker_insights/weekly_success_by_agent": True,
     "basic/revenue": False,
     "finance_metrics/bookings_trend": False,
     "finance_metrics/days_to_pay": True,

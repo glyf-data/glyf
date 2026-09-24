@@ -1,0 +1,10 @@
+SELECT trigger, count(*) AS runs
+FROM {{ ref('fct_agent_runs') }}
+GROUP BY 1
+ORDER BY runs DESC
+
+VISUALISE trigger AS x, runs AS y
+DRAW pie
+LABEL title => 'What starts a run'
+LABEL y_title => 'Runs'
+INTERACT tooltip

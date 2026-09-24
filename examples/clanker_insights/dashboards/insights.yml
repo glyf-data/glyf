@@ -1,0 +1,70 @@
+name: insights
+title: Platform Insights
+description: What Acme Logistics' agents did on Clanker over the last six weeks.
+owner: Acme Logistics
+theme: dark
+tags:
+  - agents
+  - usage
+  - spend
+
+filters:
+  - field: agent
+    values: source(weekly_success_by_agent, agent)
+  - field: model
+    values: source(spend_by_model, model)
+    control: toggle
+
+toolbar:
+  visibility: private
+
+summary:
+  - "{{ ui.text('Runs grew about a fifth over six weeks, to 427 in W38, and spend rose faster, to $264, because Code Reviewer and On-call Summarizer lean on clank-ultra. Success held near 92% except for Code Reviewer, which dipped in W37 after a tools deploy timed out its runs for a day.', title='Overview') }}"
+  - "{{ alert.info('Written by hand for this demo. The data is synthetic.', 'About this summary') }}"
+  - "{{ ui.label_value('Workspace', 'Acme Logistics') }}"
+  - "{{ ui.label_value('Generated', time.now('%Y-%m-%d %H:%M')) }}"
+
+sections:
+  - title: This week
+    description: W38 against W37.
+    columns: 4
+    items:
+      - chart: runs_this_week
+      - chart: success_rate_this_week
+      - chart: spend_this_week
+      - chart: median_duration_this_week
+
+  - title: Activity
+    description: Every run, by day and by what started it.
+    columns: "70% 30%"
+    items:
+      - chart: daily_runs_by_outcome
+      - chart: runs_by_trigger
+
+  - title: Quality
+    description: Which agents finish their work, and how long they take.
+    columns: 2
+    items:
+      - chart: weekly_success_by_agent
+      - chart: duration_by_agent
+
+  - title: Spend
+    description: Where the money goes, per model and per run.
+    columns: 2
+    items:
+      - chart: spend_by_model
+      - chart: tokens_vs_cost
+      - chart: spend_by_agent
+      - markdown:
+          title: How a run is priced
+          text: |
+            Each run costs its model's tokens plus a two-cent platform fee.
+            clank-ultra costs thirty times clank-mini per token, so the two
+            agents that use it are a fifth of the runs and most of the bill.
+
+  - title: Failures
+    description: What went wrong, and when.
+    columns: "65% 35%"
+    items:
+      - chart: recent_failures
+      - chart: runs_by_hour

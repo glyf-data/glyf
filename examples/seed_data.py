@@ -1,4 +1,5 @@
-"""Regenerate the seed CSVs of the finance_metrics and product_analytics examples.
+"""Regenerate the seed CSVs of the finance_metrics, product_analytics and
+clanker_insights examples.
 
 The data is synthetic. The generator is seeded, so running it again writes the
 same files byte for byte; change `SEED` or the shapes below and commit the
@@ -10,6 +11,7 @@ result to change the examples.
 import csv
 import math
 import random
+from datetime import date, timedelta
 from pathlib import Path
 
 SEED = 29
@@ -51,6 +53,38 @@ SEGMENTS = {
 }
 
 
+# Clanker is an AI agent platform; its insights page shows one customer
+# workspace, Acme Logistics, what its agents did over six weeks. Its own seed,
+# so changing it leaves the other examples' files as they are.
+CLANKER_SEED = 42
+CLANKER_START = date(2026, 8, 10)
+CLANKER_DAYS = 42
+# agent: (runs a day at the start, weekly growth, success rate, escalation
+# rate, median seconds, tool calls per run, models with their share)
+CLANKER_AGENTS = {
+    "Support Triage": (22, 0.06, 0.93, 0.04, 14, 3, {"clank-mini": 0.8, "clank-pro": 0.2}),
+    "Invoice Parser": (14, 0.03, 0.96, 0.01, 21, 2, {"clank-mini": 1.0}),
+    "Code Reviewer": (8, 0.09, 0.84, 0.06, 95, 7, {"clank-pro": 0.6, "clank-ultra": 0.4}),
+    "Lead Enricher": (10, 0.02, 0.89, 0.02, 33, 5, {"clank-mini": 0.5, "clank-pro": 0.5}),
+    "On-call Summarizer": (4, 0.04, 0.9, 0.08, 62, 9, {"clank-ultra": 1.0}),
+}
+# model: (dollars per thousand input tokens, per thousand output tokens)
+CLANKER_MODELS = {
+    "clank-mini": (0.004, 0.016),
+    "clank-pro": (0.03, 0.12),
+    "clank-ultra": (0.12, 0.48),
+}
+# What the platform charges for each run, on top of the model's tokens.
+CLANKER_RUN_FEE = 0.02
+CLANKER_TRIGGERS = {"API": 0.45, "Schedule": 0.25, "Slack": 0.2, "Webhook": 0.1}
+CLANKER_ERRORS = {
+    "Tool timeout": 0.38,
+    "Rate limited": 0.22,
+    "Invalid output": 0.25,
+    "Auth expired": 0.15,
+}
+
+
 def main(examples: Path = EXAMPLES) -> None:
     rng = random.Random(SEED)
     product = examples / "product_analytics" / "seeds"
@@ -80,6 +114,15 @@ def main(examples: Path = EXAMPLES) -> None:
         finance / "raw_invoices.csv",
         ["invoice_id", "month", "segment", "amount", "discount_pct", "days_to_pay"],
         _invoices(rng),
+    )
+    _write(
+        examples / "clanker_insights" / "seeds" / "raw_agent_runs.csv",
+        [
+            "run_id", "started_at", "agent", "model", "trigger", "outcome",
+            "error", "duration_s", "tool_calls", "input_tokens", "output_tokens",
+            "cost_usd",
+        ],
+        _agent_runs(random.Random(CLANKER_SEED)),
     )
 
 
@@ -160,6 +203,69 @@ def _invoices(rng: random.Random) -> list[list[object]]:
                 ]
             )
     return rows
+
+
+def _agent_runs(rng: random.Random) -> list[list[object]]:
+    """One row per agent run: what an agent platform logs for each task."""
+    rows: list[list[object]] = []
+    run_number = 0
+    for day in range(CLANKER_DAYS):
+        today = CLANKER_START + timedelta(days=day)
+        weekend = today.weekday() >= 5
+        # A bad deploy of the code-review tools on one day, fixed the next.
+        incident = today == CLANKER_START + timedelta(days=31)
+        for agent, (start, growth, success, escalate, seconds, tools, models) in (
+            CLANKER_AGENTS.items()
+        ):
+            level = start * (1 + growth) ** (day / 7) * (0.35 if weekend else 1.0)
+            for _ in range(max(0, round(rng.gauss(level, level * 0.15)))):
+                run_number += 1
+                hour = _working_hour(rng, weekend)
+                started = f"{today.isoformat()} {hour:02d}:{rng.randrange(60):02d}"
+                model = _pick(rng, models)
+                trigger = _pick(rng, CLANKER_TRIGGERS)
+                ok = success - (0.35 if incident and agent == "Code Reviewer" else 0.0)
+                roll = rng.random()
+                if roll < ok:
+                    outcome, error = "succeeded", ""
+                elif roll < ok + escalate:
+                    outcome, error = "escalated", ""
+                else:
+                    outcome = "failed"
+                    error = (
+                        "Tool timeout"
+                        if incident and agent == "Code Reviewer"
+                        else _pick(rng, CLANKER_ERRORS)
+                    )
+                duration = max(1.0, rng.lognormvariate(math.log(seconds), 0.45))
+                calls = max(0, round(rng.gauss(tools, tools * 0.35)))
+                tokens_in = round(duration * rng.uniform(90, 160) + calls * 400)
+                tokens_out = round(tokens_in * rng.uniform(0.12, 0.3))
+                price_in, price_out = CLANKER_MODELS[model]
+                cost = (
+                    CLANKER_RUN_FEE
+                    + tokens_in / 1000 * price_in
+                    + tokens_out / 1000 * price_out
+                )
+                rows.append(
+                    [
+                        f"run_{run_number:05d}", started, agent, model, trigger,
+                        outcome, error, round(duration, 1), calls, tokens_in,
+                        tokens_out, round(cost, 5),
+                    ]
+                )
+    return rows
+
+
+def _working_hour(rng: random.Random, weekend: bool) -> int:
+    """An hour of the day, busiest late morning and mid afternoon (UTC)."""
+    if rng.random() < (0.5 if weekend else 0.12):
+        return rng.randrange(24)
+    return min(23, max(0, round(rng.choice([10.5, 15.0]) + rng.gauss(0, 2.2))))
+
+
+def _pick(rng: random.Random, weights: dict[str, float]) -> str:
+    return rng.choices(list(weights), weights=list(weights.values()))[0]
 
 
 def _write(path: Path, header: list[str], rows: list[list[object]]) -> None:
