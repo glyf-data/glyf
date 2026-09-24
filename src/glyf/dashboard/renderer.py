@@ -121,7 +121,7 @@ class DashboardRenderer:
     def _environment(self) -> Environment:
         environment = Environment(
             loader=FileSystemLoader(self.templates_dir),
-            autoescape=select_autoescape(("html", "xml")),
+            autoescape=select_autoescape(("html", "xml", "j2")),
         )
         environment.filters["tag_tone"] = tag_tone
         return environment

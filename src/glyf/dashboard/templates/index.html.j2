@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>glyf dashboards</title>
   {% if assets.inline_css %}
-  <style>{{ assets.inline_css }}</style>
+  <style>{{ assets.inline_css | safe }}</style>
   {% else %}
   <link rel="stylesheet" href="{{ assets.css_href }}">
   {% endif %}

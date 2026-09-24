@@ -140,7 +140,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-24T20:27:28Z">24 Sep 2026, 20:27 UTC</strong>
+          Refreshed <strong title="2026-09-24T20:53:23Z">24 Sep 2026, 20:53 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -207,7 +207,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 24 Sep 2026, 20:27 UTC</span>
+              <span class="glyf-version-option-note">built 24 Sep 2026, 20:53 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -292,7 +292,7 @@
         </div>
 
         <pre class="glyf-source-sql"><code>SELECT month, sum(bookings) as bookings
-FROM "finance_metrics"."main"."fct_finance"
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
 GROUP BY 1
 </code></pre>
 
@@ -305,7 +305,7 @@ GROUP BY 1
         </div>
 
         <pre class="glyf-source-sql"><code>SELECT department, sum(gross_margin) as gross_margin
-FROM "finance_metrics"."main"."fct_finance"
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
 GROUP BY 1
 ORDER BY gross_margin DESC
 </code></pre>
@@ -319,7 +319,7 @@ ORDER BY gross_margin DESC
         </div>
 
         <pre class="glyf-source-sql"><code>SELECT month, department, sum(expenses) as expenses
-FROM "finance_metrics"."main"."fct_finance"
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
 GROUP BY 1, 2
 ORDER BY month, department
 </code></pre>
@@ -335,7 +335,7 @@ ORDER BY month, department
         <pre class="glyf-source-sql"><code>SELECT
   month,
   sum(gross_margin) as gross_margin
-FROM "finance_metrics"."main"."fct_finance"
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
 GROUP BY 1
 </code></pre>
 
@@ -351,7 +351,7 @@ GROUP BY 1
   month,
   department,
   round(gross_margin * 100.0 / nullif(bookings, 0), 1) as margin_rate
-FROM "finance_metrics"."main"."fct_finance"
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
 ORDER BY month, department
 </code></pre>
 
@@ -367,7 +367,7 @@ ORDER BY month, department
   department,
   expenses,
   gross_margin
-FROM "finance_metrics"."main"."fct_finance"
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
 ORDER BY department, expenses, gross_margin
 </code></pre>
 
@@ -382,7 +382,7 @@ ORDER BY department, expenses, gross_margin
         <pre class="glyf-source-sql"><code>SELECT
   days_to_pay,
   segment
-FROM "finance_metrics"."main"."fct_invoices"
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
 ORDER BY days_to_pay, segment
 </code></pre>
 
@@ -397,7 +397,7 @@ ORDER BY days_to_pay, segment
         <pre class="glyf-source-sql"><code>SELECT
   segment,
   discount_pct
-FROM "finance_metrics"."main"."fct_invoices"
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
 </code></pre>
 
       </div>
@@ -1108,7 +1108,7 @@ FROM "finance_metrics"."main"."fct_invoices"
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-24 21:27
+      2026-09-24 21:53
 
     </div>
   </div>
@@ -1258,7 +1258,7 @@ FROM "finance_metrics"."main"."fct_invoices"
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">24 Sep 2026, 20:27 UTC</div>
+              <div class="glyf-version-date">24 Sep 2026, 20:53 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>

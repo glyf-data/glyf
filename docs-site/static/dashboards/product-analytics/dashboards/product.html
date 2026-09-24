@@ -138,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-24T20:27:23Z">24 Sep 2026, 20:27 UTC</strong>
+          Refreshed <strong title="2026-09-24T20:53:18Z">24 Sep 2026, 20:53 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -205,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 24 Sep 2026, 20:27 UTC</span>
+              <span class="glyf-version-option-note">built 24 Sep 2026, 20:53 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -305,7 +305,7 @@
 
         <pre class="glyf-source-sql"><code>WITH weekly AS (
   SELECT week, sum(active_users) AS active_users
-  FROM "product_analytics"."main"."fct_product_usage"
+  FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
   GROUP BY 1
 )
 SELECT active_users, lag(active_users) OVER (ORDER BY week) AS previous
@@ -324,7 +324,7 @@ LIMIT 1
 
         <pre class="glyf-source-sql"><code>WITH weekly AS (
   SELECT week, sum(sessions) AS sessions
-  FROM "product_analytics"."main"."fct_product_usage"
+  FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
   GROUP BY 1
 )
 SELECT sessions, lag(sessions) OVER (ORDER BY week) AS previous
@@ -343,7 +343,7 @@ LIMIT 1
 
         <pre class="glyf-source-sql"><code>WITH weekly AS (
   SELECT week, sum(activated_users) AS activated_users
-  FROM "product_analytics"."main"."fct_product_usage"
+  FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
   GROUP BY 1
 )
 SELECT activated_users, lag(activated_users) OVER (ORDER BY week) AS previous
@@ -361,7 +361,7 @@ LIMIT 1
         </div>
 
         <pre class="glyf-source-sql"><code>SELECT week, sum(active_users) as active_users
-FROM "product_analytics"."main"."fct_product_usage"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
 GROUP BY 1
 </code></pre>
 
@@ -374,7 +374,7 @@ GROUP BY 1
         </div>
 
         <pre class="glyf-source-sql"><code>SELECT active_users, sessions, plan
-FROM "product_analytics"."main"."fct_product_usage"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
 ORDER BY plan, active_users
 </code></pre>
 
@@ -387,7 +387,7 @@ ORDER BY plan, active_users
         </div>
 
         <pre class="glyf-source-sql"><code>SELECT week, plan, sum(activated_users) as activated_users
-FROM "product_analytics"."main"."fct_product_usage"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
 GROUP BY 1, 2
 </code></pre>
 
@@ -403,7 +403,7 @@ GROUP BY 1, 2
   week,
   plan,
   round(sum(activated_users) * 100.0 / nullif(sum(active_users), 0), 1) as activation_rate
-FROM "product_analytics"."main"."fct_product_usage"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
 GROUP BY 1, 2
 </code></pre>
 
@@ -418,7 +418,7 @@ GROUP BY 1, 2
         <pre class="glyf-source-sql"><code>SELECT
   week,
   round(sum(sessions) * 1.0 / nullif(sum(active_users), 0), 2) as sessions_per_user
-FROM "product_analytics"."main"."fct_product_usage"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
 GROUP BY 1
 </code></pre>
 
@@ -433,7 +433,7 @@ GROUP BY 1
         <pre class="glyf-source-sql"><code>SELECT
   plan,
   sum(sessions) as sessions
-FROM "product_analytics"."main"."fct_product_usage"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_product_usage&#34;
 GROUP BY 1
 ORDER BY sessions DESC
 </code></pre>
@@ -447,7 +447,7 @@ ORDER BY sessions DESC
         </div>
 
         <pre class="glyf-source-sql"><code>SELECT account_id, plan, sessions, avg_session_minutes
-FROM "product_analytics"."main"."fct_account_sessions"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
 ORDER BY sessions DESC, account_id
 LIMIT 10
 </code></pre>
@@ -463,7 +463,7 @@ LIMIT 10
         <pre class="glyf-source-sql"><code>SELECT
   plan,
   sessions
-FROM "product_analytics"."main"."fct_account_sessions"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
 </code></pre>
 
       </div>
@@ -477,7 +477,7 @@ FROM "product_analytics"."main"."fct_account_sessions"
         <pre class="glyf-source-sql"><code>SELECT
   avg_session_minutes,
   plan
-FROM "product_analytics"."main"."fct_account_sessions"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
 ORDER BY avg_session_minutes, plan
 </code></pre>
 
@@ -493,7 +493,7 @@ ORDER BY avg_session_minutes, plan
   weekday,
   hour,
   sessions
-FROM "product_analytics"."main"."fct_hourly_activity"
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_hourly_activity&#34;
 ORDER BY weekday_number, hour
 </code></pre>
 
@@ -803,7 +803,7 @@ ORDER BY weekday_number, hour
 
     <span>Activation health</span>
 
-  <span class="glyf-badge glyf-trigger-badge" title="Triggered by the data when glyf built this page: latest-week average 37.4% < 40% target">
+  <span class="glyf-badge glyf-trigger-badge" title="Triggered by the data when glyf built this page: latest-week average 37.4% &lt; 40% target">
 
   <svg class="glyf-trigger-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
@@ -834,7 +834,7 @@ ORDER BY weekday_number, hour
 
     <li>The rate is activated over active users within each plan, so Team, the smallest at about 330 users, swings the most.</li>
 
-    <li>The 40% target is the Growth team's for this quarter, checked against the average of the three plans' rates.</li>
+    <li>The 40% target is the Growth team&#39;s for this quarter, checked against the average of the three plans&#39; rates.</li>
 
     <li>Free users who upgrade mid-week count toward the plan they end the week on.</li>
 
@@ -1614,7 +1614,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-24 21:27
+      2026-09-24 21:53
 
     </div>
   </div>
@@ -1796,7 +1796,7 @@ takes their quartiles, so neither query aggregates anything itself.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">24 Sep 2026, 20:27 UTC</div>
+              <div class="glyf-version-date">24 Sep 2026, 20:53 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
