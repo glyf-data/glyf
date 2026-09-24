@@ -76,8 +76,17 @@ def _compare(value: object, compare: object) -> Comparison | None:
     if not (_is_number(value) and _is_number(compare)):
         return Comparison(compare_text, None, None, None)
     delta = value - compare  # type: ignore[operator]
+    places = _shared_places(value, compare)
+    if places is not None:
+        # 89.9 - 92.3 is -2.3999999999999915 in binary floating point; the
+        # difference of two numbers is as precise as they are, no more.
+        delta = round(delta, places)
     direction = "up" if delta > 0 else "down" if delta < 0 else "flat"
-    delta_text = format_number(delta, signed=True)
+    delta_text = (
+        f"{delta:+,.{places}f}"
+        if places is not None and isinstance(delta, float)
+        else format_number(delta, signed=True)
+    )
     # A share of nothing is not a number; the delta alone says what moved.
     percent_text = f"{delta / abs(compare):+.1%}" if compare else None  # type: ignore[operator]
     return Comparison(compare_text, direction, delta_text, percent_text)
@@ -97,6 +106,27 @@ def format_number(value: object, *, signed: bool = False) -> str:
     if _is_number(value):
         return f"{value:+,}" if signed else f"{value:,}"
     return str(value)
+
+
+def _shared_places(value: object, compare: object) -> int | None:
+    """The decimal places the two numbers were written with, the more of the two.
+
+    `None` when either is written in exponent form, which says nothing about
+    its places; the delta is then left as it is.
+    """
+    places = [_places(value), _places(compare)]
+    if any(place is None for place in places):
+        return None
+    return max(place for place in places if place is not None)
+
+
+def _places(number: object) -> int | None:
+    if isinstance(number, int):
+        return 0
+    text = repr(number)
+    if "e" in text or "E" in text or "n" in text:
+        return None
+    return len(text.split(".", 1)[1]) if "." in text else 0
 
 
 def _is_number(value: object) -> bool:
