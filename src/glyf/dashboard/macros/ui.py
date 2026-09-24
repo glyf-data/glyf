@@ -18,27 +18,30 @@ def text(
     value: object,
     *,
     title: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
-    return components.text(value, title=title, width=width)
+    return components.text(value, title=title, note=note, width=width)
 
 
 def list(
     values: object,
     *,
     title: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
-    return components.values_list(values, title=title, width=width)
+    return components.values_list(values, title=title, note=note, width=width)
 
 
 def listofvalues(
     values: object,
     *,
     title: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
-    return components.values_list(values, title=title, width=width)
+    return components.values_list(values, title=title, note=note, width=width)
 
 
 def badge(

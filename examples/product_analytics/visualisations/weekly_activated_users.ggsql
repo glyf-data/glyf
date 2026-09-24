@@ -1,0 +1,14 @@
+WITH weekly AS (
+  SELECT week, sum(activated_users) AS activated_users
+  FROM {{ ref('fct_product_usage') }}
+  GROUP BY 1
+)
+SELECT activated_users, lag(activated_users) OVER (ORDER BY week) AS previous
+FROM weekly
+ORDER BY week DESC
+LIMIT 1
+
+VISUALISE activated_users AS value, previous AS compare
+DRAW kpi
+LABEL title => 'Activated users'
+LABEL compare => 'vs last week'

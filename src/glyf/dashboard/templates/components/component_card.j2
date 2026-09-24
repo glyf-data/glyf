@@ -12,6 +12,12 @@
   {% endif %}
 {%- endmacro %}
 
+{% macro note(component) -%}
+  {% if component.note %}
+  <p class="glyf-component-footnote">{{ component.note }}</p>
+  {% endif %}
+{%- endmacro %}
+
 {% macro render_component_body(component) -%}
   {% if component.kind == "label_value" %}
   <div class="glyf-component-label">{{ component.label }}</div>
@@ -24,6 +30,15 @@
   <div class="glyf-card-title">{{ component.title }}</div>
   {% endif %}
   <p class="glyf-markdown-text">{{ component.text }}</p>
+  {{ note(component) }}
+  {% elif component.kind == "alert" and component.value %}
+  <div class="glyf-status-head">
+    {{ tone_icon(component.tone) }}
+    <span>{{ component.title or "Status" }}</span>
+  </div>
+  <div class="glyf-status-value">{{ component.value }}</div>
+  <p class="glyf-status-text">{{ component.text }}</p>
+  {{ note(component) }}
   {% elif component.kind == "alert" %}
   <div class="glyf-alert glyf-tone-{{ component.tone }}">
     <span class="glyf-alert-mark">
@@ -36,6 +51,7 @@
       <span>{{ component.text }}</span>
     </div>
   </div>
+  {{ note(component) }}
   {% elif component.kind == "list" %}
   {% if component.title %}
   <div class="glyf-card-title">{{ component.title }}</div>
@@ -45,6 +61,7 @@
     <li>{{ value }}</li>
     {% endfor %}
   </ul>
+  {{ note(component) }}
   {% elif component.kind == "badge" %}
   <span class="glyf-badge">{{ component.label }}</span>
   {% elif component.kind == "link" %}
@@ -56,7 +73,8 @@
 {%- endmacro %}
 
 {% macro render_component_card(component, width=None) -%}
-<article class="glyf-card glyf-component-card"{% if width or component.width %} style="--glyf-item-width: {{ width or component.width }}"{% endif %}>
+{% set status = component.kind == "alert" and component.value %}
+<article class="glyf-card glyf-component-card{% if status %} glyf-status-card glyf-status--{{ component.tone }}{% endif %}"{% if width or component.width %} style="--glyf-item-width: {{ width or component.width }}"{% endif %}>
   <div class="glyf-card-body">
     {{ render_component_body(component) }}
   </div>
@@ -68,6 +86,11 @@
   <div class="glyf-card-body">
     <div class="glyf-metric-label">{{ item.label }}</div>
     <div class="glyf-metric-value">{{ item.value }}</div>
+    {% if item.delta %}
+    <div class="glyf-kpi-compare{% if item.trend %} glyf-kpi-compare--{{ item.trend }}{% endif %}">
+      <span class="glyf-kpi-delta">{% if item.trend == "up" %}&#9650; {% elif item.trend == "down" %}&#9660; {% elif item.trend == "flat" %}&#8212; {% endif %}{{ item.delta }}</span>
+    </div>
+    {% endif %}
     {% if item.note %}
     <div class="glyf-metric-note">{{ item.note }}</div>
     {% endif %}

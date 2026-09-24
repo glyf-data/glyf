@@ -9,42 +9,62 @@ def message(
     *,
     title: object | None = None,
     tone: str = "info",
+    metric: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
-    return components.alert(value, title=title, tone=tone, width=width)
+    return components.alert(
+        value, title=title, tone=tone, metric=metric, note=note, width=width
+    )
 
 
 def info(
     value: object,
     title: object | None = None,
     *,
+    metric: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
-    return message(value, title=title, tone="info", width=width)
+    return message(
+        value, title=title, tone="info", metric=metric, note=note, width=width
+    )
 
 
 def success(
     value: object,
     title: object | None = None,
     *,
+    metric: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
-    return message(value, title=title, tone="success", width=width)
+    return message(
+        value, title=title, tone="success", metric=metric, note=note, width=width
+    )
 
 
 def warning(
     value: object,
     title: object | None = None,
     *,
+    metric: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
-    return message(value, title=title, tone="warning", width=width)
+    return message(
+        value, title=title, tone="warning", metric=metric, note=note, width=width
+    )
 
 
 def error(
     value: object,
     title: object | None = None,
     *,
+    metric: object | None = None,
+    note: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
-    return message(value, title=title, tone="error", width=width)
+    return message(
+        value, title=title, tone="error", metric=metric, note=note, width=width
+    )

@@ -8,6 +8,7 @@ const TOOLBAR_ACTIONS: &[&str] = &["share", "visibility"];
 const TOOLBAR_VISIBILITIES: &[&str] = &["private", "public"];
 const DASHBOARD_THEMES: &[&str] = &["light", "dark"];
 const CHART_THEMES: &[&str] = &["auto", "light", "dark"];
+const METRIC_TRENDS: &[&str] = &["down", "flat", "up"];
 
 pub fn validate_dashboard_json_text(text: &str, path: &str) -> Result<(), CoreError> {
     let raw: Value = serde_json::from_str(text)
@@ -21,6 +22,7 @@ pub fn validate_dashboard_json_text(text: &str, path: &str) -> Result<(), CoreEr
 
     required_string(dashboard.get("title"), "title")?;
     optional_string(dashboard.get("description"), "description")?;
+    optional_string(dashboard.get("owner"), "owner")?;
     validate_theme(dashboard.get("theme"))?;
     validate_chart_theme(dashboard.get("chart_theme"))?;
     validate_tags(dashboard.get("tags"))?;
@@ -428,7 +430,33 @@ fn validate_metric_item(
         "string",
     )?;
     optional_string(metric.get("note"), &format!("{label}.metric.note"))?;
+    optional_string(metric.get("delta"), &format!("{label}.metric.delta"))?;
+    validate_metric_trend(metric, label)?;
     optional_positive_int(metric.get("width"), &format!("{label}.metric.width"))
+}
+
+// A trend colours the delta, so it means nothing without one.
+fn validate_metric_trend(
+    metric: &serde_json::Map<String, Value>,
+    label: &str,
+) -> Result<(), CoreError> {
+    let Some(trend) = metric.get("trend") else {
+        return Ok(());
+    };
+    if !trend
+        .as_str()
+        .is_some_and(|trend| METRIC_TRENDS.contains(&trend))
+    {
+        return Err(dashboard_error(format!(
+            "expected '{label}.metric.trend' to be one of: down, flat, up"
+        )));
+    }
+    if metric.get("delta").is_none() {
+        return Err(dashboard_error(format!(
+            "expected '{label}.metric.trend' to come with a '{label}.metric.delta'"
+        )));
+    }
+    Ok(())
 }
 
 fn validate_columns(value: Option<&Value>, label: &str) -> Result<(), CoreError> {
@@ -739,5 +767,65 @@ mod tests {
         .unwrap_err();
 
         assert!(error.to_string().contains("expected 'chart_theme'"));
+    }
+
+    #[test]
+    fn accepts_owner_and_metric_delta() {
+        validate_dashboard_json_text(
+            r#"{
+              "name": "product",
+              "title": "Product",
+              "owner": "Growth team",
+              "sections": [{"items": [
+                {"metric": {"label": "Activation", "value": "28.5%", "delta": "-1.7 pts", "trend": "down"}}
+              ]}]
+            }"#,
+            "dashboards/product.yml",
+        )
+        .unwrap();
+    }
+
+    #[test]
+    fn rejects_unknown_metric_trend() {
+        let error = validate_dashboard_json_text(
+            r#"{
+              "name": "product",
+              "title": "Product",
+              "sections": [{"items": [
+                {"metric": {"label": "Activation", "value": "28.5%", "delta": "-1.7", "trend": "sideways"}}
+              ]}]
+            }"#,
+            "dashboards/product.yml",
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("metric.trend' to be one of"));
+    }
+
+    #[test]
+    fn rejects_metric_trend_without_delta() {
+        let error = validate_dashboard_json_text(
+            r#"{
+              "name": "product",
+              "title": "Product",
+              "sections": [{"items": [
+                {"metric": {"label": "Activation", "value": "28.5%", "trend": "down"}}
+              ]}]
+            }"#,
+            "dashboards/product.yml",
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("to come with a"));
+    }
+
+    #[test]
+    fn rejects_non_string_owner() {
+        let error = validate_dashboard_json_text(
+            r#"{"name": "product", "title": "Product", "owner": 7}"#,
+            "dashboards/product.yml",
+        )
+        .unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("expected 'owner' to be a string"));
     }
 }

@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en" data-theme="light" data-glyf-chart-follows="true">
+<html lang="en" data-theme="dark" data-glyf-chart-follows="true">
 <head>
   <meta charset="utf-8">
   <script>try { var t = localStorage.getItem("glyf-theme"); if (t === "light" || t === "dark") { document.documentElement.setAttribute("data-theme", t); } } catch (e) {}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Product Analytics</title>
 
-  <link rel="stylesheet" href="../assets/dashboard.css?v=e9f6caa9b1">
+  <link rel="stylesheet" href="../assets/dashboard.css?v=fdbc876f25">
 
 
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
@@ -138,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-23T22:22:11Z">23 Sep 2026, 22:22 UTC</strong>
+          Refreshed <strong title="2026-09-24T08:06:56Z">24 Sep 2026, 08:06 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -147,7 +147,7 @@
     <path d="M20 21a8 8 0 0 0-16 0"></path>
   </svg>
 
-          Owner <strong>data team</strong>
+          Owner <strong>Growth team</strong>
         </div>
         <div class="glyf-meta-item glyf-mono">
 
@@ -157,7 +157,7 @@
     <path d="m14.5 4-5 16"></path>
   </svg>
 
-          <span>11 charts</span>
+          <span>13 charts</span>
         </div>
       </div>
       <div class="glyf-meta-right">
@@ -205,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 23 Sep 2026, 22:22 UTC</span>
+              <span class="glyf-version-option-note">built 24 Sep 2026, 08:06 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -221,12 +221,11 @@
 
 
         <label class="glyf-filter-select" data-glyf-filter="plan">
-
+          <span class="glyf-filter-field">
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
-
-          <span class="glyf-filter-field">plan</span>
+  plan</span>
           <select class="glyf-filter-control" id="glyf-filter-plan" data-glyf-filter-select="plan" aria-label="Filter by plan">
             <option value="">All</option>
 
@@ -240,12 +239,11 @@
         </label>
 
         <label class="glyf-filter-select" data-glyf-filter="week">
-
+          <span class="glyf-filter-field">
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
-
-          <span class="glyf-filter-field">week</span>
+  week</span>
           <select class="glyf-filter-control" id="glyf-filter-week" data-glyf-filter-select="week" aria-label="Filter by week">
             <option value="">All</option>
 
@@ -308,6 +306,44 @@
   GROUP BY 1
 )
 SELECT active_users, lag(active_users) OVER (ORDER BY week) AS previous
+FROM weekly
+ORDER BY week DESC
+LIMIT 1
+</code></pre>
+
+      </div>
+
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Weekly sessions</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
+
+        <pre class="glyf-source-sql"><code>WITH weekly AS (
+  SELECT week, sum(sessions) AS sessions
+  FROM "product_analytics"."main"."fct_product_usage"
+  GROUP BY 1
+)
+SELECT sessions, lag(sessions) OVER (ORDER BY week) AS previous
+FROM weekly
+ORDER BY week DESC
+LIMIT 1
+</code></pre>
+
+      </div>
+
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>Activated users</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
+
+        <pre class="glyf-source-sql"><code>WITH weekly AS (
+  SELECT week, sum(activated_users) AS activated_users
+  FROM "product_analytics"."main"."fct_product_usage"
+  GROUP BY 1
+)
+SELECT activated_users, lag(activated_users) OVER (ORDER BY week) AS previous
 FROM weekly
 ORDER BY week DESC
 LIMIT 1
@@ -479,13 +515,13 @@ ORDER BY weekday_number, hour
               <h2 class="glyf-section-title">Headline</h2>
 
 
-              <p class="glyf-section-description">Twelve weeks of product usage in three numbers.</p>
+              <p class="glyf-section-description">Week 12 against week 11, in four numbers.</p>
 
             </div>
 
             <div
               class="glyf-chart-grid"
-              style="--glyf-columns: 3"
+              style="--glyf-columns: 4"
             >
 
 
@@ -508,14 +544,40 @@ ORDER BY weekday_number, hour
 
 
 
-                  <article class="glyf-card glyf-metric-card">
+
+<article class="glyf-card glyf-kpi-card" data-glyf-chart="weekly_sessions" data-glyf-filters="plan:none week:none">
   <div class="glyf-card-body">
-    <div class="glyf-metric-label">Sessions</div>
-    <div class="glyf-metric-value">86.7k</div>
-
-    <div class="glyf-metric-note">Total product sessions across all plans</div>
-
+    <div class="glyf-kpi-label">Weekly sessions</div>
+    <figure class="glyf-kpi" data-glyf-kpi="weekly_sessions">
+  <div class="glyf-kpi-value">9,200</div>
+  <div class="glyf-kpi-compare glyf-kpi-compare--up">
+    <span class="glyf-kpi-delta">&#9650; +405 (+4.6%)</span>
+    <span class="glyf-kpi-compare-label">vs last week 8,795</span>
   </div>
+</figure>
+
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
+  </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
+</article>
+
+
+
+
+<article class="glyf-card glyf-kpi-card" data-glyf-chart="weekly_activated_users" data-glyf-filters="plan:none week:none">
+  <div class="glyf-card-body">
+    <div class="glyf-kpi-label">Activated users</div>
+    <figure class="glyf-kpi" data-glyf-kpi="weekly_activated_users">
+  <div class="glyf-kpi-value">662</div>
+  <div class="glyf-kpi-compare glyf-kpi-compare--down">
+    <span class="glyf-kpi-delta">&#9660; -21 (-3.1%)</span>
+    <span class="glyf-kpi-compare-label">vs last week 683</span>
+  </div>
+</figure>
+
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
+  </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
 </article>
 
 
@@ -523,7 +585,12 @@ ORDER BY weekday_number, hour
                   <article class="glyf-card glyf-metric-card">
   <div class="glyf-card-body">
     <div class="glyf-metric-label">Activation rate</div>
-    <div class="glyf-metric-value">31%</div>
+    <div class="glyf-metric-value">28.5%</div>
+
+    <div class="glyf-kpi-compare glyf-kpi-compare--down">
+      <span class="glyf-kpi-delta">&#9660; -1.7 pts vs last week</span>
+    </div>
+
 
     <div class="glyf-metric-note">Activated users over active users, week 12</div>
 
@@ -558,7 +625,8 @@ ORDER BY weekday_number, hour
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="active_users" data-glyf-filters="plan:none week:vega">
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="active_users" data-glyf-filters="plan:none week:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Active Users Trend</div>
@@ -566,6 +634,30 @@ ORDER BY weekday_number, hour
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">area</span>
     </div>
   </div>
@@ -576,7 +668,7 @@ ORDER BY weekday_number, hour
       id="chart-active_users"
       data-vega-chart="chart-active_users-spec"
     ></div>
-    <script type="application/json" id="chart-active_users-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-75b35507f9b4cdb7a5309fa1fc7483db"}, "datasets": {"data-75b35507f9b4cdb7a5309fa1fc7483db": [{"active_users": 1477, "week": "2026-W01"}, {"active_users": 1552, "week": "2026-W02"}, {"active_users": 1599, "week": "2026-W03"}, {"active_users": 1662, "week": "2026-W04"}, {"active_users": 1766, "week": "2026-W05"}, {"active_users": 1814, "week": "2026-W06"}, {"active_users": 1917, "week": "2026-W07"}, {"active_users": 1980, "week": "2026-W08"}, {"active_users": 2079, "week": "2026-W09"}, {"active_users": 2127, "week": "2026-W10"}, {"active_users": 2260, "week": "2026-W11"}, {"active_users": 2325, "week": "2026-W12"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "active_users", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "active_users", "title": "Users", "type": "quantitative"}}, "height": 400, "mark": {"opacity": 0.7, "type": "area"}, "title": "Active Users", "width": 800}</script>
+    <script type="application/json" id="chart-active_users-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-75b35507f9b4cdb7a5309fa1fc7483db"}, "datasets": {"data-75b35507f9b4cdb7a5309fa1fc7483db": [{"active_users": 1477, "week": "2026-W01"}, {"active_users": 1552, "week": "2026-W02"}, {"active_users": 1599, "week": "2026-W03"}, {"active_users": 1662, "week": "2026-W04"}, {"active_users": 1766, "week": "2026-W05"}, {"active_users": 1814, "week": "2026-W06"}, {"active_users": 1917, "week": "2026-W07"}, {"active_users": 1980, "week": "2026-W08"}, {"active_users": 2079, "week": "2026-W09"}, {"active_users": 2127, "week": "2026-W10"}, {"active_users": 2260, "week": "2026-W11"}, {"active_users": 2325, "week": "2026-W12"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "active_users", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "active_users", "title": "Users", "type": "quantitative"}}, "height": 400, "mark": {"opacity": 0.7, "type": "area"}, "title": "Active Users", "width": 800}</script>
     <noscript>
       <img src="../charts/active_users.png" alt="Active Users Trend">
     </noscript>
@@ -591,7 +683,8 @@ ORDER BY weekday_number, hour
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_scatter" data-glyf-filters="plan:vega week:none">
+
+<article class="glyf-card glyf-chart-card" data-glyf-zoom-locked data-chart-theme="dark" data-glyf-chart="sessions_scatter" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions vs Active Users</div>
@@ -599,6 +692,53 @@ ORDER BY weekday_number, hour
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool is-active" type="button" data-glyf-zoom-lock aria-pressed="true" aria-label="Zoom locked; click to zoom with the scroll wheel" title="Zoom locked: scrolling moves the page. Click to zoom with the wheel.">
+
+  <svg class="glyf-lock-icon glyf-lock-icon--locked" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+  </svg>
+
+
+  <svg class="glyf-lock-icon glyf-lock-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+    <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-zoom-reset aria-label="Reset zoom" title="Reset zoom">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+    <path d="M3 3v5h5"></path>
+  </svg>
+
+        </button>
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">scatter</span>
     </div>
   </div>
@@ -609,7 +749,7 @@ ORDER BY weekday_number, hour
       id="chart-sessions_scatter"
       data-vega-chart="chart-sessions_scatter-spec"
     ></div>
-    <script type="application/json" id="chart-sessions_scatter-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-f37b5deec100fd9bb4aabdf8ee8ef54a"}, "datasets": {"data-f37b5deec100fd9bb4aabdf8ee8ef54a": [{"active_users": 903, "plan": "Free", "sessions": 2633}, {"active_users": 928, "plan": "Free", "sessions": 2551}, {"active_users": 945, "plan": "Free", "sessions": 2617}, {"active_users": 981, "plan": "Free", "sessions": 2841}, {"active_users": 1040, "plan": "Free", "sessions": 2772}, {"active_users": 1062, "plan": "Free", "sessions": 3029}, {"active_users": 1120, "plan": "Free", "sessions": 3293}, {"active_users": 1137, "plan": "Free", "sessions": 3361}, {"active_users": 1194, "plan": "Free", "sessions": 3523}, {"active_users": 1204, "plan": "Free", "sessions": 3220}, {"active_users": 1280, "plan": "Free", "sessions": 3474}, {"active_users": 1299, "plan": "Free", "sessions": 3761}, {"active_users": 415, "plan": "Pro", "sessions": 1873}, {"active_users": 454, "plan": "Pro", "sessions": 2115}, {"active_users": 471, "plan": "Pro", "sessions": 2088}, {"active_users": 487, "plan": "Pro", "sessions": 2309}, {"active_users": 524, "plan": "Pro", "sessions": 2306}, {"active_users": 535, "plan": "Pro", "sessions": 2508}, {"active_users": 553, "plan": "Pro", "sessions": 2688}, {"active_users": 607, "plan": "Pro", "sessions": 2867}, {"active_users": 621, "plan": "Pro", "sessions": 2745}, {"active_users": 636, "plan": "Pro", "sessions": 2762}, {"active_users": 677, "plan": "Pro", "sessions": 3212}, {"active_users": 699, "plan": "Pro", "sessions": 3136}, {"active_users": 159, "plan": "Team", "sessions": 1045}, {"active_users": 170, "plan": "Team", "sessions": 1166}, {"active_users": 183, "plan": "Team", "sessions": 1265}, {"active_users": 194, "plan": "Team", "sessions": 1322}, {"active_users": 202, "plan": "Team", "sessions": 1322}, {"active_users": 217, "plan": "Team", "sessions": 1533}, {"active_users": 227, "plan": "Team", "sessions": 1643}, {"active_users": 253, "plan": "Team", "sessions": 1643}, {"active_users": 264, "plan": "Team", "sessions": 1718}, {"active_users": 287, "plan": "Team", "sessions": 1909}, {"active_users": 303, "plan": "Team", "sessions": 2109}, {"active_users": 327, "plan": "Team", "sessions": 2303}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "tooltip": [{"field": "active_users", "type": "quantitative"}, {"field": "sessions", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "active_users", "title": "Active Users", "type": "quantitative"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "scales", "name": "param_1e9efca18e7a2868", "select": {"encodings": ["x", "y"], "type": "interval"}}], "title": "Sessions vs Active Users", "width": 800}</script>
+    <script type="application/json" id="chart-sessions_scatter-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-f37b5deec100fd9bb4aabdf8ee8ef54a"}, "datasets": {"data-f37b5deec100fd9bb4aabdf8ee8ef54a": [{"active_users": 903, "plan": "Free", "sessions": 2633}, {"active_users": 928, "plan": "Free", "sessions": 2551}, {"active_users": 945, "plan": "Free", "sessions": 2617}, {"active_users": 981, "plan": "Free", "sessions": 2841}, {"active_users": 1040, "plan": "Free", "sessions": 2772}, {"active_users": 1062, "plan": "Free", "sessions": 3029}, {"active_users": 1120, "plan": "Free", "sessions": 3293}, {"active_users": 1137, "plan": "Free", "sessions": 3361}, {"active_users": 1194, "plan": "Free", "sessions": 3523}, {"active_users": 1204, "plan": "Free", "sessions": 3220}, {"active_users": 1280, "plan": "Free", "sessions": 3474}, {"active_users": 1299, "plan": "Free", "sessions": 3761}, {"active_users": 415, "plan": "Pro", "sessions": 1873}, {"active_users": 454, "plan": "Pro", "sessions": 2115}, {"active_users": 471, "plan": "Pro", "sessions": 2088}, {"active_users": 487, "plan": "Pro", "sessions": 2309}, {"active_users": 524, "plan": "Pro", "sessions": 2306}, {"active_users": 535, "plan": "Pro", "sessions": 2508}, {"active_users": 553, "plan": "Pro", "sessions": 2688}, {"active_users": 607, "plan": "Pro", "sessions": 2867}, {"active_users": 621, "plan": "Pro", "sessions": 2745}, {"active_users": 636, "plan": "Pro", "sessions": 2762}, {"active_users": 677, "plan": "Pro", "sessions": 3212}, {"active_users": 699, "plan": "Pro", "sessions": 3136}, {"active_users": 159, "plan": "Team", "sessions": 1045}, {"active_users": 170, "plan": "Team", "sessions": 1166}, {"active_users": 183, "plan": "Team", "sessions": 1265}, {"active_users": 194, "plan": "Team", "sessions": 1322}, {"active_users": 202, "plan": "Team", "sessions": 1322}, {"active_users": 217, "plan": "Team", "sessions": 1533}, {"active_users": 227, "plan": "Team", "sessions": 1643}, {"active_users": 253, "plan": "Team", "sessions": 1643}, {"active_users": 264, "plan": "Team", "sessions": 1718}, {"active_users": 287, "plan": "Team", "sessions": 1909}, {"active_users": 303, "plan": "Team", "sessions": 2109}, {"active_users": 327, "plan": "Team", "sessions": 2303}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "tooltip": [{"field": "active_users", "type": "quantitative"}, {"field": "sessions", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "active_users", "scale": {"nice": false, "padding": 12}, "title": "Active Users", "type": "quantitative"}, "y": {"field": "sessions", "scale": {"nice": false, "padding": 12}, "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "scales", "name": "param_1e9efca18e7a2868", "select": {"encodings": ["x", "y"], "type": "interval"}}], "title": "Sessions vs Active Users", "width": 800}</script>
     <noscript>
       <img src="../charts/sessions_scatter.png" alt="Sessions vs Active Users">
     </noscript>
@@ -644,11 +784,11 @@ ORDER BY weekday_number, hour
             >
 
 
-                  <article class="glyf-card glyf-component-card">
+
+<article class="glyf-card glyf-component-card glyf-status-card glyf-status--warning">
   <div class="glyf-card-body">
 
-  <div class="glyf-alert glyf-tone-warning">
-    <span class="glyf-alert-mark">
+  <div class="glyf-status-head">
 
 
   <svg class="glyf-alert-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -658,35 +798,40 @@ ORDER BY weekday_number, hour
   </svg>
 
 
-    </span>
-    <div>
-
-      <span class="glyf-alert-title">Health</span>
-
-      <span>Activation needs attention at 37.4%.</span>
-    </div>
+    <span>Activation health</span>
   </div>
+  <div class="glyf-status-value">37.4%</div>
+  <p class="glyf-status-text">Activation needs attention: below its 40% target.</p>
+
+  <p class="glyf-component-footnote">Average of the plans' rates in the latest week, worked out by activation_health() when glyf builds.</p>
+
 
   </div>
 </article>
 
 
 
-                  <article class="glyf-card glyf-component-card">
+
+<article class="glyf-card glyf-component-card">
   <div class="glyf-card-body">
 
 
-  <div class="glyf-card-title">Tracked plans</div>
+  <div class="glyf-card-title">Release notes</div>
 
   <ul class="glyf-list">
 
-    <li>Team</li>
+    <li>W06: onboarding checklist shipped to every plan.</li>
 
-    <li>Free</li>
+    <li>W09: Pro trial extended from 14 to 21 days.</li>
 
-    <li>Pro</li>
+    <li>W11: spring campaign; its cohort lifted activation for a week.</li>
+
+    <li>W12: activated users back down 3% as the campaign cohort ended.</li>
 
   </ul>
+
+  <p class="glyf-component-footnote">Written by hand in dashboards/macros.py and returned by a macro, not queried.</p>
+
 
   </div>
 </article>
@@ -696,7 +841,8 @@ ORDER BY weekday_number, hour
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="activation_by_plan" data-glyf-filters="plan:vega week:vega">
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="activation_by_plan" data-glyf-filters="plan:vega week:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Activation by Plan</div>
@@ -704,6 +850,30 @@ ORDER BY weekday_number, hour
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">line</span>
     </div>
   </div>
@@ -714,7 +884,7 @@ ORDER BY weekday_number, hour
       id="chart-activation_by_plan"
       data-vega-chart="chart-activation_by_plan-spec"
     ></div>
-    <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-3ffa3a5f40aa39c7da84fac5d045de75"}, "datasets": {"data-3ffa3a5f40aa39c7da84fac5d045de75": [{"activated_users": 99, "plan": "Team", "week": "2026-W01"}, {"activated_users": 123, "plan": "Free", "week": "2026-W01"}, {"activated_users": 179, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 102, "plan": "Team", "week": "2026-W02"}, {"activated_users": 124, "plan": "Free", "week": "2026-W02"}, {"activated_users": 190, "plan": "Pro", "week": "2026-W02"}, {"activated_users": 103, "plan": "Team", "week": "2026-W03"}, {"activated_users": 131, "plan": "Free", "week": "2026-W03"}, {"activated_users": 205, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 115, "plan": "Team", "week": "2026-W04"}, {"activated_users": 135, "plan": "Free", "week": "2026-W04"}, {"activated_users": 218, "plan": "Pro", "week": "2026-W04"}, {"activated_users": 114, "plan": "Team", "week": "2026-W05"}, {"activated_users": 152, "plan": "Free", "week": "2026-W05"}, {"activated_users": 221, "plan": "Pro", "week": "2026-W05"}, {"activated_users": 133, "plan": "Team", "week": "2026-W06"}, {"activated_users": 147, "plan": "Free", "week": "2026-W06"}, {"activated_users": 246, "plan": "Pro", "week": "2026-W06"}, {"activated_users": 141, "plan": "Team", "week": "2026-W07"}, {"activated_users": 165, "plan": "Free", "week": "2026-W07"}, {"activated_users": 229, "plan": "Pro", "week": "2026-W07"}, {"activated_users": 142, "plan": "Team", "week": "2026-W08"}, {"activated_users": 148, "plan": "Free", "week": "2026-W08"}, {"activated_users": 276, "plan": "Pro", "week": "2026-W08"}, {"activated_users": 147, "plan": "Team", "week": "2026-W09"}, {"activated_users": 177, "plan": "Free", "week": "2026-W09"}, {"activated_users": 246, "plan": "Pro", "week": "2026-W09"}, {"activated_users": 169, "plan": "Free", "week": "2026-W10"}, {"activated_users": 176, "plan": "Team", "week": "2026-W10"}, {"activated_users": 259, "plan": "Pro", "week": "2026-W10"}, {"activated_users": 184, "plan": "Team", "week": "2026-W11"}, {"activated_users": 190, "plan": "Free", "week": "2026-W11"}, {"activated_users": 309, "plan": "Pro", "week": "2026-W11"}, {"activated_users": 183, "plan": "Team", "week": "2026-W12"}, {"activated_users": 187, "plan": "Free", "week": "2026-W12"}, {"activated_users": 292, "plan": "Pro", "week": "2026-W12"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
+    <script type="application/json" id="chart-activation_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-3ffa3a5f40aa39c7da84fac5d045de75"}, "datasets": {"data-3ffa3a5f40aa39c7da84fac5d045de75": [{"activated_users": 99, "plan": "Team", "week": "2026-W01"}, {"activated_users": 123, "plan": "Free", "week": "2026-W01"}, {"activated_users": 179, "plan": "Pro", "week": "2026-W01"}, {"activated_users": 102, "plan": "Team", "week": "2026-W02"}, {"activated_users": 124, "plan": "Free", "week": "2026-W02"}, {"activated_users": 190, "plan": "Pro", "week": "2026-W02"}, {"activated_users": 103, "plan": "Team", "week": "2026-W03"}, {"activated_users": 131, "plan": "Free", "week": "2026-W03"}, {"activated_users": 205, "plan": "Pro", "week": "2026-W03"}, {"activated_users": 115, "plan": "Team", "week": "2026-W04"}, {"activated_users": 135, "plan": "Free", "week": "2026-W04"}, {"activated_users": 218, "plan": "Pro", "week": "2026-W04"}, {"activated_users": 114, "plan": "Team", "week": "2026-W05"}, {"activated_users": 152, "plan": "Free", "week": "2026-W05"}, {"activated_users": 221, "plan": "Pro", "week": "2026-W05"}, {"activated_users": 133, "plan": "Team", "week": "2026-W06"}, {"activated_users": 147, "plan": "Free", "week": "2026-W06"}, {"activated_users": 246, "plan": "Pro", "week": "2026-W06"}, {"activated_users": 141, "plan": "Team", "week": "2026-W07"}, {"activated_users": 165, "plan": "Free", "week": "2026-W07"}, {"activated_users": 229, "plan": "Pro", "week": "2026-W07"}, {"activated_users": 142, "plan": "Team", "week": "2026-W08"}, {"activated_users": 148, "plan": "Free", "week": "2026-W08"}, {"activated_users": 276, "plan": "Pro", "week": "2026-W08"}, {"activated_users": 147, "plan": "Team", "week": "2026-W09"}, {"activated_users": 177, "plan": "Free", "week": "2026-W09"}, {"activated_users": 246, "plan": "Pro", "week": "2026-W09"}, {"activated_users": 169, "plan": "Free", "week": "2026-W10"}, {"activated_users": 176, "plan": "Team", "week": "2026-W10"}, {"activated_users": 259, "plan": "Pro", "week": "2026-W10"}, {"activated_users": 184, "plan": "Team", "week": "2026-W11"}, {"activated_users": 190, "plan": "Free", "week": "2026-W11"}, {"activated_users": 309, "plan": "Pro", "week": "2026-W11"}, {"activated_users": 183, "plan": "Team", "week": "2026-W12"}, {"activated_users": 187, "plan": "Free", "week": "2026-W12"}, {"activated_users": 292, "plan": "Pro", "week": "2026-W12"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activated_users", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activated_users", "title": "Activated Users", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation by Plan", "width": 800}</script>
     <noscript>
       <img src="../charts/activation_by_plan.png" alt="Activation by Plan">
     </noscript>
@@ -729,7 +899,8 @@ ORDER BY weekday_number, hour
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="activation_rate_by_plan" data-glyf-filters="plan:vega week:vega">
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="activation_rate_by_plan" data-glyf-filters="plan:vega week:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Activation Rate by Plan</div>
@@ -737,6 +908,30 @@ ORDER BY weekday_number, hour
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">line</span>
     </div>
   </div>
@@ -747,7 +942,7 @@ ORDER BY weekday_number, hour
       id="chart-activation_rate_by_plan"
       data-vega-chart="chart-activation_rate_by_plan-spec"
     ></div>
-    <script type="application/json" id="chart-activation_rate_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-670bcff6f0bc577e3ab2710d81cef6fe"}, "datasets": {"data-670bcff6f0bc577e3ab2710d81cef6fe": [{"activation_rate": 13.6, "plan": "Free", "week": "2026-W01"}, {"activation_rate": 43.1, "plan": "Pro", "week": "2026-W01"}, {"activation_rate": 62.3, "plan": "Team", "week": "2026-W01"}, {"activation_rate": 13.4, "plan": "Free", "week": "2026-W02"}, {"activation_rate": 41.9, "plan": "Pro", "week": "2026-W02"}, {"activation_rate": 60.0, "plan": "Team", "week": "2026-W02"}, {"activation_rate": 13.9, "plan": "Free", "week": "2026-W03"}, {"activation_rate": 43.5, "plan": "Pro", "week": "2026-W03"}, {"activation_rate": 56.3, "plan": "Team", "week": "2026-W03"}, {"activation_rate": 13.8, "plan": "Free", "week": "2026-W04"}, {"activation_rate": 44.8, "plan": "Pro", "week": "2026-W04"}, {"activation_rate": 59.3, "plan": "Team", "week": "2026-W04"}, {"activation_rate": 14.6, "plan": "Free", "week": "2026-W05"}, {"activation_rate": 42.2, "plan": "Pro", "week": "2026-W05"}, {"activation_rate": 56.4, "plan": "Team", "week": "2026-W05"}, {"activation_rate": 13.8, "plan": "Free", "week": "2026-W06"}, {"activation_rate": 46.0, "plan": "Pro", "week": "2026-W06"}, {"activation_rate": 61.3, "plan": "Team", "week": "2026-W06"}, {"activation_rate": 14.5, "plan": "Free", "week": "2026-W07"}, {"activation_rate": 41.4, "plan": "Pro", "week": "2026-W07"}, {"activation_rate": 62.1, "plan": "Team", "week": "2026-W07"}, {"activation_rate": 13.2, "plan": "Free", "week": "2026-W08"}, {"activation_rate": 45.5, "plan": "Pro", "week": "2026-W08"}, {"activation_rate": 56.1, "plan": "Team", "week": "2026-W08"}, {"activation_rate": 14.8, "plan": "Free", "week": "2026-W09"}, {"activation_rate": 39.6, "plan": "Pro", "week": "2026-W09"}, {"activation_rate": 55.7, "plan": "Team", "week": "2026-W09"}, {"activation_rate": 14.0, "plan": "Free", "week": "2026-W10"}, {"activation_rate": 40.7, "plan": "Pro", "week": "2026-W10"}, {"activation_rate": 61.3, "plan": "Team", "week": "2026-W10"}, {"activation_rate": 14.8, "plan": "Free", "week": "2026-W11"}, {"activation_rate": 45.6, "plan": "Pro", "week": "2026-W11"}, {"activation_rate": 60.7, "plan": "Team", "week": "2026-W11"}, {"activation_rate": 14.4, "plan": "Free", "week": "2026-W12"}, {"activation_rate": 41.8, "plan": "Pro", "week": "2026-W12"}, {"activation_rate": 56.0, "plan": "Team", "week": "2026-W12"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activation_rate", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activation_rate", "title": "Activation Rate (%)", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation Rate by Plan", "width": 800}</script>
+    <script type="application/json" id="chart-activation_rate_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-670bcff6f0bc577e3ab2710d81cef6fe"}, "datasets": {"data-670bcff6f0bc577e3ab2710d81cef6fe": [{"activation_rate": 13.6, "plan": "Free", "week": "2026-W01"}, {"activation_rate": 43.1, "plan": "Pro", "week": "2026-W01"}, {"activation_rate": 62.3, "plan": "Team", "week": "2026-W01"}, {"activation_rate": 13.4, "plan": "Free", "week": "2026-W02"}, {"activation_rate": 41.9, "plan": "Pro", "week": "2026-W02"}, {"activation_rate": 60.0, "plan": "Team", "week": "2026-W02"}, {"activation_rate": 13.9, "plan": "Free", "week": "2026-W03"}, {"activation_rate": 43.5, "plan": "Pro", "week": "2026-W03"}, {"activation_rate": 56.3, "plan": "Team", "week": "2026-W03"}, {"activation_rate": 13.8, "plan": "Free", "week": "2026-W04"}, {"activation_rate": 44.8, "plan": "Pro", "week": "2026-W04"}, {"activation_rate": 59.3, "plan": "Team", "week": "2026-W04"}, {"activation_rate": 14.6, "plan": "Free", "week": "2026-W05"}, {"activation_rate": 42.2, "plan": "Pro", "week": "2026-W05"}, {"activation_rate": 56.4, "plan": "Team", "week": "2026-W05"}, {"activation_rate": 13.8, "plan": "Free", "week": "2026-W06"}, {"activation_rate": 46.0, "plan": "Pro", "week": "2026-W06"}, {"activation_rate": 61.3, "plan": "Team", "week": "2026-W06"}, {"activation_rate": 14.5, "plan": "Free", "week": "2026-W07"}, {"activation_rate": 41.4, "plan": "Pro", "week": "2026-W07"}, {"activation_rate": 62.1, "plan": "Team", "week": "2026-W07"}, {"activation_rate": 13.2, "plan": "Free", "week": "2026-W08"}, {"activation_rate": 45.5, "plan": "Pro", "week": "2026-W08"}, {"activation_rate": 56.1, "plan": "Team", "week": "2026-W08"}, {"activation_rate": 14.8, "plan": "Free", "week": "2026-W09"}, {"activation_rate": 39.6, "plan": "Pro", "week": "2026-W09"}, {"activation_rate": 55.7, "plan": "Team", "week": "2026-W09"}, {"activation_rate": 14.0, "plan": "Free", "week": "2026-W10"}, {"activation_rate": 40.7, "plan": "Pro", "week": "2026-W10"}, {"activation_rate": 61.3, "plan": "Team", "week": "2026-W10"}, {"activation_rate": 14.8, "plan": "Free", "week": "2026-W11"}, {"activation_rate": 45.6, "plan": "Pro", "week": "2026-W11"}, {"activation_rate": 60.7, "plan": "Team", "week": "2026-W11"}, {"activation_rate": 14.4, "plan": "Free", "week": "2026-W12"}, {"activation_rate": 41.8, "plan": "Pro", "week": "2026-W12"}, {"activation_rate": 56.0, "plan": "Team", "week": "2026-W12"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"field": "week", "type": "nominal"}, {"field": "activation_rate", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "activation_rate", "title": "Activation Rate (%)", "type": "quantitative"}}, "height": 400, "mark": {"point": true, "type": "line"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": "Activation Rate by Plan", "width": 800}</script>
     <noscript>
       <img src="../charts/activation_rate_by_plan.png" alt="Activation Rate by Plan">
     </noscript>
@@ -785,7 +980,8 @@ ORDER BY weekday_number, hour
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_per_user" data-glyf-filters="plan:none week:vega">
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="sessions_per_user" data-glyf-filters="plan:none week:vega">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions per Active User</div>
@@ -793,6 +989,30 @@ ORDER BY weekday_number, hour
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">bar</span>
     </div>
   </div>
@@ -803,7 +1023,7 @@ ORDER BY weekday_number, hour
       id="chart-sessions_per_user"
       data-vega-chart="chart-sessions_per_user-spec"
     ></div>
-    <script type="application/json" id="chart-sessions_per_user-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-dae716770740531de8331258919186c2"}, "datasets": {"data-dae716770740531de8331258919186c2": [{"sessions_per_user": 3.76, "week": "2026-W01"}, {"sessions_per_user": 3.76, "week": "2026-W02"}, {"sessions_per_user": 3.73, "week": "2026-W03"}, {"sessions_per_user": 3.89, "week": "2026-W04"}, {"sessions_per_user": 3.62, "week": "2026-W05"}, {"sessions_per_user": 3.9, "week": "2026-W06"}, {"sessions_per_user": 4.01, "week": "2026-W07"}, {"sessions_per_user": 3.94, "week": "2026-W08"}, {"sessions_per_user": 3.84, "week": "2026-W09"}, {"sessions_per_user": 3.71, "week": "2026-W10"}, {"sessions_per_user": 3.89, "week": "2026-W11"}, {"sessions_per_user": 3.96, "week": "2026-W12"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "sessions_per_user", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "sessions_per_user", "title": "Sessions per User", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "title": "Sessions per Active User", "width": 800}</script>
+    <script type="application/json" id="chart-sessions_per_user-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-dae716770740531de8331258919186c2"}, "datasets": {"data-dae716770740531de8331258919186c2": [{"sessions_per_user": 3.76, "week": "2026-W01"}, {"sessions_per_user": 3.76, "week": "2026-W02"}, {"sessions_per_user": 3.73, "week": "2026-W03"}, {"sessions_per_user": 3.89, "week": "2026-W04"}, {"sessions_per_user": 3.62, "week": "2026-W05"}, {"sessions_per_user": 3.9, "week": "2026-W06"}, {"sessions_per_user": 4.01, "week": "2026-W07"}, {"sessions_per_user": 3.94, "week": "2026-W08"}, {"sessions_per_user": 3.84, "week": "2026-W09"}, {"sessions_per_user": 3.71, "week": "2026-W10"}, {"sessions_per_user": 3.89, "week": "2026-W11"}, {"sessions_per_user": 3.96, "week": "2026-W12"}]}, "encoding": {"tooltip": [{"field": "week", "type": "nominal"}, {"field": "sessions_per_user", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "week", "title": "Week", "type": "nominal"}, "y": {"field": "sessions_per_user", "title": "Sessions per User", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "title": "Sessions per Active User", "width": 800}</script>
     <noscript>
       <img src="../charts/sessions_per_user.png" alt="Sessions per Active User">
     </noscript>
@@ -818,7 +1038,8 @@ ORDER BY weekday_number, hour
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_by_plan" data-glyf-filters="plan:vega week:none">
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="sessions_by_plan" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions by Plan</div>
@@ -826,6 +1047,30 @@ ORDER BY weekday_number, hour
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">pie</span>
     </div>
   </div>
@@ -836,7 +1081,7 @@ ORDER BY weekday_number, hour
       id="chart-sessions_by_plan"
       data-vega-chart="chart-sessions_by_plan-spec"
     ></div>
-    <script type="application/json" id="chart-sessions_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-eabab0aa7b8e949a78a419e42390fdac"}, "datasets": {"data-eabab0aa7b8e949a78a419e42390fdac": [{"plan": "Free", "sessions": 37075}, {"plan": "Pro", "sessions": 30609}, {"plan": "Team", "sessions": 18978}]}, "encoding": {"color": {"field": "plan", "title": null, "type": "nominal"}, "theta": {"field": "sessions", "title": "Sessions", "type": "quantitative"}, "tooltip": [{"field": "plan", "type": "nominal"}, {"field": "sessions", "type": "quantitative"}]}, "height": 400, "mark": {"type": "arc"}, "title": "Sessions by Plan", "width": 800}</script>
+    <script type="application/json" id="chart-sessions_by_plan-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-eabab0aa7b8e949a78a419e42390fdac"}, "datasets": {"data-eabab0aa7b8e949a78a419e42390fdac": [{"plan": "Free", "sessions": 37075}, {"plan": "Pro", "sessions": 30609}, {"plan": "Team", "sessions": 18978}]}, "encoding": {"color": {"field": "plan", "title": null, "type": "nominal"}, "theta": {"field": "sessions", "title": "Sessions", "type": "quantitative"}, "tooltip": [{"field": "plan", "type": "nominal"}, {"field": "sessions", "type": "quantitative"}]}, "height": 400, "mark": {"type": "arc"}, "title": "Sessions by Plan", "width": 800}</script>
     <noscript>
       <img src="../charts/sessions_by_plan.png" alt="Sessions by Plan">
     </noscript>
@@ -972,7 +1217,8 @@ ORDER BY weekday_number, hour
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_per_account" data-glyf-filters="plan:vega week:none">
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="sessions_per_account" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions per Account</div>
@@ -980,6 +1226,30 @@ ORDER BY weekday_number, hour
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">boxplot</span>
     </div>
   </div>
@@ -990,7 +1260,7 @@ ORDER BY weekday_number, hour
       id="chart-sessions_per_account"
       data-vega-chart="chart-sessions_per_account-spec"
     ></div>
-    <script type="application/json" id="chart-sessions_per_account-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-dbf8f47a9d5a384dc47278c473cb4570"}, "datasets": {"data-dbf8f47a9d5a384dc47278c473cb4570": [{"plan": "Free", "sessions": 2}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 19}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 23}, {"plan": "Free", "sessions": 24}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 29}, {"plan": "Free", "sessions": 44}, {"plan": "Pro", "sessions": 5}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 9}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 21}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 32}, {"plan": "Pro", "sessions": 33}, {"plan": "Pro", "sessions": 34}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 37}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 42}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 46}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 58}, {"plan": "Pro", "sessions": 64}, {"plan": "Pro", "sessions": 74}, {"plan": "Pro", "sessions": 83}, {"plan": "Pro", "sessions": 91}, {"plan": "Team", "sessions": 20}, {"plan": "Team", "sessions": 22}, {"plan": "Team", "sessions": 26}, {"plan": "Team", "sessions": 27}, {"plan": "Team", "sessions": 32}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 40}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 47}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 54}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 62}, {"plan": "Team", "sessions": 64}, {"plan": "Team", "sessions": 66}, {"plan": "Team", "sessions": 75}, {"plan": "Team", "sessions": 77}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 82}, {"plan": "Team", "sessions": 83}, {"plan": "Team", "sessions": 86}, {"plan": "Team", "sessions": 92}, {"plan": "Team", "sessions": 98}, {"plan": "Team", "sessions": 104}, {"plan": "Team", "sessions": 107}, {"plan": "Team", "sessions": 119}, {"plan": "Team", "sessions": 122}, {"plan": "Team", "sessions": 127}, {"plan": "Team", "sessions": 134}, {"plan": "Team", "sessions": 140}, {"plan": "Team", "sessions": 167}]}, "encoding": {"x": {"axis": {"labelAngle": 0}, "field": "plan", "title": "Plan", "type": "nominal"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "boxplot"}, "title": {"subtitle": "Median, quartiles and outlying accounts for each plan", "text": "Sessions per Account"}, "width": 800}</script>
+    <script type="application/json" id="chart-sessions_per_account-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-dbf8f47a9d5a384dc47278c473cb4570"}, "datasets": {"data-dbf8f47a9d5a384dc47278c473cb4570": [{"plan": "Free", "sessions": 2}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 19}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 23}, {"plan": "Free", "sessions": 24}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 29}, {"plan": "Free", "sessions": 44}, {"plan": "Pro", "sessions": 5}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 9}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 21}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 32}, {"plan": "Pro", "sessions": 33}, {"plan": "Pro", "sessions": 34}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 37}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 42}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 46}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 58}, {"plan": "Pro", "sessions": 64}, {"plan": "Pro", "sessions": 74}, {"plan": "Pro", "sessions": 83}, {"plan": "Pro", "sessions": 91}, {"plan": "Team", "sessions": 20}, {"plan": "Team", "sessions": 22}, {"plan": "Team", "sessions": 26}, {"plan": "Team", "sessions": 27}, {"plan": "Team", "sessions": 32}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 40}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 47}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 54}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 62}, {"plan": "Team", "sessions": 64}, {"plan": "Team", "sessions": 66}, {"plan": "Team", "sessions": 75}, {"plan": "Team", "sessions": 77}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 82}, {"plan": "Team", "sessions": 83}, {"plan": "Team", "sessions": 86}, {"plan": "Team", "sessions": 92}, {"plan": "Team", "sessions": 98}, {"plan": "Team", "sessions": 104}, {"plan": "Team", "sessions": 107}, {"plan": "Team", "sessions": 119}, {"plan": "Team", "sessions": 122}, {"plan": "Team", "sessions": 127}, {"plan": "Team", "sessions": 134}, {"plan": "Team", "sessions": 140}, {"plan": "Team", "sessions": 167}]}, "encoding": {"x": {"axis": {"labelAngle": 0}, "field": "plan", "title": "Plan", "type": "nominal"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "boxplot"}, "title": {"subtitle": "Median, quartiles and outlying accounts for each plan", "text": "Sessions per Account"}, "width": 800}</script>
     <noscript>
       <img src="../charts/sessions_per_account.png" alt="Sessions per Account">
     </noscript>
@@ -1028,7 +1298,8 @@ ORDER BY weekday_number, hour
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="session_length_distribution" data-glyf-filters="plan:vega week:none">
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="session_length_distribution" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Session Length by Account</div>
@@ -1036,6 +1307,30 @@ ORDER BY weekday_number, hour
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">histogram</span>
     </div>
   </div>
@@ -1046,7 +1341,7 @@ ORDER BY weekday_number, hour
       id="chart-session_length_distribution"
       data-vega-chart="chart-session_length_distribution-spec"
     ></div>
-    <script type="application/json" id="chart-session_length_distribution-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-cc231dbaa8e624151542eb9f5cf1ada9"}, "datasets": {"data-cc231dbaa8e624151542eb9f5cf1ada9": [{"avg_session_minutes": 2.3, "plan": "Free"}, {"avg_session_minutes": 2.4, "plan": "Free"}, {"avg_session_minutes": 2.6, "plan": "Free"}, {"avg_session_minutes": 2.9, "plan": "Free"}, {"avg_session_minutes": 3.0, "plan": "Free"}, {"avg_session_minutes": 3.1, "plan": "Free"}, {"avg_session_minutes": 3.1, "plan": "Free"}, {"avg_session_minutes": 3.2, "plan": "Free"}, {"avg_session_minutes": 3.3, "plan": "Free"}, {"avg_session_minutes": 3.3, "plan": "Free"}, {"avg_session_minutes": 3.3, "plan": "Free"}, {"avg_session_minutes": 3.4, "plan": "Free"}, {"avg_session_minutes": 3.5, "plan": "Free"}, {"avg_session_minutes": 3.6, "plan": "Free"}, {"avg_session_minutes": 3.6, "plan": "Free"}, {"avg_session_minutes": 3.9, "plan": "Free"}, {"avg_session_minutes": 4.3, "plan": "Free"}, {"avg_session_minutes": 4.4, "plan": "Free"}, {"avg_session_minutes": 4.5, "plan": "Free"}, {"avg_session_minutes": 4.5, "plan": "Free"}, {"avg_session_minutes": 4.6, "plan": "Free"}, {"avg_session_minutes": 4.7, "plan": "Free"}, {"avg_session_minutes": 4.7, "plan": "Free"}, {"avg_session_minutes": 4.7, "plan": "Free"}, {"avg_session_minutes": 4.7, "plan": "Free"}, {"avg_session_minutes": 4.8, "plan": "Free"}, {"avg_session_minutes": 4.8, "plan": "Free"}, {"avg_session_minutes": 4.8, "plan": "Free"}, {"avg_session_minutes": 4.9, "plan": "Free"}, {"avg_session_minutes": 4.9, "plan": "Free"}, {"avg_session_minutes": 5.0, "plan": "Free"}, {"avg_session_minutes": 5.0, "plan": "Free"}, {"avg_session_minutes": 5.0, "plan": "Pro"}, {"avg_session_minutes": 5.1, "plan": "Free"}, {"avg_session_minutes": 5.2, "plan": "Free"}, {"avg_session_minutes": 5.2, "plan": "Free"}, {"avg_session_minutes": 5.3, "plan": "Free"}, {"avg_session_minutes": 5.3, "plan": "Free"}, {"avg_session_minutes": 5.3, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.6, "plan": "Free"}, {"avg_session_minutes": 5.6, "plan": "Free"}, {"avg_session_minutes": 5.6, "plan": "Free"}, {"avg_session_minutes": 5.7, "plan": "Free"}, {"avg_session_minutes": 5.7, "plan": "Free"}, {"avg_session_minutes": 5.7, "plan": "Free"}, {"avg_session_minutes": 5.7, "plan": "Free"}, {"avg_session_minutes": 5.8, "plan": "Free"}, {"avg_session_minutes": 5.8, "plan": "Free"}, {"avg_session_minutes": 5.8, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 6.0, "plan": "Free"}, {"avg_session_minutes": 6.0, "plan": "Free"}, {"avg_session_minutes": 6.0, "plan": "Free"}, {"avg_session_minutes": 6.0, "plan": "Pro"}, {"avg_session_minutes": 6.0, "plan": "Pro"}, {"avg_session_minutes": 6.1, "plan": "Free"}, {"avg_session_minutes": 6.1, "plan": "Free"}, {"avg_session_minutes": 6.1, "plan": "Pro"}, {"avg_session_minutes": 6.2, "plan": "Free"}, {"avg_session_minutes": 6.2, "plan": "Free"}, {"avg_session_minutes": 6.2, "plan": "Free"}, {"avg_session_minutes": 6.3, "plan": "Free"}, {"avg_session_minutes": 6.3, "plan": "Free"}, {"avg_session_minutes": 6.3, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.5, "plan": "Free"}, {"avg_session_minutes": 6.5, "plan": "Free"}, {"avg_session_minutes": 6.6, "plan": "Free"}, {"avg_session_minutes": 6.6, "plan": "Free"}, {"avg_session_minutes": 6.6, "plan": "Free"}, {"avg_session_minutes": 6.7, "plan": "Free"}, {"avg_session_minutes": 6.7, "plan": "Free"}, {"avg_session_minutes": 6.7, "plan": "Free"}, {"avg_session_minutes": 6.7, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 7.0, "plan": "Free"}, {"avg_session_minutes": 7.0, "plan": "Pro"}, {"avg_session_minutes": 7.1, "plan": "Free"}, {"avg_session_minutes": 7.2, "plan": "Free"}, {"avg_session_minutes": 7.2, "plan": "Pro"}, {"avg_session_minutes": 7.3, "plan": "Free"}, {"avg_session_minutes": 7.3, "plan": "Free"}, {"avg_session_minutes": 7.3, "plan": "Pro"}, {"avg_session_minutes": 7.5, "plan": "Pro"}, {"avg_session_minutes": 7.6, "plan": "Free"}, {"avg_session_minutes": 7.6, "plan": "Free"}, {"avg_session_minutes": 7.6, "plan": "Free"}, {"avg_session_minutes": 7.6, "plan": "Free"}, {"avg_session_minutes": 7.6, "plan": "Pro"}, {"avg_session_minutes": 7.7, "plan": "Free"}, {"avg_session_minutes": 7.7, "plan": "Free"}, {"avg_session_minutes": 7.7, "plan": "Free"}, {"avg_session_minutes": 7.7, "plan": "Pro"}, {"avg_session_minutes": 7.8, "plan": "Free"}, {"avg_session_minutes": 7.8, "plan": "Free"}, {"avg_session_minutes": 7.8, "plan": "Free"}, {"avg_session_minutes": 7.9, "plan": "Free"}, {"avg_session_minutes": 8.0, "plan": "Free"}, {"avg_session_minutes": 8.0, "plan": "Free"}, {"avg_session_minutes": 8.1, "plan": "Free"}, {"avg_session_minutes": 8.2, "plan": "Free"}, {"avg_session_minutes": 8.3, "plan": "Pro"}, {"avg_session_minutes": 8.4, "plan": "Free"}, {"avg_session_minutes": 8.4, "plan": "Pro"}, {"avg_session_minutes": 8.5, "plan": "Free"}, {"avg_session_minutes": 8.6, "plan": "Free"}, {"avg_session_minutes": 8.7, "plan": "Free"}, {"avg_session_minutes": 8.9, "plan": "Free"}, {"avg_session_minutes": 9.0, "plan": "Free"}, {"avg_session_minutes": 9.2, "plan": "Free"}, {"avg_session_minutes": 9.5, "plan": "Free"}, {"avg_session_minutes": 9.7, "plan": "Free"}, {"avg_session_minutes": 9.8, "plan": "Free"}, {"avg_session_minutes": 9.8, "plan": "Pro"}, {"avg_session_minutes": 9.9, "plan": "Pro"}, {"avg_session_minutes": 10.2, "plan": "Free"}, {"avg_session_minutes": 10.3, "plan": "Pro"}, {"avg_session_minutes": 10.4, "plan": "Free"}, {"avg_session_minutes": 10.5, "plan": "Pro"}, {"avg_session_minutes": 10.5, "plan": "Pro"}, {"avg_session_minutes": 10.6, "plan": "Pro"}, {"avg_session_minutes": 10.9, "plan": "Pro"}, {"avg_session_minutes": 10.9, "plan": "Pro"}, {"avg_session_minutes": 11.1, "plan": "Pro"}, {"avg_session_minutes": 11.2, "plan": "Pro"}, {"avg_session_minutes": 11.3, "plan": "Pro"}, {"avg_session_minutes": 11.3, "plan": "Team"}, {"avg_session_minutes": 11.4, "plan": "Pro"}, {"avg_session_minutes": 11.5, "plan": "Pro"}, {"avg_session_minutes": 11.6, "plan": "Pro"}, {"avg_session_minutes": 11.6, "plan": "Pro"}, {"avg_session_minutes": 11.7, "plan": "Pro"}, {"avg_session_minutes": 11.8, "plan": "Pro"}, {"avg_session_minutes": 12.1, "plan": "Pro"}, {"avg_session_minutes": 12.1, "plan": "Pro"}, {"avg_session_minutes": 12.2, "plan": "Pro"}, {"avg_session_minutes": 12.3, "plan": "Pro"}, {"avg_session_minutes": 12.3, "plan": "Pro"}, {"avg_session_minutes": 12.7, "plan": "Pro"}, {"avg_session_minutes": 12.7, "plan": "Pro"}, {"avg_session_minutes": 12.9, "plan": "Pro"}, {"avg_session_minutes": 13.0, "plan": "Pro"}, {"avg_session_minutes": 13.2, "plan": "Pro"}, {"avg_session_minutes": 13.3, "plan": "Pro"}, {"avg_session_minutes": 13.5, "plan": "Pro"}, {"avg_session_minutes": 13.5, "plan": "Pro"}, {"avg_session_minutes": 13.5, "plan": "Pro"}, {"avg_session_minutes": 13.6, "plan": "Pro"}, {"avg_session_minutes": 13.7, "plan": "Pro"}, {"avg_session_minutes": 13.7, "plan": "Pro"}, {"avg_session_minutes": 13.7, "plan": "Pro"}, {"avg_session_minutes": 13.8, "plan": "Pro"}, {"avg_session_minutes": 13.8, "plan": "Team"}, {"avg_session_minutes": 13.9, "plan": "Pro"}, {"avg_session_minutes": 14.0, "plan": "Pro"}, {"avg_session_minutes": 14.1, "plan": "Pro"}, {"avg_session_minutes": 14.1, "plan": "Pro"}, {"avg_session_minutes": 14.3, "plan": "Pro"}, {"avg_session_minutes": 14.4, "plan": "Pro"}, {"avg_session_minutes": 14.7, "plan": "Pro"}, {"avg_session_minutes": 14.8, "plan": "Pro"}, {"avg_session_minutes": 14.8, "plan": "Pro"}, {"avg_session_minutes": 14.9, "plan": "Team"}, {"avg_session_minutes": 15.1, "plan": "Team"}, {"avg_session_minutes": 15.4, "plan": "Pro"}, {"avg_session_minutes": 15.4, "plan": "Team"}, {"avg_session_minutes": 15.5, "plan": "Team"}, {"avg_session_minutes": 15.6, "plan": "Pro"}, {"avg_session_minutes": 15.6, "plan": "Pro"}, {"avg_session_minutes": 15.7, "plan": "Pro"}, {"avg_session_minutes": 16.1, "plan": "Pro"}, {"avg_session_minutes": 16.2, "plan": "Team"}, {"avg_session_minutes": 16.3, "plan": "Team"}, {"avg_session_minutes": 16.4, "plan": "Pro"}, {"avg_session_minutes": 16.6, "plan": "Pro"}, {"avg_session_minutes": 16.8, "plan": "Team"}, {"avg_session_minutes": 17.1, "plan": "Pro"}, {"avg_session_minutes": 17.3, "plan": "Pro"}, {"avg_session_minutes": 17.4, "plan": "Pro"}, {"avg_session_minutes": 17.4, "plan": "Pro"}, {"avg_session_minutes": 17.5, "plan": "Pro"}, {"avg_session_minutes": 17.9, "plan": "Pro"}, {"avg_session_minutes": 17.9, "plan": "Pro"}, {"avg_session_minutes": 17.9, "plan": "Pro"}, {"avg_session_minutes": 17.9, "plan": "Team"}, {"avg_session_minutes": 18.1, "plan": "Pro"}, {"avg_session_minutes": 18.1, "plan": "Team"}, {"avg_session_minutes": 18.2, "plan": "Team"}, {"avg_session_minutes": 18.4, "plan": "Team"}, {"avg_session_minutes": 18.6, "plan": "Pro"}, {"avg_session_minutes": 18.6, "plan": "Pro"}, {"avg_session_minutes": 18.6, "plan": "Team"}, {"avg_session_minutes": 18.7, "plan": "Pro"}, {"avg_session_minutes": 19.3, "plan": "Pro"}, {"avg_session_minutes": 19.4, "plan": "Pro"}, {"avg_session_minutes": 19.7, "plan": "Team"}, {"avg_session_minutes": 19.9, "plan": "Pro"}, {"avg_session_minutes": 19.9, "plan": "Team"}, {"avg_session_minutes": 20.1, "plan": "Team"}, {"avg_session_minutes": 20.3, "plan": "Team"}, {"avg_session_minutes": 20.5, "plan": "Team"}, {"avg_session_minutes": 20.7, "plan": "Team"}, {"avg_session_minutes": 20.9, "plan": "Team"}, {"avg_session_minutes": 21.1, "plan": "Team"}, {"avg_session_minutes": 21.3, "plan": "Team"}, {"avg_session_minutes": 21.7, "plan": "Team"}, {"avg_session_minutes": 21.7, "plan": "Team"}, {"avg_session_minutes": 21.7, "plan": "Team"}, {"avg_session_minutes": 22.8, "plan": "Team"}, {"avg_session_minutes": 23.4, "plan": "Pro"}, {"avg_session_minutes": 23.6, "plan": "Team"}, {"avg_session_minutes": 24.1, "plan": "Team"}, {"avg_session_minutes": 24.8, "plan": "Team"}, {"avg_session_minutes": 25.5, "plan": "Team"}, {"avg_session_minutes": 26.4, "plan": "Team"}, {"avg_session_minutes": 26.7, "plan": "Team"}, {"avg_session_minutes": 27.4, "plan": "Team"}, {"avg_session_minutes": 27.6, "plan": "Team"}, {"avg_session_minutes": 27.9, "plan": "Team"}, {"avg_session_minutes": 29.6, "plan": "Team"}, {"avg_session_minutes": 29.6, "plan": "Team"}, {"avg_session_minutes": 32.2, "plan": "Team"}, {"avg_session_minutes": 36.8, "plan": "Team"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"bin": {"maxbins": 30}, "field": "avg_session_minutes", "type": "quantitative"}, {"aggregate": "count", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"bin": {"maxbins": 30}, "field": "avg_session_minutes", "title": "Average session (minutes)", "type": "quantitative"}, "y": {"aggregate": "count", "title": "Accounts", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": {"subtitle": "One row per account, binned by average session length", "text": "Session Length by Account"}, "width": 800}</script>
+    <script type="application/json" id="chart-session_length_distribution-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-cc231dbaa8e624151542eb9f5cf1ada9"}, "datasets": {"data-cc231dbaa8e624151542eb9f5cf1ada9": [{"avg_session_minutes": 2.3, "plan": "Free"}, {"avg_session_minutes": 2.4, "plan": "Free"}, {"avg_session_minutes": 2.6, "plan": "Free"}, {"avg_session_minutes": 2.9, "plan": "Free"}, {"avg_session_minutes": 3.0, "plan": "Free"}, {"avg_session_minutes": 3.1, "plan": "Free"}, {"avg_session_minutes": 3.1, "plan": "Free"}, {"avg_session_minutes": 3.2, "plan": "Free"}, {"avg_session_minutes": 3.3, "plan": "Free"}, {"avg_session_minutes": 3.3, "plan": "Free"}, {"avg_session_minutes": 3.3, "plan": "Free"}, {"avg_session_minutes": 3.4, "plan": "Free"}, {"avg_session_minutes": 3.5, "plan": "Free"}, {"avg_session_minutes": 3.6, "plan": "Free"}, {"avg_session_minutes": 3.6, "plan": "Free"}, {"avg_session_minutes": 3.9, "plan": "Free"}, {"avg_session_minutes": 4.3, "plan": "Free"}, {"avg_session_minutes": 4.4, "plan": "Free"}, {"avg_session_minutes": 4.5, "plan": "Free"}, {"avg_session_minutes": 4.5, "plan": "Free"}, {"avg_session_minutes": 4.6, "plan": "Free"}, {"avg_session_minutes": 4.7, "plan": "Free"}, {"avg_session_minutes": 4.7, "plan": "Free"}, {"avg_session_minutes": 4.7, "plan": "Free"}, {"avg_session_minutes": 4.7, "plan": "Free"}, {"avg_session_minutes": 4.8, "plan": "Free"}, {"avg_session_minutes": 4.8, "plan": "Free"}, {"avg_session_minutes": 4.8, "plan": "Free"}, {"avg_session_minutes": 4.9, "plan": "Free"}, {"avg_session_minutes": 4.9, "plan": "Free"}, {"avg_session_minutes": 5.0, "plan": "Free"}, {"avg_session_minutes": 5.0, "plan": "Free"}, {"avg_session_minutes": 5.0, "plan": "Pro"}, {"avg_session_minutes": 5.1, "plan": "Free"}, {"avg_session_minutes": 5.2, "plan": "Free"}, {"avg_session_minutes": 5.2, "plan": "Free"}, {"avg_session_minutes": 5.3, "plan": "Free"}, {"avg_session_minutes": 5.3, "plan": "Free"}, {"avg_session_minutes": 5.3, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.4, "plan": "Free"}, {"avg_session_minutes": 5.6, "plan": "Free"}, {"avg_session_minutes": 5.6, "plan": "Free"}, {"avg_session_minutes": 5.6, "plan": "Free"}, {"avg_session_minutes": 5.7, "plan": "Free"}, {"avg_session_minutes": 5.7, "plan": "Free"}, {"avg_session_minutes": 5.7, "plan": "Free"}, {"avg_session_minutes": 5.7, "plan": "Free"}, {"avg_session_minutes": 5.8, "plan": "Free"}, {"avg_session_minutes": 5.8, "plan": "Free"}, {"avg_session_minutes": 5.8, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 5.9, "plan": "Free"}, {"avg_session_minutes": 6.0, "plan": "Free"}, {"avg_session_minutes": 6.0, "plan": "Free"}, {"avg_session_minutes": 6.0, "plan": "Free"}, {"avg_session_minutes": 6.0, "plan": "Pro"}, {"avg_session_minutes": 6.0, "plan": "Pro"}, {"avg_session_minutes": 6.1, "plan": "Free"}, {"avg_session_minutes": 6.1, "plan": "Free"}, {"avg_session_minutes": 6.1, "plan": "Pro"}, {"avg_session_minutes": 6.2, "plan": "Free"}, {"avg_session_minutes": 6.2, "plan": "Free"}, {"avg_session_minutes": 6.2, "plan": "Free"}, {"avg_session_minutes": 6.3, "plan": "Free"}, {"avg_session_minutes": 6.3, "plan": "Free"}, {"avg_session_minutes": 6.3, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.4, "plan": "Free"}, {"avg_session_minutes": 6.5, "plan": "Free"}, {"avg_session_minutes": 6.5, "plan": "Free"}, {"avg_session_minutes": 6.6, "plan": "Free"}, {"avg_session_minutes": 6.6, "plan": "Free"}, {"avg_session_minutes": 6.6, "plan": "Free"}, {"avg_session_minutes": 6.7, "plan": "Free"}, {"avg_session_minutes": 6.7, "plan": "Free"}, {"avg_session_minutes": 6.7, "plan": "Free"}, {"avg_session_minutes": 6.7, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 6.8, "plan": "Free"}, {"avg_session_minutes": 7.0, "plan": "Free"}, {"avg_session_minutes": 7.0, "plan": "Pro"}, {"avg_session_minutes": 7.1, "plan": "Free"}, {"avg_session_minutes": 7.2, "plan": "Free"}, {"avg_session_minutes": 7.2, "plan": "Pro"}, {"avg_session_minutes": 7.3, "plan": "Free"}, {"avg_session_minutes": 7.3, "plan": "Free"}, {"avg_session_minutes": 7.3, "plan": "Pro"}, {"avg_session_minutes": 7.5, "plan": "Pro"}, {"avg_session_minutes": 7.6, "plan": "Free"}, {"avg_session_minutes": 7.6, "plan": "Free"}, {"avg_session_minutes": 7.6, "plan": "Free"}, {"avg_session_minutes": 7.6, "plan": "Free"}, {"avg_session_minutes": 7.6, "plan": "Pro"}, {"avg_session_minutes": 7.7, "plan": "Free"}, {"avg_session_minutes": 7.7, "plan": "Free"}, {"avg_session_minutes": 7.7, "plan": "Free"}, {"avg_session_minutes": 7.7, "plan": "Pro"}, {"avg_session_minutes": 7.8, "plan": "Free"}, {"avg_session_minutes": 7.8, "plan": "Free"}, {"avg_session_minutes": 7.8, "plan": "Free"}, {"avg_session_minutes": 7.9, "plan": "Free"}, {"avg_session_minutes": 8.0, "plan": "Free"}, {"avg_session_minutes": 8.0, "plan": "Free"}, {"avg_session_minutes": 8.1, "plan": "Free"}, {"avg_session_minutes": 8.2, "plan": "Free"}, {"avg_session_minutes": 8.3, "plan": "Pro"}, {"avg_session_minutes": 8.4, "plan": "Free"}, {"avg_session_minutes": 8.4, "plan": "Pro"}, {"avg_session_minutes": 8.5, "plan": "Free"}, {"avg_session_minutes": 8.6, "plan": "Free"}, {"avg_session_minutes": 8.7, "plan": "Free"}, {"avg_session_minutes": 8.9, "plan": "Free"}, {"avg_session_minutes": 9.0, "plan": "Free"}, {"avg_session_minutes": 9.2, "plan": "Free"}, {"avg_session_minutes": 9.5, "plan": "Free"}, {"avg_session_minutes": 9.7, "plan": "Free"}, {"avg_session_minutes": 9.8, "plan": "Free"}, {"avg_session_minutes": 9.8, "plan": "Pro"}, {"avg_session_minutes": 9.9, "plan": "Pro"}, {"avg_session_minutes": 10.2, "plan": "Free"}, {"avg_session_minutes": 10.3, "plan": "Pro"}, {"avg_session_minutes": 10.4, "plan": "Free"}, {"avg_session_minutes": 10.5, "plan": "Pro"}, {"avg_session_minutes": 10.5, "plan": "Pro"}, {"avg_session_minutes": 10.6, "plan": "Pro"}, {"avg_session_minutes": 10.9, "plan": "Pro"}, {"avg_session_minutes": 10.9, "plan": "Pro"}, {"avg_session_minutes": 11.1, "plan": "Pro"}, {"avg_session_minutes": 11.2, "plan": "Pro"}, {"avg_session_minutes": 11.3, "plan": "Pro"}, {"avg_session_minutes": 11.3, "plan": "Team"}, {"avg_session_minutes": 11.4, "plan": "Pro"}, {"avg_session_minutes": 11.5, "plan": "Pro"}, {"avg_session_minutes": 11.6, "plan": "Pro"}, {"avg_session_minutes": 11.6, "plan": "Pro"}, {"avg_session_minutes": 11.7, "plan": "Pro"}, {"avg_session_minutes": 11.8, "plan": "Pro"}, {"avg_session_minutes": 12.1, "plan": "Pro"}, {"avg_session_minutes": 12.1, "plan": "Pro"}, {"avg_session_minutes": 12.2, "plan": "Pro"}, {"avg_session_minutes": 12.3, "plan": "Pro"}, {"avg_session_minutes": 12.3, "plan": "Pro"}, {"avg_session_minutes": 12.7, "plan": "Pro"}, {"avg_session_minutes": 12.7, "plan": "Pro"}, {"avg_session_minutes": 12.9, "plan": "Pro"}, {"avg_session_minutes": 13.0, "plan": "Pro"}, {"avg_session_minutes": 13.2, "plan": "Pro"}, {"avg_session_minutes": 13.3, "plan": "Pro"}, {"avg_session_minutes": 13.5, "plan": "Pro"}, {"avg_session_minutes": 13.5, "plan": "Pro"}, {"avg_session_minutes": 13.5, "plan": "Pro"}, {"avg_session_minutes": 13.6, "plan": "Pro"}, {"avg_session_minutes": 13.7, "plan": "Pro"}, {"avg_session_minutes": 13.7, "plan": "Pro"}, {"avg_session_minutes": 13.7, "plan": "Pro"}, {"avg_session_minutes": 13.8, "plan": "Pro"}, {"avg_session_minutes": 13.8, "plan": "Team"}, {"avg_session_minutes": 13.9, "plan": "Pro"}, {"avg_session_minutes": 14.0, "plan": "Pro"}, {"avg_session_minutes": 14.1, "plan": "Pro"}, {"avg_session_minutes": 14.1, "plan": "Pro"}, {"avg_session_minutes": 14.3, "plan": "Pro"}, {"avg_session_minutes": 14.4, "plan": "Pro"}, {"avg_session_minutes": 14.7, "plan": "Pro"}, {"avg_session_minutes": 14.8, "plan": "Pro"}, {"avg_session_minutes": 14.8, "plan": "Pro"}, {"avg_session_minutes": 14.9, "plan": "Team"}, {"avg_session_minutes": 15.1, "plan": "Team"}, {"avg_session_minutes": 15.4, "plan": "Pro"}, {"avg_session_minutes": 15.4, "plan": "Team"}, {"avg_session_minutes": 15.5, "plan": "Team"}, {"avg_session_minutes": 15.6, "plan": "Pro"}, {"avg_session_minutes": 15.6, "plan": "Pro"}, {"avg_session_minutes": 15.7, "plan": "Pro"}, {"avg_session_minutes": 16.1, "plan": "Pro"}, {"avg_session_minutes": 16.2, "plan": "Team"}, {"avg_session_minutes": 16.3, "plan": "Team"}, {"avg_session_minutes": 16.4, "plan": "Pro"}, {"avg_session_minutes": 16.6, "plan": "Pro"}, {"avg_session_minutes": 16.8, "plan": "Team"}, {"avg_session_minutes": 17.1, "plan": "Pro"}, {"avg_session_minutes": 17.3, "plan": "Pro"}, {"avg_session_minutes": 17.4, "plan": "Pro"}, {"avg_session_minutes": 17.4, "plan": "Pro"}, {"avg_session_minutes": 17.5, "plan": "Pro"}, {"avg_session_minutes": 17.9, "plan": "Pro"}, {"avg_session_minutes": 17.9, "plan": "Pro"}, {"avg_session_minutes": 17.9, "plan": "Pro"}, {"avg_session_minutes": 17.9, "plan": "Team"}, {"avg_session_minutes": 18.1, "plan": "Pro"}, {"avg_session_minutes": 18.1, "plan": "Team"}, {"avg_session_minutes": 18.2, "plan": "Team"}, {"avg_session_minutes": 18.4, "plan": "Team"}, {"avg_session_minutes": 18.6, "plan": "Pro"}, {"avg_session_minutes": 18.6, "plan": "Pro"}, {"avg_session_minutes": 18.6, "plan": "Team"}, {"avg_session_minutes": 18.7, "plan": "Pro"}, {"avg_session_minutes": 19.3, "plan": "Pro"}, {"avg_session_minutes": 19.4, "plan": "Pro"}, {"avg_session_minutes": 19.7, "plan": "Team"}, {"avg_session_minutes": 19.9, "plan": "Pro"}, {"avg_session_minutes": 19.9, "plan": "Team"}, {"avg_session_minutes": 20.1, "plan": "Team"}, {"avg_session_minutes": 20.3, "plan": "Team"}, {"avg_session_minutes": 20.5, "plan": "Team"}, {"avg_session_minutes": 20.7, "plan": "Team"}, {"avg_session_minutes": 20.9, "plan": "Team"}, {"avg_session_minutes": 21.1, "plan": "Team"}, {"avg_session_minutes": 21.3, "plan": "Team"}, {"avg_session_minutes": 21.7, "plan": "Team"}, {"avg_session_minutes": 21.7, "plan": "Team"}, {"avg_session_minutes": 21.7, "plan": "Team"}, {"avg_session_minutes": 22.8, "plan": "Team"}, {"avg_session_minutes": 23.4, "plan": "Pro"}, {"avg_session_minutes": 23.6, "plan": "Team"}, {"avg_session_minutes": 24.1, "plan": "Team"}, {"avg_session_minutes": 24.8, "plan": "Team"}, {"avg_session_minutes": 25.5, "plan": "Team"}, {"avg_session_minutes": 26.4, "plan": "Team"}, {"avg_session_minutes": 26.7, "plan": "Team"}, {"avg_session_minutes": 27.4, "plan": "Team"}, {"avg_session_minutes": 27.6, "plan": "Team"}, {"avg_session_minutes": 27.9, "plan": "Team"}, {"avg_session_minutes": 29.6, "plan": "Team"}, {"avg_session_minutes": 29.6, "plan": "Team"}, {"avg_session_minutes": 32.2, "plan": "Team"}, {"avg_session_minutes": 36.8, "plan": "Team"}]}, "encoding": {"color": {"field": "plan", "type": "nominal"}, "opacity": {"condition": {"param": "param_029f6f27ab98f4cc", "value": 1}, "value": 0.2}, "tooltip": [{"bin": {"maxbins": 30}, "field": "avg_session_minutes", "type": "quantitative"}, {"aggregate": "count", "type": "quantitative"}, {"field": "plan", "type": "nominal"}], "x": {"bin": {"maxbins": 30}, "field": "avg_session_minutes", "title": "Average session (minutes)", "type": "quantitative"}, "y": {"aggregate": "count", "title": "Accounts", "type": "quantitative"}}, "height": 400, "mark": {"type": "bar"}, "params": [{"bind": "legend", "name": "param_029f6f27ab98f4cc", "select": {"fields": ["plan"], "type": "point"}}], "title": {"subtitle": "One row per account, binned by average session length", "text": "Session Length by Account"}, "width": 800}</script>
     <noscript>
       <img src="../charts/session_length_distribution.png" alt="Session Length by Account">
     </noscript>
@@ -1061,7 +1356,8 @@ ORDER BY weekday_number, hour
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="sessions_per_account" data-glyf-filters="plan:vega week:none">
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="sessions_per_account" data-glyf-filters="plan:vega week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions per Account</div>
@@ -1069,6 +1365,30 @@ ORDER BY weekday_number, hour
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">boxplot</span>
     </div>
   </div>
@@ -1079,7 +1399,7 @@ ORDER BY weekday_number, hour
       id="chart-sessions_per_account"
       data-vega-chart="chart-sessions_per_account-spec"
     ></div>
-    <script type="application/json" id="chart-sessions_per_account-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-dbf8f47a9d5a384dc47278c473cb4570"}, "datasets": {"data-dbf8f47a9d5a384dc47278c473cb4570": [{"plan": "Free", "sessions": 2}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 19}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 23}, {"plan": "Free", "sessions": 24}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 29}, {"plan": "Free", "sessions": 44}, {"plan": "Pro", "sessions": 5}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 9}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 21}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 32}, {"plan": "Pro", "sessions": 33}, {"plan": "Pro", "sessions": 34}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 37}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 42}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 46}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 58}, {"plan": "Pro", "sessions": 64}, {"plan": "Pro", "sessions": 74}, {"plan": "Pro", "sessions": 83}, {"plan": "Pro", "sessions": 91}, {"plan": "Team", "sessions": 20}, {"plan": "Team", "sessions": 22}, {"plan": "Team", "sessions": 26}, {"plan": "Team", "sessions": 27}, {"plan": "Team", "sessions": 32}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 40}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 47}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 54}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 62}, {"plan": "Team", "sessions": 64}, {"plan": "Team", "sessions": 66}, {"plan": "Team", "sessions": 75}, {"plan": "Team", "sessions": 77}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 82}, {"plan": "Team", "sessions": 83}, {"plan": "Team", "sessions": 86}, {"plan": "Team", "sessions": 92}, {"plan": "Team", "sessions": 98}, {"plan": "Team", "sessions": 104}, {"plan": "Team", "sessions": 107}, {"plan": "Team", "sessions": 119}, {"plan": "Team", "sessions": 122}, {"plan": "Team", "sessions": 127}, {"plan": "Team", "sessions": 134}, {"plan": "Team", "sessions": 140}, {"plan": "Team", "sessions": 167}]}, "encoding": {"x": {"axis": {"labelAngle": 0}, "field": "plan", "title": "Plan", "type": "nominal"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "boxplot"}, "title": {"subtitle": "Median, quartiles and outlying accounts for each plan", "text": "Sessions per Account"}, "width": 800}</script>
+    <script type="application/json" id="chart-sessions_per_account-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-dbf8f47a9d5a384dc47278c473cb4570"}, "datasets": {"data-dbf8f47a9d5a384dc47278c473cb4570": [{"plan": "Free", "sessions": 2}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 3}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 4}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 5}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 6}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 7}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 8}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 9}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 10}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 11}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 12}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 13}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 14}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 15}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 16}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 17}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 18}, {"plan": "Free", "sessions": 19}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 20}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 21}, {"plan": "Free", "sessions": 23}, {"plan": "Free", "sessions": 24}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 25}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 28}, {"plan": "Free", "sessions": 29}, {"plan": "Free", "sessions": 44}, {"plan": "Pro", "sessions": 5}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 7}, {"plan": "Pro", "sessions": 9}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 10}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 11}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 13}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 14}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 15}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 16}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 17}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 18}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 19}, {"plan": "Pro", "sessions": 21}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 22}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 23}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 24}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 25}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 26}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 28}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 29}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 30}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 31}, {"plan": "Pro", "sessions": 32}, {"plan": "Pro", "sessions": 33}, {"plan": "Pro", "sessions": 34}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 36}, {"plan": "Pro", "sessions": 37}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 41}, {"plan": "Pro", "sessions": 42}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 43}, {"plan": "Pro", "sessions": 46}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 47}, {"plan": "Pro", "sessions": 58}, {"plan": "Pro", "sessions": 64}, {"plan": "Pro", "sessions": 74}, {"plan": "Pro", "sessions": 83}, {"plan": "Pro", "sessions": 91}, {"plan": "Team", "sessions": 20}, {"plan": "Team", "sessions": 22}, {"plan": "Team", "sessions": 26}, {"plan": "Team", "sessions": 27}, {"plan": "Team", "sessions": 32}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 33}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 38}, {"plan": "Team", "sessions": 40}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 43}, {"plan": "Team", "sessions": 47}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 50}, {"plan": "Team", "sessions": 54}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 56}, {"plan": "Team", "sessions": 62}, {"plan": "Team", "sessions": 64}, {"plan": "Team", "sessions": 66}, {"plan": "Team", "sessions": 75}, {"plan": "Team", "sessions": 77}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 80}, {"plan": "Team", "sessions": 82}, {"plan": "Team", "sessions": 83}, {"plan": "Team", "sessions": 86}, {"plan": "Team", "sessions": 92}, {"plan": "Team", "sessions": 98}, {"plan": "Team", "sessions": 104}, {"plan": "Team", "sessions": 107}, {"plan": "Team", "sessions": 119}, {"plan": "Team", "sessions": 122}, {"plan": "Team", "sessions": 127}, {"plan": "Team", "sessions": 134}, {"plan": "Team", "sessions": 140}, {"plan": "Team", "sessions": 167}]}, "encoding": {"x": {"axis": {"labelAngle": 0}, "field": "plan", "title": "Plan", "type": "nominal"}, "y": {"field": "sessions", "title": "Sessions", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "boxplot"}, "title": {"subtitle": "Median, quartiles and outlying accounts for each plan", "text": "Sessions per Account"}, "width": 800}</script>
     <noscript>
       <img src="../charts/sessions_per_account.png" alt="Sessions per Account">
     </noscript>
@@ -1109,6 +1429,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div class="glyf-card-body">
     <div class="glyf-metric-label">Median sessions per account</div>
     <div class="glyf-metric-value">9 / 24 / 59</div>
+
 
     <div class="glyf-metric-note">Free, Pro and Team</div>
 
@@ -1143,7 +1464,8 @@ takes their quartiles, so neither query aggregates anything itself.
 
 
 
-<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="activity_by_hour" data-glyf-filters="plan:none week:none">
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="activity_by_hour" data-glyf-filters="plan:none week:none">
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">Sessions by Hour</div>
@@ -1151,6 +1473,30 @@ takes their quartiles, so neither query aggregates anything itself.
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">heatmap</span>
     </div>
   </div>
@@ -1161,7 +1507,7 @@ takes their quartiles, so neither query aggregates anything itself.
       id="chart-activity_by_hour"
       data-vega-chart="chart-activity_by_hour-spec"
     ></div>
-    <script type="application/json" id="chart-activity_by_hour-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-2c6f0f65a984f5f881609907ff6b2166"}, "datasets": {"data-2c6f0f65a984f5f881609907ff6b2166": [{"hour": 0, "sessions": 41, "weekday": "Mon"}, {"hour": 1, "sessions": 40, "weekday": "Mon"}, {"hour": 2, "sessions": 40, "weekday": "Mon"}, {"hour": 3, "sessions": 37, "weekday": "Mon"}, {"hour": 4, "sessions": 42, "weekday": "Mon"}, {"hour": 5, "sessions": 52, "weekday": "Mon"}, {"hour": 6, "sessions": 84, "weekday": "Mon"}, {"hour": 7, "sessions": 149, "weekday": "Mon"}, {"hour": 8, "sessions": 287, "weekday": "Mon"}, {"hour": 9, "sessions": 422, "weekday": "Mon"}, {"hour": 10, "sessions": 622, "weekday": "Mon"}, {"hour": 11, "sessions": 636, "weekday": "Mon"}, {"hour": 12, "sessions": 561, "weekday": "Mon"}, {"hour": 13, "sessions": 543, "weekday": "Mon"}, {"hour": 14, "sessions": 544, "weekday": "Mon"}, {"hour": 15, "sessions": 521, "weekday": "Mon"}, {"hour": 16, "sessions": 425, "weekday": "Mon"}, {"hour": 17, "sessions": 362, "weekday": "Mon"}, {"hour": 18, "sessions": 216, "weekday": "Mon"}, {"hour": 19, "sessions": 125, "weekday": "Mon"}, {"hour": 20, "sessions": 84, "weekday": "Mon"}, {"hour": 21, "sessions": 54, "weekday": "Mon"}, {"hour": 22, "sessions": 40, "weekday": "Mon"}, {"hour": 23, "sessions": 37, "weekday": "Mon"}, {"hour": 0, "sessions": 39, "weekday": "Tue"}, {"hour": 1, "sessions": 42, "weekday": "Tue"}, {"hour": 2, "sessions": 41, "weekday": "Tue"}, {"hour": 3, "sessions": 42, "weekday": "Tue"}, {"hour": 4, "sessions": 43, "weekday": "Tue"}, {"hour": 5, "sessions": 53, "weekday": "Tue"}, {"hour": 6, "sessions": 75, "weekday": "Tue"}, {"hour": 7, "sessions": 146, "weekday": "Tue"}, {"hour": 8, "sessions": 276, "weekday": "Tue"}, {"hour": 9, "sessions": 417, "weekday": "Tue"}, {"hour": 10, "sessions": 625, "weekday": "Tue"}, {"hour": 11, "sessions": 694, "weekday": "Tue"}, {"hour": 12, "sessions": 615, "weekday": "Tue"}, {"hour": 13, "sessions": 556, "weekday": "Tue"}, {"hour": 14, "sessions": 577, "weekday": "Tue"}, {"hour": 15, "sessions": 490, "weekday": "Tue"}, {"hour": 16, "sessions": 437, "weekday": "Tue"}, {"hour": 17, "sessions": 326, "weekday": "Tue"}, {"hour": 18, "sessions": 216, "weekday": "Tue"}, {"hour": 19, "sessions": 121, "weekday": "Tue"}, {"hour": 20, "sessions": 80, "weekday": "Tue"}, {"hour": 21, "sessions": 54, "weekday": "Tue"}, {"hour": 22, "sessions": 45, "weekday": "Tue"}, {"hour": 23, "sessions": 37, "weekday": "Tue"}, {"hour": 0, "sessions": 41, "weekday": "Wed"}, {"hour": 1, "sessions": 42, "weekday": "Wed"}, {"hour": 2, "sessions": 40, "weekday": "Wed"}, {"hour": 3, "sessions": 42, "weekday": "Wed"}, {"hour": 4, "sessions": 44, "weekday": "Wed"}, {"hour": 5, "sessions": 56, "weekday": "Wed"}, {"hour": 6, "sessions": 78, "weekday": "Wed"}, {"hour": 7, "sessions": 165, "weekday": "Wed"}, {"hour": 8, "sessions": 304, "weekday": "Wed"}, {"hour": 9, "sessions": 415, "weekday": "Wed"}, {"hour": 10, "sessions": 597, "weekday": "Wed"}, {"hour": 11, "sessions": 653, "weekday": "Wed"}, {"hour": 12, "sessions": 566, "weekday": "Wed"}, {"hour": 13, "sessions": 581, "weekday": "Wed"}, {"hour": 14, "sessions": 559, "weekday": "Wed"}, {"hour": 15, "sessions": 506, "weekday": "Wed"}, {"hour": 16, "sessions": 412, "weekday": "Wed"}, {"hour": 17, "sessions": 339, "weekday": "Wed"}, {"hour": 18, "sessions": 239, "weekday": "Wed"}, {"hour": 19, "sessions": 126, "weekday": "Wed"}, {"hour": 20, "sessions": 76, "weekday": "Wed"}, {"hour": 21, "sessions": 57, "weekday": "Wed"}, {"hour": 22, "sessions": 47, "weekday": "Wed"}, {"hour": 23, "sessions": 38, "weekday": "Wed"}, {"hour": 0, "sessions": 41, "weekday": "Thu"}, {"hour": 1, "sessions": 44, "weekday": "Thu"}, {"hour": 2, "sessions": 43, "weekday": "Thu"}, {"hour": 3, "sessions": 37, "weekday": "Thu"}, {"hour": 4, "sessions": 47, "weekday": "Thu"}, {"hour": 5, "sessions": 49, "weekday": "Thu"}, {"hour": 6, "sessions": 75, "weekday": "Thu"}, {"hour": 7, "sessions": 154, "weekday": "Thu"}, {"hour": 8, "sessions": 306, "weekday": "Thu"}, {"hour": 9, "sessions": 410, "weekday": "Thu"}, {"hour": 10, "sessions": 597, "weekday": "Thu"}, {"hour": 11, "sessions": 642, "weekday": "Thu"}, {"hour": 12, "sessions": 609, "weekday": "Thu"}, {"hour": 13, "sessions": 529, "weekday": "Thu"}, {"hour": 14, "sessions": 516, "weekday": "Thu"}, {"hour": 15, "sessions": 519, "weekday": "Thu"}, {"hour": 16, "sessions": 477, "weekday": "Thu"}, {"hour": 17, "sessions": 314, "weekday": "Thu"}, {"hour": 18, "sessions": 215, "weekday": "Thu"}, {"hour": 19, "sessions": 133, "weekday": "Thu"}, {"hour": 20, "sessions": 82, "weekday": "Thu"}, {"hour": 21, "sessions": 49, "weekday": "Thu"}, {"hour": 22, "sessions": 40, "weekday": "Thu"}, {"hour": 23, "sessions": 42, "weekday": "Thu"}, {"hour": 0, "sessions": 43, "weekday": "Fri"}, {"hour": 1, "sessions": 41, "weekday": "Fri"}, {"hour": 2, "sessions": 42, "weekday": "Fri"}, {"hour": 3, "sessions": 38, "weekday": "Fri"}, {"hour": 4, "sessions": 44, "weekday": "Fri"}, {"hour": 5, "sessions": 57, "weekday": "Fri"}, {"hour": 6, "sessions": 79, "weekday": "Fri"}, {"hour": 7, "sessions": 161, "weekday": "Fri"}, {"hour": 8, "sessions": 260, "weekday": "Fri"}, {"hour": 9, "sessions": 462, "weekday": "Fri"}, {"hour": 10, "sessions": 638, "weekday": "Fri"}, {"hour": 11, "sessions": 593, "weekday": "Fri"}, {"hour": 12, "sessions": 646, "weekday": "Fri"}, {"hour": 13, "sessions": 607, "weekday": "Fri"}, {"hour": 14, "sessions": 546, "weekday": "Fri"}, {"hour": 15, "sessions": 353, "weekday": "Fri"}, {"hour": 16, "sessions": 304, "weekday": "Fri"}, {"hour": 17, "sessions": 215, "weekday": "Fri"}, {"hour": 18, "sessions": 168, "weekday": "Fri"}, {"hour": 19, "sessions": 87, "weekday": "Fri"}, {"hour": 20, "sessions": 58, "weekday": "Fri"}, {"hour": 21, "sessions": 37, "weekday": "Fri"}, {"hour": 22, "sessions": 31, "weekday": "Fri"}, {"hour": 23, "sessions": 26, "weekday": "Fri"}, {"hour": 0, "sessions": 41, "weekday": "Sat"}, {"hour": 1, "sessions": 42, "weekday": "Sat"}, {"hour": 2, "sessions": 40, "weekday": "Sat"}, {"hour": 3, "sessions": 37, "weekday": "Sat"}, {"hour": 4, "sessions": 39, "weekday": "Sat"}, {"hour": 5, "sessions": 46, "weekday": "Sat"}, {"hour": 6, "sessions": 46, "weekday": "Sat"}, {"hour": 7, "sessions": 59, "weekday": "Sat"}, {"hour": 8, "sessions": 87, "weekday": "Sat"}, {"hour": 9, "sessions": 130, "weekday": "Sat"}, {"hour": 10, "sessions": 164, "weekday": "Sat"}, {"hour": 11, "sessions": 162, "weekday": "Sat"}, {"hour": 12, "sessions": 151, "weekday": "Sat"}, {"hour": 13, "sessions": 146, "weekday": "Sat"}, {"hour": 14, "sessions": 168, "weekday": "Sat"}, {"hour": 15, "sessions": 159, "weekday": "Sat"}, {"hour": 16, "sessions": 120, "weekday": "Sat"}, {"hour": 17, "sessions": 109, "weekday": "Sat"}, {"hour": 18, "sessions": 78, "weekday": "Sat"}, {"hour": 19, "sessions": 60, "weekday": "Sat"}, {"hour": 20, "sessions": 52, "weekday": "Sat"}, {"hour": 21, "sessions": 46, "weekday": "Sat"}, {"hour": 22, "sessions": 39, "weekday": "Sat"}, {"hour": 23, "sessions": 43, "weekday": "Sat"}, {"hour": 0, "sessions": 41, "weekday": "Sun"}, {"hour": 1, "sessions": 38, "weekday": "Sun"}, {"hour": 2, "sessions": 40, "weekday": "Sun"}, {"hour": 3, "sessions": 37, "weekday": "Sun"}, {"hour": 4, "sessions": 42, "weekday": "Sun"}, {"hour": 5, "sessions": 42, "weekday": "Sun"}, {"hour": 6, "sessions": 53, "weekday": "Sun"}, {"hour": 7, "sessions": 59, "weekday": "Sun"}, {"hour": 8, "sessions": 90, "weekday": "Sun"}, {"hour": 9, "sessions": 137, "weekday": "Sun"}, {"hour": 10, "sessions": 148, "weekday": "Sun"}, {"hour": 11, "sessions": 181, "weekday": "Sun"}, {"hour": 12, "sessions": 182, "weekday": "Sun"}, {"hour": 13, "sessions": 169, "weekday": "Sun"}, {"hour": 14, "sessions": 161, "weekday": "Sun"}, {"hour": 15, "sessions": 133, "weekday": "Sun"}, {"hour": 16, "sessions": 122, "weekday": "Sun"}, {"hour": 17, "sessions": 97, "weekday": "Sun"}, {"hour": 18, "sessions": 75, "weekday": "Sun"}, {"hour": 19, "sessions": 65, "weekday": "Sun"}, {"hour": 20, "sessions": 52, "weekday": "Sun"}, {"hour": 21, "sessions": 47, "weekday": "Sun"}, {"hour": 22, "sessions": 41, "weekday": "Sun"}, {"hour": 23, "sessions": 44, "weekday": "Sun"}]}, "encoding": {"color": {"field": "sessions", "type": "quantitative"}, "tooltip": [{"field": "hour", "type": "quantitative"}, {"field": "weekday", "type": "nominal"}, {"field": "sessions", "type": "quantitative"}], "x": {"field": "hour", "sort": null, "title": "Hour of day (UTC)", "type": "ordinal"}, "y": {"field": "weekday", "sort": null, "title": "Weekday", "type": "ordinal"}}, "height": 320, "mark": {"type": "rect"}, "title": {"subtitle": "Two working-day peaks; weekends run at a fifth of the volume", "text": "Sessions by Hour"}, "width": 1100}</script>
+    <script type="application/json" id="chart-activity_by_hour-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": "#3f3f46"}}, "data": {"name": "data-2c6f0f65a984f5f881609907ff6b2166"}, "datasets": {"data-2c6f0f65a984f5f881609907ff6b2166": [{"hour": 0, "sessions": 41, "weekday": "Mon"}, {"hour": 1, "sessions": 40, "weekday": "Mon"}, {"hour": 2, "sessions": 40, "weekday": "Mon"}, {"hour": 3, "sessions": 37, "weekday": "Mon"}, {"hour": 4, "sessions": 42, "weekday": "Mon"}, {"hour": 5, "sessions": 52, "weekday": "Mon"}, {"hour": 6, "sessions": 84, "weekday": "Mon"}, {"hour": 7, "sessions": 149, "weekday": "Mon"}, {"hour": 8, "sessions": 287, "weekday": "Mon"}, {"hour": 9, "sessions": 422, "weekday": "Mon"}, {"hour": 10, "sessions": 622, "weekday": "Mon"}, {"hour": 11, "sessions": 636, "weekday": "Mon"}, {"hour": 12, "sessions": 561, "weekday": "Mon"}, {"hour": 13, "sessions": 543, "weekday": "Mon"}, {"hour": 14, "sessions": 544, "weekday": "Mon"}, {"hour": 15, "sessions": 521, "weekday": "Mon"}, {"hour": 16, "sessions": 425, "weekday": "Mon"}, {"hour": 17, "sessions": 362, "weekday": "Mon"}, {"hour": 18, "sessions": 216, "weekday": "Mon"}, {"hour": 19, "sessions": 125, "weekday": "Mon"}, {"hour": 20, "sessions": 84, "weekday": "Mon"}, {"hour": 21, "sessions": 54, "weekday": "Mon"}, {"hour": 22, "sessions": 40, "weekday": "Mon"}, {"hour": 23, "sessions": 37, "weekday": "Mon"}, {"hour": 0, "sessions": 39, "weekday": "Tue"}, {"hour": 1, "sessions": 42, "weekday": "Tue"}, {"hour": 2, "sessions": 41, "weekday": "Tue"}, {"hour": 3, "sessions": 42, "weekday": "Tue"}, {"hour": 4, "sessions": 43, "weekday": "Tue"}, {"hour": 5, "sessions": 53, "weekday": "Tue"}, {"hour": 6, "sessions": 75, "weekday": "Tue"}, {"hour": 7, "sessions": 146, "weekday": "Tue"}, {"hour": 8, "sessions": 276, "weekday": "Tue"}, {"hour": 9, "sessions": 417, "weekday": "Tue"}, {"hour": 10, "sessions": 625, "weekday": "Tue"}, {"hour": 11, "sessions": 694, "weekday": "Tue"}, {"hour": 12, "sessions": 615, "weekday": "Tue"}, {"hour": 13, "sessions": 556, "weekday": "Tue"}, {"hour": 14, "sessions": 577, "weekday": "Tue"}, {"hour": 15, "sessions": 490, "weekday": "Tue"}, {"hour": 16, "sessions": 437, "weekday": "Tue"}, {"hour": 17, "sessions": 326, "weekday": "Tue"}, {"hour": 18, "sessions": 216, "weekday": "Tue"}, {"hour": 19, "sessions": 121, "weekday": "Tue"}, {"hour": 20, "sessions": 80, "weekday": "Tue"}, {"hour": 21, "sessions": 54, "weekday": "Tue"}, {"hour": 22, "sessions": 45, "weekday": "Tue"}, {"hour": 23, "sessions": 37, "weekday": "Tue"}, {"hour": 0, "sessions": 41, "weekday": "Wed"}, {"hour": 1, "sessions": 42, "weekday": "Wed"}, {"hour": 2, "sessions": 40, "weekday": "Wed"}, {"hour": 3, "sessions": 42, "weekday": "Wed"}, {"hour": 4, "sessions": 44, "weekday": "Wed"}, {"hour": 5, "sessions": 56, "weekday": "Wed"}, {"hour": 6, "sessions": 78, "weekday": "Wed"}, {"hour": 7, "sessions": 165, "weekday": "Wed"}, {"hour": 8, "sessions": 304, "weekday": "Wed"}, {"hour": 9, "sessions": 415, "weekday": "Wed"}, {"hour": 10, "sessions": 597, "weekday": "Wed"}, {"hour": 11, "sessions": 653, "weekday": "Wed"}, {"hour": 12, "sessions": 566, "weekday": "Wed"}, {"hour": 13, "sessions": 581, "weekday": "Wed"}, {"hour": 14, "sessions": 559, "weekday": "Wed"}, {"hour": 15, "sessions": 506, "weekday": "Wed"}, {"hour": 16, "sessions": 412, "weekday": "Wed"}, {"hour": 17, "sessions": 339, "weekday": "Wed"}, {"hour": 18, "sessions": 239, "weekday": "Wed"}, {"hour": 19, "sessions": 126, "weekday": "Wed"}, {"hour": 20, "sessions": 76, "weekday": "Wed"}, {"hour": 21, "sessions": 57, "weekday": "Wed"}, {"hour": 22, "sessions": 47, "weekday": "Wed"}, {"hour": 23, "sessions": 38, "weekday": "Wed"}, {"hour": 0, "sessions": 41, "weekday": "Thu"}, {"hour": 1, "sessions": 44, "weekday": "Thu"}, {"hour": 2, "sessions": 43, "weekday": "Thu"}, {"hour": 3, "sessions": 37, "weekday": "Thu"}, {"hour": 4, "sessions": 47, "weekday": "Thu"}, {"hour": 5, "sessions": 49, "weekday": "Thu"}, {"hour": 6, "sessions": 75, "weekday": "Thu"}, {"hour": 7, "sessions": 154, "weekday": "Thu"}, {"hour": 8, "sessions": 306, "weekday": "Thu"}, {"hour": 9, "sessions": 410, "weekday": "Thu"}, {"hour": 10, "sessions": 597, "weekday": "Thu"}, {"hour": 11, "sessions": 642, "weekday": "Thu"}, {"hour": 12, "sessions": 609, "weekday": "Thu"}, {"hour": 13, "sessions": 529, "weekday": "Thu"}, {"hour": 14, "sessions": 516, "weekday": "Thu"}, {"hour": 15, "sessions": 519, "weekday": "Thu"}, {"hour": 16, "sessions": 477, "weekday": "Thu"}, {"hour": 17, "sessions": 314, "weekday": "Thu"}, {"hour": 18, "sessions": 215, "weekday": "Thu"}, {"hour": 19, "sessions": 133, "weekday": "Thu"}, {"hour": 20, "sessions": 82, "weekday": "Thu"}, {"hour": 21, "sessions": 49, "weekday": "Thu"}, {"hour": 22, "sessions": 40, "weekday": "Thu"}, {"hour": 23, "sessions": 42, "weekday": "Thu"}, {"hour": 0, "sessions": 43, "weekday": "Fri"}, {"hour": 1, "sessions": 41, "weekday": "Fri"}, {"hour": 2, "sessions": 42, "weekday": "Fri"}, {"hour": 3, "sessions": 38, "weekday": "Fri"}, {"hour": 4, "sessions": 44, "weekday": "Fri"}, {"hour": 5, "sessions": 57, "weekday": "Fri"}, {"hour": 6, "sessions": 79, "weekday": "Fri"}, {"hour": 7, "sessions": 161, "weekday": "Fri"}, {"hour": 8, "sessions": 260, "weekday": "Fri"}, {"hour": 9, "sessions": 462, "weekday": "Fri"}, {"hour": 10, "sessions": 638, "weekday": "Fri"}, {"hour": 11, "sessions": 593, "weekday": "Fri"}, {"hour": 12, "sessions": 646, "weekday": "Fri"}, {"hour": 13, "sessions": 607, "weekday": "Fri"}, {"hour": 14, "sessions": 546, "weekday": "Fri"}, {"hour": 15, "sessions": 353, "weekday": "Fri"}, {"hour": 16, "sessions": 304, "weekday": "Fri"}, {"hour": 17, "sessions": 215, "weekday": "Fri"}, {"hour": 18, "sessions": 168, "weekday": "Fri"}, {"hour": 19, "sessions": 87, "weekday": "Fri"}, {"hour": 20, "sessions": 58, "weekday": "Fri"}, {"hour": 21, "sessions": 37, "weekday": "Fri"}, {"hour": 22, "sessions": 31, "weekday": "Fri"}, {"hour": 23, "sessions": 26, "weekday": "Fri"}, {"hour": 0, "sessions": 41, "weekday": "Sat"}, {"hour": 1, "sessions": 42, "weekday": "Sat"}, {"hour": 2, "sessions": 40, "weekday": "Sat"}, {"hour": 3, "sessions": 37, "weekday": "Sat"}, {"hour": 4, "sessions": 39, "weekday": "Sat"}, {"hour": 5, "sessions": 46, "weekday": "Sat"}, {"hour": 6, "sessions": 46, "weekday": "Sat"}, {"hour": 7, "sessions": 59, "weekday": "Sat"}, {"hour": 8, "sessions": 87, "weekday": "Sat"}, {"hour": 9, "sessions": 130, "weekday": "Sat"}, {"hour": 10, "sessions": 164, "weekday": "Sat"}, {"hour": 11, "sessions": 162, "weekday": "Sat"}, {"hour": 12, "sessions": 151, "weekday": "Sat"}, {"hour": 13, "sessions": 146, "weekday": "Sat"}, {"hour": 14, "sessions": 168, "weekday": "Sat"}, {"hour": 15, "sessions": 159, "weekday": "Sat"}, {"hour": 16, "sessions": 120, "weekday": "Sat"}, {"hour": 17, "sessions": 109, "weekday": "Sat"}, {"hour": 18, "sessions": 78, "weekday": "Sat"}, {"hour": 19, "sessions": 60, "weekday": "Sat"}, {"hour": 20, "sessions": 52, "weekday": "Sat"}, {"hour": 21, "sessions": 46, "weekday": "Sat"}, {"hour": 22, "sessions": 39, "weekday": "Sat"}, {"hour": 23, "sessions": 43, "weekday": "Sat"}, {"hour": 0, "sessions": 41, "weekday": "Sun"}, {"hour": 1, "sessions": 38, "weekday": "Sun"}, {"hour": 2, "sessions": 40, "weekday": "Sun"}, {"hour": 3, "sessions": 37, "weekday": "Sun"}, {"hour": 4, "sessions": 42, "weekday": "Sun"}, {"hour": 5, "sessions": 42, "weekday": "Sun"}, {"hour": 6, "sessions": 53, "weekday": "Sun"}, {"hour": 7, "sessions": 59, "weekday": "Sun"}, {"hour": 8, "sessions": 90, "weekday": "Sun"}, {"hour": 9, "sessions": 137, "weekday": "Sun"}, {"hour": 10, "sessions": 148, "weekday": "Sun"}, {"hour": 11, "sessions": 181, "weekday": "Sun"}, {"hour": 12, "sessions": 182, "weekday": "Sun"}, {"hour": 13, "sessions": 169, "weekday": "Sun"}, {"hour": 14, "sessions": 161, "weekday": "Sun"}, {"hour": 15, "sessions": 133, "weekday": "Sun"}, {"hour": 16, "sessions": 122, "weekday": "Sun"}, {"hour": 17, "sessions": 97, "weekday": "Sun"}, {"hour": 18, "sessions": 75, "weekday": "Sun"}, {"hour": 19, "sessions": 65, "weekday": "Sun"}, {"hour": 20, "sessions": 52, "weekday": "Sun"}, {"hour": 21, "sessions": 47, "weekday": "Sun"}, {"hour": 22, "sessions": 41, "weekday": "Sun"}, {"hour": 23, "sessions": 44, "weekday": "Sun"}]}, "encoding": {"color": {"field": "sessions", "type": "quantitative"}, "tooltip": [{"field": "hour", "type": "quantitative"}, {"field": "weekday", "type": "nominal"}, {"field": "sessions", "type": "quantitative"}], "x": {"field": "hour", "sort": null, "title": "Hour of day (UTC)", "type": "ordinal"}, "y": {"field": "weekday", "sort": null, "title": "Weekday", "type": "ordinal"}}, "height": 320, "mark": {"type": "rect"}, "title": {"subtitle": "Two working-day peaks; weekends run at a fifth of the volume", "text": "Sessions by Hour"}, "width": 1100}</script>
     <noscript>
       <img src="../charts/activity_by_hour.png" alt="Sessions by Hour">
     </noscript>
@@ -1177,6 +1523,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div class="glyf-card-body">
     <div class="glyf-metric-label">Busiest hour</div>
     <div class="glyf-metric-value">Tue 11:00</div>
+
 
     <div class="glyf-metric-note">694 sessions, about five times a weekend peak</div>
 
@@ -1240,6 +1587,7 @@ takes their quartiles, so neither query aggregates anything itself.
     </div>
   </div>
 
+
   </div>
 
 
@@ -1247,7 +1595,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Owner</div>
     <div class="glyf-ai-summary-block">
-      Product Analytics
+      Growth team
 
     </div>
   </div>
@@ -1257,7 +1605,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-23 23:22
+      2026-09-24 09:06
 
     </div>
   </div>
@@ -1285,7 +1633,7 @@ takes their quartiles, so neither query aggregates anything itself.
       <button class="glyf-lineage-back" type="button" data-glyf-lineage-close>&larr; Back to dashboard</button>
       <div class="glyf-lineage-head">
         <div class="glyf-lineage-heading">Lineage</div>
-        <div class="glyf-lineage-summary glyf-mono">3 sources · 3 models · 11 charts</div>
+        <div class="glyf-lineage-summary glyf-mono">3 sources · 3 models · 13 charts</div>
       </div>
     </div>
     <div class="glyf-lineage-body">
@@ -1296,51 +1644,53 @@ takes their quartiles, so neither query aggregates anything itself.
         <div class="glyf-lineage-colhead">Charts on this dashboard</div>
       </div>
       <div class="glyf-lineage-wrap" data-glyf-lineage>
-        <svg class="glyf-lineage-svg" viewBox="0 0 1068 672" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
+        <svg class="glyf-lineage-svg" viewBox="0 0 1068 788" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
           <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
             <g class="glyf-lineage-edges">
-              <path d="M264,278.0 C339.0,278.0 339.0,278.0 414,278.0" data-from="source:raw.product_usage" data-to="model:fct_product_usage"/>
-              <path d="M264,336.0 C339.0,336.0 339.0,336.0 414,336.0" data-from="source:raw.account_sessions" data-to="model:fct_account_sessions"/>
-              <path d="M264,394.0 C339.0,394.0 339.0,394.0 414,394.0" data-from="source:raw.hourly_activity" data-to="model:fct_hourly_activity"/>
-              <path d="M654,278.0 C729.0,278.0 729.0,46.0 804,46.0" data-from="model:fct_product_usage" data-to="chart:weekly_active_users"/>
-              <path d="M654,278.0 C729.0,278.0 729.0,104.0 804,104.0" data-from="model:fct_product_usage" data-to="chart:active_users"/>
-              <path d="M654,278.0 C729.0,278.0 729.0,162.0 804,162.0" data-from="model:fct_product_usage" data-to="chart:sessions_scatter"/>
-              <path d="M654,278.0 C729.0,278.0 729.0,220.0 804,220.0" data-from="model:fct_product_usage" data-to="chart:activation_by_plan"/>
-              <path d="M654,278.0 C729.0,278.0 729.0,278.0 804,278.0" data-from="model:fct_product_usage" data-to="chart:activation_rate_by_plan"/>
-              <path d="M654,278.0 C729.0,278.0 729.0,336.0 804,336.0" data-from="model:fct_product_usage" data-to="chart:sessions_per_user"/>
-              <path d="M654,278.0 C729.0,278.0 729.0,394.0 804,394.0" data-from="model:fct_product_usage" data-to="chart:sessions_by_plan"/>
-              <path d="M654,336.0 C729.0,336.0 729.0,452.0 804,452.0" data-from="model:fct_account_sessions" data-to="chart:top_accounts"/>
-              <path d="M654,336.0 C729.0,336.0 729.0,510.0 804,510.0" data-from="model:fct_account_sessions" data-to="chart:sessions_per_account"/>
-              <path d="M654,336.0 C729.0,336.0 729.0,568.0 804,568.0" data-from="model:fct_account_sessions" data-to="chart:session_length_distribution"/>
-              <path d="M654,394.0 C729.0,394.0 729.0,626.0 804,626.0" data-from="model:fct_hourly_activity" data-to="chart:activity_by_hour"/>
+              <path d="M264,336.0 C339.0,336.0 339.0,336.0 414,336.0" data-from="source:raw.product_usage" data-to="model:fct_product_usage"/>
+              <path d="M264,394.0 C339.0,394.0 339.0,394.0 414,394.0" data-from="source:raw.account_sessions" data-to="model:fct_account_sessions"/>
+              <path d="M264,452.0 C339.0,452.0 339.0,452.0 414,452.0" data-from="source:raw.hourly_activity" data-to="model:fct_hourly_activity"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,46.0 804,46.0" data-from="model:fct_product_usage" data-to="chart:weekly_active_users"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,104.0 804,104.0" data-from="model:fct_product_usage" data-to="chart:weekly_sessions"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,162.0 804,162.0" data-from="model:fct_product_usage" data-to="chart:weekly_activated_users"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,220.0 804,220.0" data-from="model:fct_product_usage" data-to="chart:active_users"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,278.0 804,278.0" data-from="model:fct_product_usage" data-to="chart:sessions_scatter"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,336.0 804,336.0" data-from="model:fct_product_usage" data-to="chart:activation_by_plan"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,394.0 804,394.0" data-from="model:fct_product_usage" data-to="chart:activation_rate_by_plan"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,452.0 804,452.0" data-from="model:fct_product_usage" data-to="chart:sessions_per_user"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,510.0 804,510.0" data-from="model:fct_product_usage" data-to="chart:sessions_by_plan"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,568.0 804,568.0" data-from="model:fct_account_sessions" data-to="chart:top_accounts"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,626.0 804,626.0" data-from="model:fct_account_sessions" data-to="chart:sessions_per_account"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,684.0 804,684.0" data-from="model:fct_account_sessions" data-to="chart:session_length_distribution"/>
+              <path d="M654,452.0 C729.0,452.0 729.0,742.0 804,742.0" data-from="model:fct_hourly_activity" data-to="chart:activity_by_hour"/>
             </g>
             <g class="glyf-lineage-nodes">
-              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.product_usage" data-tip="raw table, read through source()" transform="translate(24,256.0)" tabindex="0" role="button" aria-label="raw.product_usage, source">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.product_usage" data-tip="raw table, read through source()" transform="translate(24,314.0)" tabindex="0" role="button" aria-label="raw.product_usage, source">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">raw.product_usage</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.account_sessions" data-tip="raw table, read through source()" transform="translate(24,314.0)" tabindex="0" role="button" aria-label="raw.account_sessions, source">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.account_sessions" data-tip="raw table, read through source()" transform="translate(24,372.0)" tabindex="0" role="button" aria-label="raw.account_sessions, source">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">raw.account_sessions</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.hourly_activity" data-tip="raw table, read through source()" transform="translate(24,372.0)" tabindex="0" role="button" aria-label="raw.hourly_activity, source">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.hourly_activity" data-tip="raw table, read through source()" transform="translate(24,430.0)" tabindex="0" role="button" aria-label="raw.hourly_activity, source">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">raw.hourly_activity</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_product_usage" data-tip="models/fct_product_usage.sql" transform="translate(414,256.0)" tabindex="0" role="button" aria-label="fct_product_usage, model">
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_product_usage" data-tip="models/fct_product_usage.sql" transform="translate(414,314.0)" tabindex="0" role="button" aria-label="fct_product_usage, model">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">fct_product_usage</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_account_sessions" data-tip="models/fct_account_sessions.sql" transform="translate(414,314.0)" tabindex="0" role="button" aria-label="fct_account_sessions, model">
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_account_sessions" data-tip="models/fct_account_sessions.sql" transform="translate(414,372.0)" tabindex="0" role="button" aria-label="fct_account_sessions, model">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">fct_account_sessions</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_hourly_activity" data-tip="models/fct_hourly_activity.sql" transform="translate(414,372.0)" tabindex="0" role="button" aria-label="fct_hourly_activity, model">
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_hourly_activity" data-tip="models/fct_hourly_activity.sql" transform="translate(414,430.0)" tabindex="0" role="button" aria-label="fct_hourly_activity, model">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">fct_hourly_activity</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
@@ -1350,52 +1700,62 @@ takes their quartiles, so neither query aggregates anything itself.
                 <text class="glyf-lineage-node-title" x="12" y="18">Weekly active users</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">kpi</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:active_users" data-tip="binds week AS x, active_users AS y" transform="translate(804,82.0)" tabindex="0" role="button" aria-label="Active Users, area">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:weekly_sessions" data-tip="binds sessions AS value, previous AS compare" transform="translate(804,82.0)" tabindex="0" role="button" aria-label="Weekly sessions, kpi">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Weekly sessions</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">kpi</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:weekly_activated_users" data-tip="binds activated_users AS value, previous AS compare" transform="translate(804,140.0)" tabindex="0" role="button" aria-label="Activated users, kpi">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">Activated users</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">kpi</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:active_users" data-tip="binds week AS x, active_users AS y" transform="translate(804,198.0)" tabindex="0" role="button" aria-label="Active Users, area">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Active Users</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">area</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_scatter" data-tip="binds active_users AS x, sessions AS y" transform="translate(804,140.0)" tabindex="0" role="button" aria-label="Sessions vs Active Users, scatter">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_scatter" data-tip="binds active_users AS x, sessions AS y" transform="translate(804,256.0)" tabindex="0" role="button" aria-label="Sessions vs Active Users, scatter">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Sessions vs Active Users</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">scatter</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activation_by_plan" data-tip="binds week AS x, activated_users AS y" transform="translate(804,198.0)" tabindex="0" role="button" aria-label="Activation by Plan, line">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activation_by_plan" data-tip="binds week AS x, activated_users AS y" transform="translate(804,314.0)" tabindex="0" role="button" aria-label="Activation by Plan, line">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Activation by Plan</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">line</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activation_rate_by_plan" data-tip="binds week AS x, activation_rate AS y" transform="translate(804,256.0)" tabindex="0" role="button" aria-label="Activation Rate by Plan, line">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activation_rate_by_plan" data-tip="binds week AS x, activation_rate AS y" transform="translate(804,372.0)" tabindex="0" role="button" aria-label="Activation Rate by Plan, line">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Activation Rate by Plan</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">line</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_per_user" data-tip="binds week AS x, sessions_per_user AS y" transform="translate(804,314.0)" tabindex="0" role="button" aria-label="Sessions per Active User, bar">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_per_user" data-tip="binds week AS x, sessions_per_user AS y" transform="translate(804,430.0)" tabindex="0" role="button" aria-label="Sessions per Active User, bar">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Sessions per Active User</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">bar</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_by_plan" data-tip="binds plan AS x, sessions AS y" transform="translate(804,372.0)" tabindex="0" role="button" aria-label="Sessions by Plan, pie">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_by_plan" data-tip="binds plan AS x, sessions AS y" transform="translate(804,488.0)" tabindex="0" role="button" aria-label="Sessions by Plan, pie">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Sessions by Plan</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">pie</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:top_accounts" data-tip="lists account_id, plan, sessions, avg_session_minutes" transform="translate(804,430.0)" tabindex="0" role="button" aria-label="Most active accounts, table">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:top_accounts" data-tip="lists account_id, plan, sessions, avg_session_minutes" transform="translate(804,546.0)" tabindex="0" role="button" aria-label="Most active accounts, table">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Most active accounts</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">table</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_per_account" data-tip="binds plan AS x, sessions AS y" transform="translate(804,488.0)" tabindex="0" role="button" aria-label="Sessions per Account, boxplot">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:sessions_per_account" data-tip="binds plan AS x, sessions AS y" transform="translate(804,604.0)" tabindex="0" role="button" aria-label="Sessions per Account, boxplot">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Sessions per Account</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">boxplot</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:session_length_distribution" data-tip="binds avg_session_minutes AS x" transform="translate(804,546.0)" tabindex="0" role="button" aria-label="Session Length by Account, histogram">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:session_length_distribution" data-tip="binds avg_session_minutes AS x" transform="translate(804,662.0)" tabindex="0" role="button" aria-label="Session Length by Account, histogram">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Session Length by Account</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">histogram</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activity_by_hour" data-tip="binds hour AS x, weekday AS y" transform="translate(804,604.0)" tabindex="0" role="button" aria-label="Sessions by Hour, heatmap">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activity_by_hour" data-tip="binds hour AS x, weekday AS y" transform="translate(804,720.0)" tabindex="0" role="button" aria-label="Sessions by Hour, heatmap">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Sessions by Hour</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">heatmap</text>
@@ -1427,7 +1787,7 @@ takes their quartiles, so neither query aggregates anything itself.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">23 Sep 2026, 22:22 UTC</div>
+              <div class="glyf-version-date">24 Sep 2026, 08:06 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -1706,7 +2066,7 @@ takes their quartiles, so neither query aggregates anything itself.
         }
 
       };
-      const buildTheme = "light";
+      const buildTheme = "dark";
       const current = () => root.getAttribute("data-theme") === "dark";
       // The page may have been switched before paint; bring the charts along.
       if (current() !== (buildTheme === "dark")) themeCharts(current());
@@ -1719,6 +2079,99 @@ takes their quartiles, so neither query aggregates anything itself.
           if (window.glyfApplyFilters) window.glyfApplyFilters();
         });
       }
+    })();
+
+    (function () {
+      // Each chart's own tools: zoom lock, reset, download, full screen.
+      const cards = Array.from(document.querySelectorAll(".glyf-chart-card"));
+      const visibleSvg = (card) => Array.from(card.querySelectorAll(".glyf-chart-body svg")).find((svg) => svg.getClientRects().length > 0);
+
+
+      // A chart that zooms takes the wheel from the page, so it starts locked:
+      // scrolling moves the page until the reader unlocks it. The events stop
+      // at the card on their way down, before the chart hears them.
+      const blocked = ["wheel", "mousedown", "pointerdown", "touchstart", "dblclick"];
+      cards.filter((card) => card.hasAttribute("data-glyf-zoom-locked")).forEach((card) => {
+        blocked.forEach((type) => card.addEventListener(type, (event) => {
+          if (card.hasAttribute("data-glyf-zoom-locked") && event.target.closest(".glyf-chart-body")) event.stopPropagation();
+        }, { capture: true, passive: true }));
+        const lock = card.querySelector("[data-glyf-zoom-lock]");
+        lock.addEventListener("click", () => {
+          const locked = !card.hasAttribute("data-glyf-zoom-locked");
+          card.toggleAttribute("data-glyf-zoom-locked", locked);
+          lock.classList.toggle("is-active", locked);
+          lock.setAttribute("aria-pressed", locked ? "true" : "false");
+          lock.setAttribute("aria-label", locked ? "Zoom locked; click to zoom with the scroll wheel" : "Zoom unlocked; click to lock");
+          lock.title = locked ? "Zoom locked: scrolling moves the page. Click to zoom with the wheel." : "Zoom unlocked: scroll to zoom, drag to pan. Click to lock.";
+        });
+        // Reset is a fresh draw: the spec as built, with the page's theme
+        // and any filter the reader has set.
+        card.querySelector("[data-glyf-zoom-reset]").addEventListener("click", () => {
+          if (window.glyfApplyFilters && card.dataset.glyfFilters) return window.glyfApplyFilters();
+          const target = card.querySelector("[data-vega-chart]");
+          const specElement = target && document.getElementById(target.dataset.vegaChart);
+          if (!specElement || typeof vegaEmbed !== "function") return;
+          const spec = JSON.parse(specElement.textContent);
+          const root = document.documentElement;
+          const themed = root.dataset.glyfChartFollows !== "false" && window.glyfVegaTheme ? window.glyfVegaTheme(spec, root.getAttribute("data-theme") === "dark") : spec;
+          vegaEmbed(target, themed, { actions: false, renderer: "svg" });
+        });
+      });
+
+
+      // The chart as the reader sees it, theme and filters included, at twice
+      // its size so it stays sharp on a slide.
+      cards.forEach((card) => {
+        const button = card.querySelector("[data-glyf-chart-download]");
+        if (!button) return;
+        button.addEventListener("click", () => {
+          const name = card.dataset.glyfChart || "chart";
+          const save = (href) => { const a = document.createElement("a"); a.href = href; a.download = `${name}.png`; document.body.appendChild(a); a.click(); a.remove(); };
+          const svg = visibleSvg(card);
+          if (!svg) {
+            const img = card.querySelector(".glyf-chart-body img");
+            if (img) save(img.src);
+            return;
+          }
+          const copy = svg.cloneNode(true);
+          copy.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+          // An image cannot reach the page's web font; fall back to a sans, not a serif.
+          copy.querySelectorAll("[font-family]").forEach((el) => el.setAttribute("font-family", `${el.getAttribute("font-family")}, Helvetica, Arial, sans-serif`));
+          const box = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width ? svg.viewBox.baseVal : svg.getBoundingClientRect();
+          const width = Math.round(box.width), height = Math.round(box.height);
+          copy.setAttribute("width", width); copy.setAttribute("height", height);
+          const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)], { type: "image/svg+xml" }));
+          const image = new Image();
+          image.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = width * 2; canvas.height = height * 2;
+            const context = canvas.getContext("2d");
+            context.fillStyle = getComputedStyle(card.querySelector(".glyf-chart-body")).backgroundColor || "#ffffff";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.scale(2, 2); context.drawImage(image, 0, 0, width, height);
+            URL.revokeObjectURL(url);
+            save(canvas.toDataURL("image/png"));
+          };
+          image.src = url;
+        });
+      });
+
+      // Full screen is the card over the whole window, like Lineage.
+      let expanded = null;
+      const setExpanded = (card, open) => {
+        const button = card.querySelector("[data-glyf-chart-expand]");
+        card.classList.toggle("is-expanded", open);
+        document.body.style.overflow = open ? "hidden" : "";
+        button.setAttribute("aria-pressed", open ? "true" : "false");
+        button.setAttribute("aria-label", open ? "Exit full screen" : "Full screen");
+        button.title = open ? "Exit full screen (Esc)" : "Full screen";
+        expanded = open ? card : null;
+      };
+      cards.forEach((card) => {
+        const button = card.querySelector("[data-glyf-chart-expand]");
+        if (button) button.addEventListener("click", () => setExpanded(card, !card.classList.contains("is-expanded")));
+      });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape" && expanded) setExpanded(expanded, false); });
     })();
 
 
@@ -1777,6 +2230,7 @@ takes their quartiles, so neither query aggregates anything itself.
       const apply = () => {
         const pairs = active();
         if (clearButton) clearButton.hidden = pairs.length === 0;
+        selects.forEach((s) => { const box = s.closest("[data-glyf-filter]"); if (box) box.classList.toggle("is-set", s.value !== ""); });
         cards.forEach((card) => {
           const modes = modesOf(card);
           const applies = pairs.filter((p) => modes[p.field] && modes[p.field] !== "none");

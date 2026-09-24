@@ -46,6 +46,7 @@ DASHBOARD_KEYS = frozenset(
         "name",
         "title",
         "description",
+        "owner",
         "tags",
         "theme",
         "chart_theme",

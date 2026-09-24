@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Finance Metrics</title>
 
-  <link rel="stylesheet" href="../assets/dashboard.css?v=e9f6caa9b1">
+  <link rel="stylesheet" href="../assets/dashboard.css?v=fdbc876f25">
 
 
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
@@ -140,7 +140,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-09-23T22:22:07Z">23 Sep 2026, 22:22 UTC</strong>
+          Refreshed <strong title="2026-09-24T08:06:51Z">24 Sep 2026, 08:06 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -207,7 +207,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 23 Sep 2026, 22:22 UTC</span>
+              <span class="glyf-version-option-note">built 24 Sep 2026, 08:06 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -223,12 +223,11 @@
 
 
         <label class="glyf-filter-select" data-glyf-filter="department">
-
+          <span class="glyf-filter-field">
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
-
-          <span class="glyf-filter-field">department</span>
+  department</span>
           <select class="glyf-filter-control" id="glyf-filter-department" data-glyf-filter-select="department" aria-label="Filter by department">
             <option value="">All</option>
 
@@ -244,12 +243,11 @@
         </label>
 
         <label class="glyf-filter-select" data-glyf-filter="segment">
-
+          <span class="glyf-filter-field">
   <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
   </svg>
-
-          <span class="glyf-filter-field">segment</span>
+  segment</span>
           <select class="glyf-filter-control" id="glyf-filter-segment" data-glyf-filter-select="segment" aria-label="Filter by segment">
             <option value="">All</option>
 
@@ -433,6 +431,7 @@ FROM "finance_metrics"."main"."fct_invoices"
     <div class="glyf-metric-label">Bookings</div>
     <div class="glyf-metric-value">$1.08M</div>
 
+
     <div class="glyf-metric-note">Four departments, twelve months</div>
 
   </div>
@@ -445,6 +444,7 @@ FROM "finance_metrics"."main"."fct_invoices"
     <div class="glyf-metric-label">Gross margin</div>
     <div class="glyf-metric-value">$504k</div>
 
+
     <div class="glyf-metric-note">46.7% of bookings</div>
 
   </div>
@@ -456,6 +456,7 @@ FROM "finance_metrics"."main"."fct_invoices"
   <div class="glyf-card-body">
     <div class="glyf-metric-label">March gross margin</div>
     <div class="glyf-metric-value">$62.5k</div>
+
 
     <div class="glyf-metric-note">On $116k of bookings, the strongest month</div>
 
@@ -490,6 +491,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 
 
 
+
 <article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="bookings_trend" data-glyf-filters="department:none segment:none">
   <div class="glyf-card-head">
     <div>
@@ -498,6 +500,30 @@ FROM "finance_metrics"."main"."fct_invoices"
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">line</span>
     </div>
   </div>
@@ -523,6 +549,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 
 
 
+
 <article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="margin_share" data-glyf-filters="department:vega segment:none">
   <div class="glyf-card-head">
     <div>
@@ -531,6 +558,30 @@ FROM "finance_metrics"."main"."fct_invoices"
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">pie</span>
     </div>
   </div>
@@ -579,6 +630,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 
 
 
+
 <article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="expenses_by_department" data-glyf-filters="department:vega segment:none">
   <div class="glyf-card-head">
     <div>
@@ -587,6 +639,30 @@ FROM "finance_metrics"."main"."fct_invoices"
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">bar</span>
     </div>
   </div>
@@ -612,6 +688,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 
 
 
+
 <article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="gross_margin_trend" data-glyf-filters="department:none segment:none">
   <div class="glyf-card-head">
     <div>
@@ -620,6 +697,30 @@ FROM "finance_metrics"."main"."fct_invoices"
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">area</span>
     </div>
   </div>
@@ -668,6 +769,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 
 
 
+
 <article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="margin_rate_by_department" data-glyf-filters="department:vega segment:none">
   <div class="glyf-card-head">
     <div>
@@ -676,6 +778,30 @@ FROM "finance_metrics"."main"."fct_invoices"
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">heatmap</span>
     </div>
   </div>
@@ -701,6 +827,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 
 
 
+
 <article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="margin_vs_expenses" data-glyf-filters="department:vega segment:none">
   <div class="glyf-card-head">
     <div>
@@ -709,6 +836,30 @@ FROM "finance_metrics"."main"."fct_invoices"
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">scatter</span>
     </div>
   </div>
@@ -719,7 +870,7 @@ FROM "finance_metrics"."main"."fct_invoices"
       id="chart-margin_vs_expenses"
       data-vega-chart="chart-margin_vs_expenses-spec"
     ></div>
-    <script type="application/json" id="chart-margin_vs_expenses-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-a970ec9483c50fa57d5e731c2ce54eba"}, "datasets": {"data-a970ec9483c50fa57d5e731c2ce54eba": [{"department": "Partners", "expenses": 3300, "gross_margin": 3200}, {"department": "Partners", "expenses": 3400, "gross_margin": 2900}, {"department": "Partners", "expenses": 3500, "gross_margin": 3900}, {"department": "Partners", "expenses": 3600, "gross_margin": 3800}, {"department": "Partners", "expenses": 3900, "gross_margin": 4100}, {"department": "Partners", "expenses": 4100, "gross_margin": 4500}, {"department": "Partners", "expenses": 4100, "gross_margin": 5200}, {"department": "Partners", "expenses": 4200, "gross_margin": 4600}, {"department": "Partners", "expenses": 4400, "gross_margin": 5900}, {"department": "Partners", "expenses": 4500, "gross_margin": 5800}, {"department": "Partners", "expenses": 4700, "gross_margin": 5900}, {"department": "Partners", "expenses": 4800, "gross_margin": 7400}, {"department": "Product", "expenses": 18300, "gross_margin": -3100}, {"department": "Product", "expenses": 18500, "gross_margin": -2400}, {"department": "Product", "expenses": 18600, "gross_margin": 1600}, {"department": "Product", "expenses": 19100, "gross_margin": -900}, {"department": "Product", "expenses": 19800, "gross_margin": -1800}, {"department": "Product", "expenses": 19900, "gross_margin": 1800}, {"department": "Product", "expenses": 20400, "gross_margin": 500}, {"department": "Product", "expenses": 20800, "gross_margin": 1400}, {"department": "Product", "expenses": 21500, "gross_margin": 2000}, {"department": "Product", "expenses": 22500, "gross_margin": 2800}, {"department": "Product", "expenses": 22600, "gross_margin": 3800}, {"department": "Product", "expenses": 22800, "gross_margin": 7100}, {"department": "Sales", "expenses": 13900, "gross_margin": 25300}, {"department": "Sales", "expenses": 14000, "gross_margin": 30100}, {"department": "Sales", "expenses": 14200, "gross_margin": 28200}, {"department": "Sales", "expenses": 14200, "gross_margin": 30200}, {"department": "Sales", "expenses": 14400, "gross_margin": 24900}, {"department": "Sales", "expenses": 14500, "gross_margin": 36600}, {"department": "Sales", "expenses": 15000, "gross_margin": 33500}, {"department": "Sales", "expenses": 15300, "gross_margin": 28100}, {"department": "Sales", "expenses": 15800, "gross_margin": 34600}, {"department": "Sales", "expenses": 16300, "gross_margin": 35400}, {"department": "Sales", "expenses": 16600, "gross_margin": 33500}, {"department": "Sales", "expenses": 17200, "gross_margin": 41300}, {"department": "Services", "expenses": 7800, "gross_margin": 5400}, {"department": "Services", "expenses": 7900, "gross_margin": 3400}, {"department": "Services", "expenses": 8100, "gross_margin": 3400}, {"department": "Services", "expenses": 8200, "gross_margin": 2900}, {"department": "Services", "expenses": 8300, "gross_margin": 5700}, {"department": "Services", "expenses": 8400, "gross_margin": 3200}, {"department": "Services", "expenses": 8600, "gross_margin": 3300}, {"department": "Services", "expenses": 8700, "gross_margin": 4200}, {"department": "Services", "expenses": 8700, "gross_margin": 4500}, {"department": "Services", "expenses": 8800, "gross_margin": 5200}, {"department": "Services", "expenses": 8900, "gross_margin": 4100}, {"department": "Services", "expenses": 8900, "gross_margin": 6700}]}, "encoding": {"color": {"field": "department", "type": "nominal"}, "opacity": {"condition": {"param": "param_da46cb0ab065acf5", "value": 1}, "value": 0.2}, "tooltip": [{"field": "expenses", "type": "quantitative"}, {"field": "gross_margin", "type": "quantitative"}, {"field": "department", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "expenses", "title": "Expenses", "type": "quantitative"}, "y": {"field": "gross_margin", "title": "Gross Margin", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "legend", "name": "param_da46cb0ab065acf5", "select": {"fields": ["department"], "type": "point"}}], "title": "Margin vs Expenses", "width": 800}</script>
+    <script type="application/json" id="chart-margin_vs_expenses-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-a970ec9483c50fa57d5e731c2ce54eba"}, "datasets": {"data-a970ec9483c50fa57d5e731c2ce54eba": [{"department": "Partners", "expenses": 3300, "gross_margin": 3200}, {"department": "Partners", "expenses": 3400, "gross_margin": 2900}, {"department": "Partners", "expenses": 3500, "gross_margin": 3900}, {"department": "Partners", "expenses": 3600, "gross_margin": 3800}, {"department": "Partners", "expenses": 3900, "gross_margin": 4100}, {"department": "Partners", "expenses": 4100, "gross_margin": 4500}, {"department": "Partners", "expenses": 4100, "gross_margin": 5200}, {"department": "Partners", "expenses": 4200, "gross_margin": 4600}, {"department": "Partners", "expenses": 4400, "gross_margin": 5900}, {"department": "Partners", "expenses": 4500, "gross_margin": 5800}, {"department": "Partners", "expenses": 4700, "gross_margin": 5900}, {"department": "Partners", "expenses": 4800, "gross_margin": 7400}, {"department": "Product", "expenses": 18300, "gross_margin": -3100}, {"department": "Product", "expenses": 18500, "gross_margin": -2400}, {"department": "Product", "expenses": 18600, "gross_margin": 1600}, {"department": "Product", "expenses": 19100, "gross_margin": -900}, {"department": "Product", "expenses": 19800, "gross_margin": -1800}, {"department": "Product", "expenses": 19900, "gross_margin": 1800}, {"department": "Product", "expenses": 20400, "gross_margin": 500}, {"department": "Product", "expenses": 20800, "gross_margin": 1400}, {"department": "Product", "expenses": 21500, "gross_margin": 2000}, {"department": "Product", "expenses": 22500, "gross_margin": 2800}, {"department": "Product", "expenses": 22600, "gross_margin": 3800}, {"department": "Product", "expenses": 22800, "gross_margin": 7100}, {"department": "Sales", "expenses": 13900, "gross_margin": 25300}, {"department": "Sales", "expenses": 14000, "gross_margin": 30100}, {"department": "Sales", "expenses": 14200, "gross_margin": 28200}, {"department": "Sales", "expenses": 14200, "gross_margin": 30200}, {"department": "Sales", "expenses": 14400, "gross_margin": 24900}, {"department": "Sales", "expenses": 14500, "gross_margin": 36600}, {"department": "Sales", "expenses": 15000, "gross_margin": 33500}, {"department": "Sales", "expenses": 15300, "gross_margin": 28100}, {"department": "Sales", "expenses": 15800, "gross_margin": 34600}, {"department": "Sales", "expenses": 16300, "gross_margin": 35400}, {"department": "Sales", "expenses": 16600, "gross_margin": 33500}, {"department": "Sales", "expenses": 17200, "gross_margin": 41300}, {"department": "Services", "expenses": 7800, "gross_margin": 5400}, {"department": "Services", "expenses": 7900, "gross_margin": 3400}, {"department": "Services", "expenses": 8100, "gross_margin": 3400}, {"department": "Services", "expenses": 8200, "gross_margin": 2900}, {"department": "Services", "expenses": 8300, "gross_margin": 5700}, {"department": "Services", "expenses": 8400, "gross_margin": 3200}, {"department": "Services", "expenses": 8600, "gross_margin": 3300}, {"department": "Services", "expenses": 8700, "gross_margin": 4200}, {"department": "Services", "expenses": 8700, "gross_margin": 4500}, {"department": "Services", "expenses": 8800, "gross_margin": 5200}, {"department": "Services", "expenses": 8900, "gross_margin": 4100}, {"department": "Services", "expenses": 8900, "gross_margin": 6700}]}, "encoding": {"color": {"field": "department", "type": "nominal"}, "opacity": {"condition": {"param": "param_da46cb0ab065acf5", "value": 1}, "value": 0.2}, "tooltip": [{"field": "expenses", "type": "quantitative"}, {"field": "gross_margin", "type": "quantitative"}, {"field": "department", "type": "nominal"}], "x": {"axis": {"labelAngle": 0}, "field": "expenses", "scale": {"nice": false, "padding": 12}, "title": "Expenses", "type": "quantitative"}, "y": {"field": "gross_margin", "scale": {"nice": false, "padding": 12}, "title": "Gross Margin", "type": "quantitative"}}, "height": 400, "mark": {"size": 80, "type": "circle"}, "params": [{"bind": "legend", "name": "param_da46cb0ab065acf5", "select": {"fields": ["department"], "type": "point"}}], "title": "Margin vs Expenses", "width": 800}</script>
     <noscript>
       <img src="../charts/margin_vs_expenses.png" alt="Margin vs Expenses">
     </noscript>
@@ -757,6 +908,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 
 
 
+
 <article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="days_to_pay" data-glyf-filters="department:none segment:vega">
   <div class="glyf-card-head">
     <div>
@@ -765,6 +917,30 @@ FROM "finance_metrics"."main"."fct_invoices"
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">histogram</span>
     </div>
   </div>
@@ -790,6 +966,7 @@ FROM "finance_metrics"."main"."fct_invoices"
 
 
 
+
 <article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="discount_by_segment" data-glyf-filters="department:none segment:vega">
   <div class="glyf-card-head">
     <div>
@@ -798,6 +975,30 @@ FROM "finance_metrics"."main"."fct_invoices"
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
       <span class="glyf-badge glyf-mono">boxplot</span>
     </div>
   </div>
@@ -825,6 +1026,7 @@ FROM "finance_metrics"."main"."fct_invoices"
     <div class="glyf-metric-label">Median days to pay</div>
     <div class="glyf-metric-value">24</div>
 
+
     <div class="glyf-metric-note">17 of 300 invoices took longer than 60 days</div>
 
   </div>
@@ -832,7 +1034,8 @@ FROM "finance_metrics"."main"."fct_invoices"
 
 
 
-                  <article class="glyf-card glyf-component-card">
+
+<article class="glyf-card glyf-component-card">
   <div class="glyf-card-body">
 
   <div class="glyf-alert glyf-tone-warning">
@@ -854,6 +1057,7 @@ FROM "finance_metrics"."main"."fct_invoices"
       <span>Enterprise invoices pay at a median of 47 days and carry the deepest discounts.</span>
     </div>
   </div>
+
 
   </div>
 </article>
@@ -898,7 +1102,7 @@ FROM "finance_metrics"."main"."fct_invoices"
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-09-23 23:22
+      2026-09-24 09:06
 
     </div>
   </div>
@@ -1048,7 +1252,7 @@ FROM "finance_metrics"."main"."fct_invoices"
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">23 Sep 2026, 22:22 UTC</div>
+              <div class="glyf-version-date">24 Sep 2026, 08:06 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
@@ -1307,6 +1511,99 @@ FROM "finance_metrics"."main"."fct_invoices"
       }
     })();
 
+    (function () {
+      // Each chart's own tools: zoom lock, reset, download, full screen.
+      const cards = Array.from(document.querySelectorAll(".glyf-chart-card"));
+      const visibleSvg = (card) => Array.from(card.querySelectorAll(".glyf-chart-body svg")).find((svg) => svg.getClientRects().length > 0);
+
+
+      // A chart that zooms takes the wheel from the page, so it starts locked:
+      // scrolling moves the page until the reader unlocks it. The events stop
+      // at the card on their way down, before the chart hears them.
+      const blocked = ["wheel", "mousedown", "pointerdown", "touchstart", "dblclick"];
+      cards.filter((card) => card.hasAttribute("data-glyf-zoom-locked")).forEach((card) => {
+        blocked.forEach((type) => card.addEventListener(type, (event) => {
+          if (card.hasAttribute("data-glyf-zoom-locked") && event.target.closest(".glyf-chart-body")) event.stopPropagation();
+        }, { capture: true, passive: true }));
+        const lock = card.querySelector("[data-glyf-zoom-lock]");
+        lock.addEventListener("click", () => {
+          const locked = !card.hasAttribute("data-glyf-zoom-locked");
+          card.toggleAttribute("data-glyf-zoom-locked", locked);
+          lock.classList.toggle("is-active", locked);
+          lock.setAttribute("aria-pressed", locked ? "true" : "false");
+          lock.setAttribute("aria-label", locked ? "Zoom locked; click to zoom with the scroll wheel" : "Zoom unlocked; click to lock");
+          lock.title = locked ? "Zoom locked: scrolling moves the page. Click to zoom with the wheel." : "Zoom unlocked: scroll to zoom, drag to pan. Click to lock.";
+        });
+        // Reset is a fresh draw: the spec as built, with the page's theme
+        // and any filter the reader has set.
+        card.querySelector("[data-glyf-zoom-reset]").addEventListener("click", () => {
+          if (window.glyfApplyFilters && card.dataset.glyfFilters) return window.glyfApplyFilters();
+          const target = card.querySelector("[data-vega-chart]");
+          const specElement = target && document.getElementById(target.dataset.vegaChart);
+          if (!specElement || typeof vegaEmbed !== "function") return;
+          const spec = JSON.parse(specElement.textContent);
+          const root = document.documentElement;
+          const themed = root.dataset.glyfChartFollows !== "false" && window.glyfVegaTheme ? window.glyfVegaTheme(spec, root.getAttribute("data-theme") === "dark") : spec;
+          vegaEmbed(target, themed, { actions: false, renderer: "svg" });
+        });
+      });
+
+
+      // The chart as the reader sees it, theme and filters included, at twice
+      // its size so it stays sharp on a slide.
+      cards.forEach((card) => {
+        const button = card.querySelector("[data-glyf-chart-download]");
+        if (!button) return;
+        button.addEventListener("click", () => {
+          const name = card.dataset.glyfChart || "chart";
+          const save = (href) => { const a = document.createElement("a"); a.href = href; a.download = `${name}.png`; document.body.appendChild(a); a.click(); a.remove(); };
+          const svg = visibleSvg(card);
+          if (!svg) {
+            const img = card.querySelector(".glyf-chart-body img");
+            if (img) save(img.src);
+            return;
+          }
+          const copy = svg.cloneNode(true);
+          copy.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+          // An image cannot reach the page's web font; fall back to a sans, not a serif.
+          copy.querySelectorAll("[font-family]").forEach((el) => el.setAttribute("font-family", `${el.getAttribute("font-family")}, Helvetica, Arial, sans-serif`));
+          const box = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width ? svg.viewBox.baseVal : svg.getBoundingClientRect();
+          const width = Math.round(box.width), height = Math.round(box.height);
+          copy.setAttribute("width", width); copy.setAttribute("height", height);
+          const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)], { type: "image/svg+xml" }));
+          const image = new Image();
+          image.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = width * 2; canvas.height = height * 2;
+            const context = canvas.getContext("2d");
+            context.fillStyle = getComputedStyle(card.querySelector(".glyf-chart-body")).backgroundColor || "#ffffff";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.scale(2, 2); context.drawImage(image, 0, 0, width, height);
+            URL.revokeObjectURL(url);
+            save(canvas.toDataURL("image/png"));
+          };
+          image.src = url;
+        });
+      });
+
+      // Full screen is the card over the whole window, like Lineage.
+      let expanded = null;
+      const setExpanded = (card, open) => {
+        const button = card.querySelector("[data-glyf-chart-expand]");
+        card.classList.toggle("is-expanded", open);
+        document.body.style.overflow = open ? "hidden" : "";
+        button.setAttribute("aria-pressed", open ? "true" : "false");
+        button.setAttribute("aria-label", open ? "Exit full screen" : "Full screen");
+        button.title = open ? "Exit full screen (Esc)" : "Full screen";
+        expanded = open ? card : null;
+      };
+      cards.forEach((card) => {
+        const button = card.querySelector("[data-glyf-chart-expand]");
+        if (button) button.addEventListener("click", () => setExpanded(card, !card.classList.contains("is-expanded")));
+      });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape" && expanded) setExpanded(expanded, false); });
+    })();
+
 
     (function () {
       // A filter redraws every chart it can, from the rows the page carries,
@@ -1363,6 +1660,7 @@ FROM "finance_metrics"."main"."fct_invoices"
       const apply = () => {
         const pairs = active();
         if (clearButton) clearButton.hidden = pairs.length === 0;
+        selects.forEach((s) => { const box = s.closest("[data-glyf-filter]"); if (box) box.classList.toggle("is-set", s.value !== ""); });
         cards.forEach((card) => {
           const modes = modesOf(card);
           const applies = pairs.filter((p) => modes[p.field] && modes[p.field] !== "none");
