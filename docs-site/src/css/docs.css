@@ -812,6 +812,133 @@ html.plugin-docs .exampleCard .exampleCard__body p {
   color: var(--doc-body) !important;
 }
 
+/* ---------- Chart type cards (visualisation syntax) ---------- */
+
+/* Two columns of cards, each a chart from the product demo that flips to
+   the .ggsql that drew it. One column on a phone. */
+html.plugin-docs .chartTypeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 2rem;
+}
+@media (max-width: 720px) {
+  html.plugin-docs .chartTypeGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+html.plugin-docs .chartTypeCard {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--doc-rule);
+  border-radius: 12px;
+  background: var(--doc-surface);
+  overflow: hidden;
+}
+html.plugin-docs .chartTypeCard__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--doc-rule);
+}
+html.plugin-docs .chartTypeCard__head > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+html.plugin-docs .chartTypeCard__title {
+  margin: 0 !important;
+  color: var(--doc-ink);
+  font-size: 1rem;
+}
+html.plugin-docs .chartTypeCard__draw {
+  padding: 0.05rem 0.4rem;
+  font-size: 0.75rem;
+}
+html.plugin-docs .chartTypeCard__switch {
+  display: inline-flex;
+  flex-shrink: 0;
+  border: 1px solid var(--doc-rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+html.plugin-docs .chartTypeCard__switch button {
+  padding: 0.25rem 0.65rem;
+  border: 0;
+  background: transparent;
+  color: var(--doc-quiet);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+html.plugin-docs .chartTypeCard__switch button + button {
+  border-left: 1px solid var(--doc-rule);
+}
+html.plugin-docs .chartTypeCard__switch button.is-on {
+  background: var(--doc-accent-wash);
+  color: var(--doc-accent);
+}
+html.plugin-docs .chartTypeCard__switch button:focus-visible {
+  outline: 2px solid var(--doc-accent);
+  outline-offset: -2px;
+}
+/* The same height either way, so flipping a card does not move the grid. */
+html.plugin-docs .chartTypeCard__body {
+  display: flex;
+  align-items: center;
+  height: 14rem;
+  padding: 0.5rem;
+  background: var(--doc-wash);
+}
+html.plugin-docs .chartTypeCard__body--code {
+  padding: 0;
+}
+html.plugin-docs .chartTypeCard__image {
+  cursor: zoom-in;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+}
+html.plugin-docs .chartTypeCard__code {
+  align-self: stretch;
+  width: 100%;
+  overflow: auto;
+}
+html.plugin-docs .chartTypeCard__code div[class*="codeBlockContainer"] {
+  min-height: 100%;
+}
+html.plugin-docs .chartTypeCard__code pre,
+html.plugin-docs .chartTypeCard__code div[class*="codeBlockContainer"] {
+  margin: 0 !important;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+html.plugin-docs .chartTypeCard__code pre {
+  font-size: 0.72rem;
+}
+html.plugin-docs .chartTypeCard__foot {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 0.7rem 0.9rem 0.8rem;
+  border-top: 1px solid var(--doc-rule);
+  font-size: 0.86rem;
+}
+html.plugin-docs .chartTypeCard__foot p {
+  margin: 0;
+  color: var(--doc-body);
+}
+
 /* ---------- Roadmap page ---------- */
 
 html.plugin-docs .roadmapJump {

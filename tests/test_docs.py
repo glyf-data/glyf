@@ -7,7 +7,8 @@ the documented examples executable:
 
 1. every dashboard YAML block in the docs loads through `glyf.dashboard.loader`
 2. every macro expression in those blocks resolves against the real macros
-3. blocks a page presents as a shipped example file are identical to that file
+3. blocks a page presents as a shipped example file are identical to that file,
+   including the code on each chart type card
 4. every documented `glyf.yml` loads through `glyf.config`
 5. every documented chart parses through `glyf.ggsql.parser`
 
@@ -18,6 +19,7 @@ left to its own check. A block that is deliberately invalid can opt out with an
 HTML comment on the line above its fence; see `docs-site/README.md`.
 """
 
+import re
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
@@ -304,6 +306,24 @@ def test_example_pages_show_the_shipped_file(page: str, shipped: str) -> None:
     assert documented[0].text.strip() == expected, (
         f"{page} no longer matches {shipped}; update the page or the example"
     )
+
+
+CHART_TYPE_CARD = re.compile(
+    r'<ChartTypeCard[^>]*\bexample="(?P<example>[^"]+)"[^>]*>\s*```sql\n(?P<code>.*?)\n```\s*</ChartTypeCard>',
+    re.DOTALL,
+)
+
+
+def test_chart_type_cards_show_the_shipped_files() -> None:
+    """A card's Code view claims to be the file that drew its chart."""
+    page = (DOCS / "guides" / "visualisation-syntax.md").read_text(encoding="utf-8")
+    cards = list(CHART_TYPE_CARD.finditer(page))
+    assert len(cards) == 10, "one card per chart type"
+    for card in cards:
+        shipped = Path(card["example"]).read_text(encoding="utf-8").strip()
+        assert card["code"].strip() == shipped, (
+            f"the {card['example']} card no longer matches the file"
+        )
 
 
 @pytest.mark.parametrize("block", _config_blocks(), ids=lambda block: block.id)
