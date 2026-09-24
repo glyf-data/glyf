@@ -24,6 +24,10 @@ class ComponentSpec:
     items: tuple[str, ...] = ()
     href: str | None = None
     width: int | None = None
+    # The rule that raised an alert when glyf built the page, such as
+    # "latest week 28.5% < 40% target". Set, the card says it was triggered
+    # by the data rather than written by hand.
+    trigger: str | None = None
 
 
 def label_value(
@@ -65,9 +69,14 @@ def alert(
     tone: str = "info",
     metric: object | None = None,
     note: object | None = None,
+    trigger: object | None = None,
     width: int | None = None,
 ) -> ComponentSpec:
-    """A message in a tone; with `metric`, a card led by the number it is about."""
+    """A message in a tone; with `metric`, a card led by the number it is about.
+
+    `trigger` names the rule that raised it from the data, and marks the card
+    as auto-triggered.
+    """
     return ComponentSpec(
         kind="alert",
         title=_optional_text(title, "title"),
@@ -75,6 +84,7 @@ def alert(
         tone=_tone(tone),
         value=_optional_text(metric, "metric"),
         note=_optional_text(note, "note"),
+        trigger=_optional_text(trigger, "trigger"),
         width=_optional_positive_int(width, "width"),
     )
 
@@ -183,6 +193,7 @@ def _component_from_mapping(value: Mapping[object, object], label: str) -> Compo
         tone=_tone(value.get("tone", "neutral")),
         items=items,
         href=_optional_text(value.get("href"), f"{label}.href"),
+        trigger=_optional_text(value.get("trigger"), f"{label}.trigger"),
         width=_optional_positive_int(value.get("width"), f"{label}.width"),
     )
 

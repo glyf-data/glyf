@@ -205,6 +205,7 @@ Each section item is one of four kinds:
 | `layout.columns` | Default grid columns for the dashboard body. Accepts an integer, a track string like `"30% 70%"`, or a list like `["1fr", "2fr"]`. |
 | `filters[].field` | Label shown for the filter in the dashboard controls row. |
 | `filters[].values` | Either a hardcoded list or `source(chart, field)` to read distinct values from rendered chart artifacts. |
+| `filters[].control` | How the filter is drawn: `select` (default), `radio` or `toggle`. See [Filters](#filters). |
 | `sections[].title` | Optional section heading. |
 | `sections[].description` | Optional section intro text. |
 | `sections[].columns` | Optional section-level grid columns, using the same formats as `layout.columns`. |
@@ -243,7 +244,7 @@ in [Dashboard Macros](/docs/guides/dashboard-macros).
 
 ## Filters
 
-A filter names a column. On the page it is a select with `All` and the
+A filter names a column. By default it is a select with `All` and the
 filter's values, and choosing a value redraws every chart on the dashboard
 whose rows carry that column, in the browser, from the rows the page already
 holds. Nothing is fetched and no server is involved.
@@ -267,6 +268,28 @@ filters:
 `source(chart, field)` reads the distinct values from the normalized chart data
 artifact written by `glyf render`. That keeps the filter list aligned with the
 chart output instead of duplicating values in YAML.
+
+`control` picks how the filter is drawn and what the reader can choose:
+
+| `control` | Drawn as | Keeps |
+| --- | --- | --- |
+| `select` (default) | A dropdown with `All` first | One value, or all |
+| `radio` | A row of buttons, `All` first | One value, or all |
+| `toggle` | A row of buttons that switch on and off | Any number of values; none on means all |
+
+```yaml
+filters:
+  - field: plan
+    values: source(activation_by_plan, plan)
+    control: toggle      # compare Pro and Team side by side
+  - field: segment
+    values: [SMB, Mid-market, Enterprise]
+    control: radio
+```
+
+Buttons suit a short list the reader switches between often; a select suits a
+long one, such as weeks. With toggles, a chart keeps the rows matching any
+value that is on, and its chip reads `plan = Pro or Team`.
 
 What a filter does to each kind of card:
 

@@ -87,6 +87,39 @@ def test_the_page_carries_selects_specs_and_card_hooks(tmp_path: Path) -> None:
     assert 'toString(datum[' in html
 
 
+@pytest.mark.parametrize(
+    ("control", "all_button"),
+    [("radio", True), ("toggle", False)],
+)
+def test_a_filter_can_be_radio_buttons_or_toggles(
+    tmp_path: Path, control: str, all_button: bool
+) -> None:
+    project, config = _project(
+        tmp_path,
+        filters=f"filters:\n  - field: month\n    values: source(revenue, month)\n    control: {control}\n",
+    )
+    assert load_dashboard(project / "dashboards" / "executive.yml").filters[0].control == control
+
+    generate_dashboards(project, config)
+
+    html = (project / "target" / "glyf" / "dashboards" / "executive.html").read_text(encoding="utf-8")
+    assert f'data-glyf-filter-group="{control}"' in html
+    assert 'data-glyf-filter-option="2026-03"' in html
+    assert ('data-glyf-filter-option=""' in html) is all_button
+    assert 'data-glyf-filter-select="month"' not in html
+    assert 'data-glyf-chart="revenue" data-glyf-filters="month:vega"' in html
+
+
+def test_a_filter_control_is_checked(tmp_path: Path) -> None:
+    path = tmp_path / "d.yml"
+    path.write_text(
+        "name: d\ntitle: D\nfilters:\n  - field: plan\n    values: [Pro]\n    control: slider\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match=r"filters\[1\]\.control"):
+        load_dashboard(path)
+
+
 def test_a_filter_can_be_narrowed_to_named_charts(tmp_path: Path) -> None:
     project, config = _project(tmp_path, filters="filters:\n  - field: month\n    values: [2026-01]\n    charts: [months]\n")
     dashboard = load_dashboard(project / "dashboards" / "executive.yml")

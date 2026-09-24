@@ -272,19 +272,26 @@ def _alert_threshold_factory(
         title_value = title or f"{field.replace('_', ' ').title()} threshold"
         rendered_value = _format_number(actual_number)
         rendered_threshold = _format_number(threshold_number)
+        trigger = (
+            f"{chart}.{field} = {rendered_value}, "
+            f"checked {_OPERATOR_SYMBOLS[operator]} {rendered_threshold}"
+        )
         if passed:
             message = success_text or (
                 f"{field.replace('_', ' ').title()} is {rendered_value}. "
                 f"Threshold satisfied ({operator} {rendered_threshold})."
             )
-            return alert.success(message, title_value, width=width)
+            return alert.success(message, title_value, trigger=trigger, width=width)
         message = alert_text or (
             f"{field.replace('_', ' ').title()} is {rendered_value}. "
             f"Threshold breached ({operator} {rendered_threshold})."
         )
-        return alert.warning(message, title_value, width=width)
+        return alert.warning(message, title_value, trigger=trigger, width=width)
 
     return alert_threshold
+
+
+_OPERATOR_SYMBOLS = {"lt": "<", "lte": "<=", "gt": ">", "gte": ">=", "eq": "=", "neq": "!="}
 
 
 def _normalise_operator(value: str) -> str:

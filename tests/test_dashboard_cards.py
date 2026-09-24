@@ -98,6 +98,32 @@ def test_dashboard_renders_owner_delta_status_card_and_notes(tmp_path: Path) -> 
     assert "Written by hand." in html
 
 
+def test_a_triggered_alert_says_so_and_a_written_one_does_not(tmp_path: Path) -> None:
+    alert = c.alert("Below.", tone="warning", metric="28%", trigger="28% < 40% target")
+    assert alert.trigger == "28% < 40% target"
+    assert c.ensure_component(
+        {"kind": "alert", "text": "Below", "trigger": "rule"}, "macro"
+    ).trigger == "rule"
+
+    project = copy_basic_project(tmp_path)
+    render_project(project)
+    _write(
+        project / "dashboards" / "executive.yml",
+        "name: executive\ntitle: Executive\n"
+        "sections:\n  - items:\n"
+        "      - component: \"{{ alert.warning('Below target.', 'Health', metric='28%', trigger='28% under a 40% target') }}\"\n"
+        "      - component: \"{{ alert.threshold('revenue', 'revenue', 1, op='gt') }}\"\n"
+        "      - component: \"{{ alert.info('Written by hand.') }}\"\n",
+    )
+
+    generate_dashboards(project)
+    html = _html(project)
+
+    assert html.count("glyf-trigger-badge") == 2
+    assert "Triggered by the data when glyf built this page: 28% under a 40% target" in html
+    assert "revenue.revenue = " in html, "alert.threshold names its rule"
+
+
 def test_owner_defaults_to_the_data_team(tmp_path: Path) -> None:
     project = copy_basic_project(tmp_path)
     render_project(project)

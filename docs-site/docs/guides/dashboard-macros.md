@@ -71,11 +71,11 @@ Alert macros render status-oriented callouts.
 
 | Macro | Returns |
 | --- | --- |
-| `alert.message(value, title=None, tone='info', metric=None, note=None, width=None)` | Generic alert |
-| `alert.info(value, title=None, metric=None, note=None, width=None)` | Informational alert |
-| `alert.success(value, title=None, metric=None, note=None, width=None)` | Success alert |
-| `alert.warning(value, title=None, metric=None, note=None, width=None)` | Warning alert |
-| `alert.error(value, title=None, metric=None, note=None, width=None)` | Error alert |
+| `alert.message(value, title=None, tone='info', metric=None, note=None, trigger=None, width=None)` | Generic alert |
+| `alert.info(value, title=None, metric=None, note=None, trigger=None, width=None)` | Informational alert |
+| `alert.success(value, title=None, metric=None, note=None, trigger=None, width=None)` | Success alert |
+| `alert.warning(value, title=None, metric=None, note=None, trigger=None, width=None)` | Warning alert |
+| `alert.error(value, title=None, metric=None, note=None, trigger=None, width=None)` | Error alert |
 | `alert.threshold(chart, field, value, op='lt', title=None, ...)` | Artifact-aware threshold alert |
 | `echo(value, title=None)` | Alias of `alert.info(...)` |
 
@@ -97,12 +97,18 @@ alert's tone, the message under it, and the card edged in the same colour.
 `note` adds a footnote under a dashed rule, on alerts, text and lists alike;
 use it to say where a number came from.
 
+`trigger` marks an alert that the data raised when glyf built the page, rather
+than one written by hand. The card gets an **Auto-triggered** pill with a
+lightning icon, and hovering it shows the rule, such as
+`latest-week average 28.5% < 40% target`. `alert.threshold(...)` sets it for
+you; a custom macro that picks a tone from a value should pass it too.
+
 ```yaml
 sections:
   - title: Health
     items:
       - component: "{{ alert.warning('Below its 40% target.', 'Activation health', metric='37.4%', note='Average of the plans in the latest week.') }}"
-      - component: "{{ ui.list(['W06: checklist shipped.', 'W09: trial extended.'], title='Release notes', note='Written by hand, not queried.') }}"
+      - component: "{{ ui.list(['Activated means onboarding finished that week.', 'The 40% target is for this quarter.'], title='Reading activation') }}"
 ```
 
 `alert.threshold(...)` reads the latest value from the named chart artifact and
@@ -208,12 +214,14 @@ def product_owner() -> c.ComponentSpec:
 
 
 def product_notes() -> c.ComponentSpec:
-    # Nothing here is queried: a macro can return fixed text as readily as a
-    # number from the build, which is how a dashboard carries notes.
+    # Notes a reader needs beside the activation charts. Nothing here is
+    # queried: a macro returns fixed text as readily as a number.
     return c.values_list(
-        ["W06: onboarding checklist shipped.", "W09: Pro trial extended to 21 days."],
-        title="Release notes",
-        note="Written by hand in dashboards/macros.py, not queried.",
+        [
+            "Activated means the user finished onboarding in that week.",
+            "The 40% target is the Growth team's for this quarter.",
+        ],
+        title="Reading activation",
     )
 
 
@@ -227,7 +235,13 @@ def activation_health(
     latest_rate = float(ctx.latest_value(chart, field))
     tone = "success" if latest_rate >= threshold else "warning"
     message = "On track." if tone == "success" else f"Below its {threshold:g}% target."
-    return c.alert(message, title="Activation health", tone=tone, metric=f"{latest_rate:.1f}%")
+    return c.alert(
+        message,
+        title="Activation health",
+        tone=tone,
+        metric=f"{latest_rate:.1f}%",
+        trigger=f"latest rate {latest_rate:.1f}% against a {threshold:g}% target",
+    )
 ```
 
 Used in YAML:

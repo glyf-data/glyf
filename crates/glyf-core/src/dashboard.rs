@@ -9,6 +9,9 @@ const TOOLBAR_VISIBILITIES: &[&str] = &["private", "public"];
 const DASHBOARD_THEMES: &[&str] = &["light", "dark"];
 const CHART_THEMES: &[&str] = &["auto", "light", "dark"];
 const METRIC_TRENDS: &[&str] = &["down", "flat", "up"];
+// How a filter is drawn: a dropdown, a row of buttons picking one value, or
+// toggles that keep any number of values on.
+const FILTER_CONTROLS: &[&str] = &["radio", "select", "toggle"];
 
 pub fn validate_dashboard_json_text(text: &str, path: &str) -> Result<(), CoreError> {
     let raw: Value = serde_json::from_str(text)
@@ -202,6 +205,16 @@ fn validate_filter(filter: &Value, index: usize) -> Result<(), CoreError> {
     if let Some(charts) = filter.get("charts") {
         if !charts.is_null() {
             validate_charts(Some(charts), &format!("{label}.charts"))?;
+        }
+    }
+    if let Some(control) = filter.get("control") {
+        if !control
+            .as_str()
+            .is_some_and(|control| FILTER_CONTROLS.contains(&control))
+        {
+            return Err(dashboard_error(format!(
+                "expected '{label}.control' to be one of: radio, select, toggle"
+            )));
         }
     }
 
@@ -724,6 +737,25 @@ mod tests {
         )
         .unwrap_err();
         assert!(error.to_string().contains("filters[1].charts"), "{error}");
+    }
+
+    #[test]
+    fn a_filter_may_choose_its_control() {
+        for control in ["select", "radio", "toggle"] {
+            validate_dashboard_json_text(
+                &format!(
+                    r#"{{"name": "d", "title": "D", "filters": [{{"field": "plan", "values": ["Pro"], "control": "{control}"}}]}}"#
+                ),
+                "d.yml",
+            )
+            .unwrap();
+        }
+        let error = validate_dashboard_json_text(
+            r#"{"name": "d", "title": "D", "filters": [{"field": "plan", "values": ["Pro"], "control": "slider"}]}"#,
+            "d.yml",
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("filters[1].control"), "{error}");
     }
 
     #[test]

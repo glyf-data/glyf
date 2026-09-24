@@ -12,6 +12,14 @@
   {% endif %}
 {%- endmacro %}
 
+{% macro trigger_badge(component) -%}
+  {% if component.trigger %}
+  <span class="glyf-badge glyf-trigger-badge" title="Triggered by the data when glyf built this page: {{ component.trigger }}">
+    {{ icons.icon("zap", "glyf-trigger-icon") }}Auto-triggered
+  </span>
+  {% endif %}
+{%- endmacro %}
+
 {% macro note(component) -%}
   {% if component.note %}
   <p class="glyf-component-footnote">{{ component.note }}</p>
@@ -35,11 +43,15 @@
   <div class="glyf-status-head">
     {{ tone_icon(component.tone) }}
     <span>{{ component.title or "Status" }}</span>
+    {{ trigger_badge(component) }}
   </div>
   <div class="glyf-status-value">{{ component.value }}</div>
   <p class="glyf-status-text">{{ component.text }}</p>
   {{ note(component) }}
   {% elif component.kind == "alert" %}
+  {% if component.trigger %}
+  <div class="glyf-trigger-row">{{ trigger_badge(component) }}</div>
+  {% endif %}
   <div class="glyf-alert glyf-tone-{{ component.tone }}">
     <span class="glyf-alert-mark">
       {{ tone_icon(component.tone) }}

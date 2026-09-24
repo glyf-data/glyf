@@ -54,6 +54,7 @@ filters:
     values: source(expenses_by_department, department)
   - field: segment
     values: source(days_to_pay, segment)
+    control: radio
 
 summary:
   - "{{ ui.label_value('Period', 'Apr 2025 to Mar 2026') }}"
