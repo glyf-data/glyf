@@ -80,7 +80,8 @@ const config = {
         items: [
           {to: '/docs/intro', label: 'Docs', position: 'left'},
           {to: '/docs/examples/gallery', label: 'Examples', position: 'left'},
-          {to: '/#embed', label: 'Embed', position: 'left'},
+          // A section of the home page, not a page: never shown as the current one.
+          {to: '/#embed', label: 'Embed', position: 'left', activeBaseRegex: '^/embed$'},
           {to: '/docs/integrations/overview', label: 'Integrations', position: 'left'},
           {to: '/docs/resources/roadmap', label: 'Roadmap', position: 'left'},
           {to: '/docs/resources/support', label: 'Support', position: 'left'},
