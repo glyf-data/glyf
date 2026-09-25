@@ -1,0 +1,29 @@
+{
+  "chart_type": "kpi",
+  "compare": "previous",
+  "compiled_sql_path": "compiled/success_rate_this_week.sql",
+  "kpi_html_path": "charts/success_rate_this_week.kpi.html",
+  "lineage": {
+    "models": {
+      "fct_agent_runs": {
+        "parents": [
+          "source:raw.agent_runs"
+        ],
+        "path": "models/fct_agent_runs.sql"
+      },
+      "fct_weekly_usage": {
+        "parents": [
+          "fct_agent_runs"
+        ],
+        "path": "models/fct_weekly_usage.sql"
+      }
+    },
+    "sources": [
+      "raw.agent_runs"
+    ]
+  },
+  "metadata_path": "charts/success_rate_this_week.json",
+  "name": "success_rate_this_week",
+  "title": "Success rate (%)",
+  "value": "success_rate"
+}

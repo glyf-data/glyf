@@ -80,6 +80,7 @@ const config = {
         items: [
           {to: '/docs/intro', label: 'Docs', position: 'left'},
           {to: '/docs/examples/gallery', label: 'Examples', position: 'left'},
+          {to: '/#embed', label: 'Embed', position: 'left'},
           {to: '/docs/integrations/overview', label: 'Integrations', position: 'left'},
           {to: '/docs/resources/roadmap', label: 'Roadmap', position: 'left'},
           {to: '/docs/resources/support', label: 'Support', position: 'left'},

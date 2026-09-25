@@ -1,0 +1,31 @@
+{
+  "chart_type": "area",
+  "color": "model",
+  "compiled_sql_path": "compiled/spend_by_model.sql",
+  "interactions": [
+    "tooltip",
+    "legend_filter"
+  ],
+  "lineage": {
+    "models": {
+      "fct_agent_runs": {
+        "parents": [
+          "source:raw.agent_runs"
+        ],
+        "path": "models/fct_agent_runs.sql"
+      }
+    },
+    "sources": [
+      "raw.agent_runs"
+    ]
+  },
+  "metadata_path": "charts/spend_by_model.json",
+  "name": "spend_by_model",
+  "png_path": "charts/spend_by_model.png",
+  "svg_path": "charts/spend_by_model.svg",
+  "title": "Spend by model",
+  "x": "week",
+  "x_title": "Week",
+  "y": "spend_usd",
+  "y_title": "USD"
+}

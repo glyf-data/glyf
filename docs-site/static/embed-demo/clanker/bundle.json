@@ -1,0 +1,349 @@
+{
+  "bundle_version": "1",
+  "charts": {
+    "daily_runs_by_outcome": {
+      "artifacts": {
+        "compiled_sql": "compiled/daily_runs_by_outcome.sql",
+        "data": null,
+        "metadata": "charts/daily_runs_by_outcome.json",
+        "png": "charts/daily_runs_by_outcome.png",
+        "svg": "charts/daily_runs_by_outcome.svg",
+        "vega": "charts/daily_runs_by_outcome.vega.json"
+      },
+      "chart_type": "bar",
+      "fields": {
+        "x": "day",
+        "y": "runs"
+      },
+      "interactions": [
+        "tooltip",
+        "legend_filter"
+      ],
+      "title": "Runs per day"
+    },
+    "duration_by_agent": {
+      "artifacts": {
+        "compiled_sql": "compiled/duration_by_agent.sql",
+        "data": null,
+        "metadata": "charts/duration_by_agent.json",
+        "png": "charts/duration_by_agent.png",
+        "svg": "charts/duration_by_agent.svg",
+        "vega": "charts/duration_by_agent.vega.json"
+      },
+      "chart_type": "boxplot",
+      "fields": {
+        "x": "agent",
+        "y": "duration_s"
+      },
+      "interactions": [
+        "tooltip"
+      ],
+      "title": "Run time by agent"
+    },
+    "median_duration_this_week": {
+      "artifacts": {
+        "compiled_sql": "compiled/median_duration_this_week.sql",
+        "data": null,
+        "kpi": "charts/median_duration_this_week.kpi.html",
+        "metadata": "charts/median_duration_this_week.json",
+        "png": null,
+        "svg": null,
+        "vega": null
+      },
+      "chart_type": "kpi",
+      "fields": {
+        "compare": "previous",
+        "value": "median_duration_s"
+      },
+      "title": "Median run time (s)"
+    },
+    "recent_failures": {
+      "artifacts": {
+        "compiled_sql": "compiled/recent_failures.sql",
+        "data": null,
+        "metadata": "charts/recent_failures.json",
+        "png": null,
+        "svg": null,
+        "table": "charts/recent_failures.table.html",
+        "vega": null
+      },
+      "chart_type": "table",
+      "fields": {
+        "columns": [
+          "error",
+          "agent",
+          "failures",
+          "last_seen"
+        ]
+      },
+      "title": "Failures by cause"
+    },
+    "run_cost_distribution": {
+      "artifacts": {
+        "compiled_sql": "compiled/run_cost_distribution.sql",
+        "data": null,
+        "metadata": "charts/run_cost_distribution.json",
+        "png": "charts/run_cost_distribution.png",
+        "svg": "charts/run_cost_distribution.svg",
+        "vega": "charts/run_cost_distribution.vega.json"
+      },
+      "chart_type": "histogram",
+      "fields": {
+        "x": "cost_usd",
+        "y": null
+      },
+      "interactions": [
+        "tooltip",
+        "legend_filter"
+      ],
+      "title": "Cost per run"
+    },
+    "runs_by_hour": {
+      "artifacts": {
+        "compiled_sql": "compiled/runs_by_hour.sql",
+        "data": null,
+        "metadata": "charts/runs_by_hour.json",
+        "png": "charts/runs_by_hour.png",
+        "svg": "charts/runs_by_hour.svg",
+        "vega": "charts/runs_by_hour.vega.json"
+      },
+      "chart_type": "heatmap",
+      "fields": {
+        "x": "hour",
+        "y": "weekday"
+      },
+      "interactions": [
+        "tooltip"
+      ],
+      "title": "When agents run"
+    },
+    "runs_by_trigger": {
+      "artifacts": {
+        "compiled_sql": "compiled/runs_by_trigger.sql",
+        "data": null,
+        "metadata": "charts/runs_by_trigger.json",
+        "png": "charts/runs_by_trigger.png",
+        "svg": "charts/runs_by_trigger.svg",
+        "vega": "charts/runs_by_trigger.vega.json"
+      },
+      "chart_type": "pie",
+      "fields": {
+        "x": "trigger",
+        "y": "runs"
+      },
+      "interactions": [
+        "tooltip"
+      ],
+      "title": "What starts a run"
+    },
+    "runs_this_week": {
+      "artifacts": {
+        "compiled_sql": "compiled/runs_this_week.sql",
+        "data": null,
+        "kpi": "charts/runs_this_week.kpi.html",
+        "metadata": "charts/runs_this_week.json",
+        "png": null,
+        "svg": null,
+        "vega": null
+      },
+      "chart_type": "kpi",
+      "fields": {
+        "compare": "previous",
+        "value": "runs"
+      },
+      "title": "Agent runs"
+    },
+    "spend_by_agent": {
+      "artifacts": {
+        "compiled_sql": "compiled/spend_by_agent.sql",
+        "data": null,
+        "metadata": "charts/spend_by_agent.json",
+        "png": "charts/spend_by_agent.png",
+        "svg": "charts/spend_by_agent.svg",
+        "vega": "charts/spend_by_agent.vega.json"
+      },
+      "chart_type": "bar",
+      "fields": {
+        "x": "agent",
+        "y": "spend_usd"
+      },
+      "interactions": [
+        "tooltip",
+        "legend_filter"
+      ],
+      "title": "Spend by agent"
+    },
+    "spend_by_model": {
+      "artifacts": {
+        "compiled_sql": "compiled/spend_by_model.sql",
+        "data": null,
+        "metadata": "charts/spend_by_model.json",
+        "png": "charts/spend_by_model.png",
+        "svg": "charts/spend_by_model.svg",
+        "vega": "charts/spend_by_model.vega.json"
+      },
+      "chart_type": "area",
+      "fields": {
+        "x": "week",
+        "y": "spend_usd"
+      },
+      "interactions": [
+        "tooltip",
+        "legend_filter"
+      ],
+      "title": "Spend by model"
+    },
+    "spend_this_week": {
+      "artifacts": {
+        "compiled_sql": "compiled/spend_this_week.sql",
+        "data": null,
+        "kpi": "charts/spend_this_week.kpi.html",
+        "metadata": "charts/spend_this_week.json",
+        "png": null,
+        "svg": null,
+        "vega": null
+      },
+      "chart_type": "kpi",
+      "fields": {
+        "compare": "previous",
+        "value": "spend_usd"
+      },
+      "title": "Spend (USD)"
+    },
+    "success_rate_this_week": {
+      "artifacts": {
+        "compiled_sql": "compiled/success_rate_this_week.sql",
+        "data": null,
+        "kpi": "charts/success_rate_this_week.kpi.html",
+        "metadata": "charts/success_rate_this_week.json",
+        "png": null,
+        "svg": null,
+        "vega": null
+      },
+      "chart_type": "kpi",
+      "fields": {
+        "compare": "previous",
+        "value": "success_rate"
+      },
+      "title": "Success rate (%)"
+    },
+    "tokens_vs_cost": {
+      "artifacts": {
+        "compiled_sql": "compiled/tokens_vs_cost.sql",
+        "data": null,
+        "metadata": "charts/tokens_vs_cost.json",
+        "png": "charts/tokens_vs_cost.png",
+        "svg": "charts/tokens_vs_cost.svg",
+        "vega": "charts/tokens_vs_cost.vega.json"
+      },
+      "chart_type": "scatter",
+      "fields": {
+        "x": "tokens",
+        "y": "cost_usd"
+      },
+      "interactions": [
+        "tooltip",
+        "zoom"
+      ],
+      "title": "Tokens and cost per run"
+    },
+    "weekly_success_by_agent": {
+      "artifacts": {
+        "compiled_sql": "compiled/weekly_success_by_agent.sql",
+        "data": null,
+        "metadata": "charts/weekly_success_by_agent.json",
+        "png": "charts/weekly_success_by_agent.png",
+        "svg": "charts/weekly_success_by_agent.svg",
+        "vega": "charts/weekly_success_by_agent.vega.json"
+      },
+      "chart_type": "line",
+      "fields": {
+        "x": "week",
+        "y": "success_rate"
+      },
+      "interactions": [
+        "tooltip",
+        "legend_filter"
+      ],
+      "title": "Success rate by agent"
+    }
+  },
+  "dashboards": {
+    "insights": {
+      "chart_theme": "auto",
+      "charts": [
+        "runs_this_week",
+        "success_rate_this_week",
+        "spend_this_week",
+        "median_duration_this_week",
+        "daily_runs_by_outcome",
+        "runs_by_trigger",
+        "weekly_success_by_agent",
+        "duration_by_agent",
+        "spend_by_model",
+        "tokens_vs_cost",
+        "spend_by_agent",
+        "recent_failures",
+        "runs_by_hour"
+      ],
+      "description": "What Glyf Data's agents did on Clanker over the last six weeks.",
+      "filters": [
+        {
+          "control": "select",
+          "field": "agent",
+          "source": {
+            "chart": "weekly_success_by_agent",
+            "field": "agent"
+          },
+          "values": [
+            "Code Reviewer",
+            "Invoice Parser",
+            "Lead Enricher",
+            "On-call Summarizer",
+            "Support Triage"
+          ]
+        },
+        {
+          "control": "toggle",
+          "field": "model",
+          "source": {
+            "chart": "spend_by_model",
+            "field": "model"
+          },
+          "values": [
+            "clank-mini",
+            "clank-pro",
+            "clank-ultra"
+          ]
+        }
+      ],
+      "path": "dashboards/insights.html",
+      "source": "dashboards/insights.yml",
+      "tags": [
+        "agents",
+        "usage",
+        "spend"
+      ],
+      "theme": "dark",
+      "title": "Platform Insights"
+    }
+  },
+  "generated_at": "2026-09-24T23:00:38Z",
+  "glyf_version": "0.17.0",
+  "mode": "public_site",
+  "paths": {
+    "assets": "assets/",
+    "charts": "charts/",
+    "compiled": "compiled/",
+    "dashboards": "dashboards/",
+    "index": "index.html"
+  },
+  "project": "clanker_insights",
+  "security": {
+    "browser_visible_data": "Public exports include rendered dashboard HTML and public chart artifacts. Embedded app packages may intentionally expose Vega specs to the browser. Each drawn chart's Vega specification is published for embedding (export.embed), with the rows it was drawn from.",
+    "embedded_specs": true,
+    "internal_artifacts": [],
+    "internal_artifacts_included": false,
+    "public_export": true
+  }
+}

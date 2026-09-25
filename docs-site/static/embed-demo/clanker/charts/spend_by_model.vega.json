@@ -1,0 +1,192 @@
+{
+  "config": {
+    "view": {
+      "continuousWidth": 300,
+      "continuousHeight": 300,
+      "stroke": "#d9e2ec"
+    },
+    "axis": {
+      "labelAngle": 0,
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titleFontWeight": 600,
+      "labelFont": "Hanken Grotesk",
+      "titleFont": "Hanken Grotesk"
+    },
+    "legend": {
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titleFontWeight": 600,
+      "labelFont": "Hanken Grotesk",
+      "titleFont": "Hanken Grotesk"
+    },
+    "title": {
+      "fontSize": 15,
+      "fontWeight": 600,
+      "subtitleFontSize": 12,
+      "subtitleFontWeight": 400,
+      "font": "Hanken Grotesk",
+      "subtitleFont": "Hanken Grotesk"
+    }
+  },
+  "data": {
+    "name": "data-b0d4e7c50528239717843113b6e3aef6"
+  },
+  "mark": {
+    "type": "area",
+    "opacity": 0.7
+  },
+  "encoding": {
+    "color": {
+      "field": "model",
+      "type": "nominal"
+    },
+    "opacity": {
+      "condition": {
+        "param": "param_71b48305c7a3be24",
+        "value": 1
+      },
+      "value": 0.2
+    },
+    "tooltip": [
+      {
+        "field": "week",
+        "type": "nominal"
+      },
+      {
+        "field": "spend_usd",
+        "type": "quantitative"
+      },
+      {
+        "field": "model",
+        "type": "nominal"
+      }
+    ],
+    "x": {
+      "axis": {
+        "labelAngle": 0
+      },
+      "field": "week",
+      "title": "Week",
+      "type": "nominal"
+    },
+    "y": {
+      "field": "spend_usd",
+      "title": "USD",
+      "type": "quantitative"
+    }
+  },
+  "height": 400,
+  "params": [
+    {
+      "name": "param_71b48305c7a3be24",
+      "select": {
+        "type": "point",
+        "fields": [
+          "model"
+        ]
+      },
+      "bind": "legend"
+    }
+  ],
+  "title": {
+    "text": "Spend by model",
+    "subtitle": "clank-ultra is an eighth of the runs and most of the bill"
+  },
+  "width": 800,
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json",
+  "datasets": {
+    "data-b0d4e7c50528239717843113b6e3aef6": [
+      {
+        "week": "2026-W33",
+        "model": "clank-mini",
+        "spend_usd": 10.72
+      },
+      {
+        "week": "2026-W33",
+        "model": "clank-pro",
+        "spend_usd": 44.07
+      },
+      {
+        "week": "2026-W33",
+        "model": "clank-ultra",
+        "spend_usd": 118.87
+      },
+      {
+        "week": "2026-W34",
+        "model": "clank-mini",
+        "spend_usd": 10.49
+      },
+      {
+        "week": "2026-W34",
+        "model": "clank-pro",
+        "spend_usd": 39.73
+      },
+      {
+        "week": "2026-W34",
+        "model": "clank-ultra",
+        "spend_usd": 141.21
+      },
+      {
+        "week": "2026-W35",
+        "model": "clank-mini",
+        "spend_usd": 10.96
+      },
+      {
+        "week": "2026-W35",
+        "model": "clank-pro",
+        "spend_usd": 47.81
+      },
+      {
+        "week": "2026-W35",
+        "model": "clank-ultra",
+        "spend_usd": 145.89
+      },
+      {
+        "week": "2026-W36",
+        "model": "clank-mini",
+        "spend_usd": 11.93
+      },
+      {
+        "week": "2026-W36",
+        "model": "clank-pro",
+        "spend_usd": 54.84
+      },
+      {
+        "week": "2026-W36",
+        "model": "clank-ultra",
+        "spend_usd": 162.81
+      },
+      {
+        "week": "2026-W37",
+        "model": "clank-mini",
+        "spend_usd": 11.15
+      },
+      {
+        "week": "2026-W37",
+        "model": "clank-pro",
+        "spend_usd": 48.34
+      },
+      {
+        "week": "2026-W37",
+        "model": "clank-ultra",
+        "spend_usd": 156.13
+      },
+      {
+        "week": "2026-W38",
+        "model": "clank-mini",
+        "spend_usd": 12.26
+      },
+      {
+        "week": "2026-W38",
+        "model": "clank-pro",
+        "spend_usd": 55.47
+      },
+      {
+        "week": "2026-W38",
+        "model": "clank-ultra",
+        "spend_usd": 196.12
+      }
+    ]
+  }
+}

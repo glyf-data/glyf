@@ -1,0 +1,2165 @@
+{
+  "config": {
+    "view": {
+      "continuousWidth": 300,
+      "continuousHeight": 300,
+      "stroke": "#d9e2ec"
+    },
+    "axis": {
+      "labelAngle": 0,
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titleFontWeight": 600,
+      "labelFont": "Hanken Grotesk",
+      "titleFont": "Hanken Grotesk"
+    },
+    "legend": {
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titleFontWeight": 600,
+      "labelFont": "Hanken Grotesk",
+      "titleFont": "Hanken Grotesk"
+    },
+    "title": {
+      "fontSize": 15,
+      "fontWeight": 600,
+      "subtitleFontSize": 12,
+      "subtitleFontWeight": 400,
+      "font": "Hanken Grotesk",
+      "subtitleFont": "Hanken Grotesk"
+    }
+  },
+  "data": {
+    "name": "data-f08a373377c124eb3f131a47dedd0091"
+  },
+  "mark": {
+    "type": "bar"
+  },
+  "encoding": {
+    "color": {
+      "field": "outcome",
+      "type": "nominal"
+    },
+    "opacity": {
+      "condition": {
+        "param": "param_49ca7c54da862deb",
+        "value": 1
+      },
+      "value": 0.2
+    },
+    "tooltip": [
+      {
+        "field": "day",
+        "type": "nominal"
+      },
+      {
+        "field": "runs",
+        "type": "quantitative"
+      },
+      {
+        "field": "outcome",
+        "type": "nominal"
+      }
+    ],
+    "x": {
+      "axis": {
+        "labelAngle": 0
+      },
+      "field": "day",
+      "title": "Day",
+      "type": "nominal"
+    },
+    "y": {
+      "field": "runs",
+      "title": "Runs",
+      "type": "quantitative"
+    }
+  },
+  "height": 400,
+  "params": [
+    {
+      "name": "param_49ca7c54da862deb",
+      "select": {
+        "type": "point",
+        "fields": [
+          "outcome"
+        ]
+      },
+      "bind": "legend"
+    }
+  ],
+  "title": {
+    "text": "Runs per day",
+    "subtitle": "Weekends run at about a third of the weekday volume"
+  },
+  "width": 1100,
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json",
+  "datasets": {
+    "data-f08a373377c124eb3f131a47dedd0091": [
+      {
+        "day": "08-10",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-10",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-10",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 2
+      },
+      {
+        "day": "08-10",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 6
+      },
+      {
+        "day": "08-10",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 11
+      },
+      {
+        "day": "08-10",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 8
+      },
+      {
+        "day": "08-10",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-10",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 21
+      },
+      {
+        "day": "08-11",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-11",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "08-11",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 2
+      },
+      {
+        "day": "08-11",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "08-11",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 14
+      },
+      {
+        "day": "08-11",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 10
+      },
+      {
+        "day": "08-11",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-11",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 28
+      },
+      {
+        "day": "08-12",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-12",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 3
+      },
+      {
+        "day": "08-12",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 2
+      },
+      {
+        "day": "08-12",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-12",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 4
+      },
+      {
+        "day": "08-12",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 11
+      },
+      {
+        "day": "08-12",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 8
+      },
+      {
+        "day": "08-12",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-12",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 21
+      },
+      {
+        "day": "08-13",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "08-13",
+        "outcome": "escalated",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "08-13",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-13",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "08-13",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 9
+      },
+      {
+        "day": "08-13",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 13
+      },
+      {
+        "day": "08-13",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 14
+      },
+      {
+        "day": "08-13",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-13",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 19
+      },
+      {
+        "day": "08-14",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-14",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-14",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "08-14",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 9
+      },
+      {
+        "day": "08-14",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 19
+      },
+      {
+        "day": "08-14",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 9
+      },
+      {
+        "day": "08-14",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-14",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 24
+      },
+      {
+        "day": "08-15",
+        "outcome": "escalated",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "08-15",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 3
+      },
+      {
+        "day": "08-15",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 4
+      },
+      {
+        "day": "08-15",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 3
+      },
+      {
+        "day": "08-15",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 9
+      },
+      {
+        "day": "08-16",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 3
+      },
+      {
+        "day": "08-16",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 5
+      },
+      {
+        "day": "08-16",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 4
+      },
+      {
+        "day": "08-16",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "08-16",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 9
+      },
+      {
+        "day": "08-17",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-17",
+        "outcome": "escalated",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "08-17",
+        "outcome": "escalated",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-17",
+        "outcome": "escalated",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "08-17",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-17",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "08-17",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-17",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "08-17",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 13
+      },
+      {
+        "day": "08-17",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 8
+      },
+      {
+        "day": "08-17",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 3
+      },
+      {
+        "day": "08-17",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 20
+      },
+      {
+        "day": "08-18",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "08-18",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-18",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-18",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 9
+      },
+      {
+        "day": "08-18",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 13
+      },
+      {
+        "day": "08-18",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 8
+      },
+      {
+        "day": "08-18",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-18",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 24
+      },
+      {
+        "day": "08-19",
+        "outcome": "escalated",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-19",
+        "outcome": "escalated",
+        "agent": "On-call Summarizer",
+        "runs": 2
+      },
+      {
+        "day": "08-19",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-19",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "08-19",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 15
+      },
+      {
+        "day": "08-19",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 7
+      },
+      {
+        "day": "08-19",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 2
+      },
+      {
+        "day": "08-19",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 22
+      },
+      {
+        "day": "08-20",
+        "outcome": "escalated",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "08-20",
+        "outcome": "escalated",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "08-20",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-20",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 2
+      },
+      {
+        "day": "08-20",
+        "outcome": "failed",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "08-20",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "08-20",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 17
+      },
+      {
+        "day": "08-20",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 9
+      },
+      {
+        "day": "08-20",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 3
+      },
+      {
+        "day": "08-20",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 21
+      },
+      {
+        "day": "08-21",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-21",
+        "outcome": "escalated",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "08-21",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-21",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "08-21",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "08-21",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 12
+      },
+      {
+        "day": "08-21",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 9
+      },
+      {
+        "day": "08-21",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-21",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 23
+      },
+      {
+        "day": "08-22",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-22",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 2
+      },
+      {
+        "day": "08-22",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "08-22",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 3
+      },
+      {
+        "day": "08-22",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 4
+      },
+      {
+        "day": "08-22",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 2
+      },
+      {
+        "day": "08-22",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 8
+      },
+      {
+        "day": "08-23",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-23",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "08-23",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-23",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-23",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-23",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 6
+      },
+      {
+        "day": "08-23",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 3
+      },
+      {
+        "day": "08-23",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 2
+      },
+      {
+        "day": "08-23",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 8
+      },
+      {
+        "day": "08-24",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-24",
+        "outcome": "escalated",
+        "agent": "Lead Enricher",
+        "runs": 2
+      },
+      {
+        "day": "08-24",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-24",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "08-24",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-24",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-24",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 7
+      },
+      {
+        "day": "08-24",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 10
+      },
+      {
+        "day": "08-24",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 8
+      },
+      {
+        "day": "08-24",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 5
+      },
+      {
+        "day": "08-24",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 25
+      },
+      {
+        "day": "08-25",
+        "outcome": "escalated",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-25",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-25",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 7
+      },
+      {
+        "day": "08-25",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 13
+      },
+      {
+        "day": "08-25",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 9
+      },
+      {
+        "day": "08-25",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-25",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 24
+      },
+      {
+        "day": "08-26",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-26",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "08-26",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-26",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "08-26",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 15
+      },
+      {
+        "day": "08-26",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 10
+      },
+      {
+        "day": "08-26",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-26",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 21
+      },
+      {
+        "day": "08-27",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-27",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "08-27",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 14
+      },
+      {
+        "day": "08-27",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 12
+      },
+      {
+        "day": "08-27",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 3
+      },
+      {
+        "day": "08-27",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 32
+      },
+      {
+        "day": "08-28",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-28",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-28",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 11
+      },
+      {
+        "day": "08-28",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 13
+      },
+      {
+        "day": "08-28",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 11
+      },
+      {
+        "day": "08-28",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 5
+      },
+      {
+        "day": "08-28",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 27
+      },
+      {
+        "day": "08-29",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "08-29",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "08-29",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-29",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 3
+      },
+      {
+        "day": "08-29",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 5
+      },
+      {
+        "day": "08-29",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 3
+      },
+      {
+        "day": "08-29",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "08-29",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 10
+      },
+      {
+        "day": "08-30",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "08-30",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "08-30",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 4
+      },
+      {
+        "day": "08-30",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 3
+      },
+      {
+        "day": "08-30",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 2
+      },
+      {
+        "day": "08-30",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 9
+      },
+      {
+        "day": "08-31",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "08-31",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 2
+      },
+      {
+        "day": "08-31",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 2
+      },
+      {
+        "day": "08-31",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 11
+      },
+      {
+        "day": "08-31",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 13
+      },
+      {
+        "day": "08-31",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 10
+      },
+      {
+        "day": "08-31",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "08-31",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 26
+      },
+      {
+        "day": "09-01",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-01",
+        "outcome": "escalated",
+        "agent": "Lead Enricher",
+        "runs": 2
+      },
+      {
+        "day": "09-01",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-01",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 2
+      },
+      {
+        "day": "09-01",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 13
+      },
+      {
+        "day": "09-01",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 15
+      },
+      {
+        "day": "09-01",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 9
+      },
+      {
+        "day": "09-01",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "09-01",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 18
+      },
+      {
+        "day": "09-02",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 2
+      },
+      {
+        "day": "09-02",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-02",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-02",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 9
+      },
+      {
+        "day": "09-02",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 14
+      },
+      {
+        "day": "09-02",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 10
+      },
+      {
+        "day": "09-02",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 5
+      },
+      {
+        "day": "09-02",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 23
+      },
+      {
+        "day": "09-03",
+        "outcome": "escalated",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-03",
+        "outcome": "escalated",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "09-03",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-03",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-03",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 9
+      },
+      {
+        "day": "09-03",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 15
+      },
+      {
+        "day": "09-03",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 9
+      },
+      {
+        "day": "09-03",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "09-03",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 29
+      },
+      {
+        "day": "09-04",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "09-04",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 2
+      },
+      {
+        "day": "09-04",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 3
+      },
+      {
+        "day": "09-04",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 2
+      },
+      {
+        "day": "09-04",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 9
+      },
+      {
+        "day": "09-04",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 11
+      },
+      {
+        "day": "09-04",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 10
+      },
+      {
+        "day": "09-04",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 3
+      },
+      {
+        "day": "09-04",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 30
+      },
+      {
+        "day": "09-05",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-05",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-05",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 3
+      },
+      {
+        "day": "09-05",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 5
+      },
+      {
+        "day": "09-05",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 4
+      },
+      {
+        "day": "09-05",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "09-05",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 8
+      },
+      {
+        "day": "09-06",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-06",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 4
+      },
+      {
+        "day": "09-06",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 6
+      },
+      {
+        "day": "09-06",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 4
+      },
+      {
+        "day": "09-06",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 2
+      },
+      {
+        "day": "09-06",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 10
+      },
+      {
+        "day": "09-07",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-07",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 5
+      },
+      {
+        "day": "09-07",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-07",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-07",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-07",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "09-07",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 14
+      },
+      {
+        "day": "09-07",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 8
+      },
+      {
+        "day": "09-07",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 5
+      },
+      {
+        "day": "09-07",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 26
+      },
+      {
+        "day": "09-08",
+        "outcome": "escalated",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-08",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 2
+      },
+      {
+        "day": "09-08",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 13
+      },
+      {
+        "day": "09-08",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 9
+      },
+      {
+        "day": "09-08",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 7
+      },
+      {
+        "day": "09-08",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 5
+      },
+      {
+        "day": "09-08",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 29
+      },
+      {
+        "day": "09-09",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-09",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-09",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 6
+      },
+      {
+        "day": "09-09",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 12
+      },
+      {
+        "day": "09-09",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 10
+      },
+      {
+        "day": "09-09",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "09-09",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 32
+      },
+      {
+        "day": "09-10",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-10",
+        "outcome": "escalated",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-10",
+        "outcome": "escalated",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-10",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 4
+      },
+      {
+        "day": "09-10",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 5
+      },
+      {
+        "day": "09-10",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 16
+      },
+      {
+        "day": "09-10",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 9
+      },
+      {
+        "day": "09-10",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 5
+      },
+      {
+        "day": "09-10",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 28
+      },
+      {
+        "day": "09-11",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-11",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "09-11",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-11",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-11",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "09-11",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 11
+      },
+      {
+        "day": "09-11",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 9
+      },
+      {
+        "day": "09-11",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "09-11",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 31
+      },
+      {
+        "day": "09-12",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "09-12",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-12",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-12",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "09-12",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 5
+      },
+      {
+        "day": "09-12",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 3
+      },
+      {
+        "day": "09-12",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "09-12",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 11
+      },
+      {
+        "day": "09-13",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 5
+      },
+      {
+        "day": "09-13",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 6
+      },
+      {
+        "day": "09-13",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 4
+      },
+      {
+        "day": "09-13",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "09-13",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 10
+      },
+      {
+        "day": "09-14",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 3
+      },
+      {
+        "day": "09-14",
+        "outcome": "escalated",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-14",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-14",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-14",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 8
+      },
+      {
+        "day": "09-14",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 15
+      },
+      {
+        "day": "09-14",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 10
+      },
+      {
+        "day": "09-14",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 5
+      },
+      {
+        "day": "09-14",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 30
+      },
+      {
+        "day": "09-15",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-15",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 2
+      },
+      {
+        "day": "09-15",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-15",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-15",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 10
+      },
+      {
+        "day": "09-15",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 13
+      },
+      {
+        "day": "09-15",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 12
+      },
+      {
+        "day": "09-15",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 5
+      },
+      {
+        "day": "09-15",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 34
+      },
+      {
+        "day": "09-16",
+        "outcome": "escalated",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "09-16",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-16",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-16",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 2
+      },
+      {
+        "day": "09-16",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 11
+      },
+      {
+        "day": "09-16",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 12
+      },
+      {
+        "day": "09-16",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 10
+      },
+      {
+        "day": "09-16",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "09-16",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 28
+      },
+      {
+        "day": "09-17",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "09-17",
+        "outcome": "escalated",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-17",
+        "outcome": "escalated",
+        "agent": "On-call Summarizer",
+        "runs": 2
+      },
+      {
+        "day": "09-17",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 2
+      },
+      {
+        "day": "09-17",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "09-17",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-17",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-17",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 9
+      },
+      {
+        "day": "09-17",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 15
+      },
+      {
+        "day": "09-17",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 10
+      },
+      {
+        "day": "09-17",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 3
+      },
+      {
+        "day": "09-17",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 22
+      },
+      {
+        "day": "09-18",
+        "outcome": "escalated",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "09-18",
+        "outcome": "escalated",
+        "agent": "Support Triage",
+        "runs": 2
+      },
+      {
+        "day": "09-18",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-18",
+        "outcome": "failed",
+        "agent": "Lead Enricher",
+        "runs": 1
+      },
+      {
+        "day": "09-18",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 3
+      },
+      {
+        "day": "09-18",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 10
+      },
+      {
+        "day": "09-18",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 12
+      },
+      {
+        "day": "09-18",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 11
+      },
+      {
+        "day": "09-18",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 4
+      },
+      {
+        "day": "09-18",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 34
+      },
+      {
+        "day": "09-19",
+        "outcome": "escalated",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "09-19",
+        "outcome": "escalated",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-19",
+        "outcome": "failed",
+        "agent": "Code Reviewer",
+        "runs": 1
+      },
+      {
+        "day": "09-19",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 2
+      },
+      {
+        "day": "09-19",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 2
+      },
+      {
+        "day": "09-19",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 6
+      },
+      {
+        "day": "09-19",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 3
+      },
+      {
+        "day": "09-19",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 2
+      },
+      {
+        "day": "09-19",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 11
+      },
+      {
+        "day": "09-20",
+        "outcome": "failed",
+        "agent": "Invoice Parser",
+        "runs": 1
+      },
+      {
+        "day": "09-20",
+        "outcome": "failed",
+        "agent": "Support Triage",
+        "runs": 1
+      },
+      {
+        "day": "09-20",
+        "outcome": "succeeded",
+        "agent": "Code Reviewer",
+        "runs": 4
+      },
+      {
+        "day": "09-20",
+        "outcome": "succeeded",
+        "agent": "Invoice Parser",
+        "runs": 5
+      },
+      {
+        "day": "09-20",
+        "outcome": "succeeded",
+        "agent": "Lead Enricher",
+        "runs": 4
+      },
+      {
+        "day": "09-20",
+        "outcome": "succeeded",
+        "agent": "On-call Summarizer",
+        "runs": 1
+      },
+      {
+        "day": "09-20",
+        "outcome": "succeeded",
+        "agent": "Support Triage",
+        "runs": 9
+      }
+    ]
+  }
+}
