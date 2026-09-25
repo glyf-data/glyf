@@ -3726,8 +3726,14 @@ nav.navbar .navbar-sidebar__items .navbarSlackLink {
 
 
 /* ---------- Hero: the second demo, embedded analytics ---------- */
-.glyfHero__demos { display: flex; flex-wrap: wrap; gap: 10px; }
-.glyfHero .glyfHero__demoButton--app { background: #fff; color: var(--hero-blue); border: 1px solid rgba(37, 99, 235, 0.35); box-shadow: none; }
+/* The two demos side by side, the same height, sharing the copy column. */
+.glyfHero__demos { display: flex; flex-wrap: nowrap; gap: 8px; }
+.glyfHero .glyfHero__demos .glyfHero__demoButton { flex: 0 1 auto; gap: 6px; min-height: 44px; margin-top: 8px; padding: 0 13px; font-size: 0.85rem; white-space: nowrap; }
+.glyfHero .glyfHero__demoButton--app { background: #fff; color: var(--hero-blue); border: 1px solid rgba(37, 99, 235, 0.45); box-shadow: none; }
+.glyfHero__newTag { padding: 1px 6px; border-radius: 999px; background: var(--hero-blue); color: #fff; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em; }
+@media (max-width: 560px), (min-width: 997px) and (max-width: 1260px) {
+  .glyfHero__demos { flex-wrap: wrap; }
+}
 .glyfHero .glyfHero__demoButton--app:hover { background: #eff6ff; color: var(--hero-blue-strong); }
 .glyfHeroOutput--app .glyfHeroCardText small { white-space: nowrap; }
 

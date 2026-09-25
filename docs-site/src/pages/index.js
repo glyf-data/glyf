@@ -812,6 +812,8 @@ charts:{'\n'}
 
 // The Clanker demo: glyf charts embedded in a product with @glyf-data/react.
 const EMBED_DEMO_URL = 'https://clanker.glyfdata.com';
+// The same Clanker charts as a glyf dashboard, served beside the app.
+const CLANKER_DASHBOARD_URL = 'https://clanker.glyfdata.com/glyf/clanker_insights/dashboards/insights';
 
 function useLiveDashboard() {
   const liveDashboardUrl = useBaseUrl('/dashboards/product-analytics/dashboards/product.html');
@@ -836,13 +838,21 @@ function useLiveDashboard() {
     setLiveOpen,
     openLive: opener('dashboard'),
     openApp: opener('app'),
+    openAppDashboard: opener('appDashboard'),
   };
 }
 
 const LIVE_DEMOS = {
   dashboard: {title: 'Product Analytics', note: 'built by glyf from a dbt project'},
   app: {title: 'Clanker Insights', note: 'glyf charts inside a product, drawn with @glyf-data/react'},
+  appDashboard: {title: 'Platform Insights', note: 'the same Clanker charts as a glyf dashboard'},
 };
+
+function liveUrl(which, liveDashboardUrl) {
+  if (which === 'app') return EMBED_DEMO_URL;
+  if (which === 'appDashboard') return CLANKER_DASHBOARD_URL;
+  return liveDashboardUrl;
+}
 
 function LiveOverlay({which, url, onClose}) {
   const demo = LIVE_DEMOS[which];
@@ -865,7 +875,7 @@ function HomepageHeader({live}) {
       {liveOpen ? (
         <LiveOverlay
           which={liveOpen}
-          url={liveOpen === 'app' ? EMBED_DEMO_URL : liveDashboardUrl}
+          url={liveUrl(liveOpen, liveDashboardUrl)}
           onClose={() => setLiveOpen(false)}
         />
       ) : null}
@@ -887,6 +897,7 @@ function HomepageHeader({live}) {
                 View Glyf generated dashboard <span aria-hidden="true">&rarr;</span>
               </a>
               <a className="glyfHero__demoButton glyfHero__demoButton--app" href={EMBED_DEMO_URL} onClick={openApp}>
+                <span className="glyfHero__newTag">New</span>
                 See it inside a product <span aria-hidden="true">&rarr;</span>
               </a>
             </div>
@@ -1526,8 +1537,8 @@ function LiveEmbedPreview() {
 }
 
 function EmbedSection({live}) {
-  const {liveDashboardUrl, openLive, openApp} = live;
-  const dashboardShot = useBaseUrl('/img/examples/product-analytics-banner.png');
+  const {openAppDashboard, openApp} = live;
+  const dashboardShot = useBaseUrl('/img/embed/clanker-dashboard.webp');
   return (
     <section className="embedSection" id="embed" aria-labelledby="embed-title">
       <div className="container">
@@ -1540,20 +1551,23 @@ function EmbedSection({live}) {
           </p>
         </div>
         <div className="embedSection__ways">
-          <a className="embedWay embedWay--dashboard" href={liveDashboardUrl} onClick={openLive}>
-            <img src={dashboardShot} alt="A glyf dashboard: weekly active users and sessions" loading="lazy" width="1200" height="675" />
+          <a className="embedWay embedWay--dashboard" href={CLANKER_DASHBOARD_URL} onClick={openAppDashboard}>
+            <img src={dashboardShot} alt="The Clanker charts as a glyf dashboard: agent runs, success rate, spend and run time this week" loading="lazy" width="1200" height="675" />
             <span className="embedWay__body">
               <strong>Dashboards you host</strong>
-              <span>A static site on any host. No server, no BI licence.</span>
-              <span className="embedWay__link">Open the live dashboard <span aria-hidden="true">&rarr;</span></span>
+              <span>
+                The Clanker charts as a glyf dashboard: a static site on any host, with filters,
+                lineage and source. No server, no BI licence.
+              </span>
+              <span className="embedWay__link">Open this dashboard <span aria-hidden="true">&rarr;</span></span>
             </span>
           </a>
           <div className="embedWay embedWay--app">
             <div className="embedWay__head">
               <strong>Inside your product</strong>
               <span>
-                The same charts, drawn live in your app: your theme, tooltips, the dashboard's
-                filters. Try the model toggles.
+                The same charts, drawn live inside the Clanker app: its theme, tooltips, the
+                dashboard's filters. Try the model toggles.
               </span>
             </div>
             <LiveEmbedPreview />
