@@ -75,7 +75,7 @@ const featureSections = [
       },
       {
         name: 'React components',
-        desc: '@glyf/react loads the bundle.json every build writes and renders its charts with GlyfProvider and GlyfChart, as SVG or PNG. No BI SDK and no server.',
+        desc: '@glyf-data/react draws the charts from the bundle.json every build writes, live in your own app: tooltips, your theme, the dashboard\'s filters. On npm. No BI SDK and no server.',
         status: 'preview',
         reverse: true,
         visual: 'reactEmbed',
@@ -785,16 +785,16 @@ charts:{'\n'}
     case 'reactEmbed':
       return (
         <FeatureMacWindow filename={item.filename}>
-          <pre><code><span className="codeKw">import</span> {'{ '}<span className="codeFn">GlyfProvider</span>, <span className="codeFn">GlyfChart</span>{' }'} <span className="codeKw">from</span> <span className="codeStr">'@glyf/react'</span>{'\n\n'}
+          <pre><code><span className="codeKw">import</span> {'{ '}<span className="codeFn">GlyfChart</span>, <span className="codeFn">GlyfFilters</span>, <span className="codeFn">GlyfProvider</span>{' }'} <span className="codeKw">from</span> <span className="codeStr">'@glyf-data/react'</span>{'\n\n'}
 <span className="codeKw">export function</span> <span className="codeFn">Analytics</span>() {'{'}{'\n'}
 {'  '}<span className="codeKw">return</span> ({'\n'}
-{'    '}&lt;<span className="codeFn">GlyfProvider</span> bundleUrl=<span className="codeStr">"/glyf/product_analytics/bundle.json"</span>&gt;{'\n'}
-{'      '}&lt;<span className="codeFn">GlyfChart</span> name=<span className="codeStr">"activation_by_plan"</span> artifact=<span className="codeStr">"svg"</span> /&gt;{'\n'}
-{'      '}&lt;<span className="codeFn">GlyfChart</span> name=<span className="codeStr">"revenue_weekly"</span> showTitle /&gt;{'\n'}
+{'    '}&lt;<span className="codeFn">GlyfProvider</span> bundleUrl=<span className="codeStr">"/glyf/bundle.json"</span> theme=<span className="codeStr">"dark"</span>&gt;{'\n'}
+{'      '}&lt;<span className="codeFn">GlyfFilters</span> dashboard=<span className="codeStr">"insights"</span> /&gt;{'\n'}
+{'      '}&lt;<span className="codeFn">GlyfChart</span> name=<span className="codeStr">"spend_by_model"</span> /&gt;{'\n'}
 {'    '}&lt;/<span className="codeFn">GlyfProvider</span>&gt;{'\n'}
 {'  '}){'\n'}
 {'}'}{'\n\n'}
-<span className="codeOk">✓</span> <span className="codeMuted">reads bundle.json · renders SVG or PNG · no BI SDK</span></code></pre>
+<span className="codeOk">✓</span> <span className="codeMuted">npm install @glyf-data/react · live charts · no BI SDK</span></code></pre>
         </FeatureMacWindow>
       );
     default:
