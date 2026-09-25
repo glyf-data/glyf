@@ -44,5 +44,5 @@ request, and you only do it once.
 | | |
 | --- | --- |
 | [glyf](https://github.com/glyf-data/glyf) | The CLI, the `.ggsql` chart compiler and the dashboard generator. |
-| [glyf-js](https://github.com/glyf-data/glyf-js) | Experimental React components and a client for consuming `bundle.json` in a web application. |
+| [glyf-js](https://github.com/glyf-data/glyf-js) | `@glyf-data/embed` and `@glyf-data/react` on npm: draw glyf charts, KPI tiles, tables and filters inside your own application. |
 | [homebrew-glyf](https://github.com/glyf-data/homebrew-glyf) | The Homebrew tap. |

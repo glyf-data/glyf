@@ -73,6 +73,30 @@ internal artifacts.
 
 ## JavaScript packages
 
-Client and React packages that consume `bundle.json` directly are on the
-[roadmap](../resources/roadmap.md); they are not published yet. Until then,
-read the manifest with `fetch` and render the SVG or PNG it points to.
+[glyf-js](https://github.com/glyf-data/glyf-js) reads `bundle.json` and draws
+the charts in your application: live from the published Vega specs, with
+tooltips, your theme and palette, KPI tiles, tables and the dashboard's
+filters.
+
+```bash
+npm install @glyf-data/react     # React
+npm install @glyf-data/embed     # any page, no framework
+```
+
+```tsx
+import "@glyf-data/embed/style.css";
+import { GlyfChart, GlyfFilters, GlyfProvider } from "@glyf-data/react";
+
+export function Insights() {
+  return (
+    <GlyfProvider bundleUrl="/glyf/bundle.json" theme="dark">
+      <GlyfFilters dashboard="insights" />
+      <GlyfChart name="spend_by_model" />
+    </GlyfProvider>
+  );
+}
+```
+
+[clanker.glyfdata.com](https://clanker.glyfdata.com) is a customer-facing page
+built this way, from `examples/clanker_insights`. Without `export.embed` the
+packages fall back to the SVG each chart was rendered as.

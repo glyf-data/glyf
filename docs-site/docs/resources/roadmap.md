@@ -45,7 +45,6 @@ if one of these would change how you work.
   <li><strong>dbt docs on dashboards.</strong> Model, column and source descriptions from the manifest, shown beside the charts they describe.</li>
   <li><strong>Richer layout.</strong> Grid and chart sizing beyond column tracks.</li>
   <li><strong>Publish helpers</strong> for common static hosts.</li>
-  <li><strong>JavaScript packages.</strong> React components and a client for <code>bundle.json</code> are experimental in <Link href="https://github.com/glyf-data/glyf-js">glyf-js</Link>.</li>
 </ul>
 
 <p className="roadmapAsk">
