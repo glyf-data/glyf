@@ -1,0 +1,32 @@
+{
+  "chart_type": "bar",
+  "color": "outcome",
+  "compiled_sql_path": "compiled/daily_runs_by_outcome.sql",
+  "interactions": [
+    "tooltip",
+    "legend_filter"
+  ],
+  "lineage": {
+    "models": {
+      "fct_agent_runs": {
+        "parents": [
+          "source:raw.agent_runs"
+        ],
+        "path": "models/fct_agent_runs.sql"
+      }
+    },
+    "sources": [
+      "raw.agent_runs"
+    ]
+  },
+  "metadata_path": "charts/daily_runs_by_outcome.json",
+  "name": "daily_runs_by_outcome",
+  "png_path": "charts/daily_runs_by_outcome.png",
+  "svg_path": "charts/daily_runs_by_outcome.svg",
+  "title": "Runs per day",
+  "width": 1100,
+  "x": "day",
+  "x_title": "Day",
+  "y": "runs",
+  "y_title": "Runs"
+}

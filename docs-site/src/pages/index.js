@@ -2,6 +2,7 @@ import React from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import '@glyf-data/embed/style.css';
 
 const featureSections = [
   {
@@ -461,7 +462,7 @@ function HeroArrow({className}) {
   );
 }
 
-function HeroDiagram({liveDashboardUrl, openLive}) {
+function HeroDiagram({liveDashboardUrl, openLive, openApp}) {
   const logoUrl = useBaseUrl('/img/glyf-logo-v4.svg');
   const hostedDashboardUrl = useBaseUrl('/dashboards/sales-dashboard/dashboards/sales.html');
   return (
@@ -516,14 +517,14 @@ function HeroDiagram({liveDashboardUrl, openLive}) {
             </a>
           </div>
           <div className="glyfHeroSlot">
-            <Link className="glyfHeroCard glyfHeroOutput" to="/docs/integrations/embedded-analytics">
+            <a className="glyfHeroCard glyfHeroOutput glyfHeroOutput--live glyfHeroOutput--app" href={EMBED_DEMO_URL} onClick={openApp}>
               <span className="glyfHeroIcon"><HeroGlyph type="code" /></span>
               <span className="glyfHeroCardText">
-                <strong>Embedded analytics</strong>
-                <small>SVG · PNG · app</small>
+                <strong>Inside your app</strong>
+                <small>@glyf-data/react · live charts</small>
               </span>
-              <span className="glyfHeroChevron"><HeroGlyph type="chevron" /></span>
-            </Link>
+              <span className="glyfHeroLiveHint">View live <span aria-hidden="true">&rarr;</span></span>
+            </a>
           </div>
           <div className="glyfHeroSlot">
             <a className="glyfHeroCard glyfHeroOutput" href={hostedDashboardUrl}>
@@ -809,8 +810,12 @@ charts:{'\n'}
   }
 }
 
+// The Clanker demo: glyf charts embedded in a product with @glyf-data/react.
+const EMBED_DEMO_URL = 'https://clanker.glyfdata.com';
+
 function useLiveDashboard() {
   const liveDashboardUrl = useBaseUrl('/dashboards/product-analytics/dashboards/product.html');
+  // Which demo the full-screen overlay shows: the dashboard, the app, or none.
   const [liveOpen, setLiveOpen] = React.useState(false);
   React.useEffect(() => {
     if (!liveOpen) return undefined;
@@ -819,28 +824,50 @@ function useLiveDashboard() {
     document.body.style.overflow = 'hidden';
     return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
   }, [liveOpen]);
-  const openLive = (event) => {
+  const opener = (which) => (event) => {
     // A phone gets the demo as a page of its own; the overlay needs room.
     if (window.matchMedia && window.matchMedia('(max-width: 720px)').matches) return;
     event.preventDefault();
-    setLiveOpen(true);
+    setLiveOpen(which);
   };
-  return {liveDashboardUrl, liveOpen, setLiveOpen, openLive};
+  return {
+    liveDashboardUrl,
+    liveOpen,
+    setLiveOpen,
+    openLive: opener('dashboard'),
+    openApp: opener('app'),
+  };
 }
 
-function HomepageHeader() {
-  const {liveDashboardUrl, liveOpen, setLiveOpen, openLive} = useLiveDashboard();
+const LIVE_DEMOS = {
+  dashboard: {title: 'Product Analytics', note: 'built by glyf from a dbt project'},
+  app: {title: 'Clanker Insights', note: 'glyf charts inside a product, drawn with @glyf-data/react'},
+};
+
+function LiveOverlay({which, url, onClose}) {
+  const demo = LIVE_DEMOS[which];
+  return (
+    <div className="liveDashboard" role="dialog" aria-modal="true" aria-label={demo.title}>
+      <div className="liveDashboard__bar">
+        <button type="button" className="liveDashboard__back" onClick={onClose}>&larr; Back</button>
+        <span className="liveDashboard__title">{demo.title} <span>{demo.note}</span></span>
+        <a className="liveDashboard__open" href={url} target="_blank" rel="noopener">Open in a new tab &#8599;</a>
+      </div>
+      <iframe className="liveDashboard__frame" src={url} title={`${demo.title}, ${demo.note}`} />
+    </div>
+  );
+}
+
+function HomepageHeader({live}) {
+  const {liveDashboardUrl, liveOpen, setLiveOpen, openLive, openApp} = live;
   return (
     <header className="glyfHero">
       {liveOpen ? (
-        <div className="liveDashboard" role="dialog" aria-modal="true" aria-label="A live glyf dashboard">
-          <div className="liveDashboard__bar">
-            <button type="button" className="liveDashboard__back" onClick={() => setLiveOpen(false)}>&larr; Back</button>
-            <span className="liveDashboard__title">Product Analytics <span>built by glyf from a dbt project</span></span>
-            <a className="liveDashboard__open" href={liveDashboardUrl} target="_blank" rel="noopener">Open in a new tab &#8599;</a>
-          </div>
-          <iframe className="liveDashboard__frame" src={liveDashboardUrl} title="Product analytics dashboard, built by glyf" />
-        </div>
+        <LiveOverlay
+          which={liveOpen}
+          url={liveOpen === 'app' ? EMBED_DEMO_URL : liveDashboardUrl}
+          onClose={() => setLiveOpen(false)}
+        />
       ) : null}
 
       <div className="container glyfHero__inner">
@@ -850,14 +877,19 @@ function HomepageHeader() {
           </h1>
           <p className="glyfHero__lead">
             Glyf is an open source, code-first build step for defining, testing, and shipping
-            charts and dashboards from your dbt models.
+            charts from your dbt models: as dashboards you host, or drawn live inside your own product.
           </p>
           <div className="glyfHero__actions">
             <InstallCommand className="installCommand--hero" />
             <p className="glyfHero__installNote">macOS and Linux. Other ways to install are in the <Link to="/docs/get-started/installation">installation guide</Link>.</p>
-            <a className="glyfHero__demoButton" href={liveDashboardUrl} onClick={openLive}>
-              View Glyf generated dashboard <span aria-hidden="true">&rarr;</span>
-            </a>
+            <div className="glyfHero__demos">
+              <a className="glyfHero__demoButton" href={liveDashboardUrl} onClick={openLive}>
+                View Glyf generated dashboard <span aria-hidden="true">&rarr;</span>
+              </a>
+              <a className="glyfHero__demoButton glyfHero__demoButton--app" href={EMBED_DEMO_URL} onClick={openApp}>
+                See it inside a product <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
           </div>
           <ul className="glyfHero__traits">
             {heroTraits.map(([icon, label]) => (
@@ -865,7 +897,7 @@ function HomepageHeader() {
             ))}
           </ul>
         </div>
-        <HeroDiagram liveDashboardUrl={liveDashboardUrl} openLive={openLive} />
+        <HeroDiagram liveDashboardUrl={liveDashboardUrl} openLive={openLive} openApp={openApp} />
       </div>
     </header>
   );
@@ -1413,18 +1445,162 @@ function InstallCommand({className = ''}) {
 }
 
 
+const EMBED_STEPS = [
+  {file: 'glyf.yml', code: 'export:\n  embed: true', note: 'Publish each chart live'},
+  {file: 'terminal', code: 'npm install @glyf-data/react', note: 'Add the package'},
+  {file: 'Insights.tsx', code: '<GlyfChart name="spend_by_model" />', note: 'Drop in a chart'},
+];
+
+// Real glyf-js on the page: the Clanker charts, drawn by @glyf-data/embed
+// once the section scrolls into view, so the first screen stays light.
+function LiveEmbedPreview() {
+  const root = React.useRef(null);
+  const filters = React.useRef(null);
+  const chart = React.useRef(null);
+  const runs = React.useRef(null);
+  const spend = React.useRef(null);
+  const bundleUrl = useBaseUrl('/embed-demo/clanker/bundle.json');
+  const [state, setState] = React.useState('waiting');
+
+  React.useEffect(() => {
+    let glyf;
+    let cancelled = false;
+    const start = async () => {
+      setState('loading');
+      try {
+        const {createGlyf} = await import('@glyf-data/embed');
+        glyf = await createGlyf({
+          bundleUrl,
+          theme: 'light',
+          palette: ['#2563eb', '#f59e0b', '#10b981'],
+        });
+        if (cancelled) return;
+        glyf.mountFilters(filters.current, 'insights');
+        glyf.mount(chart.current, 'spend_by_model', {height: 220});
+        glyf.mount(runs.current, 'runs_this_week');
+        glyf.mount(spend.current, 'spend_this_week');
+        setState('ready');
+      } catch (error) {
+        if (!cancelled) setState('error');
+      }
+    };
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        observer.disconnect();
+        start();
+      }
+    }, {rootMargin: '200px'});
+    if (root.current) observer.observe(root.current);
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
+  }, [bundleUrl]);
+
+  return (
+    <div className="embedPreview" ref={root} data-state={state}>
+      <div className="embedPreview__bar">
+        <span className="embedPreview__app">Clanker <span>Insights for Glyf Data</span></span>
+        <span className="embedPreview__live">Live</span>
+      </div>
+      <div className="embedPreview__filters" ref={filters} />
+      <div className="embedPreview__grid">
+        <div className="embedPreview__panel embedPreview__panel--chart">
+          <p className="embedPreview__label">Spend by model</p>
+          <div ref={chart} />
+        </div>
+        <div className="embedPreview__panel">
+          <p className="embedPreview__label">Agent runs</p>
+          <div ref={runs} />
+        </div>
+        <div className="embedPreview__panel">
+          <p className="embedPreview__label">Spend (USD)</p>
+          <div ref={spend} />
+        </div>
+      </div>
+      {state === 'error' ? (
+        <p className="embedPreview__error">The live preview could not load. Open the demo instead.</p>
+      ) : null}
+    </div>
+  );
+}
+
+function EmbedSection({live}) {
+  const {liveDashboardUrl, openLive, openApp} = live;
+  const dashboardShot = useBaseUrl('/img/examples/product-analytics-banner.png');
+  return (
+    <section className="embedSection" id="embed" aria-labelledby="embed-title">
+      <div className="container">
+        <div className="sectionHeader">
+          <p className="eyebrow">embedded analytics</p>
+          <h2 id="embed-title">Two ways to ship the same charts.</h2>
+          <p>
+            Every chart is SQL in your dbt project, reviewed like code. Publish it as a dashboard,
+            or draw it inside your own product with glyf-js.
+          </p>
+        </div>
+        <div className="embedSection__ways">
+          <a className="embedWay embedWay--dashboard" href={liveDashboardUrl} onClick={openLive}>
+            <img src={dashboardShot} alt="A glyf dashboard: weekly active users and sessions" loading="lazy" width="1200" height="675" />
+            <span className="embedWay__body">
+              <strong>Dashboards you host</strong>
+              <span>A static site on any host. No server, no BI licence.</span>
+              <span className="embedWay__link">Open the live dashboard <span aria-hidden="true">&rarr;</span></span>
+            </span>
+          </a>
+          <div className="embedWay embedWay--app">
+            <div className="embedWay__head">
+              <strong>Inside your product</strong>
+              <span>
+                The same charts, drawn live in your app: your theme, tooltips, the dashboard's
+                filters. Try the model toggles.
+              </span>
+            </div>
+            <LiveEmbedPreview />
+            <ol className="embedSteps">
+              {EMBED_STEPS.map((step) => (
+                <li key={step.file}>
+                  <span className="embedSteps__file">{step.file}</span>
+                  <code>{step.code}</code>
+                  <span className="embedSteps__note">{step.note}</span>
+                </li>
+              ))}
+            </ol>
+            <div className="embedWay__links">
+              <a className="embedWay__primary" href={EMBED_DEMO_URL} onClick={openApp}>
+                Open the Clanker demo <span aria-hidden="true">&rarr;</span>
+              </a>
+              <Link to="/docs/integrations/embedded-analytics">Read the embedding guide</Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HomeBody() {
+  const live = useLiveDashboard();
+  return (
+    <>
+      <HomepageHeader live={live} />
+      <main className="landingSections">
+        <EmbedSection live={live} />
+        <HowItWorks />
+        <FeaturesSection />
+        <PersonasSection />
+      </main>
+    </>
+  );
+}
+
 export default function Home() {
   return (
     <Layout
       title="Build visualizations the way you build pipelines"
       description="Glyf is an open source, code-first build step for defining, testing, and shipping charts and dashboards from your dbt models."
     >
-      <HomepageHeader />
-      <main className="landingSections">
-        <HowItWorks />
-        <FeaturesSection />
-        <PersonasSection />
-      </main>
+      <HomeBody />
     </Layout>
   );
 }
