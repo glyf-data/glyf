@@ -38,6 +38,7 @@ fn chart_to_python(py: Python<'_>, chart: GgsqlChart) -> PyResult<Py<PyAny>> {
     dict.set_item("draw_type", chart.draw_type)?;
     dict.set_item("labels", chart.labels)?;
     dict.set_item("config", chart.config)?;
+    dict.set_item("options", chart.options)?;
     dict.set_item("interactions", chart.interactions)?;
     dict.set_item("has_order_by", chart.has_order_by)?;
     dict.set_item("sql_warning", chart.sql_warning)?;

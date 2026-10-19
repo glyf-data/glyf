@@ -82,6 +82,15 @@ def write_chart_metadata(
         metadata["value"] = chart.field_for_role("value")
         metadata["compare"] = chart.field_for_role("compare")
         metadata["kpi_html_path"] = artifacts.kpi_html.relative_to(project_root).as_posix()
+    elif chart.is_map:
+        # A map has no axes. `x` and `y` keep the shape every drawn chart's
+        # metadata has -- the place and what is shown there -- and `roles`
+        # says what each column really is, in VISUALISE order.
+        metadata["x"] = chart.field_for_role("region") or chart.field_for_role("longitude")
+        metadata["y"] = chart.field_for_role("color") or chart.field_for_role("latitude")
+        metadata["roles"] = [[mapping.role, mapping.field] for mapping in chart.visualise]
+        metadata["png_path"] = artifacts.png.relative_to(project_root).as_posix()
+        metadata["svg_path"] = artifacts.svg.relative_to(project_root).as_posix()
     else:
         metadata["x"] = chart.field_for_role("x")
         metadata["y"] = chart.field_for_role("y")

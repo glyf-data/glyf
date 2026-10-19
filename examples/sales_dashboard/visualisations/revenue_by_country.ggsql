@@ -1,0 +1,8 @@
+SELECT country, revenue
+FROM {{ source('raw', 'country_sales') }}
+ORDER BY country
+
+VISUALISE country AS region, revenue AS color
+DRAW map
+LABEL title => 'Revenue by Country'
+INTERACT tooltip

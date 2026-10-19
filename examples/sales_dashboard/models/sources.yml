@@ -6,3 +6,7 @@ sources:
     tables:
       - name: sales
         identifier: raw_sales
+      - name: country_sales
+        identifier: raw_country_sales
+      - name: stores
+        identifier: raw_stores

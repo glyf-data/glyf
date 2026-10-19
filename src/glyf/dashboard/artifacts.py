@@ -32,6 +32,9 @@ class ChartMetadata:
     value: str | None = None
     compare: str | None = None
     kpi_html_path: Path | None = None
+    # What each column is, `(role, field)` in VISUALISE order, for a chart
+    # whose roles are not x and y: a map.
+    roles: tuple[tuple[str, str], ...] = ()
     # `{"models": {name: {"parents": [...], "path": ...}}, "sources": [...]}`;
     # empty for metadata written before lineage was recorded.
     lineage: dict[str, object] | None = None
@@ -158,7 +161,7 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
     y = raw.get("y")
     if y is not None and not isinstance(y, str):
         raise ChartArtifactError(f"chart metadata for '{chart_name}' has invalid y")
-    if y is None and raw["chart_type"] not in {"histogram", "table", "kpi"}:
+    if y is None and raw["chart_type"] not in {"histogram", "table", "kpi", "map"}:
         raise ChartArtifactError(f"chart metadata for '{chart_name}' missing y")
 
     compare = raw.get("compare")
@@ -172,6 +175,15 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         raise ChartArtifactError(
             f"chart metadata for '{chart_name}' has invalid interactions"
         )
+
+    roles = raw.get("roles", [])
+    if not isinstance(roles, list) or not all(
+        isinstance(pair, list)
+        and len(pair) == 2
+        and all(isinstance(item, str) for item in pair)
+        for pair in roles
+    ):
+        raise ChartArtifactError(f"chart metadata for '{chart_name}' has invalid roles")
 
     vega_json_path = raw.get("vega_json_path")
     if vega_json_path is not None and not isinstance(vega_json_path, str):
@@ -198,6 +210,7 @@ def _parse_metadata(project_root: Path, chart_name: str, raw: object) -> ChartMe
         value=raw["value"] if is_kpi else None,
         compare=compare if is_kpi else None,
         kpi_html_path=project_root / raw["kpi_html_path"] if is_kpi else None,
+        roles=tuple((role, field) for role, field in roles),
         lineage=raw["lineage"] if isinstance(raw.get("lineage"), dict) else None,
     )
 

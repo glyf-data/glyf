@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from pathlib import Path
 
 # A table's columns carry this role: `VISUALISE region, revenue` is a list
@@ -43,6 +44,8 @@ class GgsqlChart:
     draw_type: str
     labels: dict[str, str]
     config: dict[str, int]
+    # Text CONFIG values: a map's `shapes` file and `projection`.
+    options: dict[str, str] = dataclass_field(default_factory=dict)
     interactions: tuple[str, ...] = ()
     has_order_by: bool = False
     # Set when the SQL did not parse for the chosen dialect. A warning, never
@@ -102,6 +105,15 @@ class GgsqlChart:
     def has_picture(self) -> bool:
         """Whether the renderer draws this chart to a PNG and SVG."""
         return not (self.is_table or self.is_kpi)
+
+    @property
+    def is_map(self) -> bool:
+        return self.draw_type == "map"
+
+    @property
+    def is_point_map(self) -> bool:
+        """A map of places at a latitude and longitude, rather than regions."""
+        return self.is_map and self.field_for_role("region") is None
 
     @property
     def lists_every_column(self) -> bool:

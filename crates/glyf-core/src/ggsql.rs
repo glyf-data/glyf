@@ -32,6 +32,20 @@ const XY: &[&str] = &["x", "y"];
 const XY_COLOR: &[&str] = &["x", "y", "color"];
 const ALL_INTERACTIONS: &[&str] = &["legend_filter", "tooltip", "zoom"];
 const CONFIG_KEYS: &[&str] = &["width", "height"];
+/// `CONFIG` keys that take text, and the one draw type that reads them.
+const MAP_OPTION_KEYS: &[&str] = &["shapes", "projection"];
+/// The projections a map may name, as Vega spells them. Matched without
+/// regard to case, so `CONFIG projection => 'albersusa'` works.
+const MAP_PROJECTIONS: &[&str] = &[
+    "equalEarth",
+    "naturalEarth1",
+    "mercator",
+    "equirectangular",
+    "albersUsa",
+    "orthographic",
+];
+/// A map draws regions (`region`) or places (`latitude` and `longitude`).
+const MAP_ROLES: &[&str] = &["region", "latitude", "longitude", "size", "color"];
 
 /// The role a table's columns carry. A table has no axes: `VISUALISE` lists
 /// the columns to show, in order, and every one of them is a column.
@@ -82,6 +96,15 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
             allowed: &[COLUMN_ROLE],
             interactions: &[],
         },
+        // A map is regions filled by a value, or places at a latitude and
+        // longitude; `validate_map_roles` says which. Its colour may be a
+        // continuous scale, and a projection has no zoom of its own yet.
+        "map" => DrawSpec {
+            draw_type: "map",
+            required: &[],
+            allowed: MAP_ROLES,
+            interactions: &["tooltip"],
+        },
         // A kpi is one number, with an optional one to compare it against.
         "kpi" => DrawSpec {
             draw_type: "kpi",
@@ -95,7 +118,7 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
 
 /// The draw types glyf accepts, for error messages.
 const SUPPORTED_DRAWS: &str =
-    "area, bar, boxplot, heatmap, histogram, kpi, line, pie, scatter, table";
+    "area, bar, boxplot, heatmap, histogram, kpi, line, map, pie, scatter, table";
 
 /// Parse a `.ggsql` file: the SQL, then the chart block.
 ///
@@ -131,6 +154,7 @@ pub fn parse_ggsql_text(
     let mut draw_type = None;
     let mut labels = BTreeMap::new();
     let mut config = BTreeMap::new();
+    let mut options = BTreeMap::new();
     let mut interactions = Vec::new();
     let mut seen_interactions = BTreeSet::new();
 
@@ -149,9 +173,13 @@ pub fn parse_ggsql_text(
             continue;
         }
         if let Some((key, value)) = parse_key_value_directive(line, "CONFIG") {
+            if MAP_OPTION_KEYS.contains(&key.as_str()) {
+                options.insert(key, unquote(value).trim().to_string());
+                continue;
+            }
             if !CONFIG_KEYS.contains(&key.as_str()) {
                 return Err(CoreError::Parse(format!(
-                    "unsupported CONFIG key '{key}'; supported keys: width, height"
+                    "unsupported CONFIG key '{key}'; supported keys: width, height, and for a map shapes, projection"
                 )));
             }
             let parsed = value.trim().parse::<i64>().map_err(|_| {
@@ -198,6 +226,7 @@ pub fn parse_ggsql_text(
     let spec = draw_spec(&draw_type).expect("a stored draw type is in the table");
     validate_roles(&spec, &visualise)?;
     validate_interactions(&spec, &interactions)?;
+    let options = validate_options(&spec, options)?;
 
     Ok(GgsqlChart {
         path: path.unwrap_or(name).to_string(),
@@ -207,6 +236,7 @@ pub fn parse_ggsql_text(
         draw_type,
         labels,
         config,
+        options,
         interactions,
         has_order_by,
         sql_warning,
@@ -434,6 +464,9 @@ fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(),
             )));
         }
     }
+    if draw == "map" {
+        return validate_map_roles(visualise);
+    }
     let roles = visualise
         .iter()
         .map(|mapping| mapping.role.as_str())
@@ -454,6 +487,73 @@ fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(),
         return Err(CoreError::Parse(message));
     }
     Ok(())
+}
+
+/// A map draws one of two things, and its roles say which: `region` fills a
+/// shape per row, `latitude` and `longitude` put a point per row. `size` only
+/// means something for a point.
+fn validate_map_roles(visualise: &[VisualiseMapping]) -> Result<(), CoreError> {
+    let roles = visualise
+        .iter()
+        .map(|mapping| mapping.role.as_str())
+        .collect::<BTreeSet<_>>();
+    let region = roles.contains("region");
+    let latitude = roles.contains("latitude");
+    let longitude = roles.contains("longitude");
+    if region && (latitude || longitude) {
+        return Err(CoreError::Parse(
+            "map draws regions or points, not both; map 'region', or 'latitude' and 'longitude'"
+                .to_string(),
+        ));
+    }
+    if region {
+        if roles.contains("size") {
+            return Err(CoreError::Parse(
+                "map takes 'size' only for points; a region is filled by 'color'".to_string(),
+            ));
+        }
+        return Ok(());
+    }
+    if latitude && longitude {
+        return Ok(());
+    }
+    Err(CoreError::Parse(
+        "map requires a region mapping, or latitude and longitude mappings".to_string(),
+    ))
+}
+
+/// The text `CONFIG` keys a chart set, checked against its draw type.
+fn validate_options(
+    spec: &DrawSpec,
+    options: BTreeMap<String, String>,
+) -> Result<BTreeMap<String, String>, CoreError> {
+    let mut checked = BTreeMap::new();
+    for (key, value) in options {
+        if spec.draw_type != "map" {
+            return Err(CoreError::Parse(format!(
+                "CONFIG {key} applies to DRAW map only; supported keys: width, height"
+            )));
+        }
+        if value.is_empty() {
+            return Err(CoreError::Parse(format!("CONFIG {key} needs a value")));
+        }
+        let value = if key == "projection" {
+            MAP_PROJECTIONS
+                .iter()
+                .find(|name| name.eq_ignore_ascii_case(&value))
+                .map(|name| name.to_string())
+                .ok_or_else(|| {
+                    CoreError::Parse(format!(
+                        "unsupported map projection '{value}'; supported projections: {}",
+                        MAP_PROJECTIONS.join(", ")
+                    ))
+                })?
+        } else {
+            value
+        };
+        checked.insert(key, value);
+    }
+    Ok(checked)
 }
 
 /// A table's `VISUALISE` is a list of columns, or `*` alone.
@@ -909,7 +1009,7 @@ mod tests {
 
         assert_eq!(
             error.to_string(),
-            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, kpi, line, pie, scatter, table"
+            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, kpi, line, map, pie, scatter, table"
         );
     }
 
@@ -1059,5 +1159,112 @@ mod tests {
         .unwrap();
 
         assert!(chart.has_order_by);
+    }
+
+    fn map(
+        visualise: &str,
+        extra: &str,
+    ) -> Result<crate::models::GgsqlChart, crate::error::CoreError> {
+        parse_ggsql_text(
+            &format!("SELECT * FROM fct_orders\n\nVISUALISE {visualise}\nDRAW map\n{extra}"),
+            "orders_map",
+            None,
+            "duckdb",
+        )
+    }
+
+    #[test]
+    fn parses_a_region_map_and_a_point_map() {
+        let regions = map("country AS region, revenue AS color", "").unwrap();
+        assert_eq!(regions.draw_type, "map");
+        assert!(regions.options.is_empty());
+        let points = map(
+            "lat AS latitude, lon AS longitude, stores AS size, chain AS color",
+            "INTERACT tooltip\n",
+        )
+        .unwrap();
+        assert_eq!(points.interactions, vec!["tooltip"]);
+    }
+
+    #[test]
+    fn rejects_a_map_without_a_region_or_both_coordinates() {
+        for visualise in ["revenue AS color", "lat AS latitude, revenue AS color"] {
+            let error = map(visualise, "").unwrap_err().to_string();
+            assert!(
+                error.contains("map requires a region mapping, or latitude and longitude"),
+                "{error}"
+            );
+        }
+    }
+
+    #[test]
+    fn rejects_a_map_that_mixes_regions_and_points() {
+        let error = map("country AS region, lat AS latitude, lon AS longitude", "")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("map draws regions or points, not both"),
+            "{error}"
+        );
+        let error = map("country AS region, stores AS size", "")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("map takes 'size' only for points"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn rejects_map_roles_and_interactions_it_does_not_take() {
+        let error = map("country AS x, revenue AS color", "")
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("map does not take a 'x' mapping"), "{error}");
+        let error = map("country AS region", "INTERACT zoom\n")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("zoom interaction is not supported for map charts"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn reads_map_shapes_and_projection_and_normalises_the_projection() {
+        let chart = map(
+            "state AS region, revenue AS color",
+            "CONFIG shapes => 'geo/us-states.topojson'\nCONFIG projection => 'albersusa'\nCONFIG width => 700\n",
+        )
+        .unwrap();
+        assert_eq!(
+            chart.options.get("shapes").unwrap(),
+            "geo/us-states.topojson"
+        );
+        assert_eq!(chart.options.get("projection").unwrap(), "albersUsa");
+        assert_eq!(chart.config.get("width"), Some(&700));
+    }
+
+    #[test]
+    fn rejects_an_unknown_projection_and_map_options_on_other_charts() {
+        let error = map("country AS region", "CONFIG projection => 'globe'\n")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("unsupported map projection 'globe'"),
+            "{error}"
+        );
+        let error = parse_ggsql_text(
+            "SELECT month, revenue FROM fct_orders\n\nVISUALISE month AS x, revenue AS y\nDRAW bar\nCONFIG shapes => 'x.topojson'\n",
+            "bar",
+            None,
+            "duckdb",
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(
+            error.contains("CONFIG shapes applies to DRAW map only"),
+            "{error}"
+        );
     }
 }

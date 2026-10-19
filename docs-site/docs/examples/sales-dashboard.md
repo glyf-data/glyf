@@ -23,7 +23,8 @@ Rendered dashboard: <Link to="pathname:///dashboards/sales-dashboard/dashboards/
 ## What it demonstrates
 
 - Three charts (monthly revenue, channel mix, regional sales) all querying one `fct_sales` model.
-- The simplest dashboard shape: a `charts` list with no sections or macros.
+- Two maps: revenue by country, shaded on the world's countries, and stores as points sized by revenue. See [Map](../guides/visualisation-syntax.md#map).
+- A simple dashboard shape: two groups of charts, with no sections or macros.
 
 ## Run it
 
@@ -57,4 +58,6 @@ target/glyf/site/index.html
 target/glyf/charts/monthly_revenue.svg
 target/glyf/charts/channel_revenue.svg
 target/glyf/charts/regional_revenue.svg
+target/glyf/charts/revenue_by_country.svg
+target/glyf/charts/store_locations.svg
 ```

@@ -308,6 +308,7 @@ def test_every_chart_type_the_parser_accepts_can_be_drawn() -> None:
     A type added to one and not the other parses and then fails to render, or
     is drawable and never reachable. The table and the kpi are the types that
     are not drawn: `glyf.ggsql.table` and `glyf.ggsql.kpi` write them from
-    their rows, and the pipeline branches before the renderer is reached.
+    their rows, and the pipeline branches before the renderer is reached. A
+    map is drawn, but as layers, by `_build_map`.
     """
-    assert set(CHART_TYPES) | {"table", "kpi"} == SUPPORTED_CHART_TYPES
+    assert set(CHART_TYPES) | {"table", "kpi", "map"} == SUPPORTED_CHART_TYPES

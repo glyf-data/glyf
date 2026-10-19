@@ -1,0 +1,13 @@
+city,latitude,longitude,revenue,format
+New York,40.71,-74.01,52000,Flagship
+San Francisco,37.77,-122.42,38000,Flagship
+Chicago,41.88,-87.63,24000,Outlet
+Toronto,43.65,-79.38,21000,Outlet
+Sao Paulo,-23.55,-46.63,19000,Outlet
+London,51.51,-0.13,44000,Flagship
+Berlin,52.52,13.40,29000,Outlet
+Paris,48.86,2.35,31000,Flagship
+Mumbai,19.08,72.88,22000,Outlet
+Tokyo,35.68,139.69,41000,Flagship
+Singapore,1.35,103.82,17000,Outlet
+Sydney,-33.87,151.21,23000,Outlet
