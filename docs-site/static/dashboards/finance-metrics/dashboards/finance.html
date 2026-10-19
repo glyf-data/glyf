@@ -140,7 +140,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-10-19T19:45:37Z">19 Oct 2026, 19:45 UTC</strong>
+          Refreshed <strong title="2026-10-19T20:01:26Z">19 Oct 2026, 20:01 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -159,7 +159,7 @@
     <path d="m14.5 4-5 16"></path>
   </svg>
 
-          <span>9 charts</span>
+          <span>10 charts</span>
         </div>
       </div>
       <div class="glyf-meta-right">
@@ -207,7 +207,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 19 Oct 2026, 19:45 UTC</span>
+              <span class="glyf-version-option-note">built 19 Oct 2026, 20:01 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -354,6 +354,23 @@ GROUP BY 1
 FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
 GROUP BY 1
 ORDER BY 1, bookings, margin_rate
+</code></pre>
+
+      </div>
+
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>From Bookings to Gross Margin</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
+
+        <pre class="glyf-source-sql"><code>SELECT 0 AS step_order, &#39;Bookings&#39; AS step, sum(bookings) AS amount
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
+UNION ALL
+SELECT 1, department || &#39; expenses&#39;, -sum(expenses)
+FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_finance&#34;
+GROUP BY department
+ORDER BY step_order, amount
 </code></pre>
 
       </div>
@@ -850,6 +867,64 @@ FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
 
 
 
+<article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="margin_bridge" data-glyf-filters="department:none segment:none">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">From Bookings to Gross Margin</div>
+      <div class="glyf-card-subtitle">step -> amount</div>
+    </div>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
+      <span class="glyf-badge glyf-mono">waterfall</span>
+    </div>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+
+    <div
+      class="glyf-interactive-chart"
+      id="chart-margin_bridge"
+      data-vega-chart="chart-margin_bridge-spec"
+    ></div>
+    <script type="application/json" id="chart-margin_bridge-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "config": {"axis": {"labelAngle": 0, "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "title": {"font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "stroke": "#d9e2ec"}}, "data": {"name": "data-b7e6de1e177299a329cff8d088727b98"}, "datasets": {"data-b7e6de1e177299a329cff8d088727b98": [{"change": 1079700.0, "end": 1079700.0, "kind": "Total", "label": "1,079,700", "next": "Product expenses", "start": 0.0, "step": "Bookings", "top": 1079700.0}, {"change": -244800.0, "end": 834900.0, "kind": "Decrease", "label": "\u2212244,800", "next": "Sales expenses", "start": 1079700.0, "step": "Product expenses", "top": 1079700.0}, {"change": -181400.0, "end": 653500.0, "kind": "Decrease", "label": "\u2212181,400", "next": "Services expenses", "start": 834900.0, "step": "Sales expenses", "top": 834900.0}, {"change": -101300.0, "end": 552200.0, "kind": "Decrease", "label": "\u2212101,300", "next": "Partners expenses", "start": 653500.0, "step": "Services expenses", "top": 653500.0}, {"change": -48500.0, "end": 503700.0, "kind": "Decrease", "label": "\u221248,500", "next": "Gross margin", "start": 552200.0, "step": "Partners expenses", "top": 552200.0}, {"change": 503700.0, "end": 503700.0, "kind": "Total", "label": "503,700", "next": null, "start": 0.0, "step": "Gross margin", "top": 503700.0}]}, "height": 340, "layer": [{"encoding": {"x": {"bandPosition": 0.5, "field": "step", "scale": {"paddingInner": 0.3, "paddingOuter": 0.15, "type": "band"}, "sort": null, "type": "nominal"}, "x2": {"bandPosition": 0.5, "field": "next"}, "y": {"field": "end", "type": "quantitative"}}, "mark": {"color": "#888888", "strokeDash": [3, 3], "type": "rule"}, "transform": [{"filter": "isValid(datum.next)"}]}, {"encoding": {"color": {"field": "kind", "legend": {"orient": "top", "title": null}, "scale": {"domain": ["Decrease", "Total"], "range": ["#e45756", "#4c78a8"]}, "type": "nominal"}, "tooltip": [{"field": "step", "title": "step", "type": "nominal"}, {"field": "change", "format": ",", "title": "amount", "type": "quantitative"}, {"field": "end", "format": ",", "title": "running total", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "step", "scale": {"paddingInner": 0.3, "paddingOuter": 0.15, "type": "band"}, "sort": null, "title": null, "type": "nominal"}, "y": {"field": "start", "title": "Amount", "type": "quantitative"}, "y2": {"field": "end"}}, "mark": {"type": "bar"}}, {"encoding": {"text": {"field": "label", "type": "nominal"}, "tooltip": [{"field": "step", "title": "step", "type": "nominal"}, {"field": "change", "format": ",", "title": "amount", "type": "quantitative"}, {"field": "end", "format": ",", "title": "running total", "type": "quantitative"}], "x": {"axis": {"labelAngle": 0}, "field": "step", "scale": {"paddingInner": 0.3, "paddingOuter": 0.15, "type": "band"}, "sort": null, "title": null, "type": "nominal"}, "y": {"field": "top", "type": "quantitative"}}, "mark": {"dy": -6, "fontSize": 11, "fontWeight": 600, "type": "text"}}], "title": {"subtitle": "Twelve months of bookings, less each department\u0027s expenses", "text": "From Bookings to Gross Margin"}, "width": 1100}</script>
+    <noscript>
+      <img src="../charts/margin_bridge.png" alt="From Bookings to Gross Margin">
+    </noscript>
+
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
+  </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
+</article>
+
+
+
+
+
+
+
 <article class="glyf-card glyf-chart-card" data-chart-theme="light" data-glyf-chart="margin_rate_by_department" data-glyf-filters="department:vega segment:none">
   <div class="glyf-card-head">
     <div>
@@ -1183,7 +1258,7 @@ FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-10-19 20:45
+      2026-10-19 21:01
 
     </div>
   </div>
@@ -1220,7 +1295,7 @@ FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
       <button class="glyf-lineage-back" type="button" data-glyf-lineage-close>&larr; Back to dashboard</button>
       <div class="glyf-lineage-head">
         <div class="glyf-lineage-heading">Lineage</div>
-        <div class="glyf-lineage-summary glyf-mono">2 sources · 2 models · 9 charts</div>
+        <div class="glyf-lineage-summary glyf-mono">2 sources · 2 models · 10 charts</div>
       </div>
     </div>
     <div class="glyf-lineage-body">
@@ -1231,38 +1306,39 @@ FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
         <div class="glyf-lineage-colhead">Charts on this dashboard</div>
       </div>
       <div class="glyf-lineage-wrap" data-glyf-lineage>
-        <svg class="glyf-lineage-svg" viewBox="0 0 1068 556" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
+        <svg class="glyf-lineage-svg" viewBox="0 0 1068 614" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
           <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
             <g class="glyf-lineage-edges">
-              <path d="M264,249.0 C339.0,249.0 339.0,249.0 414,249.0" data-from="source:raw.finance" data-to="model:fct_finance"/>
-              <path d="M264,307.0 C339.0,307.0 339.0,307.0 414,307.0" data-from="source:raw.invoices" data-to="model:fct_invoices"/>
-              <path d="M654,249.0 C729.0,249.0 729.0,46.0 804,46.0" data-from="model:fct_finance" data-to="chart:bookings_trend"/>
-              <path d="M654,249.0 C729.0,249.0 729.0,104.0 804,104.0" data-from="model:fct_finance" data-to="chart:margin_share"/>
-              <path d="M654,249.0 C729.0,249.0 729.0,162.0 804,162.0" data-from="model:fct_finance" data-to="chart:expenses_by_department"/>
-              <path d="M654,249.0 C729.0,249.0 729.0,220.0 804,220.0" data-from="model:fct_finance" data-to="chart:gross_margin_trend"/>
-              <path d="M654,249.0 C729.0,249.0 729.0,278.0 804,278.0" data-from="model:fct_finance" data-to="chart:bookings_and_margin"/>
-              <path d="M654,249.0 C729.0,249.0 729.0,336.0 804,336.0" data-from="model:fct_finance" data-to="chart:margin_rate_by_department"/>
-              <path d="M654,249.0 C729.0,249.0 729.0,394.0 804,394.0" data-from="model:fct_finance" data-to="chart:margin_vs_expenses"/>
-              <path d="M654,307.0 C729.0,307.0 729.0,452.0 804,452.0" data-from="model:fct_invoices" data-to="chart:days_to_pay"/>
-              <path d="M654,307.0 C729.0,307.0 729.0,510.0 804,510.0" data-from="model:fct_invoices" data-to="chart:discount_by_segment"/>
+              <path d="M264,278.0 C339.0,278.0 339.0,278.0 414,278.0" data-from="source:raw.finance" data-to="model:fct_finance"/>
+              <path d="M264,336.0 C339.0,336.0 339.0,336.0 414,336.0" data-from="source:raw.invoices" data-to="model:fct_invoices"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,46.0 804,46.0" data-from="model:fct_finance" data-to="chart:bookings_trend"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,104.0 804,104.0" data-from="model:fct_finance" data-to="chart:margin_share"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,162.0 804,162.0" data-from="model:fct_finance" data-to="chart:expenses_by_department"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,220.0 804,220.0" data-from="model:fct_finance" data-to="chart:gross_margin_trend"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,278.0 804,278.0" data-from="model:fct_finance" data-to="chart:bookings_and_margin"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,336.0 804,336.0" data-from="model:fct_finance" data-to="chart:margin_bridge"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,394.0 804,394.0" data-from="model:fct_finance" data-to="chart:margin_rate_by_department"/>
+              <path d="M654,278.0 C729.0,278.0 729.0,452.0 804,452.0" data-from="model:fct_finance" data-to="chart:margin_vs_expenses"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,510.0 804,510.0" data-from="model:fct_invoices" data-to="chart:days_to_pay"/>
+              <path d="M654,336.0 C729.0,336.0 729.0,568.0 804,568.0" data-from="model:fct_invoices" data-to="chart:discount_by_segment"/>
             </g>
             <g class="glyf-lineage-nodes">
-              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.finance" data-tip="raw table, read through source()" transform="translate(24,227.0)" tabindex="0" role="button" aria-label="raw.finance, source">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.finance" data-tip="raw table, read through source()" transform="translate(24,256.0)" tabindex="0" role="button" aria-label="raw.finance, source">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">raw.finance</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.invoices" data-tip="raw table, read through source()" transform="translate(24,285.0)" tabindex="0" role="button" aria-label="raw.invoices, source">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.invoices" data-tip="raw table, read through source()" transform="translate(24,314.0)" tabindex="0" role="button" aria-label="raw.invoices, source">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">raw.invoices</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_finance" data-tip="models/fct_finance.sql" transform="translate(414,227.0)" tabindex="0" role="button" aria-label="fct_finance, model">
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_finance" data-tip="models/fct_finance.sql" transform="translate(414,256.0)" tabindex="0" role="button" aria-label="fct_finance, model">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">fct_finance</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_invoices" data-tip="models/fct_invoices.sql" transform="translate(414,285.0)" tabindex="0" role="button" aria-label="fct_invoices, model">
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_invoices" data-tip="models/fct_invoices.sql" transform="translate(414,314.0)" tabindex="0" role="button" aria-label="fct_invoices, model">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">fct_invoices</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
@@ -1292,22 +1368,27 @@ FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
                 <text class="glyf-lineage-node-title" x="12" y="18">Bookings and Margin Rate</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">combo</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:margin_rate_by_department" data-tip="binds month AS x, department AS y" transform="translate(804,314.0)" tabindex="0" role="button" aria-label="Margin Rate by Department, heatmap">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:margin_bridge" data-tip="binds step AS x, amount AS y" transform="translate(804,314.0)" tabindex="0" role="button" aria-label="From Bookings to Gross Margin, waterfall">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">From Bookings to Gross Margin</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">waterfall</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:margin_rate_by_department" data-tip="binds month AS x, department AS y" transform="translate(804,372.0)" tabindex="0" role="button" aria-label="Margin Rate by Department, heatmap">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Margin Rate by Department</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">heatmap</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:margin_vs_expenses" data-tip="binds expenses AS x, gross_margin AS y" transform="translate(804,372.0)" tabindex="0" role="button" aria-label="Margin vs Expenses, scatter">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:margin_vs_expenses" data-tip="binds expenses AS x, gross_margin AS y" transform="translate(804,430.0)" tabindex="0" role="button" aria-label="Margin vs Expenses, scatter">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Margin vs Expenses</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">scatter</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:days_to_pay" data-tip="binds days_to_pay AS x" transform="translate(804,430.0)" tabindex="0" role="button" aria-label="Days to Pay, histogram">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:days_to_pay" data-tip="binds days_to_pay AS x" transform="translate(804,488.0)" tabindex="0" role="button" aria-label="Days to Pay, histogram">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Days to Pay</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">histogram</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:discount_by_segment" data-tip="binds segment AS x, discount_pct AS y" transform="translate(804,488.0)" tabindex="0" role="button" aria-label="Discount by Segment, boxplot">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:discount_by_segment" data-tip="binds segment AS x, discount_pct AS y" transform="translate(804,546.0)" tabindex="0" role="button" aria-label="Discount by Segment, boxplot">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Discount by Segment</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">boxplot</text>
@@ -1339,7 +1420,7 @@ FROM &#34;finance_metrics&#34;.&#34;main&#34;.&#34;fct_invoices&#34;
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">19 Oct 2026, 19:45 UTC</div>
+              <div class="glyf-version-date">19 Oct 2026, 20:01 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>

@@ -53,6 +53,10 @@ COMBO_LINE = "#f58518"
 FUNNEL_LABEL_CHAR = 7
 FUNNEL_LABEL_MARGIN = 20
 FUNNEL_PADDING = {"left": 24, "right": 5, "top": 5, "bottom": 5}
+# A waterfall's bars: up, down, and the amounts it starts and ends at.
+WATERFALL_KINDS = ("Increase", "Decrease", "Total")
+WATERFALL_COLORS = ("#54a24b", "#e45756", "#4c78a8")
+WATERFALL_TOTAL = "Total"
 # A link's band, behind its nodes: see-through, so crossing bands both read.
 SANKEY_LINK_OPACITY = 0.38
 
@@ -330,6 +334,8 @@ def build_chart(
         return _build_funnel(chart, frame, config)
     if chart.is_treemap:
         return _build_treemap(chart, frame, config)
+    if chart.is_waterfall:
+        return _build_waterfall(chart, frame, config)
     chart_type = CHART_TYPES.get(chart.draw_type)
     if chart_type is None:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
@@ -555,6 +561,99 @@ def _build_treemap(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> 
         .encode(text="amount:N", **position, **encoding)
     )
     return _styled(alt.layer(rects, names, amounts), chart, config).configure_view(stroke=None)
+
+
+def _build_waterfall(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.LayerChart:
+    """A bar per change from where the running total stood, then the total.
+
+    The first row is where the total starts, drawn up from zero like the
+    closing total; every row after it rises or falls from where the one
+    before ended. The steps keep the query's order: a waterfall reads as a
+    story, and only the query knows its order. A dashed line carries each
+    bar's end across to the next bar.
+    """
+    _require_columns(chart, frame)
+    step, change = chart.field_for_role("x"), chart.field_for_role("y")
+    assert step is not None and change is not None
+    _require_numeric(frame, change, "y", "waterfall")
+    rows = [
+        (str(name), float(amount))
+        for name, amount in zip(frame.column(step).to_pylist(), frame.column(change).to_pylist())
+        if name is not None and amount is not None
+    ]
+    if not rows:
+        raise ChartRenderError("waterfall has no steps to draw: every step or change is missing")
+    total_label = chart.labels.get("total", WATERFALL_TOTAL)
+    if total_label in {name for name, _ in rows}:
+        raise ChartRenderError(
+            f"waterfall adds a closing bar named '{total_label}', and a step already has "
+            "that name; set LABEL total to another name"
+        )
+
+    bars = []
+    running = 0.0
+    for index, (name, amount) in enumerate(rows):
+        start, running = running, running + amount
+        kind = "Total" if index == 0 else ("Increase" if amount >= 0 else "Decrease")
+        bars.append(_waterfall_bar(name, kind, start, running, amount))
+    bars.append(_waterfall_bar(total_label, "Total", 0.0, running, running))
+    for bar, following in zip(bars, bars[1:]):
+        bar["next"] = following["step"]
+
+    # The connectors share this scale; set its padding, or bars touch.
+    x_scale = alt.Scale(type="band", paddingInner=0.3, paddingOuter=0.15)
+    x = alt.X("step:N", sort=None, scale=x_scale, title=chart.x_title, axis=alt.Axis(labelAngle=0))
+    y = alt.Y("start:Q", title=chart.y_title or change)
+    encoding: dict[str, object] = {}
+    if "tooltip" in chart.interactions:
+        encoding["tooltip"] = [
+            alt.Tooltip("step:N", title=step),
+            alt.Tooltip("change:Q", title=change, format=","),
+            alt.Tooltip("end:Q", title="running total", format=","),
+        ]
+    base = alt.Chart(pa.Table.from_pylist(bars))
+    # The legend names only the kinds of bar the chart has.
+    present = {bar["kind"] for bar in bars}
+    color = alt.Color(
+        "kind:N",
+        scale=alt.Scale(
+            domain=[kind for kind in WATERFALL_KINDS if kind in present],
+            range=[c for kind, c in zip(WATERFALL_KINDS, WATERFALL_COLORS) if kind in present],
+        ),
+        legend=alt.Legend(orient="top", title=None),
+    )
+    # Under the bars, so only the stretch between two bars shows.
+    connectors = (
+        base.transform_filter("isValid(datum.next)")
+        .mark_rule(strokeDash=[3, 3], color="#888888")
+        .encode(
+            x=alt.X("step:N", sort=None, scale=x_scale, bandPosition=0.5),
+            x2=alt.X2("next:N", bandPosition=0.5),
+            y=alt.Y("end:Q"),
+        )
+    )
+    columns = base.mark_bar().encode(x=x, y=y, y2="end:Q", color=color, **encoding)
+    labels = base.mark_text(dy=-6, fontSize=11, fontWeight=600).encode(
+        x=x, y=alt.Y("top:Q"), text="label:N", **encoding
+    )
+    layered = alt.layer(connectors, columns, labels)
+    return _styled(layered, chart, config)
+
+
+def _waterfall_bar(
+    name: str, kind: str, start: float, end: float, change: float
+) -> dict[str, object]:
+    sign = "" if kind == "Total" else ("+" if change >= 0 else "−")
+    return {
+        "step": name,
+        "kind": kind,
+        "start": start,
+        "end": end,
+        "top": max(start, end),
+        "change": change,
+        "label": f"{sign}{_number(abs(change) if sign else change)}",
+        "next": None,
+    }
 
 
 def _fit_text(text: str, room: float) -> str:

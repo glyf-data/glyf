@@ -1,0 +1,30 @@
+{
+  "chart_type": "waterfall",
+  "compiled_sql_path": "compiled/margin_bridge.sql",
+  "height": 340,
+  "interactions": [
+    "tooltip"
+  ],
+  "lineage": {
+    "models": {
+      "fct_finance": {
+        "parents": [
+          "source:raw.finance"
+        ],
+        "path": "models/fct_finance.sql"
+      }
+    },
+    "sources": [
+      "raw.finance"
+    ]
+  },
+  "metadata_path": "charts/margin_bridge.json",
+  "name": "margin_bridge",
+  "png_path": "charts/margin_bridge.png",
+  "svg_path": "charts/margin_bridge.svg",
+  "title": "From Bookings to Gross Margin",
+  "width": 1100,
+  "x": "step",
+  "y": "amount",
+  "y_title": "Amount"
+}

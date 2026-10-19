@@ -1,0 +1,17 @@
+SELECT 0 AS step_order, 'Bookings' AS step, sum(bookings) AS amount
+FROM {{ ref('fct_finance') }}
+UNION ALL
+SELECT 1, department || ' expenses', -sum(expenses)
+FROM {{ ref('fct_finance') }}
+GROUP BY department
+ORDER BY step_order, amount
+
+VISUALISE step AS x, amount AS y
+DRAW waterfall
+LABEL title => 'From Bookings to Gross Margin'
+LABEL subtitle => "Twelve months of bookings, less each department's expenses"
+LABEL y_title => 'Amount'
+LABEL total => 'Gross margin'
+CONFIG width => 1100
+CONFIG height => 340
+INTERACT tooltip
