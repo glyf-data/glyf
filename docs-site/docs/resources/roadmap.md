@@ -125,7 +125,7 @@ if one of these would change how you work.
       <time dateTime="2026-09-23">23 September 2026</time>
     </div>
     <strong>Table chart, KPI tile, and a diff that says what moved</strong>
-    <p><code>DRAW table</code> shows a query's rows as they are, sortable on the dashboard, and <code>DRAW kpi</code> shows one number with the change against a comparison value; neither is drawn, so <code>glyf diff</code> compares their rows and shows before and after side by side. For a bar, line or area chart the diff now says what happened the way the chart draws it, <code>bars: 12 gone (Partners)</code>, and draws this build's marks over the baseline's in grey. Underneath, glyf validates the chart block itself for every chart type and reads chart SQL with a parser that reports syntax errors with a position. <Link to="/docs/guides/visualisation-syntax#table">Read the guide</Link>.</p>
+    <p><code>DRAW table</code> shows a query's rows as they are, sortable on the dashboard, and <code>DRAW kpi</code> shows one number with the change against a comparison value; neither is drawn, so <code>glyf diff</code> compares their rows and shows before and after side by side. For a bar, line or area chart the diff now says what happened the way the chart draws it, <code>bars: 12 gone (Partners)</code>, and draws this build's marks over the baseline's in grey. Underneath, glyf validates the chart block itself for every chart type and reads chart SQL with a parser that reports syntax errors with a position. <Link to="/docs/charts/table">Read the guide</Link>.</p>
   </li>
   <li>
     <div className="roadmapTimeline__head">

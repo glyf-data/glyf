@@ -822,6 +822,10 @@ html.plugin-docs .chartTypeGrid {
   gap: 1rem;
   margin: 1.25rem 0 2rem;
 }
+/* A chart's own page shows its one card at full width. */
+html.plugin-docs .chartTypeGrid.chartTypeGrid--single {
+  grid-template-columns: minmax(0, 1fr);
+}
 @media (max-width: 720px) {
   html.plugin-docs .chartTypeGrid {
     grid-template-columns: minmax(0, 1fr);

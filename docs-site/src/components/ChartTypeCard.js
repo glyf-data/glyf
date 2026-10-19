@@ -3,10 +3,11 @@ import Link from '@docusaurus/Link';
 import ThemedImage from '@theme/ThemedImage';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-// One chart type as a card: the chart as the product demo draws it, and the
+// One chart type as a card: the chart as an example project draws it, and the
 // .ggsql file that drew it one click away. The code is the card's children, a
 // fenced block, so the docs test can compare it against the shipped file.
-export default function ChartTypeCard({type, title, summary, anchor, children}) {
+// `page` links the card to the chart's own page; on that page it is left out.
+export default function ChartTypeCard({type, title, summary, page, children}) {
   const [view, setView] = useState('chart');
   const light = useBaseUrl(`/img/chart-types/${type}-light.webp`);
   const dark = useBaseUrl(`/img/chart-types/${type}-dark.webp`);
@@ -34,7 +35,7 @@ export default function ChartTypeCard({type, title, summary, anchor, children}) 
         {view === 'chart' ? (
           <ThemedImage
             className="chartTypeCard__image"
-            alt={`A ${type} chart from the product analytics example`}
+            alt={`A ${type} chart from the example projects`}
             sources={{light, dark}}
             loading="lazy"
             title="Open full size"
@@ -46,7 +47,7 @@ export default function ChartTypeCard({type, title, summary, anchor, children}) 
       </div>
       <footer className="chartTypeCard__foot">
         <p>{summary}</p>
-        {anchor && <Link to={`#${anchor}`}>How it reads →</Link>}
+        {page && <Link to={page}>Syntax and how it reads →</Link>}
       </footer>
     </article>
   );

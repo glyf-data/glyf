@@ -199,7 +199,7 @@ render:
 
 ## How many rows a table may list
 
-`render.max_rows` fails a [table](../guides/visualisation-syntax.md#table)
+`render.max_rows` fails a [table](../charts/table.md)
 that would list more rows than it allows:
 
 ```text

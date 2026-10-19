@@ -315,10 +315,17 @@ CHART_TYPE_CARD = re.compile(
 
 
 def test_chart_type_cards_show_the_shipped_files() -> None:
-    """A card's Code view claims to be the file that drew its chart."""
-    page = (DOCS / "guides" / "visualisation-syntax.md").read_text(encoding="utf-8")
-    cards = list(CHART_TYPE_CARD.finditer(page))
-    assert len(cards) == 12, "one card per chart type"
+    """A card's Code view claims to be the file that drew its chart.
+
+    The Charts overview has one card per chart type, and each chart's page
+    repeats its own.
+    """
+    overview = (DOCS / "charts" / "overview.md").read_text(encoding="utf-8")
+    assert len(list(CHART_TYPE_CARD.finditer(overview))) == 12, "one card per chart type"
+    pages = sorted((DOCS / "charts").glob("*.md"))
+    assert len(pages) == 13, "the overview and a page per chart type"
+    cards = [card for page in pages for card in CHART_TYPE_CARD.finditer(page.read_text(encoding="utf-8"))]
+    assert len(cards) == 24
     for card in cards:
         shipped = Path(card["example"]).read_text(encoding="utf-8").strip()
         assert card["code"].strip() == shipped, (

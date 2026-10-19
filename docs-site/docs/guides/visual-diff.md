@@ -157,14 +157,14 @@ Row changes need both builds to have published their rows. A build under
 [`export.row_data: exclude`](data-exposure.md) publishes none, and the diff
 then reports the pictures alone.
 
-A [table](visualisation-syntax.md#table) has no picture. Its HTML fragment is
+A [table](../charts/table.md) has no picture. Its HTML fragment is
 written from its rows and nothing else, so it is byte-stable the way a PNG is,
 and a fragment that differs is a table that changed. There is no percentage
 and no threshold for it: `glyf diff` says `the table changed`, gives the row
 changes above, and the report shows the two tables side by side. In
 `diff.json` a table's entry carries `"table": true`, no pixel counts, and a
 `fragments` object pointing at `fragments/<name>.before.html` and
-`fragments/<name>.after.html`. A [kpi](visualisation-syntax.md#kpi) is
+`fragments/<name>.after.html`. A [kpi](../charts/kpi.md) is
 treated the same way: `glyf diff` says `the value changed`, the entry
 carries `"kpi": true`, and the report shows the two tiles side by side.
 
