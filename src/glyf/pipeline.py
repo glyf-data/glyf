@@ -8,6 +8,7 @@ from glyf.downsample import Downsampling, downsample_m4, plan_downsampling
 from glyf.execution import QueryResult, SqlExecutionError, execute_sql
 from glyf.execution.dialect import sql_dialect
 from glyf.execution.limits import wrap_row_limit
+from glyf.ggsql.geo import MapShapesError, resolve_shapes_path
 from glyf.ggsql.models import GgsqlChart, OrderTiebreak
 from glyf.ggsql.parser import GgsqlParseError, order_tiebreak, parse_ggsql_file
 from glyf.ggsql.renderer import (
@@ -17,6 +18,7 @@ from glyf.ggsql.renderer import (
     render_chart,
     strip_svg_row_values,
     table_columns,
+    unmatched_regions,
 )
 from glyf.ggsql.kpi import render_kpi
 from glyf.ggsql.table import render_table
@@ -294,6 +296,14 @@ def _compile(path: Path, run: _Run) -> _Compiled:
         raise RenderError(f"{rel_path}: {exc}") from exc
     if chart.sql_warning:
         run.warnings.append(f"{rel_path}: {chart.sql_warning}")
+    shapes = chart.options.get("shapes")
+    if shapes is not None:
+        # Checked here so validate mode catches a missing file too.
+        try:
+            path_on_disk = resolve_shapes_path(shapes, root)
+        except MapShapesError as exc:
+            raise RenderError(f"{rel_path}: {exc}") from exc
+        chart = replace(chart, options={**chart.options, "shapes": str(path_on_disk)})
     if chart.is_table and run.exclude_row_data:
         # A picture can be published without its rows; a table is its rows.
         # Say so here, where validate mode also passes, rather than after the
@@ -581,6 +591,13 @@ def _write_artifacts(
         if run.prune_row_data
         else render_data
     )
+    missed = unmatched_regions(chart, chart_data)
+    if missed:
+        shown = ", ".join(missed[:5]) + (", ..." if len(missed) > 5 else "")
+        run.warnings.append(
+            f"{compiled.rel_path}: {len(missed)} region(s) have no shape and are "
+            f"left off the map: {shown}"
+        )
     try:
         render_chart(
             chart,

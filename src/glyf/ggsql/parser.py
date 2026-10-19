@@ -19,8 +19,11 @@ SUPPORTED_CHART_TYPES = {
     "heatmap",
     "table",
     "kpi",
+    "map",
 }
 SUPPORTED_CONFIG_KEYS = {"width", "height"}
+# Text-valued CONFIG keys, which only a map takes.
+SUPPORTED_MAP_OPTIONS = {"shapes", "projection"}
 SUPPORTED_INTERACTIONS = {"tooltip", "zoom", "legend_filter"}
 
 
@@ -85,6 +88,10 @@ def _chart_from_core(raw: dict[str, object]) -> GgsqlChart:
         config={
             str(key): int(value)
             for key, value in _required_dict(raw, "config").items()
+        },
+        options={
+            str(key): str(value)
+            for key, value in _required_dict(raw, "options").items()
         },
         interactions=tuple(str(value) for value in _required_list(raw, "interactions")),
         has_order_by=bool(raw.get("has_order_by", False)),

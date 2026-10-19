@@ -12,3 +12,8 @@ file, including the attribution above.
 The names "glyf" and "glyf-data", and the glyf logo, are trademarks of
 Kannan Kalidasan. The Apache License does not grant permission to use them.
 See TRADEMARK.md for the trademark policy.
+
+The world-countries shapes in src/glyf/ggsql/geo/world-countries.topojson are
+derived from world-atlas 2.0.2, Copyright 2013-2019 Michael Bostock, under the
+ISC license (src/glyf/ggsql/geo/LICENSE-world-atlas), which is built from
+Natural Earth's public-domain data.

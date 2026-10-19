@@ -1,0 +1,39 @@
+{
+  "chart_type": "map",
+  "color": "format",
+  "compiled_sql_path": "compiled/store_locations.sql",
+  "interactions": [
+    "tooltip"
+  ],
+  "lineage": {
+    "models": {},
+    "sources": [
+      "raw.stores"
+    ]
+  },
+  "metadata_path": "charts/store_locations.json",
+  "name": "store_locations",
+  "png_path": "charts/store_locations.png",
+  "roles": [
+    [
+      "latitude",
+      "latitude"
+    ],
+    [
+      "longitude",
+      "longitude"
+    ],
+    [
+      "size",
+      "revenue"
+    ],
+    [
+      "color",
+      "format"
+    ]
+  ],
+  "svg_path": "charts/store_locations.svg",
+  "title": "Stores by Revenue",
+  "x": "longitude",
+  "y": "format"
+}

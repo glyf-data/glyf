@@ -2,6 +2,19 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `DRAW map`: regions filled by a value (`country AS region, revenue AS
+  color`), or places as points (`lat AS latitude, lon AS longitude`, with
+  optional `size` and `color`), drawn over the land. The world's countries
+  ship with glyf and match ISO 3166 alpha-3 or alpha-2 codes or English
+  names, whichever the column holds; `CONFIG shapes` names a project
+  TopoJSON instead, and `CONFIG projection` picks the projection. A region
+  with no shape is reported in the build. Takes `INTERACT tooltip`.
+- The sales example draws revenue by country and its stores on maps.
+
 ## 0.18.0 - 2026-09-25
 
 ### Added

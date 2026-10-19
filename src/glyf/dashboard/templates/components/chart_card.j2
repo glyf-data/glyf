@@ -8,7 +8,7 @@
   <div class="glyf-card-head">
     <div>
       <div class="glyf-card-title">{{ title or chart.metadata.title or chart.metadata.name }}</div>
-      <div class="glyf-card-subtitle">{{ chart.metadata.x }}{% if chart.metadata.y %} -> {{ chart.metadata.y }}{% endif %}</div>
+      <div class="glyf-card-subtitle">{% if chart.metadata.roles %}{{ chart.metadata.roles | map("last") | join(", ") }}{% else %}{{ chart.metadata.x }}{% if chart.metadata.y %} -> {{ chart.metadata.y }}{% endif %}{% endif %}</div>
     </div>
     <div class="glyf-card-badges">
       <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>

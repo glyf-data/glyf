@@ -4,6 +4,7 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TypeVar
 
 import altair as alt
 import pyarrow as pa
@@ -11,8 +12,11 @@ import pyarrow.compute as pc
 
 from glyf.config import RenderConfig
 from glyf.execution.result import ArrowStreamExportable, QueryResult
+from glyf.ggsql.geo import MapShapesError, Shapes, load_shapes, match_regions
 from glyf.ggsql.models import GgsqlChart
 from glyf.renderers import chart_renderer, get_chart_renderer
+
+_Styleable = TypeVar("_Styleable", alt.Chart, alt.LayerChart)
 
 
 HISTOGRAM_MAX_BINS = 30
@@ -21,6 +25,15 @@ BOXPLOT_MIN_SIZE = 6
 BOXPLOT_MAX_SIZE = 80
 # Pixels of room past the outermost point, on both axes of a scatter.
 SCATTER_PADDING = 12
+# A map's land, under the regions and points the query draws: present enough
+# to place them, quiet enough that it never reads as data. Translucent, so the
+# same spec reads on a light card and a dark one.
+MAP_LAND = "#94a3b8"
+MAP_LAND_OPACITY = 0.28
+MAP_BORDER = "#ffffff"
+MAP_DEFAULT_PROJECTION = "equalEarth"
+# The roles a map binds, in encoding order.
+MAP_ROLES = ("region", "latitude", "longitude", "size", "color")
 
 
 class ChartRenderError(ValueError):
@@ -82,7 +95,12 @@ def required_columns(chart: GgsqlChart) -> tuple[str, ...]:
     """
     if chart.is_table:
         return chart.table_columns
-    roles = ("value", "compare") if chart.is_kpi else ("x", "y", "color")
+    if chart.is_map:
+        roles: tuple[str, ...] = MAP_ROLES
+    elif chart.is_kpi:
+        roles = ("value", "compare")
+    else:
+        roles = ("x", "y", "color")
     fields = [chart.field_for_role(role) for role in roles]
     return tuple(dict.fromkeys(field for field in fields if field is not None))
 
@@ -268,13 +286,15 @@ def build_chart(
     chart: GgsqlChart,
     data: QueryResult | ArrowStreamExportable,
     config: RenderConfig | None = None,
-) -> alt.Chart:
+) -> alt.Chart | alt.LayerChart:
     config = config or RenderConfig()
     frame = _coerce_query_result(data).to_arrow()
     if not chart.has_picture:
         raise ChartRenderError(
             f"a {chart.draw_type} is not drawn; glyf.ggsql.{chart.draw_type} writes it from its rows"
         )
+    if chart.is_map:
+        return _build_map(chart, frame, config)
     chart_type = CHART_TYPES.get(chart.draw_type)
     if chart_type is None:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
@@ -290,6 +310,109 @@ def build_chart(
 
     base = _styled(alt.Chart(frame).encode(**encoding), chart, config)
     return _with_interactions(chart_type.mark(base, drawing), drawing)
+
+
+def _build_map(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.LayerChart:
+    """Land from the shapes, then the query's regions or points over it.
+
+    The rows are the layered chart's own data and the land brings its own, so
+    a dashboard filter -- a transform at the top of the spec -- narrows the
+    regions or points and leaves the land whole.
+    """
+    missing = missing_columns(chart, tuple(frame.column_names))
+    if missing:
+        joined = ", ".join(f"'{field}'" for field in missing)
+        raise ChartRenderError(f"query result missing chart column {joined}")
+    try:
+        shapes = load_shapes(chart.options.get("shapes"))
+    except MapShapesError as exc:
+        raise ChartRenderError(str(exc)) from exc
+
+    land_data = _shape_data(shapes)
+    land = alt.Chart(land_data).mark_geoshape(
+        fill=MAP_LAND,
+        fillOpacity=MAP_LAND_OPACITY,
+        stroke=MAP_LAND,
+        strokeOpacity=0.5,
+        strokeWidth=0.5,
+    )
+    encoding: dict[str, object] = {}
+    color = chart.field_for_role("color")
+    if color is not None:
+        encoding["color"] = alt.Color(
+            color, type="quantitative" if _is_numeric(frame, color) else "nominal"
+        )
+    if "tooltip" in chart.interactions:
+        encoding["tooltip"] = [alt.Tooltip(field) for field in required_columns(chart)]
+
+    if chart.is_point_map:
+        latitude = chart.field_for_role("latitude")
+        longitude = chart.field_for_role("longitude")
+        assert latitude is not None and longitude is not None
+        _require_numeric(frame, latitude, "latitude", "map")
+        _require_numeric(frame, longitude, "longitude", "map")
+        encoding["latitude"] = alt.Latitude(latitude, type="quantitative")
+        encoding["longitude"] = alt.Longitude(longitude, type="quantitative")
+        size = chart.field_for_role("size")
+        if size is not None:
+            _require_numeric(frame, size, "size", "map")
+            encoding["size"] = alt.Size(size, type="quantitative")
+        marks = alt.Chart().mark_circle(
+            opacity=0.8, stroke=MAP_BORDER, strokeWidth=0.5
+        )
+    else:
+        region = chart.field_for_role("region")
+        assert region is not None
+        try:
+            match = match_regions(shapes, frame.column(region).to_pylist())
+        except MapShapesError as exc:
+            raise ChartRenderError(str(exc)) from exc
+        marks = (
+            alt.Chart()
+            .transform_lookup(
+                lookup=region,
+                from_=alt.LookupData(
+                    data=land_data, key=match.lookup_key, fields=["type", "geometry"]
+                ),
+            )
+            # A region the shapes do not have has nothing to fill.
+            .transform_filter("isValid(datum.geometry)")
+            .mark_geoshape(stroke=MAP_BORDER, strokeOpacity=0.6, strokeWidth=0.5)
+        )
+
+    layered = alt.layer(land, marks.encode(**encoding), data=frame).project(
+        type=chart.options.get("projection", MAP_DEFAULT_PROJECTION)
+    )
+    # A map is not a plot area: the frame around the view would box the sea.
+    return _styled(layered, chart, config).configure_view(stroke=None)
+
+
+def unmatched_regions(chart: GgsqlChart, data: QueryResult) -> tuple[str, ...]:
+    """The regions a map's query returned that its shapes have no shape for.
+
+    They are left off the map, which is easy to miss, so the build says so.
+    """
+    region = chart.field_for_role("region")
+    if not chart.is_map or region is None or region not in data.columns:
+        return ()
+    try:
+        shapes = load_shapes(chart.options.get("shapes"))
+        return match_regions(shapes, data.to_arrow().column(region).to_pylist()).unmatched
+    except MapShapesError:
+        # The render reports it, with the same message.
+        return ()
+
+
+def _shape_data(shapes: Shapes) -> alt.InlineData:
+    return alt.InlineData(
+        values=shapes.topology,
+        format=alt.DataFormat(type="topojson", feature=shapes.feature),
+    )
+
+
+def _is_numeric(frame: pa.Table, field: str) -> bool:
+    column_type = frame.schema.field(field).type
+    return pa.types.is_integer(column_type) or pa.types.is_floating(column_type)
 
 
 def _drawing(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> _Drawing:
@@ -322,7 +445,7 @@ def _drawing(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> _Drawi
     )
 
 
-def _styled(base: alt.Chart, chart: GgsqlChart, config: RenderConfig) -> alt.Chart:
+def _styled(base: _Styleable, chart: GgsqlChart, config: RenderConfig) -> _Styleable:
     """Size, title and the type treatment every glyf chart shares."""
     title: str | alt.TitleParams | None = chart.title
     if chart.title and chart.subtitle:
@@ -372,11 +495,11 @@ def _with_interactions(rendered: alt.Chart, drawing: _Drawing) -> alt.Chart:
 
 
 def _require_numeric(frame: pa.Table, field: str, role: str, draw_type: str) -> None:
-    column_type = frame.schema.field(field).type
-    if pa.types.is_integer(column_type) or pa.types.is_floating(column_type):
+    if _is_numeric(frame, field):
         return
     raise ChartRenderError(
-        f"{draw_type} needs a numeric {role} column and '{field}' is {column_type}"
+        f"{draw_type} needs a numeric {role} column and '{field}' is "
+        f"{frame.schema.field(field).type}"
     )
 
 

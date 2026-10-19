@@ -184,6 +184,8 @@ def _bindings(chart: ChartArtifact) -> str:
         if metadata.compare:
             parts.append(f"{metadata.compare} AS compare")
         return "binds " + ", ".join(parts)
+    if metadata.roles:
+        return "binds " + ", ".join(f"{field} AS {role}" for role, field in metadata.roles)
     parts = [f"{metadata.x} AS x"]
     if metadata.y:
         parts.append(f"{metadata.y} AS y")

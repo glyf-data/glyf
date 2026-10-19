@@ -16,3 +16,8 @@ groups:
       - monthly_revenue
       - channel_revenue
       - regional_revenue
+  - title: Around the world
+    description: Where revenue comes from, by country and by store.
+    charts:
+      - revenue_by_country
+      - store_locations

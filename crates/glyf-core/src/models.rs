@@ -15,6 +15,10 @@ pub struct GgsqlChart {
     pub draw_type: String,
     pub labels: BTreeMap<String, String>,
     pub config: BTreeMap<String, i64>,
+    /// `CONFIG` keys whose value is text rather than a size: a map's
+    /// `shapes` file and `projection`. Only the draw types that take one may
+    /// set it.
+    pub options: BTreeMap<String, String>,
     pub interactions: Vec<String>,
     /// Whether the query orders its own rows. A chart whose query does not is
     /// rendered from whatever order the warehouse returned, which is not

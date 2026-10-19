@@ -1,0 +1,31 @@
+{
+  "chart_type": "map",
+  "color": "revenue",
+  "compiled_sql_path": "compiled/revenue_by_country.sql",
+  "interactions": [
+    "tooltip"
+  ],
+  "lineage": {
+    "models": {},
+    "sources": [
+      "raw.country_sales"
+    ]
+  },
+  "metadata_path": "charts/revenue_by_country.json",
+  "name": "revenue_by_country",
+  "png_path": "charts/revenue_by_country.png",
+  "roles": [
+    [
+      "region",
+      "country"
+    ],
+    [
+      "color",
+      "revenue"
+    ]
+  ],
+  "svg_path": "charts/revenue_by_country.svg",
+  "title": "Revenue by Country",
+  "x": "country",
+  "y": "revenue"
+}
