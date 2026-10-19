@@ -57,6 +57,14 @@ if one of these would change how you work.
 <ol className="roadmapTimeline">
   <li>
     <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.20.0">0.20.0</Link>
+      <time dateTime="2026-10-19">19 October 2026</time>
+    </div>
+    <strong>Combo, funnel, treemap, waterfall and small multiples</strong>
+    <p>Four new chart types: <code>DRAW combo</code> puts bars and a line on two axes, <code>DRAW funnel</code> shows conversion step by step, <code>DRAW treemap</code> sizes tiles by value, and <code>DRAW waterfall</code> walks a running total to its end. A <code>facet</code> role splits a chart into small multiples, and maps gain a <code>label</code> role and zoom. <Link to="/docs/charts">Browse the charts</Link>.</p>
+  </li>
+  <li>
+    <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.19.0">0.19.0</Link>
       <time dateTime="2026-10-19">19 October 2026</time>
     </div>
