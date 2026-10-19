@@ -142,11 +142,11 @@ values resolved out of chart rows. An `INTERACT` chart becomes a static image, a
 which chart was downgraded. The full behaviour is in the
 [configuration reference](../reference/configuration.md#publishing-without-the-rows).
 
-A [table](visualisation-syntax.md#table) cannot be published this way: it is
+A [table](../charts/table.md) cannot be published this way: it is
 its rows, and there is no picture to publish instead. A build with a table and
 `row_data: exclude` fails at validation, naming the chart, so the choice is
 made in the open: set `row_data` to `include` or `minimal`, or leave the table
-out of that build with `--select`. A [kpi](visualisation-syntax.md#kpi) is
+out of that build with `--select`. A [kpi](../charts/kpi.md) is
 published: its tile carries one number, or two, which is what a PNG of it
 would show.
 
