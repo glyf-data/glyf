@@ -318,7 +318,7 @@ def test_chart_type_cards_show_the_shipped_files() -> None:
     """A card's Code view claims to be the file that drew its chart."""
     page = (DOCS / "guides" / "visualisation-syntax.md").read_text(encoding="utf-8")
     cards = list(CHART_TYPE_CARD.finditer(page))
-    assert len(cards) == 11, "one card per chart type"
+    assert len(cards) == 12, "one card per chart type"
     for card in cards:
         shipped = Path(card["example"]).read_text(encoding="utf-8").strip()
         assert card["code"].strip() == shipped, (

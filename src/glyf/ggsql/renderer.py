@@ -14,6 +14,7 @@ from glyf.config import RenderConfig
 from glyf.execution.result import ArrowStreamExportable, QueryResult
 from glyf.ggsql.geo import MapShapesError, Shapes, load_shapes, match_regions
 from glyf.ggsql.models import GgsqlChart
+from glyf.ggsql.sankey import LABEL_GAP, Layout, SankeyError, layout_sankey
 from glyf.renderers import chart_renderer, get_chart_renderer
 
 _Styleable = TypeVar("_Styleable", alt.Chart, alt.LayerChart)
@@ -34,6 +35,9 @@ MAP_BORDER = "#ffffff"
 MAP_DEFAULT_PROJECTION = "equalEarth"
 # The roles a map binds, in encoding order.
 MAP_ROLES = ("region", "latitude", "longitude", "size", "color")
+SANKEY_ROLES = ("source", "target", "value")
+# A link's band, behind its nodes: see-through, so crossing bands both read.
+SANKEY_LINK_OPACITY = 0.38
 
 
 class ChartRenderError(ValueError):
@@ -97,6 +101,8 @@ def required_columns(chart: GgsqlChart) -> tuple[str, ...]:
         return chart.table_columns
     if chart.is_map:
         roles: tuple[str, ...] = MAP_ROLES
+    elif chart.is_sankey:
+        roles = SANKEY_ROLES
     elif chart.is_kpi:
         roles = ("value", "compare")
     else:
@@ -295,6 +301,8 @@ def build_chart(
         )
     if chart.is_map:
         return _build_map(chart, frame, config)
+    if chart.is_sankey:
+        return _build_sankey(chart, frame, config)
     chart_type = CHART_TYPES.get(chart.draw_type)
     if chart_type is None:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
@@ -385,6 +393,127 @@ def _build_map(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.
     )
     # A map is not a plot area: the frame around the view would box the sea.
     return _styled(layered, chart, config).configure_view(stroke=None)
+
+
+def _build_sankey(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.LayerChart:
+    """Bands for the flows, a bar per node over them, and the nodes' names.
+
+    The geometry is laid out in pixels by `glyf.ggsql.sankey`, so both axes
+    are pixel scales with no axis drawn.
+    """
+    missing = missing_columns(chart, tuple(frame.column_names))
+    if missing:
+        joined = ", ".join(f"'{field}'" for field in missing)
+        raise ChartRenderError(f"query result missing chart column {joined}")
+    source, target, value = (chart.field_for_role(role) for role in SANKEY_ROLES)
+    assert source is not None and target is not None and value is not None
+    width = chart.width or config.default_width
+    height = chart.height or config.default_height
+    try:
+        layout = layout_sankey(
+            list(
+                zip(
+                    frame.column(source).to_pylist(),
+                    frame.column(target).to_pylist(),
+                    frame.column(value).to_pylist(),
+                )
+            ),
+            width,
+            height,
+        )
+    except SankeyError as exc:
+        raise ChartRenderError(str(exc)) from exc
+
+    x = alt.X("x:Q", scale=alt.Scale(domain=[0, width], nice=False, zero=False), axis=None)
+    y_scale = alt.Scale(domain=[0, height], nice=False, zero=False, reverse=True)
+    y = alt.Y("y:Q", scale=y_scale, axis=None)
+    # One colour per node, in the order the query first names them, so a
+    # band takes the colour of the node it leaves.
+    colors = alt.Scale(domain=[node.name for node in _first_seen_nodes(layout)])
+    tooltip = "tooltip" in chart.interactions
+
+    # A band is an area between its top and bottom edges, not a thick line:
+    # a line's bounds grow by half its stroke, which would pad the picture.
+    links = alt.Chart(pa.Table.from_pylist(_link_points(layout))).mark_area(
+        interpolate="monotone", opacity=SANKEY_LINK_OPACITY
+    ).encode(
+        x=x,
+        y=alt.Y("y:Q", scale=y_scale, axis=None, stack=None),
+        y2="y2:Q",
+        # An area runs along x, and a band's points rise in x; an `order`
+        # channel would split it into one area per point.
+        detail="link:N",
+        color=alt.Color("source:N", scale=colors, legend=None),
+        **(
+            {
+                "tooltip": [
+                    alt.Tooltip("source:N", title=source),
+                    alt.Tooltip("target:N", title=target),
+                    alt.Tooltip("value:Q", title=value),
+                ]
+            }
+            if tooltip
+            else {}
+        ),
+    )
+    node_rows = [
+        {"node": node.name, "x": node.x0, "x2": node.x1, "y": node.y0, "y2": node.y1, "value": node.value}
+        for node in layout.nodes
+    ]
+    nodes = alt.Chart(pa.Table.from_pylist(node_rows)).mark_rect().encode(
+        x=x,
+        x2="x2:Q",
+        y=y,
+        y2="y2:Q",
+        color=alt.Color("node:N", scale=colors, legend=None),
+        **(
+            {"tooltip": [alt.Tooltip("node:N", title="node"), alt.Tooltip("value:Q", title=value)]}
+            if tooltip
+            else {}
+        ),
+    )
+    layers = [links, nodes]
+    # The last column's names sit to the left of their bars, inside the
+    # picture; every other column's to the right.
+    for align, last in (("left", False), ("right", True)):
+        rows = [
+            {
+                "label": node.name,
+                "x": node.x0 - LABEL_GAP if last else node.x1 + LABEL_GAP,
+                "y": (node.y0 + node.y1) / 2,
+            }
+            for node in layout.nodes
+            if (node.column == layout.columns - 1) == last
+        ]
+        if rows:
+            layers.append(
+                alt.Chart(pa.Table.from_pylist(rows))
+                .mark_text(align=align, baseline="middle", fontSize=11, fontWeight=500)
+                .encode(x=x, y=y, text="label:N")
+            )
+    return _styled(alt.layer(*layers), chart, config).configure_view(stroke=None)
+
+
+def _first_seen_nodes(layout: Layout) -> list:
+    """Nodes in column order, top to bottom: a stable order for the colours."""
+    return sorted(layout.nodes, key=lambda node: (node.column, node.y0))
+
+
+def _link_points(layout: Layout) -> list[dict[str, object]]:
+    return [
+        {
+            "link": index,
+            "step": step,
+            "x": point[0],
+            "y": point[1] - link.width / 2,
+            "y2": point[1] + link.width / 2,
+            "source": link.source,
+            "target": link.target,
+            "value": link.value,
+        }
+        for index, link in enumerate(layout.links)
+        for step, point in enumerate(link.curve())
+    ]
 
 
 def unmatched_regions(chart: GgsqlChart, data: QueryResult) -> tuple[str, ...]:

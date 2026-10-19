@@ -62,7 +62,7 @@
         "chart_type": {
           "enum": [
             "line", "bar", "scatter", "area", "pie", "histogram",
-            "boxplot", "heatmap", "table", "kpi", "map", null
+            "boxplot", "heatmap", "table", "kpi", "map", "sankey", null
           ]
         },
         "fields": {

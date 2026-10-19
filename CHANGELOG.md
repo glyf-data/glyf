@@ -14,6 +14,17 @@ All notable changes to `glyf` will be documented in this file.
   TopoJSON instead, and `CONFIG projection` picks the projection. A region
   with no shape is reported in the build. Takes `INTERACT tooltip`.
 - The sales example draws revenue by country and its stores on maps.
+- `DRAW sankey`: flows between stages, one row per flow (`stage AS source,
+  next_stage AS target, users AS value`). glyf lays the stages out as
+  columns and draws the flows as bands as wide as their value; a loop, a
+  negative value or a self-flow fails the build with the chart's name.
+  Takes `INTERACT tooltip`. The product analytics example shows accounts
+  flowing from plan to activity to session length.
+
+### Fixed
+
+- A dashboard's dark theme no longer draws a frame around a chart that has
+  none, and colours text marks so they read on a dark card.
 
 ## 0.18.0 - 2026-09-25
 

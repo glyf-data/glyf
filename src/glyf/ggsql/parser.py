@@ -20,6 +20,7 @@ SUPPORTED_CHART_TYPES = {
     "table",
     "kpi",
     "map",
+    "sankey",
 }
 SUPPORTED_CONFIG_KEYS = {"width", "height"}
 # Text-valued CONFIG keys, which only a map takes.

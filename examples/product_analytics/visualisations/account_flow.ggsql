@@ -1,0 +1,27 @@
+WITH accounts AS (
+  SELECT
+    plan,
+    CASE
+      WHEN sessions >= 40 THEN 'Heavy use'
+      WHEN sessions >= 15 THEN 'Regular use'
+      ELSE 'Light use'
+    END AS activity,
+    CASE WHEN avg_session_minutes >= 15 THEN 'Long sessions' ELSE 'Short sessions' END AS session_length
+  FROM {{ ref('fct_account_sessions') }}
+)
+SELECT plan AS stage, activity AS next_stage, count(*) AS accounts
+FROM accounts
+GROUP BY 1, 2
+UNION ALL
+SELECT activity, session_length, count(*)
+FROM accounts
+GROUP BY 1, 2
+ORDER BY 1, 2
+
+VISUALISE stage AS source, next_stage AS target, accounts AS value
+DRAW sankey
+LABEL title => 'How Accounts Use the Product'
+LABEL subtitle => 'Accounts by plan, then by how often and how long they use it'
+CONFIG width => 1100
+CONFIG height => 420
+INTERACT tooltip

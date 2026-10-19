@@ -3,8 +3,9 @@
 A chart is drawn from the rows its query returned, in the order it returned
 them, and for several chart types that order is part of the picture: it sets a
 stacked bar's segment order, a pie's slice order, which points a scatter draws
-on top, and a heatmap's axes. SQL only promises an order when the query asks
-for one, so the same project can draw a different chart on every build.
+on top, a heatmap's axes, and which colour each sankey node takes. SQL only
+promises an order when the query asks for one, so the same project can draw a
+different chart on every build.
 
 Where the query asks, glyf keeps that order exactly. Where it does not, glyf
 picks one: there is no intent to override, and an arbitrary order that holds
@@ -29,7 +30,7 @@ from glyf.ggsql.renderer import required_columns
 # glyf picked is worth reporting. A line or an area is drawn along its x axis
 # whatever order the rows arrive in. A table's picture is the order.
 _STACKS = frozenset({"bar", "area", "histogram"})
-_ALWAYS_ORDER_SENSITIVE = frozenset({"pie", "heatmap", "table"})
+_ALWAYS_ORDER_SENSITIVE = frozenset({"pie", "heatmap", "table", "sankey"})
 
 
 @dataclass(frozen=True)
