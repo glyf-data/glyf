@@ -27,6 +27,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/product-analytics/dashboard
 - Dashboard filters whose values come from a rendered chart artifact (`source(activation_by_plan, plan)`).
 - Built-in macros in `summary` and two project-local macros: `activation_health` reads the latest activation rates through `MacroContext` and returns a status card led by the number, and `product_notes` returns hand-written release notes, to show that a macro can carry fixed text as well as values from the build.
 - A histogram and a boxplot over `fct_account_sessions`, which has one row per account, and a weekday-by-hour heatmap over `fct_hourly_activity` ordered by `weekday_number, hour` so the week starts on Monday.
+- Small multiples: weekly sessions as bars, one panel per plan (`weekly_sessions_by_plan.ggsql`), split by `plan AS facet`.
 - A funnel of accounts by how much they use the product (`account_funnel.ggsql`): one `SELECT` per step joined with `UNION ALL`, ordered by a step number.
 - A sankey of accounts flowing from plan to how often and how long they use the product (`account_flow.ggsql`): two `GROUP BY`s joined with `UNION ALL`, one per pair of stages.
 - A table of the ten most active accounts (`top_accounts.ggsql`): `VISUALISE *` over the same model with `LIMIT 10`, column labels, and a `CONFIG height` that turns the card into a scroll area.
@@ -109,6 +110,12 @@ sections:
       - component: "{{ product_notes() }}"
       - chart: activation_by_plan
       - chart: activation_rate_by_plan
+
+  - title: Plan by Plan
+    description: Each plan's weekly sessions in its own panel, on one scale.
+    columns: 1
+    items:
+      - chart: weekly_sessions_by_plan
 
   - title: Engagement Mix
     description: Sessions per active user and total session share by plan.

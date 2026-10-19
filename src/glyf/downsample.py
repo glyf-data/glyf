@@ -127,7 +127,8 @@ def downsample_m4(
     Whole rows are kept, not the extreme values alone, so every column a chart
     encodes or a tooltip shows still lines up with the row it came from. A
     chart coloured by a series bins each series separately; sharing bins across
-    them would let a busy series' extremes stand in for a quiet one's.
+    them would let a busy series' extremes stand in for a quiet one's. Each
+    panel of a faceted chart is binned separately for the same reason.
     """
     x_field = chart.field_for_role("x")
     y_field = chart.field_for_role("y")
@@ -136,14 +137,18 @@ def downsample_m4(
         raise ValueError("downsampling needs a chart with x and y mappings")
 
     table = data.to_arrow()
-    if color_field is not None and color_field not in table.column_names:
-        color_field = None
+    # A series is a colour within a panel: each is binned on its own.
+    series = [
+        field
+        for field in (color_field, chart.field_for_role("facet"))
+        if field is not None and field in table.column_names
+    ]
 
     # An in-memory transform over a result already in hand, not execution: the
     # rows have been fetched, whichever warehouse they came from. duckdb reads
     # `arrow_table` out of this frame by name.
     arrow_table = table
-    group = f", {_quote(color_field)}" if color_field else ""
+    group = "".join(f", {_quote(field)}" for field in series)
     reduced = duckdb.sql(f"""
         with source as (
             select *, row_number() over () as glyf_row from arrow_table

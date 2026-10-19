@@ -93,6 +93,16 @@ class GgsqlChart:
         return self.config.get("height")
 
     @property
+    def facet(self) -> str | None:
+        """The column that splits the chart into small multiples, a panel per value."""
+        return self.field_for_role("facet")
+
+    @property
+    def columns(self) -> int | None:
+        """How many panels a faceted chart puts in a row."""
+        return self.config.get("columns")
+
+    @property
     def is_interactive(self) -> bool:
         return bool(self.interactions)
 

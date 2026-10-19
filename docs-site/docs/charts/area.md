@@ -45,6 +45,9 @@ Use an area over a line when the total matters as much as the parts; use a
 line when the parts should be compared against each other, since stacked
 bands are hard to compare except at the bottom.
 
+To draw one area chart per value of a column, add a `facet` role: see
+[Small multiples](../guides/visualisation-syntax.md#small-multiples).
+
 ## See also
 
 - [Visualisation syntax](../guides/visualisation-syntax.md): the directives every chart shares, `LABEL`, `CONFIG` and `INTERACT`.

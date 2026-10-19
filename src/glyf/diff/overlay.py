@@ -163,6 +163,9 @@ def build_overlay(
     """
     draw_type = metadata.get("chart_type")
     x, y, color = metadata.get("x"), metadata.get("y"), metadata.get("color")
+    # A faceted chart is a grid of panels; one overlay would merge them.
+    if metadata.get("facet") is not None:
+        return None
     if draw_type not in SUPPORTED or not isinstance(x, str) or not isinstance(y, str):
         return None
     if color is not None and not isinstance(color, str):

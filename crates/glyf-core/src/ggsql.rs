@@ -30,8 +30,12 @@ struct DrawSpec {
 
 const XY: &[&str] = &["x", "y"];
 const XY_COLOR: &[&str] = &["x", "y", "color"];
+/// A chart that can be split into small multiples, one panel per `facet`.
+const XY_COLOR_FACET: &[&str] = &["x", "y", "color", "facet"];
+/// The role that splits a chart into a panel per value.
+const FACET_ROLE: &str = "facet";
 const ALL_INTERACTIONS: &[&str] = &["legend_filter", "tooltip", "zoom"];
-const CONFIG_KEYS: &[&str] = &["width", "height"];
+const CONFIG_KEYS: &[&str] = &["width", "height", "columns"];
 /// `CONFIG` keys that take text, and the one draw type that reads them.
 const MAP_OPTION_KEYS: &[&str] = &["shapes", "projection"];
 /// The projections a map may name, as Vega spells them. Matched without
@@ -61,23 +65,24 @@ pub const COLUMN_ROLE: &str = "column";
 pub const EVERY_COLUMN: &str = "*";
 
 fn draw_spec(draw: &str) -> Option<DrawSpec> {
-    let xy = |draw_type| DrawSpec {
+    let xy = |draw_type, allowed| DrawSpec {
         draw_type,
         required: XY,
-        allowed: XY_COLOR,
+        allowed,
         interactions: ALL_INTERACTIONS,
     };
     Some(match draw {
-        "line" => xy("line"),
-        "bar" => xy("bar"),
-        "area" => xy("area"),
-        "pie" => xy("pie"),
+        // The charts with axes can be split into small multiples by `facet`.
+        "line" => xy("line", XY_COLOR_FACET),
+        "bar" => xy("bar", XY_COLOR_FACET),
+        "area" => xy("area", XY_COLOR_FACET),
+        "pie" => xy("pie", XY_COLOR),
         // ggsql calls it `point`; glyf has always reported `scatter`.
-        "scatter" | "point" => xy("scatter"),
+        "scatter" | "point" => xy("scatter", XY_COLOR_FACET),
         "histogram" => DrawSpec {
             draw_type: "histogram",
             required: &["x"],
-            allowed: &["x", "color"],
+            allowed: &["x", "color", "facet"],
             interactions: ALL_INTERACTIONS,
         },
         // A boxplot is a composite mark a legend selection cannot bind to, and
@@ -228,7 +233,7 @@ pub fn parse_ggsql_text(
             }
             if !CONFIG_KEYS.contains(&key.as_str()) {
                 return Err(CoreError::Parse(format!(
-                    "unsupported CONFIG key '{key}'; supported keys: width, height, and for a map shapes, projection"
+                    "unsupported CONFIG key '{key}'; supported keys: width, height, columns, and for a map shapes, projection"
                 )));
             }
             let parsed = value.trim().parse::<i64>().map_err(|_| {
@@ -274,6 +279,7 @@ pub fn parse_ggsql_text(
         draw_type.ok_or_else(|| CoreError::Parse("missing DRAW directive".to_string()))?;
     let spec = draw_spec(&draw_type).expect("a stored draw type is in the table");
     validate_roles(&spec, &visualise)?;
+    validate_columns(&visualise, &config)?;
     validate_interactions(&spec, &interactions)?;
     let options = validate_options(&spec, options)?;
 
@@ -543,6 +549,22 @@ fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(),
     Ok(())
 }
 
+/// `CONFIG columns` lays a faceted chart's panels out in rows of that many;
+/// a chart without a `facet` has one panel and nothing to lay out.
+fn validate_columns(
+    visualise: &[VisualiseMapping],
+    config: &BTreeMap<String, i64>,
+) -> Result<(), CoreError> {
+    let faceted = visualise.iter().any(|mapping| mapping.role == FACET_ROLE);
+    if config.contains_key("columns") && !faceted {
+        return Err(CoreError::Parse(
+            "CONFIG columns lays out a faceted chart's panels; map a column AS facet to split the chart"
+                .to_string(),
+        ));
+    }
+    Ok(())
+}
+
 /// A map draws one of two things, and its roles say which: `region` fills a
 /// shape per row, `latitude` and `longitude` put a point per row. `size` only
 /// means something for a point.
@@ -585,7 +607,7 @@ fn validate_options(
     for (key, value) in options {
         if spec.draw_type != "map" {
             return Err(CoreError::Parse(format!(
-                "CONFIG {key} applies to DRAW map only; supported keys: width, height"
+                "CONFIG {key} applies to DRAW map only; supported keys: width, height, columns"
             )));
         }
         if value.is_empty() {
@@ -908,7 +930,7 @@ mod tests {
         .unwrap_err();
         assert_eq!(
             bar.to_string(),
-            "bar maps each column to a role (x, y, color); write 'region AS x', or DRAW table to list columns"
+            "bar maps each column to a role (x, y, color, facet); write 'region AS x', or DRAW table to list columns"
         );
     }
 
@@ -1513,5 +1535,41 @@ mod tests {
         );
         let error = parse("step AS x", "").unwrap_err().to_string();
         assert!(error.contains("requires x and y mappings"), "{error}");
+    }
+
+    #[test]
+    fn a_chart_with_axes_takes_a_facet_and_its_columns() {
+        let parse = |visualise: &str, draw: &str, extra: &str| {
+            parse_ggsql_text(
+                &format!("SELECT * FROM fct_sales\n\nVISUALISE {visualise}\nDRAW {draw}\n{extra}"),
+                "by_region",
+                None,
+                "duckdb",
+            )
+        };
+        for draw in ["line", "bar", "area", "scatter"] {
+            let chart = parse(
+                "month AS x, revenue AS y, region AS facet",
+                draw,
+                "CONFIG columns => 2\n",
+            )
+            .unwrap();
+            assert_eq!(chart.config.get("columns"), Some(&2));
+        }
+        assert!(parse("amount AS x, region AS facet", "histogram", "").is_ok());
+        let error = parse("region AS x, revenue AS y, channel AS facet", "pie", "")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("pie does not take a 'facet' mapping"),
+            "{error}"
+        );
+        let error = parse("month AS x, revenue AS y", "line", "CONFIG columns => 2\n")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("CONFIG columns lays out a faceted chart's panels"),
+            "{error}"
+        );
     }
 }

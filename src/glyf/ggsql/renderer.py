@@ -25,6 +25,13 @@ HISTOGRAM_MAX_BINS = 30
 _HISTOGRAM_BINS = alt.Bin(maxbins=HISTOGRAM_MAX_BINS)
 BOXPLOT_MIN_SIZE = 6
 BOXPLOT_MAX_SIZE = 80
+# Small multiples: at most this many panels to a row unless CONFIG columns
+# says otherwise, this much room between them, and a panel's height as a
+# share of its width when CONFIG height leaves it open.
+FACET_COLUMNS = 3
+FACET_GAP = 16
+FACET_ASPECT = 0.6
+FACET_MIN_HEIGHT = 120
 # Pixels of room past the outermost point, on both axes of a scatter.
 SCATTER_PADDING = 12
 # A map's land, under the regions and points the query draws: present enough
@@ -131,7 +138,7 @@ def required_columns(chart: GgsqlChart) -> tuple[str, ...]:
     elif chart.is_kpi:
         roles = ("value", "compare")
     else:
-        roles = ("x", "y", "color")
+        roles = ("x", "y", "color", "facet")
     fields = [chart.field_for_role(role) for role in roles]
     return tuple(dict.fromkeys(field for field in fields if field is not None))
 
@@ -349,8 +356,54 @@ def build_chart(
             else [alt.Tooltip(field) for field in required_columns(chart)]
         )
 
+    if chart.facet is not None:
+        return _faceted(chart_type, drawing, encoding, config)
     base = _styled(alt.Chart(frame).encode(**encoding), chart, config)
     return _with_interactions(chart_type.mark(base, drawing), drawing)
+
+
+def _faceted(
+    chart_type: _ChartType,
+    drawing: _Drawing,
+    encoding: dict[str, object],
+    config: RenderConfig,
+) -> alt.FacetChart:
+    """The chart drawn once per value of its facet column, in a grid.
+
+    Every panel shares its axes and colours, so panels compare at a glance.
+    `CONFIG width` and `CONFIG height` are the whole grid's; each panel takes
+    its share, a fixed proportion of its width tall when the height is open.
+    """
+    chart, frame = drawing.chart, drawing.frame
+    facet = chart.facet
+    assert facet is not None
+    panels = max(pc.count_distinct(frame.column(facet)).as_py(), 1)
+    columns = min(chart.columns or FACET_COLUMNS, panels)
+    rows = -(-panels // columns)
+    width = chart.width or config.default_width
+    panel_width = max(int((width - FACET_GAP * (columns - 1)) / columns), 60)
+    if chart.height is not None:
+        panel_height = max(int((chart.height - FACET_GAP * (rows - 1)) / rows), 60)
+    else:
+        panel_height = max(int(panel_width * FACET_ASPECT), FACET_MIN_HEIGHT)
+    # A panel is a fraction of the width: labels that would collide are
+    # dropped, every other one first.
+    encoding = {**encoding, "x": encoding["x"].axis(labelAngle=0, labelOverlap="parity")}
+    panel = chart_type.mark(alt.Chart(frame).encode(**encoding), drawing).properties(
+        width=panel_width, height=panel_height
+    )
+    grid = _with_interactions(panel, drawing).facet(
+        facet=alt.Facet(
+            facet,
+            title=None,
+            header=alt.Header(labelFontSize=12, labelFontWeight=600, labelPadding=6),
+        ),
+        columns=columns,
+        spacing=FACET_GAP,
+    )
+    # A grid's title starts at its left edge by default; centre it as a
+    # single chart's is.
+    return _configured(grid.properties(**_title(chart, anchor="middle")))
 
 
 def _build_combo(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.LayerChart:
@@ -961,19 +1014,30 @@ def _drawing(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> _Drawi
 
 def _styled(base: _Styleable, chart: GgsqlChart, config: RenderConfig) -> _Styleable:
     """Size, title and the type treatment every glyf chart shares."""
-    title: str | alt.TitleParams | None = chart.title
-    if chart.title and chart.subtitle:
-        title = alt.TitleParams(text=chart.title, subtitle=chart.subtitle)
-    properties: dict[str, object] = {
-        "width": chart.width or config.default_width,
-        "height": chart.height or config.default_height,
-    }
-    if title is not None:
-        properties["title"] = title
+    return _configured(
+        base.properties(
+            width=chart.width or config.default_width,
+            height=chart.height or config.default_height,
+            **_title(chart),
+        )
+    )
 
+
+def _title(chart: GgsqlChart, **params: object) -> dict[str, object]:
+    if chart.title and chart.subtitle:
+        return {"title": alt.TitleParams(text=chart.title, subtitle=chart.subtitle, **params)}
+    if chart.title:
+        return {"title": alt.TitleParams(text=chart.title, **params) if params else chart.title}
+    return {}
+
+
+_Configurable = TypeVar("_Configurable", alt.Chart, alt.LayerChart, alt.FacetChart)
+
+
+def _configured(base: _Configurable) -> _Configurable:
+    """The type treatment every glyf chart shares."""
     return (
-        base.properties(**properties)
-        .configure_view(stroke="#d9e2ec")
+        base.configure_view(stroke="#d9e2ec")
         .configure_axis(
             labelAngle=0,
             labelFontSize=11,
@@ -995,6 +1059,7 @@ def _styled(base: _Styleable, chart: GgsqlChart, config: RenderConfig) -> _Style
 
 
 def _with_interactions(rendered: alt.Chart, drawing: _Drawing) -> alt.Chart:
+    """Legend filtering and zoom, on one chart or on each panel of a grid."""
     interactions = drawing.chart.interactions
     if "legend_filter" in interactions:
         if drawing.color is None:

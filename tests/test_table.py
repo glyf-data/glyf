@@ -87,7 +87,7 @@ def test_visualise_star_lists_every_column_the_query_returns() -> None:
         ("VISUALISE month\nDRAW table\nINTERACT tooltip\n", "table takes no INTERACT"),
         (
             "VISUALISE month, revenue\nDRAW bar\n",
-            "bar maps each column to a role \\(x, y, color\\); write 'month AS x'",
+            "bar maps each column to a role \\(x, y, color, facet\\); write 'month AS x'",
         ),
     ],
 )

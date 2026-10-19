@@ -111,6 +111,8 @@ def write_chart_metadata(
     # What `glyf diff` needs to draw the chart over its old self; only when set.
     for key, value in (
         ("color", chart.field_for_role("color")),
+        ("facet", chart.facet),
+        ("columns", chart.columns),
         ("x_title", chart.x_title),
         ("y_title", chart.y_title),
         ("width", chart.width),

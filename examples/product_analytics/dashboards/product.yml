@@ -61,6 +61,12 @@ sections:
       - chart: activation_by_plan
       - chart: activation_rate_by_plan
 
+  - title: Plan by Plan
+    description: Each plan's weekly sessions in its own panel, on one scale.
+    columns: 1
+    items:
+      - chart: weekly_sessions_by_plan
+
   - title: Engagement Mix
     description: Sessions per active user and total session share by plan.
     columns: "65% 35%"

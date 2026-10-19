@@ -254,6 +254,7 @@ EXAMPLE_ORDER_BY = {
     "product_analytics/weekly_activated_users": True,
     "product_analytics/weekly_active_users": True,
     "product_analytics/weekly_sessions": True,
+    "product_analytics/weekly_sessions_by_plan": True,
     "sales_dashboard/channel_revenue": True,
     "sales_dashboard/monthly_revenue": False,
     "sales_dashboard/regional_revenue": True,

@@ -88,6 +88,15 @@ def _apply_dark_vega_theme(spec: object | None) -> object | None:
         }
     )
 
+    # A faceted chart's panel names.
+    header = config.setdefault("header", {})
+    header.update(
+        {
+            "labelColor": "#f4f4f5",
+            "titleColor": "#f4f4f5",
+        }
+    )
+
     title = config.setdefault("title", {})
     title.update(
         {

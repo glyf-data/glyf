@@ -49,6 +49,9 @@ the rows; see [Row order](../guides/visualisation-syntax.md#row-order).
 Several rows for the same `x` and colour are stacked too, not summed into one
 segment, so aggregate in SQL with `GROUP BY` when each bar should be one row.
 
+To draw one bar chart per value of a column, add a `facet` role: see
+[Small multiples](../guides/visualisation-syntax.md#small-multiples).
+
 ## See also
 
 - [Visualisation syntax](../guides/visualisation-syntax.md): the directives every chart shares, `LABEL`, `CONFIG` and `INTERACT`.

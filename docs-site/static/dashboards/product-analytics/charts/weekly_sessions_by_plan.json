@@ -1,0 +1,32 @@
+{
+  "chart_type": "bar",
+  "columns": 3,
+  "compiled_sql_path": "compiled/weekly_sessions_by_plan.sql",
+  "facet": "plan",
+  "interactions": [
+    "tooltip"
+  ],
+  "lineage": {
+    "models": {
+      "fct_product_usage": {
+        "parents": [
+          "source:raw.product_usage"
+        ],
+        "path": "models/fct_product_usage.sql"
+      }
+    },
+    "sources": [
+      "raw.product_usage"
+    ]
+  },
+  "metadata_path": "charts/weekly_sessions_by_plan.json",
+  "name": "weekly_sessions_by_plan",
+  "png_path": "charts/weekly_sessions_by_plan.png",
+  "svg_path": "charts/weekly_sessions_by_plan.svg",
+  "title": "Weekly Sessions, Plan by Plan",
+  "width": 1100,
+  "x": "week",
+  "x_title": "Week",
+  "y": "sessions",
+  "y_title": "Sessions"
+}
