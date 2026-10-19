@@ -6,18 +6,13 @@ Where to take a question, and what to check before you ask it.
 
 | You want to | Go to |
 | --- | --- |
-| Get unstuck, or talk through how to do something | [Slack](pathname:///slack), in the help channel. The quickest answer. |
-| Ask something others will search for later | [GitHub Discussions](https://github.com/glyf-data/glyf/discussions) |
+| Get unstuck, or talk through how to do something | [GitHub Discussions](https://github.com/glyf-data/glyf/discussions), in Q&A |
 | Report a bug | [Open an issue](https://github.com/glyf-data/glyf/issues/new/choose) |
 | Propose a feature | [Open a feature request](https://github.com/glyf-data/glyf/issues/new/choose), or Discussions while it is still an idea |
-| Report a security problem | **Privately**, through [GitHub's vulnerability reporting](https://github.com/glyf-data/glyf/security/advisories/new). Never in a public issue or in Slack. See the [security policy](https://github.com/glyf-data/glyf/blob/main/SECURITY.md). |
+| Report a security problem | **Privately**, through [GitHub's vulnerability reporting](https://github.com/glyf-data/glyf/security/advisories/new). Never in a public issue or a discussion. See the [security policy](https://github.com/glyf-data/glyf/blob/main/SECURITY.md). |
 
-Already in the Slack? The help channel is
-[here](https://glyfdata.slack.com/archives/C0C30CX7ZDZ).
-
-Slack is quick, and its history is neither public nor permanent. When a
-conversation there finds a bug or settles a decision, it still goes into an
-issue or a discussion afterwards.
+A discussion stays public, so the answer helps the next person with the same
+question. When one finds a bug, it moves into an issue.
 
 ## Before you ask
 
@@ -37,7 +32,7 @@ failures.
 
 ## A good question
 
-Whether it goes to Slack, a discussion or an issue, include:
+Whether it goes to a discussion or an issue, include:
 
 - the `glyf` version, from `glyf --version`
 - the command you ran
@@ -47,6 +42,6 @@ Whether it goes to Slack, a discussion or an issue, include:
 
 ## A bug, or a question?
 
-If you are not sure, ask in Slack or Discussions first. It is a bug when `glyf`
+If you are not sure, ask in Discussions first. It is a bug when `glyf`
 does something other than what the documentation says, fails without telling
 you what to change, or publishes something your settings said it would not.

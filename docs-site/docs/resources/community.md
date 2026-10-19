@@ -6,13 +6,9 @@ glyf is built in the open, and the people using it are the best source of what
 it should do next. Come and ask, show what you made, or help someone else.
 
 <div className="docMap">
-  <Link className="docMap__start" href="pathname:///slack">
-    <strong>Join the Slack community</strong>
-    <span>Where glyf gets built in the open. Ask a question, show what you made, or help decide what comes next.</span>
-  </Link>
-  <Link href="https://github.com/glyf-data/glyf/discussions">
-    <strong>Discussions</strong>
-    <span>Questions and ideas that others will want to find later.</span>
+  <Link className="docMap__start" href="https://github.com/glyf-data/glyf/discussions">
+    <strong>GitHub Discussions</strong>
+    <span>Ask a question, show what you made, or help decide what comes next. Answers stay public and searchable.</span>
   </Link>
   <Link href="https://github.com/glyf-data/glyf/issues">
     <strong>Issues</strong>

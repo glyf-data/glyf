@@ -14,7 +14,6 @@ Define charts in SQL, compose dashboards in YAML, publish anywhere.
 [![Python](https://img.shields.io/badge/python-3.11%2B-0047FF?style=flat-square&labelColor=0f172a)](https://github.com/glyf-data/glyf/blob/main/pyproject.toml)
 [![Rust](https://img.shields.io/badge/rust-1.83%2B-0047FF?style=flat-square&labelColor=0f172a)](https://github.com/glyf-data/glyf/blob/main/crates/glyf-core/Cargo.toml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-475569?style=flat-square&labelColor=0f172a)](https://github.com/glyf-data/glyf/blob/main/LICENSE)
-[![Slack](https://img.shields.io/badge/slack-join%20the%20community-0047FF?style=flat-square&logo=slack&logoColor=white&labelColor=0f172a)](https://glyfdata.com/slack)
 
 [Install](#install) · [Quickstart](#quickstart) · [How it works](#how-it-works) · [CLI](#cli) · [Examples](#examples) · [Docs](#documentation) · [Community](#community)
 
@@ -288,8 +287,7 @@ Questions, ideas, or something not working? Come and ask.
 
 | | |
 | --- | --- |
-| **[Join the Slack community](https://glyfdata.com/slack)** | The quickest way to get help, and where glyf gets built in the open. Ask in the help channel. |
-| **[Discussions](https://github.com/glyf-data/glyf/discussions)** | Questions and ideas that others will want to find later. |
+| **[Discussions](https://github.com/glyf-data/glyf/discussions)** | Questions and ideas, and where glyf gets built in the open. |
 | **[Issues](https://github.com/glyf-data/glyf/issues)** | Bugs and feature requests. |
 | **[Support](https://glyfdata.com/docs/resources/support)** | Where to ask what, and what to check before you ask. |
 | **[Roadmap](https://glyfdata.com/docs/resources/roadmap)** | What shipped recently and what is planned. |

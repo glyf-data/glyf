@@ -3031,56 +3031,6 @@ nav.navbar .navbarGithubLink span {
   border-color: #9fb5e6;
   color: #0f172a;
 }
-/* The one filled control in the bar: joining is the action the bar asks for.
-   Stated once; see the note on the token palette about equal-specificity
-   overrides. */
-nav.navbar .navbarSlackLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 2.5rem;
-  margin-right: 0.6rem;
-  padding: 0 1.1rem;
-  border: 1px solid #1d4ed8;
-  border-radius: 999px;
-  background: #1d4ed8;
-  color: #ffffff;
-  font-family: var(--ifm-font-family-base);
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background-color 120ms ease, border-color 120ms ease;
-}
-nav.navbar .navbarSlackLink:hover {
-  border-color: #1740c4;
-  background: #1740c4;
-  color: #ffffff;
-  text-decoration: none;
-}
-nav.navbar .navbarSlackLink:focus-visible {
-  outline: 2px solid #1d4ed8;
-  outline-offset: 3px;
-}
-nav.navbar .navbarSlackMark {
-  width: 1rem;
-  height: 1rem;
-  flex: none;
-}
-nav.navbar .navbar-sidebar__items .navbarSlackLink {
-  margin: 1rem 0.9rem 0;
-}
-/* Between the desktop bar and the burger there is no room for two labelled
-   buttons and five links; the Slack mark alone still says what it is. The
-   breakpoint is where "Join Slack Community" stops fitting beside them. */
-@media (min-width: 997px) and (max-width: 1320px) {
-  nav.navbar .navbarSlackLink span {
-    display: none;
-  }
-  nav.navbar .navbarSlackLink {
-    padding: 0 0.75rem;
-  }
-}
 @media (max-width: 996px) {
   nav.navbar .navbar__logo,
   nav.navbar .navbar__logo img {

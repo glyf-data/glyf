@@ -14,8 +14,7 @@ you write code? Ask. Nobody expects you to work it out alone.
 
 | | |
 | --- | --- |
-| **[Slack](https://glyfdata.com/slack)** | The quickest answer. Ask in the help channel; say what you ran and what happened. |
-| **[Discussions](https://github.com/glyf-data/glyf/discussions)** | Questions and ideas that others will want to find later. |
+| **[Discussions](https://github.com/glyf-data/glyf/discussions)** | Questions and ideas. Say what you ran and what happened. |
 | **[Issues](https://github.com/glyf-data/glyf/issues)** | Bugs and concrete feature requests. |
 
 ## Your first contribution, in five steps
@@ -262,7 +261,7 @@ well-described pull requests go first. You may be asked to narrow the scope, to
 split the change, or to move a design question into an issue, and sometimes a
 pull request is declined. Opening one does not oblige the maintainer to merge
 it or to keep that implementation direction. If yours has gone quiet for a
-week, a nudge in Slack is welcome.
+week, a nudge in a comment on it is welcome.
 
 ## Reporting bugs
 
@@ -293,7 +292,7 @@ Explain the workflow the feature supports:
   examples
 
 For syntax, an example beats a description: show the `.ggsql` or YAML and the
-output you expect. If the idea is still broad, start in Discussions or Slack.
+output you expect. If the idea is still broad, start in Discussions.
 
 ## Documentation
 
