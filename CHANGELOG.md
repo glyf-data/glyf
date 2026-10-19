@@ -2,7 +2,7 @@
 
 All notable changes to `glyf` will be documented in this file.
 
-## Unreleased
+## 0.19.0 - 2026-10-19
 
 ### Added
 
@@ -20,6 +20,11 @@ All notable changes to `glyf` will be documented in this file.
   negative value or a self-flow fails the build with the chart's name.
   Takes `INTERACT tooltip`. The product analytics example shows accounts
   flowing from plan to activity to session length.
+
+### Changed
+
+- Questions and community discussion moved from Slack to GitHub
+  Discussions. `glyfdata.com/slack` now redirects there.
 
 ### Fixed
 

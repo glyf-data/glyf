@@ -57,6 +57,14 @@ if one of these would change how you work.
 <ol className="roadmapTimeline">
   <li>
     <div className="roadmapTimeline__head">
+      <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.19.0">0.19.0</Link>
+      <time dateTime="2026-10-19">19 October 2026</time>
+    </div>
+    <strong>Maps and sankey charts</strong>
+    <p><code>DRAW map</code> fills countries by a value or places points at a latitude and longitude, with the world's countries built in and your own TopoJSON when you need states or territories. <code>DRAW sankey</code> draws flows between stages. Every chart type now has its own page: <Link to="/docs/charts">browse the charts</Link>.</p>
+  </li>
+  <li>
+    <div className="roadmapTimeline__head">
       <Link className="roadmapVersion" href="https://github.com/glyf-data/glyf/releases/tag/v0.18.0">0.18.0</Link>
       <time dateTime="2026-09-25">25 September 2026</time>
     </div>
