@@ -26,7 +26,7 @@ SUPPORTED_CHART_TYPES = {
     "treemap",
     "waterfall",
 }
-SUPPORTED_CONFIG_KEYS = {"width", "height"}
+SUPPORTED_CONFIG_KEYS = {"width", "height", "columns"}
 # Text-valued CONFIG keys, which only a map takes.
 SUPPORTED_MAP_OPTIONS = {"shapes", "projection"}
 SUPPORTED_INTERACTIONS = {"tooltip", "zoom", "legend_filter"}

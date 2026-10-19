@@ -29,6 +29,12 @@ All notable changes to `glyf` will be documented in this file.
   by `LABEL total`. Steps keep the query's order. Takes `INTERACT tooltip`;
   dashboard filters leave it alone. The finance example adds a bridge from
   bookings to gross margin.
+- Small multiples: a `facet` role on a line, bar, area, scatter or histogram
+  draws the chart once per value of a column, as a grid of panels sharing
+  their axes (`month AS x, revenue AS y, region AS facet`). `CONFIG
+  columns` sets how many panels to a row; `CONFIG width` and `height` are
+  the grid's. Interactions and dashboard filters work across the panels.
+  The product analytics example shows weekly sessions plan by plan.
 
 ## 0.19.0 - 2026-10-19
 

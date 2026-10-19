@@ -49,6 +49,9 @@ top, so a scatter needs an `ORDER BY` that settles every row; see
 [Row order](../guides/visualisation-syntax.md#row-order). `INTERACT zoom` suits a dense scatter; on a dashboard
 the zoom starts locked so scrolling moves the page.
 
+To draw one scatter chart per value of a column, add a `facet` role: see
+[Small multiples](../guides/visualisation-syntax.md#small-multiples).
+
 ## See also
 
 - [Visualisation syntax](../guides/visualisation-syntax.md): the directives every chart shares, `LABEL`, `CONFIG` and `INTERACT`.

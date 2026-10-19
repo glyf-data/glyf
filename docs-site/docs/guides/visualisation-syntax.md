@@ -37,6 +37,9 @@ Roles:
 - `y`: required by every chart type except `histogram`, which rejects it,
   `table`, `kpi`, `map`, `sankey` and `treemap`.
 - `color`: optional, except for `heatmap`, which requires it.
+- `facet`: optional for `line`, `bar`, `area`, `scatter` and `histogram`.
+  Draws the chart once per value of the column. See
+  [Small multiples](#small-multiples).
 - `y2`: a `combo`'s line, drawn on the right axis; required there and taken
   nowhere else. See [Combo](../charts/combo.md).
 - `value` and `compare`: a `kpi`'s roles, and nobody else's. See [KPI](../charts/kpi.md).
@@ -170,12 +173,46 @@ Only the chart types above are reported, because only they show the order.
 Every chart is ordered either way, so that a build can be compared against the
 last one.
 
+## Small multiples
+
+A `line`, `bar`, `area`, `scatter` or `histogram` takes a `facet` role: the
+chart is drawn once per value of that column, as a grid of panels.
+
+```sql
+SELECT week, plan, sum(sessions) AS sessions
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1, 2
+ORDER BY 1, 2
+
+VISUALISE week AS x, sessions AS y, plan AS facet
+DRAW bar
+CONFIG columns => 3
+INTERACT tooltip
+```
+
+Every panel shares the same axes and colours, so the panels compare at a
+glance: the tallest bar in any panel is the tallest in all of them. Each
+panel is named by its value, in ascending order.
+
+`CONFIG width` and `CONFIG height` are the whole grid's. The panels share the
+width, in rows of `CONFIG columns`; without it, a row holds up to three
+panels, fewer when there are fewer values. Without `CONFIG height`, each panel
+is three fifths as tall as it is wide. Where a panel is too narrow for every x
+label, every other label is left out.
+
+A faceted chart takes the same `color` and `INTERACT` its chart type does;
+`zoom` zooms all the panels together. Dashboard filters redraw the grid, so
+filtering the facet's column leaves only the matching panels. The visual diff
+compares a faceted chart pixel by pixel rather than draw it over its old self.
+
 ## Labels
 
 - `title`
 - `subtitle`
 - `x_title`
 - `y_title`
+- `y2_title`, for a `combo`: the right axis, which the line is drawn against
+- `total`, for a `waterfall`: the closing bar's name, `Total` by default
 - a column name, for a `table`: the text its header shows
 - `compare`, for a `kpi`: what the comparison is called
 
@@ -188,6 +225,8 @@ A glyf addition.
 
 - `width`: positive integer.
 - `height`: positive integer.
+- `columns`: positive integer, a chart with a `facet` only. How many panels
+  to a row. See [Small multiples](#small-multiples).
 - `shapes`: a map only. A TopoJSON file in the project to draw instead of the
   world's countries. See [Map](../charts/map.md).
 - `projection`: a map only. How the globe is flattened; `equalEarth` by

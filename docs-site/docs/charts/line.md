@@ -50,6 +50,9 @@ Use a line when `x` is ordered, usually time, and the question is how a value
 moves. A text `x` such as `2026-W01` is drawn as evenly spaced categories;
 a date or number is drawn to scale.
 
+To draw one line chart per value of a column, add a `facet` role: see
+[Small multiples](../guides/visualisation-syntax.md#small-multiples).
+
 ## See also
 
 - [Visualisation syntax](../guides/visualisation-syntax.md): the directives every chart shares, `LABEL`, `CONFIG` and `INTERACT`.

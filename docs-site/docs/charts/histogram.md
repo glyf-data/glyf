@@ -49,6 +49,9 @@ The query returns one row per observation, not one row per bin. glyf divides
 `x` into at most 30 bins and counts the rows in each. A `y` mapping fails
 validation, because the y axis is the count.
 
+To draw one histogram chart per value of a column, add a `facet` role: see
+[Small multiples](../guides/visualisation-syntax.md#small-multiples).
+
 ## See also
 
 - [Visualisation syntax](../guides/visualisation-syntax.md): the directives every chart shares, `LABEL`, `CONFIG` and `INTERACT`.

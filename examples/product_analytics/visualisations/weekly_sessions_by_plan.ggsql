@@ -1,0 +1,14 @@
+SELECT week, plan, sum(sessions) as sessions
+FROM {{ ref('fct_product_usage') }}
+GROUP BY 1, 2
+ORDER BY 1, 2
+
+VISUALISE week AS x, sessions AS y, plan AS facet
+DRAW bar
+LABEL title => 'Weekly Sessions, Plan by Plan'
+LABEL subtitle => 'One panel per plan, all on the same scale'
+LABEL x_title => 'Week'
+LABEL y_title => 'Sessions'
+CONFIG width => 1100
+CONFIG columns => 3
+INTERACT tooltip

@@ -496,15 +496,15 @@
           svg.querySelectorAll(`[${attr}="${from}"]`).forEach((el) => el.setAttribute(attr, to));
         });
       };
-      const darkVega = { background: "#09090b", view: { stroke: "#3f3f46", fill: "#09090b" }, axis: { labelColor: "#f4f4f5", titleColor: "#f4f4f5", domainColor: "#a1a1aa", tickColor: "#a1a1aa", gridColor: "#27272a" }, legend: { labelColor: "#f4f4f5", titleColor: "#f4f4f5" }, title: { color: "#f4f4f5", subtitleColor: "#d4d4d8" }, text: { color: "#f4f4f5" } };
-      const lightVega = { background: "#ffffff", view: { stroke: "#d9e2ec", fill: "#ffffff" }, axis: { labelColor: "#000000", titleColor: "#000000", domainColor: "#888888", tickColor: "#888888", gridColor: "#dddddd" }, legend: { labelColor: "#000000", titleColor: "#000000" }, title: { color: "#000000", subtitleColor: "#52525b" }, text: { color: "#000000" } };
+      const darkVega = { background: "#09090b", view: { stroke: "#3f3f46", fill: "#09090b" }, axis: { labelColor: "#f4f4f5", titleColor: "#f4f4f5", domainColor: "#a1a1aa", tickColor: "#a1a1aa", gridColor: "#27272a" }, legend: { labelColor: "#f4f4f5", titleColor: "#f4f4f5" }, title: { color: "#f4f4f5", subtitleColor: "#d4d4d8" }, text: { color: "#f4f4f5" }, header: { labelColor: "#f4f4f5", titleColor: "#f4f4f5" } };
+      const lightVega = { background: "#ffffff", view: { stroke: "#d9e2ec", fill: "#ffffff" }, axis: { labelColor: "#000000", titleColor: "#000000", domainColor: "#888888", tickColor: "#888888", gridColor: "#dddddd" }, legend: { labelColor: "#000000", titleColor: "#000000" }, title: { color: "#000000", subtitleColor: "#52525b" }, text: { color: "#000000" }, header: { labelColor: "#000000", titleColor: "#000000" } };
       window.glyfVegaTheme = (spec, dark) => {
         const palette = dark ? darkVega : lightVega;
         spec.background = palette.background;
         spec.config = spec.config || {};
         // A map or a sankey has no frame (`stroke: null`); the theme keeps it so.
         const frameless = spec.config.view && spec.config.view.stroke === null;
-        ["view", "axis", "legend", "title", "text"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
+        ["view", "axis", "legend", "title", "text", "header"].forEach((key) => { spec.config[key] = Object.assign({}, spec.config[key] || {}, palette[key]); });
         if (frameless) spec.config.view.stroke = null;
         return spec;
       };

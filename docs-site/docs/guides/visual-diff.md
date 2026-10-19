@@ -117,6 +117,9 @@ one mark per x value and series, and reports what it finds first:
 `bars: 12 gone (Partners)` means twelve bars that the baseline drew have no
 counterpart in this build, all of them in the Partners series. The other
 counts are `new`, `higher` and `lower`. A line or area chart says `points`.
+A chart split into [small multiples](visualisation-syntax.md#small-multiples)
+is compared pixel by pixel instead: one overlay would draw every panel's marks
+on top of each other.
 
 When the axes themselves moved, that comes first, because a moved axis moves
 every mark on the page. In the sales example, one channel's February revenue
