@@ -89,12 +89,6 @@ const config = {
             type: 'html',
             position: 'right',
             value:
-              '<a class="navbarSlackLink" href="/slack" aria-label="Join the glyf community on Slack"><svg class="navbarSlackMark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5.04 15.16a2.52 2.52 0 1 1-2.52-2.52h2.52v2.52Zm1.27 0a2.52 2.52 0 0 1 5.04 0v6.32a2.52 2.52 0 1 1-5.04 0v-6.32ZM8.83 5.04a2.52 2.52 0 1 1 2.52-2.52v2.52H8.83Zm0 1.27a2.52 2.52 0 0 1 0 5.04H2.52a2.52 2.52 0 1 1 0-5.04h6.31Zm10.13 2.52a2.52 2.52 0 1 1 2.52 2.52h-2.52V8.83Zm-1.27 0a2.52 2.52 0 0 1-5.04 0V2.52a2.52 2.52 0 1 1 5.04 0v6.31Zm-2.52 10.13a2.52 2.52 0 1 1-2.52 2.52v-2.52h2.52Zm0-1.27a2.52 2.52 0 0 1 0-5.04h6.32a2.52 2.52 0 1 1 0 5.04h-6.32Z"/></svg><span>Join Slack Community</span></a>',
-          },
-          {
-            type: 'html',
-            position: 'right',
-            value:
               '<a class="navbarGithubLink navbarStar" href="https://github.com/glyf-data/glyf" aria-label="Star Glyf on GitHub"><svg class="navbarStarMark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4l-5.9 3.2 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><span>Star on GitHub</span></a>',
           },
         ],
@@ -128,7 +122,7 @@ const config = {
             title: 'Community',
             items: [
               {label: 'GitHub', href: 'https://github.com/glyf-data/glyf'},
-              {label: 'Slack', href: 'https://glyfdata.com/slack'},
+              {label: 'Discussions', href: 'https://github.com/glyf-data/glyf/discussions'},
               {label: 'Contributing', href: 'https://github.com/glyf-data/glyf/blob/main/CONTRIBUTING.md'},
               {label: 'Support', to: '/docs/resources/support'},
               {label: 'Security', href: 'https://github.com/glyf-data/glyf/blob/main/SECURITY.md'},

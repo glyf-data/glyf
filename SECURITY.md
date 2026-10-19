@@ -2,8 +2,8 @@
 
 ## Reporting a vulnerability
 
-Please report a security problem privately, not in a public issue, a
-discussion or Slack.
+Please report a security problem privately, not in a public issue or a
+discussion.
 
 **[Report a vulnerability](https://github.com/glyf-data/glyf/security/advisories/new)**
 through GitHub's private vulnerability reporting. Only the maintainer sees the
