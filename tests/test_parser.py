@@ -236,6 +236,7 @@ EXAMPLE_ORDER_BY = {
     "finance_metrics/expenses_by_department": True,
     "finance_metrics/gross_margin_trend": False,
     "finance_metrics/margin_rate_by_department": True,
+    "finance_metrics/margin_bridge": True,
     "finance_metrics/margin_share": True,
     "finance_metrics/margin_vs_expenses": True,
     "product_analytics/account_flow": True,

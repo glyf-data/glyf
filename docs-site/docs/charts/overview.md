@@ -126,6 +126,30 @@ INTERACT tooltip
 
 </ChartTypeCard>
 
+<ChartTypeCard type="waterfall" title="Waterfall" page="/docs/charts/waterfall" example="examples/finance_metrics/visualisations/margin_bridge.ggsql" summary="A running total: a bar per change, rising or falling from where the last ended, then the total. Shows how one number becomes another.">
+
+```sql
+SELECT 0 AS step_order, 'Bookings' AS step, sum(bookings) AS amount
+FROM {{ ref('fct_finance') }}
+UNION ALL
+SELECT 1, department || ' expenses', -sum(expenses)
+FROM {{ ref('fct_finance') }}
+GROUP BY department
+ORDER BY step_order, amount
+
+VISUALISE step AS x, amount AS y
+DRAW waterfall
+LABEL title => 'From Bookings to Gross Margin'
+LABEL subtitle => "Twelve months of bookings, less each department's expenses"
+LABEL y_title => 'Amount'
+LABEL total => 'Gross margin'
+CONFIG width => 1100
+CONFIG height => 340
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
 <ChartTypeCard type="scatter" title="Scatter" page="/docs/charts/scatter" example="examples/product_analytics/visualisations/sessions_scatter.ggsql" summary="One point per row. Shows how two numbers move together, and the rows that do not.">
 
 ```sql
@@ -341,6 +365,7 @@ INTERACT tooltip
 | `area` | One filled area per `color` value. | `x`, `y`, optional `color` | ggsql |
 | `combo` | Bars of `y` on the left axis and a line of `y2` on the right, over one `x`. | `x`, `y`, `y2` | glyf |
 | `funnel` | One centred bar per step, as wide as its `y`, in the query's order. | `x`, `y` | glyf |
+| `waterfall` | One bar per change from the running total, then a closing total. | `x`, `y` | glyf |
 | `pie` | One slice per `x` value, sized by `y`. | `x`, `y`, optional `color` | glyf |
 | `histogram` | The number of rows in each bin of `x`, stacked by `color`. | `x`, optional `color` | glyf |
 | `boxplot` | The quartiles of `y` for each `x` value, with outliers as points. | `x`, `y`, optional `color` | glyf |

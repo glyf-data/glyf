@@ -22,6 +22,7 @@ const sidebars = {
       doc('charts/area', 'chart-area'),
       doc('charts/combo', 'chart-combo'),
       doc('charts/funnel', 'chart-funnel'),
+      doc('charts/waterfall', 'chart-waterfall'),
       doc('charts/scatter', 'chart-scatter'),
       doc('charts/pie', 'chart-pie'),
       doc('charts/histogram', 'chart-histogram'),

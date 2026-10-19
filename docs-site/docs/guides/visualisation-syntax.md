@@ -52,7 +52,7 @@ A `table` takes no roles at all: its `VISUALISE` is a list of columns. See
 
 ## Chart types
 
-Fifteen chart types, each with its own page under [Charts](../charts/overview.md):
+Sixteen chart types, each with its own page under [Charts](../charts/overview.md):
 
 | `DRAW` | Roles | Page |
 | --- | --- | --- |
@@ -61,6 +61,7 @@ Fifteen chart types, each with its own page under [Charts](../charts/overview.md
 | `area` | `x`, `y`, optional `color` | [Area](../charts/area.md) |
 | `combo` | `x`, `y` (bars), `y2` (line) | [Combo](../charts/combo.md) |
 | `funnel` | `x` (the step), `y` | [Funnel](../charts/funnel.md) |
+| `waterfall` | `x` (the step), `y` (the change) | [Waterfall](../charts/waterfall.md) |
 | `scatter` | `x`, `y`, optional `color` | [Scatter](../charts/scatter.md) |
 | `pie` | `x`, `y`, optional `color` | [Pie](../charts/pie.md) |
 | `histogram` | `x`, optional `color` | [Histogram](../charts/histogram.md) |
@@ -77,8 +78,8 @@ Any other `DRAW` value fails validation with `unsupported chart type`.
 ### Numeric columns
 
 A histogram's `x`, a boxplot's `y`, a heatmap's `color`, a combo's `y` and
-`y2`, a funnel's `y` and a treemap's `value` must be integer or
-floating-point columns. So must a map's `latitude`, `longitude` and `size`. A text column fails the render:
+`y2`, a funnel's and a waterfall's `y` and a treemap's `value` must be
+integer or floating-point columns. So must a map's `latitude`, `longitude` and `size`. A text column fails the render:
 
 ```text
 histogram needs a numeric x column and 'region' is string
@@ -212,7 +213,7 @@ Supported interactions:
 
 A `table` takes no `INTERACT` clause; sorting by column is built into the
 dashboard. A `kpi` takes none either. A `map`, a `sankey`, a
-`combo`, a `funnel` and a `treemap` take `tooltip` only.
+`combo`, a `funnel`, a `treemap` and a `waterfall` take `tooltip` only.
 
 Interactive charts still write PNG and SVG artifacts. They also write a Vega-Lite JSON artifact, which dashboard pages embed with the Vega runtime scripts. The exported dashboard is still static HTML, but interactive rendering needs a browser with JavaScript enabled and access to those scripts.
 

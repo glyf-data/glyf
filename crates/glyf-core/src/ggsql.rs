@@ -145,6 +145,15 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
             allowed: TREEMAP_ROLES,
             interactions: &["tooltip"],
         },
+        // A waterfall is a running total: one bar per change, rising or
+        // falling from where the last one ended, and a closing total. Its
+        // colours mean up, down and total, not a column a legend could filter.
+        "waterfall" => DrawSpec {
+            draw_type: "waterfall",
+            required: XY,
+            allowed: XY,
+            interactions: &["tooltip"],
+        },
         // A kpi is one number, with an optional one to compare it against.
         "kpi" => DrawSpec {
             draw_type: "kpi",
@@ -158,7 +167,7 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
 
 /// The draw types glyf accepts, for error messages.
 const SUPPORTED_DRAWS: &str =
-    "area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table, treemap";
+    "area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table, treemap, waterfall";
 
 /// Parse a `.ggsql` file: the SQL, then the chart block.
 ///
@@ -1054,7 +1063,7 @@ mod tests {
 
         assert_eq!(
             error.to_string(),
-            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table, treemap"
+            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table, treemap, waterfall"
         );
     }
 
@@ -1474,5 +1483,35 @@ mod tests {
             error.contains("treemap does not take a 'x' mapping; it takes label, value, group"),
             "{error}"
         );
+    }
+
+    #[test]
+    fn parses_a_waterfall_and_its_total_label() {
+        let parse = |visualise: &str, extra: &str| {
+            parse_ggsql_text(
+                &format!(
+                    "SELECT * FROM fct_bridge\n\nVISUALISE {visualise}\nDRAW waterfall\n{extra}"
+                ),
+                "bridge",
+                None,
+                "duckdb",
+            )
+        };
+        let chart = parse(
+            "step AS x, change AS y",
+            "LABEL total => 'Closing'\nINTERACT tooltip\n",
+        )
+        .unwrap();
+        assert_eq!(chart.draw_type, "waterfall");
+        assert_eq!(chart.labels.get("total").unwrap(), "Closing");
+        let error = parse("step AS x, change AS y, kind AS color", "")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("waterfall does not take a 'color' mapping; it takes x, y"),
+            "{error}"
+        );
+        let error = parse("step AS x", "").unwrap_err().to_string();
+        assert!(error.contains("requires x and y mappings"), "{error}");
     }
 }

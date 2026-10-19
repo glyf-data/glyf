@@ -23,6 +23,12 @@ All notable changes to `glyf` will be documented in this file.
   shows its name and value when they fit, and its tooltip its share of the
   total. Takes `INTERACT tooltip`; dashboard filters leave it alone. The
   sales example adds a treemap of store revenue.
+- `DRAW waterfall`: a running total, one bar per change (`step AS x,
+  change AS y`). The first row is the starting amount; each later bar rises
+  or falls from where the last ended, and glyf adds a closing total, named
+  by `LABEL total`. Steps keep the query's order. Takes `INTERACT tooltip`;
+  dashboard filters leave it alone. The finance example adds a bridge from
+  bookings to gross margin.
 
 ## 0.19.0 - 2026-10-19
 

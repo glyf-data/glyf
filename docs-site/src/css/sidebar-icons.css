@@ -146,6 +146,9 @@
 .sidebarIcon--chart-treemap {
   --sidebar-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4h18v16H3zM12 4v16M12 13h9M16 13v7M3 14h9'/%3E%3C/svg%3E");
 }
+.sidebarIcon--chart-waterfall {
+  --sidebar-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 20h18M5 20v-9h3v9M10 11V6h3v5M15 6v5h3V6M18 11v9h3v-9'/%3E%3C/svg%3E");
+}
 .sidebarIcon--chart-sankey {
   --sidebar-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4h2v7H3zM3 14h2v6H3zM19 3h2v9h-2zM19 15h2v5h-2zM5 6c7 0 7-2 14-2M5 9c7 0 7 7 14 7M5 17c7 0 7-12 14-12'/%3E%3C/svg%3E");
 }

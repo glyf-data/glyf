@@ -57,14 +57,15 @@ def plan_filters(dashboard: Dashboard, charts: dict[str, ChartArtifact]) -> Filt
 
 
 # Chart types whose spec carries a picture glyf laid out, not rows to filter.
-_LAID_OUT = frozenset({"sankey", "funnel", "treemap"})
+_LAID_OUT = frozenset({"sankey", "funnel", "treemap", "waterfall"})
 
 
 def _mode(artifact: ChartArtifact, field: str) -> str:
     metadata = artifact.metadata
     # A sankey's spec holds its laid-out geometry, not its rows: dropping a
     # band would leave a gap rather than redraw the flows; a treemap's tiles
-    # likewise. A funnel's shares are of its first step, from all the rows.
+    # likewise. A funnel's shares are of its first step, and a waterfall's
+    # running total runs through every row.
     if metadata.is_kpi or metadata.chart_type in _LAID_OUT:
         return "none"
     if metadata.is_table:
