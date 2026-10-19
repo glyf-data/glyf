@@ -312,6 +312,23 @@ INTERACT tooltip
 
 </ChartTypeCard>
 
+
+<ChartTypeCard type="treemap" title="Treemap" page="/docs/charts/treemap" example="examples/sales_dashboard/visualisations/store_revenue.ggsql" summary="A rectangle per row, its area its value, clustered by group. Shows the parts of a whole when there are too many for a pie.">
+
+```sql
+SELECT city, format, revenue
+FROM {{ source('raw', 'stores') }}
+ORDER BY revenue DESC
+
+VISUALISE city AS label, revenue AS value, format AS group
+DRAW treemap
+LABEL title => 'Revenue by Store'
+LABEL subtitle => 'Each store sized by its revenue, grouped by format'
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
 </div>
 
 ## At a glance
@@ -331,6 +348,7 @@ INTERACT tooltip
 | `table` | The rows themselves, one column per listed column. Not drawn: no PNG or SVG. | a column list, or `*` | glyf |
 | `kpi` | One number as a tile, with the change against a comparison value. Not drawn. | `value`, optional `compare` | glyf |
 | `sankey` | Flows between stages, one band per `source` and `target` pair, as wide as its `value`. | `source`, `target`, `value` | glyf |
+| `treemap` | One rectangle per row, its area its `value`, clustered by `group`. | `label`, `value`, optional `group` | glyf |
 | `map` | One filled region per row, or one point per row at a latitude and longitude. | `region` or `latitude` and `longitude`, optional `size` and `color` | glyf |
 
 Any other `DRAW` value fails validation with `unsupported chart type`. The

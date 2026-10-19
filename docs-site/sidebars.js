@@ -31,6 +31,7 @@ const sidebars = {
       doc('charts/kpi', 'chart-kpi'),
       doc('charts/map', 'globe'),
       doc('charts/sankey', 'chart-sankey'),
+      doc('charts/treemap', 'chart-treemap'),
     ]),
     group('Guides', [
       doc('guides/visualisation-syntax', 'chart'),

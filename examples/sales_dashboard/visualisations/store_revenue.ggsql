@@ -1,0 +1,9 @@
+SELECT city, format, revenue
+FROM {{ source('raw', 'stores') }}
+ORDER BY revenue DESC
+
+VISUALISE city AS label, revenue AS value, format AS group
+DRAW treemap
+LABEL title => 'Revenue by Store'
+LABEL subtitle => 'Each store sized by its revenue, grouped by format'
+INTERACT tooltip

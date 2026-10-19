@@ -32,9 +32,10 @@ INTERACT tooltip, zoom
 
 Roles:
 
-- `x`: required by every chart type except `table`, `kpi`, `map` and `sankey`.
+- `x`: required by every chart type except `table`, `kpi`, `map`, `sankey`
+  and `treemap`.
 - `y`: required by every chart type except `histogram`, which rejects it,
-  `table`, `kpi`, `map` and `sankey`.
+  `table`, `kpi`, `map`, `sankey` and `treemap`.
 - `color`: optional, except for `heatmap`, which requires it.
 - `y2`: a `combo`'s line, drawn on the right axis; required there and taken
   nowhere else. See [Combo](../charts/combo.md).
@@ -43,13 +44,15 @@ Roles:
   roles. See [Map](../charts/map.md).
 - `source`, `target` and `value`: a `sankey`'s roles, all three required. See
   [Sankey](../charts/sankey.md).
+- `label` and `value`, with an optional `group`: a `treemap`'s roles. See
+  [Treemap](../charts/treemap.md).
 
 A `table` takes no roles at all: its `VISUALISE` is a list of columns. See
 [Table](../charts/table.md).
 
 ## Chart types
 
-Fourteen chart types, each with its own page under [Charts](../charts/overview.md):
+Fifteen chart types, each with its own page under [Charts](../charts/overview.md):
 
 | `DRAW` | Roles | Page |
 | --- | --- | --- |
@@ -67,13 +70,15 @@ Fourteen chart types, each with its own page under [Charts](../charts/overview.m
 | `kpi` | `value`, optional `compare` | [KPI](../charts/kpi.md) |
 | `map` | `region` or `latitude` and `longitude`, optional `size` and `color` | [Map](../charts/map.md) |
 | `sankey` | `source`, `target`, `value` | [Sankey](../charts/sankey.md) |
+| `treemap` | `label`, `value`, optional `group` | [Treemap](../charts/treemap.md) |
 
 Any other `DRAW` value fails validation with `unsupported chart type`.
 
 ### Numeric columns
 
 A histogram's `x`, a boxplot's `y`, a heatmap's `color`, a combo's `y` and
-`y2` and a funnel's `y` must be integer or floating-point columns. So must a map's `latitude`, `longitude` and `size`. A text column fails the render:
+`y2`, a funnel's `y` and a treemap's `value` must be integer or
+floating-point columns. So must a map's `latitude`, `longitude` and `size`. A text column fails the render:
 
 ```text
 histogram needs a numeric x column and 'region' is string
@@ -207,7 +212,7 @@ Supported interactions:
 
 A `table` takes no `INTERACT` clause; sorting by column is built into the
 dashboard. A `kpi` takes none either. A `map`, a `sankey`, a
-`combo` and a `funnel` take `tooltip` only.
+`combo`, a `funnel` and a `treemap` take `tooltip` only.
 
 Interactive charts still write PNG and SVG artifacts. They also write a Vega-Lite JSON artifact, which dashboard pages embed with the Vega runtime scripts. The exported dashboard is still static HTML, but interactive rendering needs a browser with JavaScript enabled and access to those scripts.
 

@@ -15,6 +15,7 @@ from glyf.execution.result import ArrowStreamExportable, QueryResult
 from glyf.ggsql.geo import MapShapesError, Shapes, load_shapes, match_regions
 from glyf.ggsql.models import GgsqlChart
 from glyf.ggsql.sankey import LABEL_GAP, Layout, SankeyError, layout_sankey
+from glyf.ggsql.treemap import Tile, TreemapError, layout_treemap
 from glyf.renderers import chart_renderer, get_chart_renderer
 
 _Styleable = TypeVar("_Styleable", alt.Chart, alt.LayerChart)
@@ -37,6 +38,12 @@ MAP_DEFAULT_PROJECTION = "equalEarth"
 MAP_ROLES = ("region", "latitude", "longitude", "size", "color")
 SANKEY_ROLES = ("source", "target", "value")
 COMBO_ROLES = ("x", "y", "y2")
+TREEMAP_ROLES = ("label", "value", "group")
+# A tile shows its name when it is at least this big, and its value under the
+# name when it has room for a second line.
+TREEMAP_NAME_SIZE = (36, 18)
+TREEMAP_VALUE_HEIGHT = 34
+TREEMAP_TEXT_INSET = 6
 # A combo's bars and line: the first two colours of the default palette, so
 # each axis title can say which mark it measures.
 COMBO_BAR = "#4c78a8"
@@ -115,6 +122,8 @@ def required_columns(chart: GgsqlChart) -> tuple[str, ...]:
         roles = SANKEY_ROLES
     elif chart.is_combo:
         roles = COMBO_ROLES
+    elif chart.is_treemap:
+        roles = TREEMAP_ROLES
     elif chart.is_kpi:
         roles = ("value", "compare")
     else:
@@ -319,6 +328,8 @@ def build_chart(
         return _build_combo(chart, frame, config)
     if chart.is_funnel:
         return _build_funnel(chart, frame, config)
+    if chart.is_treemap:
+        return _build_treemap(chart, frame, config)
     chart_type = CHART_TYPES.get(chart.draw_type)
     if chart_type is None:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
@@ -449,18 +460,109 @@ def _build_funnel(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> a
     inside = (
         base.transform_filter("datum.inside")
         .mark_text(color="#ffffff", fontSize=11, fontWeight=600)
-        .encode(x=alt.X("middle:Q", scale=x_scale, axis=None), y=y, text="label:N")
+        .encode(x=alt.X("middle:Q", scale=x_scale, axis=None), y=y, text="label:N", **encoding)
         .transform_calculate(middle=f"{widest} / 2")
     )
     beside = (
         base.transform_filter("!datum.inside")
         .mark_text(align="left", dx=6, fontSize=11, fontWeight=600)
-        .encode(x=alt.X("end:Q", scale=x_scale, axis=None), y=y, text="label:N")
+        .encode(x=alt.X("end:Q", scale=x_scale, axis=None), y=y, text="label:N", **encoding)
     )
     # Vega sizes the step names by measuring them in a stand-in font, a few
     # pixels short of the dashboard's; the room keeps a long name whole.
     layered = alt.layer(bars, inside, beside).properties(padding=FUNNEL_PADDING)
     return _styled(layered, chart, config).configure_view(stroke=None)
+
+
+def _build_treemap(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.LayerChart:
+    """A rectangle per tile, coloured by group, with its name and value on it.
+
+    The tiles are laid out in pixels by `glyf.ggsql.treemap`, so both axes are
+    pixel scales with no axis drawn. A tile shows its name and value when it
+    has room for them; the tooltip has them for every tile.
+    """
+    _require_columns(chart, frame)
+    label, value, group = (chart.field_for_role(role) for role in TREEMAP_ROLES)
+    assert label is not None and value is not None
+    _require_numeric(frame, value, "value", "treemap")
+    width = chart.width or config.default_width
+    height = chart.height or config.default_height
+    groups = frame.column(group).to_pylist() if group is not None else [None] * frame.num_rows
+    try:
+        tiles = layout_treemap(
+            list(zip(frame.column(label).to_pylist(), groups, frame.column(value).to_pylist())),
+            width,
+            height,
+        )
+    except TreemapError as exc:
+        raise ChartRenderError(str(exc)) from exc
+
+    total = sum(tile.value for tile in tiles)
+    rows = [
+        {
+            "label": tile.label,
+            "group": tile.group,
+            "value": tile.value,
+            "share": tile.value / total,
+            "x": tile.x0,
+            "x2": tile.x1,
+            "y": tile.y0,
+            "y2": tile.y1,
+            "name": _fit_text(tile.label, tile.width),
+            "amount": _fit_text(_number(tile.value), tile.width),
+            "named": tile.width >= TREEMAP_NAME_SIZE[0] and tile.height >= TREEMAP_NAME_SIZE[1],
+            "valued": tile.width >= TREEMAP_NAME_SIZE[0] and tile.height >= TREEMAP_VALUE_HEIGHT,
+        }
+        for tile in tiles
+    ]
+    x_scale = alt.Scale(domain=[0, width], nice=False, zero=False)
+    y_scale = alt.Scale(domain=[0, height], nice=False, zero=False, reverse=True)
+    position = {
+        "x": alt.X("x:Q", scale=x_scale, axis=None),
+        "y": alt.Y("y:Q", scale=y_scale, axis=None),
+    }
+    color: alt.Color | alt.ColorValue = alt.value(COMBO_BAR)
+    if group is not None:
+        # Groups in layout order, largest first, so the legend reads like the picture.
+        order = list(dict.fromkeys(tile.group for tile in tiles))
+        color = alt.Color(
+            "group:N", scale=alt.Scale(domain=order), legend=alt.Legend(orient="top", title=group)
+        )
+    encoding: dict[str, object] = {}
+    if "tooltip" in chart.interactions:
+        encoding["tooltip"] = [
+            alt.Tooltip("label:N", title=label),
+            *([alt.Tooltip("group:N", title=group)] if group is not None else []),
+            alt.Tooltip("value:Q", title=value, format=","),
+            alt.Tooltip("share:Q", title="share of the total", format=".1%"),
+        ]
+    base = alt.Chart(pa.Table.from_pylist(rows))
+    rects = base.mark_rect().encode(x2="x2:Q", y2="y2:Q", color=color, **position, **encoding)
+    names = (
+        base.transform_filter("datum.named")
+        .mark_text(
+            align="left", baseline="top", dx=TREEMAP_TEXT_INSET, dy=TREEMAP_TEXT_INSET,
+            color="#ffffff", fontSize=11, fontWeight=600,
+        )
+        .encode(text="name:N", **position, **encoding)
+    )
+    amounts = (
+        base.transform_filter("datum.valued")
+        .mark_text(
+            align="left", baseline="top", dx=TREEMAP_TEXT_INSET, dy=TREEMAP_TEXT_INSET + 14,
+            color="#ffffff", fontSize=11, opacity=0.85,
+        )
+        .encode(text="amount:N", **position, **encoding)
+    )
+    return _styled(alt.layer(rects, names, amounts), chart, config).configure_view(stroke=None)
+
+
+def _fit_text(text: str, room: float) -> str:
+    """The text cut to fit a tile this wide, with an ellipsis when it was cut."""
+    fits = int((room - 2 * TREEMAP_TEXT_INSET) // FUNNEL_LABEL_CHAR)
+    if len(text) <= fits:
+        return text
+    return text[: max(fits - 1, 1)] + "…"
 
 
 def _number(value: float) -> str:

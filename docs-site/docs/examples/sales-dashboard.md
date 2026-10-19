@@ -24,6 +24,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/sales-dashboard/dashboards/
 
 - Three charts (monthly revenue, channel mix, regional sales) all querying one `fct_sales` model.
 - Two maps: revenue by country, shaded on the world's countries, and stores as points sized by revenue. See [Map](../charts/map.md).
+- A treemap of the same stores, each sized by its revenue and grouped by format. See [Treemap](../charts/treemap.md).
 - A simple dashboard shape: two groups of charts, with no sections or macros.
 
 ## Run it
@@ -60,4 +61,5 @@ target/glyf/charts/channel_revenue.svg
 target/glyf/charts/regional_revenue.svg
 target/glyf/charts/revenue_by_country.svg
 target/glyf/charts/store_locations.svg
+target/glyf/charts/store_revenue.svg
 ```

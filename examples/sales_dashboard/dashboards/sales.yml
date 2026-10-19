@@ -21,3 +21,4 @@ groups:
     charts:
       - revenue_by_country
       - store_locations
+      - store_revenue

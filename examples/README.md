@@ -6,8 +6,9 @@ dashboard YAML.
 ## Gallery
 
 - `simple_dbt`: minimal revenue dashboard and chart syntax sampler.
-- `sales_dashboard`: sales performance by month, channel, and region, and two
-  maps: revenue by country and store locations.
+- `sales_dashboard`: sales performance by month, channel, and region, two
+  maps (revenue by country and store locations) and a treemap of store
+  revenue.
 - `product_analytics`: product usage and activation by plan, with a histogram and
   a boxplot over per-account rows and a weekday-by-hour heatmap.
 - `finance_metrics`: bookings, expenses, margin and collections over twelve
