@@ -34,13 +34,15 @@ INTERACT tooltip, zoom
 
 Roles:
 
-- `x`: required by every chart type except `table`, `kpi` and `map`.
+- `x`: required by every chart type except `table`, `kpi`, `map` and `sankey`.
 - `y`: required by every chart type except `histogram`, which rejects it,
-  `table`, `kpi` and `map`.
+  `table`, `kpi`, `map` and `sankey`.
 - `color`: optional, except for `heatmap`, which requires it.
 - `value` and `compare`: a `kpi`'s roles, and nobody else's. See [KPI](#kpi).
 - `region`, or `latitude` and `longitude`, with an optional `size`: a `map`'s
   roles. See [Map](#map).
+- `source`, `target` and `value`: a `sankey`'s roles, all three required. See
+  [Sankey](#sankey).
 
 A `table` takes no roles at all: its `VISUALISE` is a list of columns. See
 [Table](#table).
@@ -247,6 +249,40 @@ LABEL compare => 'vs last week'
 
 </ChartTypeCard>
 
+<ChartTypeCard type="sankey" title="Sankey" anchor="sankey" example="examples/product_analytics/visualisations/account_flow.ggsql" summary="Flows between stages, each band as wide as its value. Shows where things go.">
+
+```sql
+WITH accounts AS (
+  SELECT
+    plan,
+    CASE
+      WHEN sessions >= 40 THEN 'Heavy use'
+      WHEN sessions >= 15 THEN 'Regular use'
+      ELSE 'Light use'
+    END AS activity,
+    CASE WHEN avg_session_minutes >= 15 THEN 'Long sessions' ELSE 'Short sessions' END AS session_length
+  FROM {{ ref('fct_account_sessions') }}
+)
+SELECT plan AS stage, activity AS next_stage, count(*) AS accounts
+FROM accounts
+GROUP BY 1, 2
+UNION ALL
+SELECT activity, session_length, count(*)
+FROM accounts
+GROUP BY 1, 2
+ORDER BY 1, 2
+
+VISUALISE stage AS source, next_stage AS target, accounts AS value
+DRAW sankey
+LABEL title => 'How Accounts Use the Product'
+LABEL subtitle => 'Accounts by plan, then by how often and how long they use it'
+CONFIG width => 1100
+CONFIG height => 420
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
 <ChartTypeCard type="map" title="Map" anchor="map" example="examples/sales_dashboard/visualisations/revenue_by_country.ggsql" summary="Regions filled by a value, or places as points. Shows where, not just how much.">
 
 ```sql
@@ -276,6 +312,7 @@ INTERACT tooltip
 | `heatmap` | One cell per `x` and `y` pair, shaded by `color`. `tile` is accepted as an alias. | `x`, `y`, `color` | ggsql (`tile`) |
 | `table` | The rows themselves, one column per listed column. Not drawn: no PNG or SVG. | a column list, or `*` | glyf |
 | `kpi` | One number as a tile, with the change against a comparison value. Not drawn. | `value`, optional `compare` | glyf |
+| `sankey` | Flows between stages, one band per `source` and `target` pair, as wide as its `value`. | `source`, `target`, `value` | glyf |
 | `map` | One filled region per row, or one point per row at a latitude and longitude. | `region` or `latitude` and `longitude`, optional `size` and `color` | glyf |
 
 Any other `DRAW` value fails validation with `unsupported chart type`.
@@ -568,6 +605,51 @@ Points at exact coordinates can identify a person or a home. Aggregate them
 in SQL, or round the coordinates, before they reach a published map; see
 [data exposure](data-exposure.md).
 
+### Sankey
+
+```sql
+WITH accounts AS (
+  SELECT plan, CASE WHEN sessions >= 15 THEN 'Regular use' ELSE 'Light use' END AS activity
+  FROM {{ ref('fct_account_sessions') }}
+)
+SELECT plan AS stage, activity AS next_stage, count(*) AS accounts
+FROM accounts
+GROUP BY 1, 2
+ORDER BY 1, 2
+
+VISUALISE stage AS source, next_stage AS target, accounts AS value
+DRAW sankey
+INTERACT tooltip
+```
+
+A sankey is one row per flow: where it starts (`source`), where it ends
+(`target`) and how much moves along it (`value`). A flow of three stages is
+two sets of rows, the first stage to the second and the second to the third,
+joined with `UNION ALL`, as in the
+[product analytics example](https://github.com/glyf-data/glyf/blob/main/examples/product_analytics/visualisations/account_flow.ggsql).
+
+glyf lays it out itself. A node's column is the longest chain of flows that
+leads to it, and a node with nothing flowing out of it goes to the last
+column. Each node is as tall as the larger of what arrives and what leaves.
+Rows that link the same two nodes are summed. A row with a missing end or
+value, or a value of zero, is skipped. Within a column, a node sits near the
+nodes that feed it, so fewer bands cross. Each node's colour comes from the
+order the query first names it in, so keep the `ORDER BY`.
+
+The build fails, naming the chart, when the flows cannot be drawn:
+
+- a loop, such as `A` to `B` and `B` back to `A`: every flow has to move to a
+  later stage;
+- a flow from a node to itself, or a negative value;
+- more nodes in one column than `CONFIG height` has room for. Raise the
+  height, or group the smallest flows in SQL.
+
+A sankey takes `INTERACT tooltip`: a band shows its two ends and its value,
+and a node shows its total. It has no legend, because each node is already
+labelled. Dashboard filters do not apply to it: its spec carries the laid-out
+picture rather than the rows, so the card says it is not filtered. The visual
+diff compares a sankey pixel by pixel.
+
 ### Numeric columns
 
 A histogram's `x`, a boxplot's `y` and a heatmap's `color` must be integer or
@@ -704,7 +786,8 @@ Supported interactions:
   there.
 
 A `table` takes no `INTERACT` clause; sorting by column is built into the
-dashboard. A `kpi` takes none either. A `map` takes `tooltip` only.
+dashboard. A `kpi` takes none either. A `map` and a `sankey`
+take `tooltip` only.
 
 Interactive charts still write PNG and SVG artifacts. They also write a Vega-Lite JSON artifact, which dashboard pages embed with the Vega runtime scripts. The exported dashboard is still static HTML, but interactive rendering needs a browser with JavaScript enabled and access to those scripts.
 

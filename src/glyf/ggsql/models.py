@@ -111,6 +111,10 @@ class GgsqlChart:
         return self.draw_type == "map"
 
     @property
+    def is_sankey(self) -> bool:
+        return self.draw_type == "sankey"
+
+    @property
     def is_point_map(self) -> bool:
         """A map of places at a latitude and longitude, rather than regions."""
         return self.is_map and self.field_for_role("region") is None

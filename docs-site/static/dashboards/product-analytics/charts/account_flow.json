@@ -1,0 +1,43 @@
+{
+  "chart_type": "sankey",
+  "compiled_sql_path": "compiled/account_flow.sql",
+  "height": 420,
+  "interactions": [
+    "tooltip"
+  ],
+  "lineage": {
+    "models": {
+      "fct_account_sessions": {
+        "parents": [
+          "source:raw.account_sessions"
+        ],
+        "path": "models/fct_account_sessions.sql"
+      }
+    },
+    "sources": [
+      "raw.account_sessions"
+    ]
+  },
+  "metadata_path": "charts/account_flow.json",
+  "name": "account_flow",
+  "png_path": "charts/account_flow.png",
+  "roles": [
+    [
+      "source",
+      "stage"
+    ],
+    [
+      "target",
+      "next_stage"
+    ],
+    [
+      "value",
+      "accounts"
+    ]
+  ],
+  "svg_path": "charts/account_flow.svg",
+  "title": "How Accounts Use the Product",
+  "width": 1100,
+  "x": "stage",
+  "y": "next_stage"
+}

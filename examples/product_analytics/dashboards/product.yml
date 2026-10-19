@@ -92,6 +92,12 @@ sections:
           value: "9 / 24 / 59"
           note: Free, Pro and Team
 
+  - title: Flow
+    description: Where each plan's accounts end up, as flows between stages.
+    columns: 1
+    items:
+      - chart: account_flow
+
   - title: Rhythm
     description: When the product is in use, by weekday and hour.
     columns: "75% 25%"

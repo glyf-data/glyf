@@ -58,12 +58,16 @@ def _apply_dark_vega_theme(spec: object | None) -> object | None:
 
     config = themed.setdefault("config", {})
     view = config.setdefault("view", {})
+    # A map or a sankey has no frame (`stroke: None`), and keeps none.
+    frameless = "stroke" in view and view["stroke"] is None
     view.update(
         {
-            "stroke": "#3f3f46",
+            "stroke": None if frameless else "#3f3f46",
             "fill": "#09090b",
         }
     )
+    # Text marks, such as a sankey's node names.
+    config.setdefault("text", {})["color"] = "#f4f4f5"
 
     axis = config.setdefault("axis", {})
     axis.update(

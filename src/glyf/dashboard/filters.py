@@ -58,7 +58,9 @@ def plan_filters(dashboard: Dashboard, charts: dict[str, ChartArtifact]) -> Filt
 
 def _mode(artifact: ChartArtifact, field: str) -> str:
     metadata = artifact.metadata
-    if metadata.is_kpi:
+    # A sankey's spec holds its laid-out geometry, not its rows: dropping a
+    # band would leave a gap rather than redraw the flows.
+    if metadata.is_kpi or metadata.chart_type == "sankey":
         return "none"
     if metadata.is_table:
         return "table" if field in metadata.columns else "none"

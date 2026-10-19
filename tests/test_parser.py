@@ -237,6 +237,7 @@ EXAMPLE_ORDER_BY = {
     "finance_metrics/margin_rate_by_department": True,
     "finance_metrics/margin_share": True,
     "finance_metrics/margin_vs_expenses": True,
+    "product_analytics/account_flow": True,
     "product_analytics/activation_by_plan": False,
     "product_analytics/activation_rate_by_plan": False,
     "product_analytics/active_users": False,

@@ -44,6 +44,8 @@ const MAP_PROJECTIONS: &[&str] = &[
     "albersUsa",
     "orthographic",
 ];
+/// A sankey link: where it starts, where it ends, and how much flows along it.
+const SANKEY_ROLES: &[&str] = &["source", "target", "value"];
 /// A map draws regions (`region`) or places (`latitude` and `longitude`).
 const MAP_ROLES: &[&str] = &["region", "latitude", "longitude", "size", "color"];
 
@@ -105,6 +107,14 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
             allowed: MAP_ROLES,
             interactions: &["tooltip"],
         },
+        // A sankey is flows between stages: one row per link, its width the
+        // value. Its colours name nodes, so a legend would repeat the labels.
+        "sankey" => DrawSpec {
+            draw_type: "sankey",
+            required: SANKEY_ROLES,
+            allowed: SANKEY_ROLES,
+            interactions: &["tooltip"],
+        },
         // A kpi is one number, with an optional one to compare it against.
         "kpi" => DrawSpec {
             draw_type: "kpi",
@@ -118,7 +128,7 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
 
 /// The draw types glyf accepts, for error messages.
 const SUPPORTED_DRAWS: &str =
-    "area, bar, boxplot, heatmap, histogram, kpi, line, map, pie, scatter, table";
+    "area, bar, boxplot, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table";
 
 /// Parse a `.ggsql` file: the SQL, then the chart block.
 ///
@@ -482,6 +492,7 @@ fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(),
             "histogram" => "histogram requires an x mapping".to_string(),
             "heatmap" => "heatmap requires x, y and color mappings".to_string(),
             "kpi" => "kpi requires a value mapping".to_string(),
+            "sankey" => "sankey requires source, target and value mappings".to_string(),
             _ => "VISUALISE requires x and y mappings".to_string(),
         };
         return Err(CoreError::Parse(message));
@@ -1009,7 +1020,7 @@ mod tests {
 
         assert_eq!(
             error.to_string(),
-            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, kpi, line, map, pie, scatter, table"
+            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table"
         );
     }
 
@@ -1265,6 +1276,60 @@ mod tests {
         assert!(
             error.contains("CONFIG shapes applies to DRAW map only"),
             "{error}"
+        );
+    }
+
+    #[test]
+    fn parses_a_sankey() {
+        let chart = parse_ggsql_text(
+            "SELECT step, next_step, users FROM fct_funnel\n\nVISUALISE step AS source, next_step AS target, users AS value\nDRAW sankey\nINTERACT tooltip\n",
+            "funnel",
+            None,
+            "duckdb",
+        )
+        .unwrap();
+        assert_eq!(chart.draw_type, "sankey");
+        assert_eq!(chart.interactions, vec!["tooltip"]);
+    }
+
+    #[test]
+    fn rejects_a_sankey_without_its_three_roles_or_with_others() {
+        let missing = parse_ggsql_text(
+            "SELECT step, users FROM fct_funnel\n\nVISUALISE step AS source, users AS value\nDRAW sankey\n",
+            "funnel",
+            None,
+            "duckdb",
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(
+            missing.contains("sankey requires source, target and value mappings"),
+            "{missing}"
+        );
+        let extra = parse_ggsql_text(
+            "SELECT a, b, n FROM t\n\nVISUALISE a AS source, b AS target, n AS value, a AS color\nDRAW sankey\n",
+            "funnel",
+            None,
+            "duckdb",
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(
+            extra
+                .contains("sankey does not take a 'color' mapping; it takes source, target, value"),
+            "{extra}"
+        );
+        let zoom = parse_ggsql_text(
+            "SELECT a, b, n FROM t\n\nVISUALISE a AS source, b AS target, n AS value\nDRAW sankey\nINTERACT zoom\n",
+            "funnel",
+            None,
+            "duckdb",
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(
+            zoom.contains("zoom interaction is not supported for sankey charts"),
+            "{zoom}"
         );
     }
 }

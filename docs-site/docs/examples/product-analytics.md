@@ -27,6 +27,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/product-analytics/dashboard
 - Dashboard filters whose values come from a rendered chart artifact (`source(activation_by_plan, plan)`).
 - Built-in macros in `summary` and two project-local macros: `activation_health` reads the latest activation rates through `MacroContext` and returns a status card led by the number, and `product_notes` returns hand-written release notes, to show that a macro can carry fixed text as well as values from the build.
 - A histogram and a boxplot over `fct_account_sessions`, which has one row per account, and a weekday-by-hour heatmap over `fct_hourly_activity` ordered by `weekday_number, hour` so the week starts on Monday.
+- A sankey of accounts flowing from plan to how often and how long they use the product (`account_flow.ggsql`): two `GROUP BY`s joined with `UNION ALL`, one per pair of stages.
 - A table of the ten most active accounts (`top_accounts.ggsql`): `VISUALISE *` over the same model with `LIMIT 10`, column labels, and a `CONFIG height` that turns the card into a scroll area.
 - Interactive ggsql charts with `tooltip`, `legend_filter`, and `zoom`; the zooming scatter starts with its zoom locked, and every chart card has download and full-screen tools.
 
@@ -138,6 +139,12 @@ sections:
           label: Median sessions per account
           value: "9 / 24 / 59"
           note: Free, Pro and Team
+
+  - title: Flow
+    description: Where each plan's accounts end up, as flows between stages.
+    columns: 1
+    items:
+      - chart: account_flow
 
   - title: Rhythm
     description: When the product is in use, by weekday and hour.
