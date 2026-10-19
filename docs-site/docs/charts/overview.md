@@ -323,6 +323,7 @@ INTERACT tooltip
 | `scatter` | One point per row. `point` is accepted as an alias. | `x`, `y`, optional `color` | ggsql (`point`) |
 | `area` | One filled area per `color` value. | `x`, `y`, optional `color` | ggsql |
 | `combo` | Bars of `y` on the left axis and a line of `y2` on the right, over one `x`. | `x`, `y`, `y2` | glyf |
+| `funnel` | One centred bar per step, as wide as its `y`, in the query's order. | `x`, `y` | glyf |
 | `pie` | One slice per `x` value, sized by `y`. | `x`, `y`, optional `color` | glyf |
 | `histogram` | The number of rows in each bin of `x`, stacked by `color`. | `x`, optional `color` | glyf |
 | `boxplot` | The quartiles of `y` for each `x` value, with outliers as points. | `x`, `y`, optional `color` | glyf |
