@@ -58,6 +58,7 @@ sections:
     description: Where margin comes from, by department and month.
     columns: 1
     items:
+      - chart: bookings_and_margin
       - chart: margin_rate_by_department
       - chart: margin_vs_expenses
 

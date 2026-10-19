@@ -99,6 +99,9 @@ def write_chart_metadata(
     else:
         metadata["x"] = chart.field_for_role("x")
         metadata["y"] = chart.field_for_role("y")
+        if chart.is_combo:
+            # The line's column is a third role a reader of x and y would miss.
+            metadata["roles"] = [[mapping.role, mapping.field] for mapping in chart.visualise]
         metadata["png_path"] = artifacts.png.relative_to(project_root).as_posix()
         metadata["svg_path"] = artifacts.svg.relative_to(project_root).as_posix()
     # What `glyf diff` needs to draw the chart over its old self; only when set.

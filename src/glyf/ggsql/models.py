@@ -80,6 +80,11 @@ class GgsqlChart:
         return self.labels.get("y_title")
 
     @property
+    def y2_title(self) -> str | None:
+        """A combo's right axis: the line's title."""
+        return self.labels.get("y2_title")
+
+    @property
     def width(self) -> int | None:
         return self.config.get("width")
 
@@ -113,6 +118,11 @@ class GgsqlChart:
     @property
     def is_sankey(self) -> bool:
         return self.draw_type == "sankey"
+
+    @property
+    def is_combo(self) -> bool:
+        """Bars of `y` and a line of `y2`, each on its own axis."""
+        return self.draw_type == "combo"
 
     @property
     def is_point_map(self) -> bool:

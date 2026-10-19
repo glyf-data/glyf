@@ -1,0 +1,45 @@
+{
+  "chart_type": "combo",
+  "compiled_sql_path": "compiled/bookings_and_margin.sql",
+  "height": 320,
+  "interactions": [
+    "tooltip"
+  ],
+  "lineage": {
+    "models": {
+      "fct_finance": {
+        "parents": [
+          "source:raw.finance"
+        ],
+        "path": "models/fct_finance.sql"
+      }
+    },
+    "sources": [
+      "raw.finance"
+    ]
+  },
+  "metadata_path": "charts/bookings_and_margin.json",
+  "name": "bookings_and_margin",
+  "png_path": "charts/bookings_and_margin.png",
+  "roles": [
+    [
+      "x",
+      "month"
+    ],
+    [
+      "y",
+      "bookings"
+    ],
+    [
+      "y2",
+      "margin_rate"
+    ]
+  ],
+  "svg_path": "charts/bookings_and_margin.svg",
+  "title": "Bookings and Margin Rate",
+  "width": 1100,
+  "x": "month",
+  "x_title": "Month",
+  "y": "bookings",
+  "y_title": "Bookings"
+}

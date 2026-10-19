@@ -36,6 +36,11 @@ MAP_DEFAULT_PROJECTION = "equalEarth"
 # The roles a map binds, in encoding order.
 MAP_ROLES = ("region", "latitude", "longitude", "size", "color")
 SANKEY_ROLES = ("source", "target", "value")
+COMBO_ROLES = ("x", "y", "y2")
+# A combo's bars and line: the first two colours of the default palette, so
+# each axis title can say which mark it measures.
+COMBO_BAR = "#4c78a8"
+COMBO_LINE = "#f58518"
 # A link's band, behind its nodes: see-through, so crossing bands both read.
 SANKEY_LINK_OPACITY = 0.38
 
@@ -103,6 +108,8 @@ def required_columns(chart: GgsqlChart) -> tuple[str, ...]:
         roles: tuple[str, ...] = MAP_ROLES
     elif chart.is_sankey:
         roles = SANKEY_ROLES
+    elif chart.is_combo:
+        roles = COMBO_ROLES
     elif chart.is_kpi:
         roles = ("value", "compare")
     else:
@@ -303,6 +310,8 @@ def build_chart(
         return _build_map(chart, frame, config)
     if chart.is_sankey:
         return _build_sankey(chart, frame, config)
+    if chart.is_combo:
+        return _build_combo(chart, frame, config)
     chart_type = CHART_TYPES.get(chart.draw_type)
     if chart_type is None:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
@@ -318,6 +327,85 @@ def build_chart(
 
     base = _styled(alt.Chart(frame).encode(**encoding), chart, config)
     return _with_interactions(chart_type.mark(base, drawing), drawing)
+
+
+def _build_combo(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.LayerChart:
+    """Bars of `y` on the left axis and a line of `y2` on the right.
+
+    The two measures rarely share a unit, so each has its own scale. Each
+    axis title takes its mark's colour, and a legend names both, so nobody
+    reads the line against the bars' axis. Both layers draw from the layered
+    chart's data, so a dashboard filter narrows them together.
+    """
+    _require_columns(chart, frame)
+    x, y, y2 = (chart.field_for_role(role) for role in COMBO_ROLES)
+    assert x is not None and y is not None and y2 is not None
+    _require_numeric(frame, y, "y", "combo")
+    _require_numeric(frame, y2, "y2", "combo")
+    bar_title = chart.y_title or y
+    line_title = chart.y2_title or y2
+    # One colour scale over both marks: the legend's two entries.
+    legend = alt.Scale(domain=[bar_title, line_title], range=[COMBO_BAR, COMBO_LINE])
+    encoding: dict[str, object] = {"x": _band_x(frame, x, chart.x_title)}
+    if "tooltip" in chart.interactions:
+        encoding["tooltip"] = [alt.Tooltip(field) for field in required_columns(chart)]
+    series = alt.Color(f"{_COMBO_SERIES}:N", scale=legend, legend=_COMBO_LEGEND)
+    bars = (
+        alt.Chart()
+        .transform_calculate(**{_COMBO_SERIES: json.dumps(bar_title)})
+        .mark_bar()
+        .encode(
+            y=alt.Y(y, title=bar_title, axis=alt.Axis(titleColor=COMBO_BAR)),
+            color=series,
+            **encoding,
+        )
+    )
+    line = (
+        alt.Chart()
+        .transform_calculate(**{_COMBO_SERIES: json.dumps(line_title)})
+        .mark_line(point=True, strokeWidth=2.5)
+        .encode(
+            y=alt.Y(y2, title=line_title, axis=alt.Axis(titleColor=COMBO_LINE, orient="right", grid=False)),
+            color=series,
+            **encoding,
+        )
+    )
+    layered = alt.layer(bars, line, data=frame).resolve_scale(y="independent")
+    return _styled(layered, chart, config)
+
+
+def _band_x(frame: pa.Table, field: str, title: str | None) -> alt.X:
+    """An x of whole bands, so a bar is a bar wide even on a date axis.
+
+    A temporal scale gives a bar a few pixels and cuts the first and last in
+    half. Dates become bands at the grain they are at: a month when every
+    date is the first of one, otherwise a day.
+    """
+    axis = alt.Axis(labelAngle=0)
+    column_type = frame.schema.field(field).type
+    if not (pa.types.is_date(column_type) or pa.types.is_timestamp(column_type)):
+        return alt.X(field, type="ordinal", sort=None, axis=axis, title=title)
+    days = [value for value in frame.column(field).to_pylist() if value is not None]
+    monthly = all(value.day == 1 for value in days)
+    return alt.X(
+        field,
+        type="ordinal",
+        timeUnit="yearmonth" if monthly else "yearmonthdate",
+        axis=axis,
+        title=title,
+    )
+
+
+_COMBO_LEGEND = alt.Legend(orient="top", title=None)
+# The field each combo layer names itself in, for the legend.
+_COMBO_SERIES = "glyf_series"
+
+
+def _require_columns(chart: GgsqlChart, frame: pa.Table) -> None:
+    missing = missing_columns(chart, tuple(frame.column_names))
+    if missing:
+        joined = ", ".join(f"'{field}'" for field in missing)
+        raise ChartRenderError(f"query result missing chart column {joined}")
 
 
 def _build_map(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.LayerChart:

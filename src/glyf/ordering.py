@@ -30,7 +30,7 @@ from glyf.ggsql.renderer import required_columns
 # glyf picked is worth reporting. A line or an area is drawn along its x axis
 # whatever order the rows arrive in. A table's picture is the order.
 _STACKS = frozenset({"bar", "area", "histogram"})
-_ALWAYS_ORDER_SENSITIVE = frozenset({"pie", "heatmap", "table", "sankey"})
+_ALWAYS_ORDER_SENSITIVE = frozenset({"pie", "heatmap", "table", "sankey", "combo"})
 
 
 @dataclass(frozen=True)

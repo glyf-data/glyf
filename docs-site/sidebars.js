@@ -20,6 +20,7 @@ const sidebars = {
       doc('charts/line', 'chart-line'),
       doc('charts/bar', 'chart'),
       doc('charts/area', 'chart-area'),
+      doc('charts/combo', 'chart-combo'),
       doc('charts/scatter', 'chart-scatter'),
       doc('charts/pie', 'chart-pie'),
       doc('charts/histogram', 'chart-histogram'),

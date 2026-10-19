@@ -21,6 +21,7 @@ SUPPORTED_CHART_TYPES = {
     "kpi",
     "map",
     "sankey",
+    "combo",
 }
 SUPPORTED_CONFIG_KEYS = {"width", "height"}
 # Text-valued CONFIG keys, which only a map takes.

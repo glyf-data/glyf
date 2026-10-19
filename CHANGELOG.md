@@ -2,6 +2,16 @@
 
 All notable changes to `glyf` will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `DRAW combo`: bars of one measure and a line of another over the same x,
+  each on its own axis (`month AS x, revenue AS y, margin_pct AS y2`). Each
+  axis title takes its mark's colour and a legend names both;
+  `LABEL y2_title` titles the right axis. Takes `INTERACT tooltip`. The
+  finance example draws bookings with their margin rate.
+
 ## 0.19.0 - 2026-10-19
 
 ### Added
