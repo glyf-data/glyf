@@ -3,7 +3,8 @@
   "color": "revenue",
   "compiled_sql_path": "compiled/revenue_by_country.sql",
   "interactions": [
-    "tooltip"
+    "tooltip",
+    "zoom"
   ],
   "lineage": {
     "models": {},

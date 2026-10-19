@@ -55,7 +55,8 @@ const COMBO_ROLES: &[&str] = &["x", "y", "y2"];
 /// A treemap tile: its name, its size, and optionally the group it sits in.
 const TREEMAP_ROLES: &[&str] = &["label", "value", "group"];
 /// A map draws regions (`region`) or places (`latitude` and `longitude`).
-const MAP_ROLES: &[&str] = &["region", "latitude", "longitude", "size", "color"];
+/// `label` names a region or place, for the tooltip.
+const MAP_ROLES: &[&str] = &["region", "latitude", "longitude", "size", "color", "label"];
 
 /// The role a table's columns carry. A table has no axes: `VISUALISE` lists
 /// the columns to show, in order, and every one of them is a column.
@@ -109,12 +110,12 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
         },
         // A map is regions filled by a value, or places at a latitude and
         // longitude; `validate_map_roles` says which. Its colour may be a
-        // continuous scale, and a projection has no zoom of its own yet.
+        // continuous scale, which a legend selection cannot bind to.
         "map" => DrawSpec {
             draw_type: "map",
             required: &[],
             allowed: MAP_ROLES,
-            interactions: &["tooltip"],
+            interactions: &["tooltip", "zoom"],
         },
         // A sankey is flows between stages: one row per link, its width the
         // value. Its colours name nodes, so a legend would repeat the labels.
@@ -1297,11 +1298,11 @@ mod tests {
             .unwrap_err()
             .to_string();
         assert!(error.contains("map does not take a 'x' mapping"), "{error}");
-        let error = map("country AS region", "INTERACT zoom\n")
+        let error = map("country AS region", "INTERACT legend_filter\n")
             .unwrap_err()
             .to_string();
         assert!(
-            error.contains("zoom interaction is not supported for map charts"),
+            error.contains("legend_filter interaction is not supported for map charts"),
             "{error}"
         );
     }
@@ -1571,5 +1572,16 @@ mod tests {
             error.contains("CONFIG columns lays out a faceted chart's panels"),
             "{error}"
         );
+    }
+
+    #[test]
+    fn a_map_takes_a_label_and_zoom() {
+        let points = map(
+            "city AS label, lat AS latitude, lon AS longitude",
+            "INTERACT tooltip, zoom\n",
+        )
+        .unwrap();
+        assert_eq!(points.interactions, vec!["tooltip", "zoom"]);
+        assert!(map("country AS region, name AS label", "").is_ok());
     }
 }

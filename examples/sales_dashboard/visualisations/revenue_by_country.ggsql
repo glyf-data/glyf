@@ -5,4 +5,4 @@ ORDER BY country
 VISUALISE country AS region, revenue AS color
 DRAW map
 LABEL title => 'Revenue by Country'
-INTERACT tooltip
+INTERACT tooltip, zoom

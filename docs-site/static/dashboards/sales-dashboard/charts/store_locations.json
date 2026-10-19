@@ -3,7 +3,8 @@
   "color": "format",
   "compiled_sql_path": "compiled/store_locations.sql",
   "interactions": [
-    "tooltip"
+    "tooltip",
+    "zoom"
   ],
   "lineage": {
     "models": {},
@@ -15,6 +16,10 @@
   "name": "store_locations",
   "png_path": "charts/store_locations.png",
   "roles": [
+    [
+      "label",
+      "city"
+    ],
     [
       "latitude",
       "latitude"

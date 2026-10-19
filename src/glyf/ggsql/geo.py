@@ -26,6 +26,10 @@ class MapShapesError(ValueError):
     """Raised when a map's shapes cannot be loaded or matched to its rows."""
 
 
+# What a map's shapes dataset is called in its spec, before its content hash.
+SHAPES_DATASET_PREFIX = "glyf-shapes-"
+
+
 @dataclass(frozen=True)
 class Shapes:
     """A TopoJSON topology, the object in it that holds the regions, and where
