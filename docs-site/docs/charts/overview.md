@@ -71,6 +71,31 @@ INTERACT tooltip
 
 </ChartTypeCard>
 
+<ChartTypeCard type="combo" title="Combo" page="/docs/charts/combo" example="examples/finance_metrics/visualisations/bookings_and_margin.ggsql" summary="Bars of one measure and a line of another over the same x, each on its own axis. Shows a total and a rate together.">
+
+```sql
+SELECT
+  month,
+  sum(bookings) as bookings,
+  round(sum(gross_margin) * 100.0 / nullif(sum(bookings), 0), 1) as margin_rate
+FROM {{ ref('fct_finance') }}
+GROUP BY 1
+ORDER BY 1
+
+VISUALISE month AS x, bookings AS y, margin_rate AS y2
+DRAW combo
+LABEL title => 'Bookings and Margin Rate'
+LABEL subtitle => 'Bars are bookings; the line is gross margin as a share of them'
+LABEL x_title => 'Month'
+LABEL y_title => 'Bookings'
+LABEL y2_title => 'Margin Rate (%)'
+CONFIG width => 1100
+CONFIG height => 320
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
 <ChartTypeCard type="scatter" title="Scatter" page="/docs/charts/scatter" example="examples/product_analytics/visualisations/sessions_scatter.ggsql" summary="One point per row. Shows how two numbers move together, and the rows that do not.">
 
 ```sql

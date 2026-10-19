@@ -24,6 +24,7 @@ Rendered dashboard: <Link to="pathname:///dashboards/finance-metrics/dashboards/
 
 - All eight chart types from two finance models. `fct_finance` has one row per month and department and feeds the line, bar, area, scatter, pie and heatmap. `fct_invoices` has one row per invoice and feeds the histogram and boxplot.
 - A histogram and a boxplot whose queries select rows and aggregate nothing. glyf bins and counts `days_to_pay`, and takes the quartiles of `discount_pct`.
+- A combo chart: monthly bookings as bars on the left axis and the margin rate as a line on the right, each axis in its mark's colour.
 - A heatmap whose axis order comes from the query's `ORDER BY month, department`.
 - Section-level dashboard columns such as `65% 35%`, a row of metric tiles, filters resolved from chart artifacts, and built-in macros in `summary`.
 
@@ -100,6 +101,7 @@ sections:
     description: Where margin comes from, by department and month.
     columns: 1
     items:
+      - chart: bookings_and_margin
       - chart: margin_rate_by_department
       - chart: margin_vs_expenses
 

@@ -186,7 +186,7 @@ def test_parse_ggsql_rejects_a_role_the_renderer_never_drew() -> None:
 
 
 def test_parse_ggsql_lists_the_supported_chart_types() -> None:
-    with pytest.raises(GgsqlParseError, match="supported chart types: area, bar, boxplot"):
+    with pytest.raises(GgsqlParseError, match="supported chart types: area, bar, boxplot, combo"):
         parse_ggsql("SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW donut\n")
 
 
@@ -229,6 +229,7 @@ EXAMPLE_ORDER_BY = {
     "clanker_insights/tokens_vs_cost": True,
     "clanker_insights/weekly_success_by_agent": True,
     "basic/revenue": False,
+    "finance_metrics/bookings_and_margin": True,
     "finance_metrics/bookings_trend": False,
     "finance_metrics/days_to_pay": True,
     "finance_metrics/discount_by_segment": False,

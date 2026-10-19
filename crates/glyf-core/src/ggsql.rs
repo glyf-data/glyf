@@ -46,6 +46,8 @@ const MAP_PROJECTIONS: &[&str] = &[
 ];
 /// A sankey link: where it starts, where it ends, and how much flows along it.
 const SANKEY_ROLES: &[&str] = &["source", "target", "value"];
+/// A combo: bars of `y` on the left axis, a line of `y2` on the right.
+const COMBO_ROLES: &[&str] = &["x", "y", "y2"];
 /// A map draws regions (`region`) or places (`latitude` and `longitude`).
 const MAP_ROLES: &[&str] = &["region", "latitude", "longitude", "size", "color"];
 
@@ -115,6 +117,15 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
             allowed: SANKEY_ROLES,
             interactions: &["tooltip"],
         },
+        // A combo is two measures over one x, each on its own axis. Its two
+        // marks have no shared colour scale for a legend to filter, and two
+        // independent y axes have no single zoom.
+        "combo" => DrawSpec {
+            draw_type: "combo",
+            required: COMBO_ROLES,
+            allowed: COMBO_ROLES,
+            interactions: &["tooltip"],
+        },
         // A kpi is one number, with an optional one to compare it against.
         "kpi" => DrawSpec {
             draw_type: "kpi",
@@ -128,7 +139,7 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
 
 /// The draw types glyf accepts, for error messages.
 const SUPPORTED_DRAWS: &str =
-    "area, bar, boxplot, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table";
+    "area, bar, boxplot, combo, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table";
 
 /// Parse a `.ggsql` file: the SQL, then the chart block.
 ///
@@ -493,6 +504,9 @@ fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(),
             "heatmap" => "heatmap requires x, y and color mappings".to_string(),
             "kpi" => "kpi requires a value mapping".to_string(),
             "sankey" => "sankey requires source, target and value mappings".to_string(),
+            "combo" => {
+                "combo requires x, y and y2 mappings: y draws as bars, y2 as a line".to_string()
+            }
             _ => "VISUALISE requires x and y mappings".to_string(),
         };
         return Err(CoreError::Parse(message));
@@ -1020,7 +1034,7 @@ mod tests {
 
         assert_eq!(
             error.to_string(),
-            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table"
+            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, combo, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table"
         );
     }
 
@@ -1330,6 +1344,58 @@ mod tests {
         assert!(
             zoom.contains("zoom interaction is not supported for sankey charts"),
             "{zoom}"
+        );
+    }
+
+    fn combo(
+        visualise: &str,
+        extra: &str,
+    ) -> Result<crate::models::GgsqlChart, crate::error::CoreError> {
+        parse_ggsql_text(
+            &format!("SELECT * FROM fct_orders\n\nVISUALISE {visualise}\nDRAW combo\n{extra}"),
+            "revenue_and_margin",
+            None,
+            "duckdb",
+        )
+    }
+
+    #[test]
+    fn parses_a_combo_of_bars_and_a_line() {
+        let chart = combo(
+            "month AS x, revenue AS y, margin_pct AS y2",
+            "LABEL y2_title => 'Margin (%)'\nINTERACT tooltip\n",
+        )
+        .unwrap();
+        assert_eq!(chart.draw_type, "combo");
+        assert_eq!(chart.labels.get("y2_title").unwrap(), "Margin (%)");
+        assert_eq!(chart.interactions, vec!["tooltip"]);
+    }
+
+    #[test]
+    fn rejects_a_combo_without_y2_or_with_a_colour_or_zoom() {
+        let error = combo("month AS x, revenue AS y", "")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("combo requires x, y and y2 mappings"),
+            "{error}"
+        );
+        let error = combo(
+            "month AS x, revenue AS y, margin AS y2, region AS color",
+            "",
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(
+            error.contains("combo does not take a 'color' mapping; it takes x, y, y2"),
+            "{error}"
+        );
+        let error = combo("month AS x, revenue AS y, margin AS y2", "INTERACT zoom\n")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("zoom interaction is not supported for combo charts"),
+            "{error}"
         );
     }
 }
