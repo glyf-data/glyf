@@ -11,6 +11,12 @@ All notable changes to `glyf` will be documented in this file.
   axis title takes its mark's colour and a legend names both;
   `LABEL y2_title` titles the right axis. Takes `INTERACT tooltip`. The
   finance example draws bookings with their margin rate.
+- `DRAW funnel`: one centred bar per step, as wide as how many reach it
+  (`step AS x, users AS y`). Each bar is labelled with its value and its
+  share of the first step, and its tooltip adds its share of the step
+  before. Steps keep the query's order, or run largest first without an
+  ORDER BY. Takes `INTERACT tooltip`; dashboard filters leave it alone. The
+  product analytics example adds an account funnel.
 
 ## 0.19.0 - 2026-10-19
 

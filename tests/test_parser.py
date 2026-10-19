@@ -186,7 +186,7 @@ def test_parse_ggsql_rejects_a_role_the_renderer_never_drew() -> None:
 
 
 def test_parse_ggsql_lists_the_supported_chart_types() -> None:
-    with pytest.raises(GgsqlParseError, match="supported chart types: area, bar, boxplot, combo"):
+    with pytest.raises(GgsqlParseError, match="supported chart types: area, bar, boxplot, combo, funnel"):
         parse_ggsql("SELECT a, b FROM t\n\nVISUALISE a AS x, b AS y\nDRAW donut\n")
 
 
@@ -239,6 +239,7 @@ EXAMPLE_ORDER_BY = {
     "finance_metrics/margin_share": True,
     "finance_metrics/margin_vs_expenses": True,
     "product_analytics/account_flow": True,
+    "product_analytics/account_funnel": True,
     "product_analytics/activation_by_plan": False,
     "product_analytics/activation_rate_by_plan": False,
     "product_analytics/active_users": False,

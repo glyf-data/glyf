@@ -41,6 +41,11 @@ COMBO_ROLES = ("x", "y", "y2")
 # each axis title can say which mark it measures.
 COMBO_BAR = "#4c78a8"
 COMBO_LINE = "#f58518"
+# Roughly how many pixels a funnel label's character and its margins take:
+# a label goes inside its bar when it fits there, and beside it otherwise.
+FUNNEL_LABEL_CHAR = 7
+FUNNEL_LABEL_MARGIN = 20
+FUNNEL_PADDING = {"left": 24, "right": 5, "top": 5, "bottom": 5}
 # A link's band, behind its nodes: see-through, so crossing bands both read.
 SANKEY_LINK_OPACITY = 0.38
 
@@ -312,6 +317,8 @@ def build_chart(
         return _build_sankey(chart, frame, config)
     if chart.is_combo:
         return _build_combo(chart, frame, config)
+    if chart.is_funnel:
+        return _build_funnel(chart, frame, config)
     chart_type = CHART_TYPES.get(chart.draw_type)
     if chart_type is None:
         raise ChartRenderError(f"unsupported chart type '{chart.draw_type}'")
@@ -372,6 +379,95 @@ def _build_combo(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> al
     )
     layered = alt.layer(bars, line, data=frame).resolve_scale(y="independent")
     return _styled(layered, chart, config)
+
+
+def _build_funnel(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.LayerChart:
+    """One centred bar per step, as wide as its value, top to bottom.
+
+    The steps run in the query's order when it has an ORDER BY, and largest
+    first when it does not: a funnel narrows. Each bar says its value and its
+    share of the first step; the tooltip adds the share of the step before.
+    The shares are worked out here, from all the rows, so the spec carries
+    the picture rather than rows a filter could narrow.
+    """
+    _require_columns(chart, frame)
+    step, value = chart.field_for_role("x"), chart.field_for_role("y")
+    assert step is not None and value is not None
+    _require_numeric(frame, value, "y", "funnel")
+    rows = [
+        (name, amount)
+        for name, amount in zip(frame.column(step).to_pylist(), frame.column(value).to_pylist())
+        if name is not None and amount is not None
+    ]
+    if not rows:
+        raise ChartRenderError("funnel has no steps to draw: every step or value is missing")
+    if any(amount < 0 for _, amount in rows):
+        raise ChartRenderError(f"funnel needs values of zero or more, and '{value}' has a negative one")
+    if not chart.has_order_by:
+        rows.sort(key=lambda row: -row[1])
+    widest = max(amount for _, amount in rows) or 1
+    first = rows[0][1]
+    # The step names take part of the width; most of it is the bars'.
+    bar_room = (chart.width or config.default_width) * 0.8
+    steps = []
+    for index, (name, amount) in enumerate(rows):
+        previous = rows[index - 1][1] if index else amount
+        share = amount / first if first else 0.0
+        label = f"{_number(amount)} · {share:.0%}"
+        fits = bar_room * amount / widest >= len(label) * FUNNEL_LABEL_CHAR + FUNNEL_LABEL_MARGIN
+        steps.append(
+            {
+                "step": str(name),
+                "value": amount,
+                "start": (widest - amount) / 2,
+                "end": (widest + amount) / 2,
+                "share": share,
+                "from_previous": amount / previous if previous else 0.0,
+                "label": label,
+                "inside": fits,
+            }
+        )
+
+    x_scale = alt.Scale(domain=[0, widest], nice=False, zero=False)
+    x = alt.X("start:Q", scale=x_scale, axis=None)
+    y = alt.Y(
+        "step:N",
+        sort=None,
+        title=chart.x_title,
+        axis=alt.Axis(labelFontSize=11, ticks=False, domain=False, labelPadding=8),
+    )
+    encoding: dict[str, object] = {}
+    if "tooltip" in chart.interactions:
+        encoding["tooltip"] = [
+            alt.Tooltip("step:N", title=step),
+            alt.Tooltip("value:Q", title=value, format=","),
+            alt.Tooltip("share:Q", title="of the first step", format=".1%"),
+            alt.Tooltip("from_previous:Q", title="of the step before", format=".1%"),
+        ]
+    base = alt.Chart(pa.Table.from_pylist(steps))
+    bars = base.mark_bar(color=COMBO_BAR, cornerRadius=2).encode(x=x, x2="end:Q", y=y, **encoding)
+    inside = (
+        base.transform_filter("datum.inside")
+        .mark_text(color="#ffffff", fontSize=11, fontWeight=600)
+        .encode(x=alt.X("middle:Q", scale=x_scale, axis=None), y=y, text="label:N")
+        .transform_calculate(middle=f"{widest} / 2")
+    )
+    beside = (
+        base.transform_filter("!datum.inside")
+        .mark_text(align="left", dx=6, fontSize=11, fontWeight=600)
+        .encode(x=alt.X("end:Q", scale=x_scale, axis=None), y=y, text="label:N")
+    )
+    # Vega sizes the step names by measuring them in a stand-in font, a few
+    # pixels short of the dashboard's; the room keeps a long name whole.
+    layered = alt.layer(bars, inside, beside).properties(padding=FUNNEL_PADDING)
+    return _styled(layered, chart, config).configure_view(stroke=None)
+
+
+def _number(value: float) -> str:
+    """A value as a label: whole numbers without decimals, others with two."""
+    if float(value).is_integer():
+        return f"{value:,.0f}"
+    return f"{value:,.2f}"
 
 
 def _band_x(frame: pa.Table, field: str, title: str | None) -> alt.X:

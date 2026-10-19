@@ -126,6 +126,15 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
             allowed: COMBO_ROLES,
             interactions: &["tooltip"],
         },
+        // A funnel is one bar per step, narrowing as the value falls. Its bars
+        // are one colour and its x is the step itself, so there is nothing
+        // for a legend to filter or a zoom to widen.
+        "funnel" => DrawSpec {
+            draw_type: "funnel",
+            required: XY,
+            allowed: XY,
+            interactions: &["tooltip"],
+        },
         // A kpi is one number, with an optional one to compare it against.
         "kpi" => DrawSpec {
             draw_type: "kpi",
@@ -139,7 +148,7 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
 
 /// The draw types glyf accepts, for error messages.
 const SUPPORTED_DRAWS: &str =
-    "area, bar, boxplot, combo, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table";
+    "area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table";
 
 /// Parse a `.ggsql` file: the SQL, then the chart block.
 ///
@@ -1034,7 +1043,7 @@ mod tests {
 
         assert_eq!(
             error.to_string(),
-            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, combo, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table"
+            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table"
         );
     }
 
@@ -1395,6 +1404,34 @@ mod tests {
             .to_string();
         assert!(
             error.contains("zoom interaction is not supported for combo charts"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn parses_a_funnel_of_steps_and_rejects_a_colour_or_zoom() {
+        let parse = |visualise: &str, extra: &str| {
+            parse_ggsql_text(
+                &format!("SELECT * FROM fct_signup\n\nVISUALISE {visualise}\nDRAW funnel\n{extra}"),
+                "signup",
+                None,
+                "duckdb",
+            )
+        };
+        let chart = parse("step AS x, users AS y", "INTERACT tooltip\n").unwrap();
+        assert_eq!(chart.draw_type, "funnel");
+        let error = parse("step AS x, users AS y, plan AS color", "")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("funnel does not take a 'color' mapping; it takes x, y"),
+            "{error}"
+        );
+        let error = parse("step AS x, users AS y", "INTERACT zoom\n")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("zoom interaction is not supported for funnel charts"),
             "{error}"
         );
     }

@@ -93,9 +93,10 @@ sections:
           note: Free, Pro and Team
 
   - title: Flow
-    description: Where each plan's accounts end up, as flows between stages.
+    description: How far accounts get, and where each plan's accounts end up.
     columns: 1
     items:
+      - chart: account_funnel
       - chart: account_flow
 
   - title: Rhythm

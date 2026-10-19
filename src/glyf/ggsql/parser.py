@@ -22,6 +22,7 @@ SUPPORTED_CHART_TYPES = {
     "map",
     "sankey",
     "combo",
+    "funnel",
 }
 SUPPORTED_CONFIG_KEYS = {"width", "height"}
 # Text-valued CONFIG keys, which only a map takes.

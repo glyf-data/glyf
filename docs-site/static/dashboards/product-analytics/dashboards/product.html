@@ -138,7 +138,7 @@
     <path d="M12 6v6h4"></path>
   </svg>
 
-          Refreshed <strong title="2026-10-19T09:52:24Z">19 Oct 2026, 09:52 UTC</strong>
+          Refreshed <strong title="2026-10-19T19:51:49Z">19 Oct 2026, 19:51 UTC</strong>
         </div>
         <div class="glyf-meta-item">
 
@@ -157,7 +157,7 @@
     <path d="m14.5 4-5 16"></path>
   </svg>
 
-          <span>14 charts</span>
+          <span>15 charts</span>
         </div>
       </div>
       <div class="glyf-meta-right">
@@ -205,7 +205,7 @@
           <div class="glyf-version-popover" role="menu" aria-label="Dashboard version options" data-glyf-version-popover>
             <button class="glyf-version-option is-active" type="button" role="menuitem">
               <span class="glyf-version-option-title glyf-mono">v current</span>
-              <span class="glyf-version-option-note">built 19 Oct 2026, 09:52 UTC</span>
+              <span class="glyf-version-option-note">built 19 Oct 2026, 19:51 UTC</span>
             </button>
             <button class="glyf-version-option" type="button" role="menuitem" disabled>
               <span class="glyf-version-option-title glyf-mono">v previous</span>
@@ -479,6 +479,31 @@ FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
   plan
 FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
 ORDER BY avg_session_minutes, plan
+</code></pre>
+
+      </div>
+
+      <div class="glyf-source-item">
+        <div class="glyf-source-name">
+          <span>From Sign-up to Power Use</span>
+          <span class="glyf-source-version">compiled</span>
+        </div>
+
+        <pre class="glyf-source-sql"><code>SELECT 1 AS step_order, &#39;All accounts&#39; AS step, count(*) AS accounts
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
+UNION ALL
+SELECT 2, &#39;Regular use&#39;, count(*)
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
+WHERE sessions &gt;= 15
+UNION ALL
+SELECT 3, &#39;Heavy use&#39;, count(*)
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
+WHERE sessions &gt;= 40
+UNION ALL
+SELECT 4, &#39;Heavy use, long sessions&#39;, count(*)
+FROM &#34;product_analytics&#34;.&#34;main&#34;.&#34;fct_account_sessions&#34;
+WHERE sessions &gt;= 40 AND avg_session_minutes &gt;= 15
+ORDER BY step_order
 </code></pre>
 
       </div>
@@ -1488,7 +1513,7 @@ takes their quartiles, so neither query aggregates anything itself.
               <h2 class="glyf-section-title">Flow</h2>
 
 
-              <p class="glyf-section-description">Where each plan&#39;s accounts end up, as flows between stages.</p>
+              <p class="glyf-section-description">How far accounts get, and where each plan&#39;s accounts end up.</p>
 
             </div>
 
@@ -1496,6 +1521,64 @@ takes their quartiles, so neither query aggregates anything itself.
               class="glyf-chart-grid"
               style="--glyf-columns: 1"
             >
+
+
+
+
+
+
+<article class="glyf-card glyf-chart-card" data-chart-theme="dark" data-glyf-chart="account_funnel" data-glyf-filters="plan:none week:none">
+  <div class="glyf-card-head">
+    <div>
+      <div class="glyf-card-title">From Sign-up to Power Use</div>
+      <div class="glyf-card-subtitle">step -> accounts</div>
+    </div>
+    <div class="glyf-card-badges">
+      <span class="glyf-badge glyf-badge-blue glyf-filter-applied" data-glyf-filter-applied hidden></span>
+      <div class="glyf-chart-tools" role="toolbar" aria-label="Chart tools">
+
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-download aria-label="Download as PNG" title="Download as PNG">
+
+  <svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="7 10 12 15 17 10"></polyline>
+    <line x1="12" x2="12" y1="15" y2="3"></line>
+  </svg>
+
+        </button>
+        <button class="glyf-chart-tool" type="button" data-glyf-chart-expand aria-pressed="false" aria-label="Full screen" title="Full screen">
+
+  <svg class="glyf-expand-icon glyf-expand-icon--open" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+  </svg>
+
+
+  <svg class="glyf-expand-icon glyf-expand-icon--close" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+  </svg>
+
+        </button>
+      </div>
+      <span class="glyf-badge glyf-mono">funnel</span>
+    </div>
+  </div>
+  <div class="glyf-card-body glyf-chart-body">
+
+    <div
+      class="glyf-interactive-chart"
+      id="chart-account_funnel"
+      data-vega-chart="chart-account_funnel-spec"
+    ></div>
+    <script type="application/json" id="chart-account_funnel-spec">{"$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "background": "#09090b", "config": {"axis": {"domainColor": "#a1a1aa", "gridColor": "#27272a", "labelAngle": 0, "labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "tickColor": "#a1a1aa", "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "legend": {"labelColor": "#f4f4f5", "labelFont": "Hanken Grotesk", "labelFontSize": 11, "titleColor": "#f4f4f5", "titleFont": "Hanken Grotesk", "titleFontSize": 12, "titleFontWeight": 600}, "text": {"color": "#f4f4f5"}, "title": {"color": "#f4f4f5", "font": "Hanken Grotesk", "fontSize": 15, "fontWeight": 600, "subtitleColor": "#d4d4d8", "subtitleFont": "Hanken Grotesk", "subtitleFontSize": 12, "subtitleFontWeight": 400}, "view": {"continuousHeight": 300, "continuousWidth": 300, "fill": "#09090b", "stroke": null}}, "data": {"name": "data-a707ed8feb74dbc3e837a5cbf1a89576"}, "datasets": {"data-a707ed8feb74dbc3e837a5cbf1a89576": [{"end": 240.0, "from_previous": 1.0, "inside": true, "label": "240 \u00b7 100%", "share": 1.0, "start": 0.0, "step": "All accounts", "value": 240}, {"end": 185.5, "from_previous": 0.5458333333333333, "inside": true, "label": "131 \u00b7 55%", "share": 0.5458333333333333, "start": 54.5, "step": "Regular use", "value": 131}, {"end": 142.5, "from_previous": 0.3435114503816794, "inside": true, "label": "45 \u00b7 19%", "share": 0.1875, "start": 97.5, "step": "Heavy use", "value": 45}, {"end": 136.0, "from_previous": 0.7111111111111111, "inside": true, "label": "32 \u00b7 13%", "share": 0.13333333333333333, "start": 104.0, "step": "Heavy use, long sessions", "value": 32}]}, "height": 280, "layer": [{"encoding": {"tooltip": [{"field": "step", "title": "step", "type": "nominal"}, {"field": "value", "format": ",", "title": "accounts", "type": "quantitative"}, {"field": "share", "format": ".1%", "title": "of the first step", "type": "quantitative"}, {"field": "from_previous", "format": ".1%", "title": "of the step before", "type": "quantitative"}], "x": {"axis": null, "field": "start", "scale": {"domain": [0, 240], "nice": false, "zero": false}, "type": "quantitative"}, "x2": {"field": "end"}, "y": {"axis": {"domain": false, "labelFontSize": 11, "labelPadding": 8, "ticks": false}, "field": "step", "sort": null, "title": null, "type": "nominal"}}, "mark": {"color": "#4c78a8", "cornerRadius": 2, "type": "bar"}}, {"encoding": {"text": {"field": "label", "type": "nominal"}, "x": {"axis": null, "field": "middle", "scale": {"domain": [0, 240], "nice": false, "zero": false}, "type": "quantitative"}, "y": {"axis": {"domain": false, "labelFontSize": 11, "labelPadding": 8, "ticks": false}, "field": "step", "sort": null, "title": null, "type": "nominal"}}, "mark": {"color": "#ffffff", "fontSize": 11, "fontWeight": 600, "type": "text"}, "transform": [{"filter": "datum.inside"}, {"as": "middle", "calculate": "240 / 2"}]}, {"encoding": {"text": {"field": "label", "type": "nominal"}, "x": {"axis": null, "field": "end", "scale": {"domain": [0, 240], "nice": false, "zero": false}, "type": "quantitative"}, "y": {"axis": {"domain": false, "labelFontSize": 11, "labelPadding": 8, "ticks": false}, "field": "step", "sort": null, "title": null, "type": "nominal"}}, "mark": {"align": "left", "dx": 6, "fontSize": 11, "fontWeight": 600, "type": "text"}, "transform": [{"filter": "!datum.inside"}]}], "padding": {"bottom": 5, "left": 24, "right": 5, "top": 5}, "title": {"subtitle": "Accounts at each level of use, and their share of all accounts", "text": "From Sign-up to Power Use"}, "width": 1100}</script>
+    <noscript>
+      <img src="../charts/account_funnel.png" alt="From Sign-up to Power Use">
+    </noscript>
+
+    <div class="glyf-filter-note" data-glyf-filter-note hidden></div>
+  </div>
+  <div class="glyf-card-watermark" data-glyf-watermark aria-hidden="true"></div>
+</article>
+
 
 
 
@@ -1724,7 +1807,7 @@ takes their quartiles, so neither query aggregates anything itself.
   <div>
     <div class="glyf-ai-section-label">Generated</div>
     <div class="glyf-ai-summary-block">
-      2026-10-19 10:52
+      2026-10-19 20:51
 
     </div>
   </div>
@@ -1752,7 +1835,7 @@ takes their quartiles, so neither query aggregates anything itself.
       <button class="glyf-lineage-back" type="button" data-glyf-lineage-close>&larr; Back to dashboard</button>
       <div class="glyf-lineage-head">
         <div class="glyf-lineage-heading">Lineage</div>
-        <div class="glyf-lineage-summary glyf-mono">3 sources · 3 models · 14 charts</div>
+        <div class="glyf-lineage-summary glyf-mono">3 sources · 3 models · 15 charts</div>
       </div>
     </div>
     <div class="glyf-lineage-body">
@@ -1763,54 +1846,55 @@ takes their quartiles, so neither query aggregates anything itself.
         <div class="glyf-lineage-colhead">Charts on this dashboard</div>
       </div>
       <div class="glyf-lineage-wrap" data-glyf-lineage>
-        <svg class="glyf-lineage-svg" viewBox="0 0 1068 846" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
+        <svg class="glyf-lineage-svg" viewBox="0 0 1068 904" width="100%" role="img" aria-label="Lineage: sources, models and the charts on this dashboard">
           <g class="glyf-lineage-canvas" data-glyf-lineage-canvas>
             <g class="glyf-lineage-edges">
-              <path d="M264,365.0 C339.0,365.0 339.0,365.0 414,365.0" data-from="source:raw.product_usage" data-to="model:fct_product_usage"/>
-              <path d="M264,423.0 C339.0,423.0 339.0,423.0 414,423.0" data-from="source:raw.account_sessions" data-to="model:fct_account_sessions"/>
-              <path d="M264,481.0 C339.0,481.0 339.0,481.0 414,481.0" data-from="source:raw.hourly_activity" data-to="model:fct_hourly_activity"/>
-              <path d="M654,365.0 C729.0,365.0 729.0,46.0 804,46.0" data-from="model:fct_product_usage" data-to="chart:weekly_active_users"/>
-              <path d="M654,365.0 C729.0,365.0 729.0,104.0 804,104.0" data-from="model:fct_product_usage" data-to="chart:weekly_sessions"/>
-              <path d="M654,365.0 C729.0,365.0 729.0,162.0 804,162.0" data-from="model:fct_product_usage" data-to="chart:weekly_activated_users"/>
-              <path d="M654,365.0 C729.0,365.0 729.0,220.0 804,220.0" data-from="model:fct_product_usage" data-to="chart:active_users"/>
-              <path d="M654,365.0 C729.0,365.0 729.0,278.0 804,278.0" data-from="model:fct_product_usage" data-to="chart:sessions_scatter"/>
-              <path d="M654,365.0 C729.0,365.0 729.0,336.0 804,336.0" data-from="model:fct_product_usage" data-to="chart:activation_by_plan"/>
-              <path d="M654,365.0 C729.0,365.0 729.0,394.0 804,394.0" data-from="model:fct_product_usage" data-to="chart:activation_rate_by_plan"/>
-              <path d="M654,365.0 C729.0,365.0 729.0,452.0 804,452.0" data-from="model:fct_product_usage" data-to="chart:sessions_per_user"/>
-              <path d="M654,365.0 C729.0,365.0 729.0,510.0 804,510.0" data-from="model:fct_product_usage" data-to="chart:sessions_by_plan"/>
-              <path d="M654,423.0 C729.0,423.0 729.0,568.0 804,568.0" data-from="model:fct_account_sessions" data-to="chart:top_accounts"/>
-              <path d="M654,423.0 C729.0,423.0 729.0,626.0 804,626.0" data-from="model:fct_account_sessions" data-to="chart:sessions_per_account"/>
-              <path d="M654,423.0 C729.0,423.0 729.0,684.0 804,684.0" data-from="model:fct_account_sessions" data-to="chart:session_length_distribution"/>
-              <path d="M654,423.0 C729.0,423.0 729.0,742.0 804,742.0" data-from="model:fct_account_sessions" data-to="chart:account_flow"/>
-              <path d="M654,481.0 C729.0,481.0 729.0,800.0 804,800.0" data-from="model:fct_hourly_activity" data-to="chart:activity_by_hour"/>
+              <path d="M264,394.0 C339.0,394.0 339.0,394.0 414,394.0" data-from="source:raw.product_usage" data-to="model:fct_product_usage"/>
+              <path d="M264,452.0 C339.0,452.0 339.0,452.0 414,452.0" data-from="source:raw.account_sessions" data-to="model:fct_account_sessions"/>
+              <path d="M264,510.0 C339.0,510.0 339.0,510.0 414,510.0" data-from="source:raw.hourly_activity" data-to="model:fct_hourly_activity"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,46.0 804,46.0" data-from="model:fct_product_usage" data-to="chart:weekly_active_users"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,104.0 804,104.0" data-from="model:fct_product_usage" data-to="chart:weekly_sessions"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,162.0 804,162.0" data-from="model:fct_product_usage" data-to="chart:weekly_activated_users"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,220.0 804,220.0" data-from="model:fct_product_usage" data-to="chart:active_users"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,278.0 804,278.0" data-from="model:fct_product_usage" data-to="chart:sessions_scatter"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,336.0 804,336.0" data-from="model:fct_product_usage" data-to="chart:activation_by_plan"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,394.0 804,394.0" data-from="model:fct_product_usage" data-to="chart:activation_rate_by_plan"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,452.0 804,452.0" data-from="model:fct_product_usage" data-to="chart:sessions_per_user"/>
+              <path d="M654,394.0 C729.0,394.0 729.0,510.0 804,510.0" data-from="model:fct_product_usage" data-to="chart:sessions_by_plan"/>
+              <path d="M654,452.0 C729.0,452.0 729.0,568.0 804,568.0" data-from="model:fct_account_sessions" data-to="chart:top_accounts"/>
+              <path d="M654,452.0 C729.0,452.0 729.0,626.0 804,626.0" data-from="model:fct_account_sessions" data-to="chart:sessions_per_account"/>
+              <path d="M654,452.0 C729.0,452.0 729.0,684.0 804,684.0" data-from="model:fct_account_sessions" data-to="chart:session_length_distribution"/>
+              <path d="M654,452.0 C729.0,452.0 729.0,742.0 804,742.0" data-from="model:fct_account_sessions" data-to="chart:account_funnel"/>
+              <path d="M654,452.0 C729.0,452.0 729.0,800.0 804,800.0" data-from="model:fct_account_sessions" data-to="chart:account_flow"/>
+              <path d="M654,510.0 C729.0,510.0 729.0,858.0 804,858.0" data-from="model:fct_hourly_activity" data-to="chart:activity_by_hour"/>
             </g>
             <g class="glyf-lineage-nodes">
-              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.product_usage" data-tip="raw table, read through source()" transform="translate(24,343.0)" tabindex="0" role="button" aria-label="raw.product_usage, source">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.product_usage" data-tip="raw table, read through source()" transform="translate(24,372.0)" tabindex="0" role="button" aria-label="raw.product_usage, source">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">raw.product_usage</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.account_sessions" data-tip="raw table, read through source()" transform="translate(24,401.0)" tabindex="0" role="button" aria-label="raw.account_sessions, source">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.account_sessions" data-tip="raw table, read through source()" transform="translate(24,430.0)" tabindex="0" role="button" aria-label="raw.account_sessions, source">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">raw.account_sessions</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.hourly_activity" data-tip="raw table, read through source()" transform="translate(24,459.0)" tabindex="0" role="button" aria-label="raw.hourly_activity, source">
+              <g class="glyf-lineage-node glyf-lineage-node--source" data-node="source:raw.hourly_activity" data-tip="raw table, read through source()" transform="translate(24,488.0)" tabindex="0" role="button" aria-label="raw.hourly_activity, source">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">raw.hourly_activity</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">source</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_product_usage" data-tip="models/fct_product_usage.sql" transform="translate(414,343.0)" tabindex="0" role="button" aria-label="fct_product_usage, model">
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_product_usage" data-tip="models/fct_product_usage.sql" transform="translate(414,372.0)" tabindex="0" role="button" aria-label="fct_product_usage, model">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">fct_product_usage</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_account_sessions" data-tip="models/fct_account_sessions.sql" transform="translate(414,401.0)" tabindex="0" role="button" aria-label="fct_account_sessions, model">
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_account_sessions" data-tip="models/fct_account_sessions.sql" transform="translate(414,430.0)" tabindex="0" role="button" aria-label="fct_account_sessions, model">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">fct_account_sessions</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_hourly_activity" data-tip="models/fct_hourly_activity.sql" transform="translate(414,459.0)" tabindex="0" role="button" aria-label="fct_hourly_activity, model">
+              <g class="glyf-lineage-node glyf-lineage-node--model" data-node="model:fct_hourly_activity" data-tip="models/fct_hourly_activity.sql" transform="translate(414,488.0)" tabindex="0" role="button" aria-label="fct_hourly_activity, model">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">fct_hourly_activity</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">model</text>
@@ -1875,12 +1959,17 @@ takes their quartiles, so neither query aggregates anything itself.
                 <text class="glyf-lineage-node-title" x="12" y="18">Session Length by Account</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">histogram</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:account_flow" data-tip="binds stage AS source, next_stage AS target, accounts AS value" transform="translate(804,720.0)" tabindex="0" role="button" aria-label="How Accounts Use the Product, sankey">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:account_funnel" data-tip="binds step AS x, accounts AS y" transform="translate(804,720.0)" tabindex="0" role="button" aria-label="From Sign-up to Power Use, funnel">
+                <rect width="240" height="44" rx="7"/>
+                <text class="glyf-lineage-node-title" x="12" y="18">From Sign-up to Power Use</text>
+                <text class="glyf-lineage-node-sub" x="12" y="34">funnel</text>
+              </g>
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:account_flow" data-tip="binds stage AS source, next_stage AS target, accounts AS value" transform="translate(804,778.0)" tabindex="0" role="button" aria-label="How Accounts Use the Product, sankey">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">How Accounts Use the Product</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">sankey</text>
               </g>
-              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activity_by_hour" data-tip="binds hour AS x, weekday AS y" transform="translate(804,778.0)" tabindex="0" role="button" aria-label="Sessions by Hour, heatmap">
+              <g class="glyf-lineage-node glyf-lineage-node--chart" data-node="chart:activity_by_hour" data-tip="binds hour AS x, weekday AS y" transform="translate(804,836.0)" tabindex="0" role="button" aria-label="Sessions by Hour, heatmap">
                 <rect width="240" height="44" rx="7"/>
                 <text class="glyf-lineage-node-title" x="12" y="18">Sessions by Hour</text>
                 <text class="glyf-lineage-node-sub" x="12" y="34">heatmap</text>
@@ -1912,7 +2001,7 @@ takes their quartiles, so neither query aggregates anything itself.
           <div class="glyf-version-row">
             <div>
               <div class="glyf-version-title">current build</div>
-              <div class="glyf-version-date">19 Oct 2026, 09:52 UTC</div>
+              <div class="glyf-version-date">19 Oct 2026, 19:51 UTC</div>
             </div>
             <span class="glyf-badge glyf-badge-green">current</span>
           </div>
