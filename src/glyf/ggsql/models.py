@@ -125,6 +125,10 @@ class GgsqlChart:
         return self.draw_type == "combo"
 
     @property
+    def is_funnel(self) -> bool:
+        return self.draw_type == "funnel"
+
+    @property
     def is_point_map(self) -> bool:
         """A map of places at a latitude and longitude, rather than regions."""
         return self.is_map and self.field_for_role("region") is None

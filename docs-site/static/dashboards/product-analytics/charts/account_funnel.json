@@ -1,0 +1,29 @@
+{
+  "chart_type": "funnel",
+  "compiled_sql_path": "compiled/account_funnel.sql",
+  "height": 280,
+  "interactions": [
+    "tooltip"
+  ],
+  "lineage": {
+    "models": {
+      "fct_account_sessions": {
+        "parents": [
+          "source:raw.account_sessions"
+        ],
+        "path": "models/fct_account_sessions.sql"
+      }
+    },
+    "sources": [
+      "raw.account_sessions"
+    ]
+  },
+  "metadata_path": "charts/account_funnel.json",
+  "name": "account_funnel",
+  "png_path": "charts/account_funnel.png",
+  "svg_path": "charts/account_funnel.svg",
+  "title": "From Sign-up to Power Use",
+  "width": 1100,
+  "x": "step",
+  "y": "accounts"
+}

@@ -96,6 +96,36 @@ INTERACT tooltip
 
 </ChartTypeCard>
 
+<ChartTypeCard type="funnel" title="Funnel" page="/docs/charts/funnel" example="examples/product_analytics/visualisations/account_funnel.ggsql" summary="One centred bar per step, narrowing as the value falls. Shows how many get from each step to the next.">
+
+```sql
+SELECT 1 AS step_order, 'All accounts' AS step, count(*) AS accounts
+FROM {{ ref('fct_account_sessions') }}
+UNION ALL
+SELECT 2, 'Regular use', count(*)
+FROM {{ ref('fct_account_sessions') }}
+WHERE sessions >= 15
+UNION ALL
+SELECT 3, 'Heavy use', count(*)
+FROM {{ ref('fct_account_sessions') }}
+WHERE sessions >= 40
+UNION ALL
+SELECT 4, 'Heavy use, long sessions', count(*)
+FROM {{ ref('fct_account_sessions') }}
+WHERE sessions >= 40 AND avg_session_minutes >= 15
+ORDER BY step_order
+
+VISUALISE step AS x, accounts AS y
+DRAW funnel
+LABEL title => 'From Sign-up to Power Use'
+LABEL subtitle => 'Accounts at each level of use, and their share of all accounts'
+CONFIG width => 1100
+CONFIG height => 280
+INTERACT tooltip
+```
+
+</ChartTypeCard>
+
 <ChartTypeCard type="scatter" title="Scatter" page="/docs/charts/scatter" example="examples/product_analytics/visualisations/sessions_scatter.ggsql" summary="One point per row. Shows how two numbers move together, and the rows that do not.">
 
 ```sql
@@ -293,6 +323,7 @@ INTERACT tooltip
 | `scatter` | One point per row. `point` is accepted as an alias. | `x`, `y`, optional `color` | ggsql (`point`) |
 | `area` | One filled area per `color` value. | `x`, `y`, optional `color` | ggsql |
 | `combo` | Bars of `y` on the left axis and a line of `y2` on the right, over one `x`. | `x`, `y`, `y2` | glyf |
+| `funnel` | One centred bar per step, as wide as its `y`, in the query's order. | `x`, `y` | glyf |
 | `pie` | One slice per `x` value, sized by `y`. | `x`, `y`, optional `color` | glyf |
 | `histogram` | The number of rows in each bin of `x`, stacked by `color`. | `x`, optional `color` | glyf |
 | `boxplot` | The quartiles of `y` for each `x` value, with outliers as points. | `x`, `y`, optional `color` | glyf |

@@ -141,7 +141,7 @@ dashboard's `charts` list refers to.
 | Field | Type | Description |
 | --- | --- | --- |
 | `title` | string \| null | The chart's `LABEL title`, if it has one. |
-| `chart_type` | string \| null | The `DRAW` type: `line`, `bar`, `scatter`, `area`, `pie`, `histogram`, `boxplot`, `heatmap`, `table`, `kpi`, `map`, `sankey` or `combo`. The aliases `point` and `tile` are recorded as `scatter` and `heatmap`. |
+| `chart_type` | string \| null | The `DRAW` type: `line`, `bar`, `scatter`, `area`, `pie`, `histogram`, `boxplot`, `heatmap`, `table`, `kpi`, `map`, `sankey`, `combo` or `funnel`. The aliases `point` and `tile` are recorded as `scatter` and `heatmap`. |
 | `fields` | object | `x` and `y`, the column names bound to those roles. `y` is `null` for a `histogram`, which binds no y column. A `table` has `columns` instead: the column names it lists, in order. A `kpi` has `value` and `compare`, the latter `null` when unmapped. A `map` has no axes: `x` is its `region`, or `longitude` for points, and `y` its `color`, or `latitude` for points. A `sankey` has `x` for its `source` and `y` for its `target`. A `combo` has `x` and `y` for its bars; its line's `y2` column is in the chart's metadata `roles`. |
 | `artifacts` | object | See below. |
 | `interactions` | array of strings | **Optional.** Present only when the chart declares `INTERACT`. |
