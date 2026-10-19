@@ -309,7 +309,7 @@ def test_every_chart_type_the_parser_accepts_can_be_drawn() -> None:
     is drawable and never reachable. The table and the kpi are the types that
     are not drawn: `glyf.ggsql.table` and `glyf.ggsql.kpi` write them from
     their rows, and the pipeline branches before the renderer is reached. A
-    map, a sankey, a combo and a funnel are drawn, but as layers, by their
-    own `_build_*` functions.
+    map, a sankey, a combo, a funnel and a treemap are drawn, but as layers,
+    by their own `_build_*` functions.
     """
-    assert set(CHART_TYPES) | {"table", "kpi", "map", "sankey", "combo", "funnel"} == SUPPORTED_CHART_TYPES
+    assert set(CHART_TYPES) | {"table", "kpi", "map", "sankey", "combo", "funnel", "treemap"} == SUPPORTED_CHART_TYPES

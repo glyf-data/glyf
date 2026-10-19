@@ -258,6 +258,7 @@ EXAMPLE_ORDER_BY = {
     "sales_dashboard/regional_revenue": True,
     "sales_dashboard/revenue_by_country": True,
     "sales_dashboard/store_locations": True,
+    "sales_dashboard/store_revenue": True,
     "simple_dbt/revenue": True,
     "simple_dbt/revenue_area": True,
     "simple_dbt/revenue_by_region_bar": True,

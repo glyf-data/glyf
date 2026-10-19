@@ -17,6 +17,12 @@ All notable changes to `glyf` will be documented in this file.
   before. Steps keep the query's order, or run largest first without an
   ORDER BY. Takes `INTERACT tooltip`; dashboard filters leave it alone. The
   product analytics example adds an account funnel.
+- `DRAW treemap`: a rectangle per row, its area its value, clustered and
+  coloured by an optional group (`city AS label, revenue AS value, format
+  AS group`). glyf lays the tiles out squarified, largest first; a tile
+  shows its name and value when they fit, and its tooltip its share of the
+  total. Takes `INTERACT tooltip`; dashboard filters leave it alone. The
+  sales example adds a treemap of store revenue.
 
 ## 0.19.0 - 2026-10-19
 

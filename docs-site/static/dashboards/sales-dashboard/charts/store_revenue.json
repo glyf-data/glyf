@@ -1,0 +1,34 @@
+{
+  "chart_type": "treemap",
+  "compiled_sql_path": "compiled/store_revenue.sql",
+  "interactions": [
+    "tooltip"
+  ],
+  "lineage": {
+    "models": {},
+    "sources": [
+      "raw.stores"
+    ]
+  },
+  "metadata_path": "charts/store_revenue.json",
+  "name": "store_revenue",
+  "png_path": "charts/store_revenue.png",
+  "roles": [
+    [
+      "label",
+      "city"
+    ],
+    [
+      "value",
+      "revenue"
+    ],
+    [
+      "group",
+      "format"
+    ]
+  ],
+  "svg_path": "charts/store_revenue.svg",
+  "title": "Revenue by Store",
+  "x": "city",
+  "y": "revenue"
+}

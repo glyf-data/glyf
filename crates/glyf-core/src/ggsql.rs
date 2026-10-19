@@ -48,6 +48,8 @@ const MAP_PROJECTIONS: &[&str] = &[
 const SANKEY_ROLES: &[&str] = &["source", "target", "value"];
 /// A combo: bars of `y` on the left axis, a line of `y2` on the right.
 const COMBO_ROLES: &[&str] = &["x", "y", "y2"];
+/// A treemap tile: its name, its size, and optionally the group it sits in.
+const TREEMAP_ROLES: &[&str] = &["label", "value", "group"];
 /// A map draws regions (`region`) or places (`latitude` and `longitude`).
 const MAP_ROLES: &[&str] = &["region", "latitude", "longitude", "size", "color"];
 
@@ -135,6 +137,14 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
             allowed: XY,
             interactions: &["tooltip"],
         },
+        // A treemap is a rectangle per row, its area the value, clustered by
+        // group. Its colours name groups the tiles already sit together in.
+        "treemap" => DrawSpec {
+            draw_type: "treemap",
+            required: &["label", "value"],
+            allowed: TREEMAP_ROLES,
+            interactions: &["tooltip"],
+        },
         // A kpi is one number, with an optional one to compare it against.
         "kpi" => DrawSpec {
             draw_type: "kpi",
@@ -148,7 +158,7 @@ fn draw_spec(draw: &str) -> Option<DrawSpec> {
 
 /// The draw types glyf accepts, for error messages.
 const SUPPORTED_DRAWS: &str =
-    "area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table";
+    "area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table, treemap";
 
 /// Parse a `.ggsql` file: the SQL, then the chart block.
 ///
@@ -513,6 +523,7 @@ fn validate_roles(spec: &DrawSpec, visualise: &[VisualiseMapping]) -> Result<(),
             "heatmap" => "heatmap requires x, y and color mappings".to_string(),
             "kpi" => "kpi requires a value mapping".to_string(),
             "sankey" => "sankey requires source, target and value mappings".to_string(),
+            "treemap" => "treemap requires label and value mappings".to_string(),
             "combo" => {
                 "combo requires x, y and y2 mappings: y draws as bars, y2 as a line".to_string()
             }
@@ -1043,7 +1054,7 @@ mod tests {
 
         assert_eq!(
             error.to_string(),
-            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table"
+            "unsupported chart type 'donut'; supported chart types: area, bar, boxplot, combo, funnel, heatmap, histogram, kpi, line, map, pie, sankey, scatter, table, treemap"
         );
     }
 
@@ -1432,6 +1443,35 @@ mod tests {
             .to_string();
         assert!(
             error.contains("zoom interaction is not supported for funnel charts"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn parses_a_treemap_with_an_optional_group() {
+        let parse = |visualise: &str| {
+            parse_ggsql_text(
+                &format!("SELECT * FROM fct_sales\n\nVISUALISE {visualise}\nDRAW treemap\nINTERACT tooltip\n"),
+                "stores",
+                None,
+                "duckdb",
+            )
+        };
+        assert_eq!(
+            parse("city AS label, revenue AS value").unwrap().draw_type,
+            "treemap"
+        );
+        assert!(parse("city AS label, revenue AS value, format AS group").is_ok());
+        let error = parse("city AS label, format AS group")
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("treemap requires label and value mappings"),
+            "{error}"
+        );
+        let error = parse("city AS x, revenue AS y").unwrap_err().to_string();
+        assert!(
+            error.contains("treemap does not take a 'x' mapping; it takes label, value, group"),
             "{error}"
         );
     }

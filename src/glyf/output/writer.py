@@ -82,17 +82,21 @@ def write_chart_metadata(
         metadata["value"] = chart.field_for_role("value")
         metadata["compare"] = chart.field_for_role("compare")
         metadata["kpi_html_path"] = artifacts.kpi_html.relative_to(project_root).as_posix()
-    elif chart.is_map or chart.is_sankey:
-        # A map and a sankey have no axes. `x` and `y` keep the shape every
-        # drawn chart's metadata has -- for a map the place and what is shown
-        # there, for a sankey where a flow starts and ends -- and `roles` says
-        # what each column really is, in VISUALISE order.
+    elif chart.is_map or chart.is_sankey or chart.is_treemap:
+        # A map, a sankey and a treemap have no axes. `x` and `y` keep the
+        # shape every drawn chart's metadata has -- for a map the place and
+        # what is shown there, for a sankey where a flow starts and ends, for
+        # a treemap a tile and its size -- and `roles` says what each column
+        # really is, in VISUALISE order.
         if chart.is_map:
             metadata["x"] = chart.field_for_role("region") or chart.field_for_role("longitude")
             metadata["y"] = chart.field_for_role("color") or chart.field_for_role("latitude")
-        else:
+        elif chart.is_sankey:
             metadata["x"] = chart.field_for_role("source")
             metadata["y"] = chart.field_for_role("target")
+        else:
+            metadata["x"] = chart.field_for_role("label")
+            metadata["y"] = chart.field_for_role("value")
         metadata["roles"] = [[mapping.role, mapping.field] for mapping in chart.visualise]
         metadata["png_path"] = artifacts.png.relative_to(project_root).as_posix()
         metadata["svg_path"] = artifacts.svg.relative_to(project_root).as_posix()
