@@ -241,3 +241,56 @@ def test_pipeline_refuses_shapes_outside_the_project(tmp_path: Path) -> None:
 
     with pytest.raises(RenderError, match="sales_map.ggsql: CONFIG shapes '../secret.topojson' is outside the project"):
         render_project(project)
+
+
+def test_a_label_heads_the_tooltip_and_zoom_marks_the_spec() -> None:
+    chart = parse_ggsql(
+        "select city, lat, lon from fct_stores\n\n"
+        "VISUALISE city AS label, lat AS latitude, lon AS longitude\nDRAW map\n"
+        "INTERACT tooltip, zoom\n"
+    )
+    data = pd.DataFrame({"city": ["Paris"], "lat": [48.86], "lon": [2.35]})
+
+    spec = build_chart(chart, data).to_dict()
+
+    points = spec["layer"][1]
+    assert [item["field"] for item in points["encoding"]["tooltip"]] == ["city", "lat", "lon"]
+    assert spec["usermeta"] == {"glyf": {"zoom": "map"}}
+    assert "usermeta" not in build_chart(parse_ggsql(REGIONS), pd.DataFrame({"country": ["FRA"], "revenue": [1]})).to_dict()
+
+
+def test_the_shapes_are_one_named_dataset_the_land_and_lookup_share() -> None:
+    spec = build_chart(parse_ggsql(REGIONS), pd.DataFrame({"country": ["FRA"], "revenue": [1]})).to_dict()
+
+    shapes = [name for name in spec["datasets"] if name.startswith("glyf-shapes-")]
+    assert len(shapes) == 1
+    land, regions = spec["layer"]
+    assert land["data"]["name"] == shapes[0]
+    assert regions["transform"][0]["from"]["data"]["name"] == shapes[0]
+    assert len(json.dumps(spec)) < 1.5 * len(json.dumps(load_shapes(None).topology))
+
+
+def test_a_dashboard_carries_the_shapes_once_for_every_map() -> None:
+    from glyf.dashboard.artifacts import ChartArtifact, ChartDataArtifact, ChartMetadata
+    from glyf.dashboard.renderer import share_datasets
+
+    def artifact(name: str, spec: dict) -> ChartArtifact:
+        metadata = ChartMetadata(
+            name=name, title=None, chart_type="map", x="country", y="revenue",
+            compiled_sql_path=Path("c.sql"), data_json_path=Path("d.json"),
+            png_path=Path("p.png"), svg_path=Path("s.svg"),
+        )
+        return ChartArtifact(metadata, None, None, ChartDataArtifact((), ()), vega_spec=spec)
+
+    rows = pd.DataFrame({"country": ["FRA"], "revenue": [1]})
+    spec = build_chart(parse_ggsql(REGIONS), rows).to_dict()
+    charts = {"a": artifact("a", spec), "b": artifact("b", spec)}
+
+    trimmed, shared = share_datasets(charts)
+
+    assert list(shared) == [name for name in spec["datasets"] if name.startswith("glyf-shapes-")]
+    for chart in trimmed.values():
+        assert not any(name.startswith("glyf-shapes-") for name in chart.vega_spec["datasets"])
+        assert chart.vega_spec["usermeta"]["glyf"]["shared"] == list(shared)
+    # The artifact read from disk keeps its shapes.
+    assert any(name.startswith("glyf-shapes-") for name in charts["a"].vega_spec["datasets"])

@@ -16,7 +16,7 @@ ORDER BY country
 VISUALISE country AS region, revenue AS color
 DRAW map
 LABEL title => 'Revenue by Country'
-INTERACT tooltip
+INTERACT tooltip, zoom
 ```
 
 </ChartTypeCard>
@@ -25,7 +25,7 @@ INTERACT tooltip
 
 | `DRAW` | Roles | Interactions | From |
 | --- | --- | --- | --- |
-| `map` | `region` or `latitude` and `longitude`, optional `size` and `color` | `tooltip` only | glyf |
+| `map` | `region` or `latitude` and `longitude`, optional `size`, `color` and `label` | `tooltip`, `zoom` | glyf |
 
 ## How it reads
 
@@ -42,7 +42,7 @@ ORDER BY country
 VISUALISE country AS region, revenue AS color
 DRAW map
 LABEL title => 'Revenue by Country'
-INTERACT tooltip
+INTERACT tooltip, zoom
 ```
 
 **Points.** `latitude` and `longitude` place a circle per row; `size` and
@@ -53,14 +53,15 @@ SELECT city, latitude, longitude, revenue, format
 FROM {{ source('raw', 'stores') }}
 ORDER BY revenue DESC
 
-VISUALISE latitude AS latitude, longitude AS longitude, revenue AS size, format AS color
+VISUALISE city AS label, latitude AS latitude, longitude AS longitude, revenue AS size, format AS color
 DRAW map
 LABEL title => 'Stores by Revenue'
-INTERACT tooltip
+INTERACT tooltip, zoom
 ```
 
 A map takes `region` or the two coordinates, never both, and `size` only for
-points. Both kinds are drawn over the land, so the regions and points the
+points. `label` names a region or a place: it heads the tooltip, so a store
+reads `New York` rather than its coordinates. Both kinds are drawn over the land, so the regions and points the
 query returns keep their place in the world.
 
 The world's countries ship with glyf, so a map needs no setup and builds
@@ -89,9 +90,17 @@ of its properties, again taking the best match. `projection` is one of
 `equalEarth` (the default), `naturalEarth1`, `mercator`, `equirectangular`,
 `albersUsa` or `orthographic`.
 
-A map takes `INTERACT tooltip`, which lists the columns it binds.
-`legend_filter` and `zoom` fail validation. Dashboard filters narrow the
-regions or points and leave the land whole. The visual diff compares a map
+A map takes `INTERACT tooltip`, which lists the columns it binds, `label`
+first. `INTERACT zoom` zooms the map in a dashboard: the scroll wheel zooms
+about the pointer, up to twelve times, dragging moves a zoomed map, and a
+double click or the card's reset button zooms back out. Like any chart that
+zooms, the card starts locked, so scrolling moves the page until the reader
+unlocks it. The PNG and SVG are drawn unzoomed. `legend_filter` fails
+validation. Dashboard filters narrow the regions or points and leave the land
+whole.
+
+The world's countries are about 100 KB. A dashboard carries them once
+however many maps it has, and each map's spec names them. The visual diff compares a map
 pixel by pixel, the way it does a scatter.
 
 Points at exact coordinates can identify a person or a home. Aggregate them

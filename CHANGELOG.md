@@ -35,6 +35,16 @@ All notable changes to `glyf` will be documented in this file.
   columns` sets how many panels to a row; `CONFIG width` and `height` are
   the grid's. Interactions and dashboard filters work across the panels.
   The product analytics example shows weekly sessions plan by plan.
+- `DRAW map` takes a `label` role, which heads its tooltip (`city AS
+  label`), and `INTERACT zoom`: in a dashboard, the wheel zooms about the
+  pointer and a drag moves the zoomed map. The sales example's maps use
+  both.
+
+### Changed
+
+- A dashboard carries a map's shapes once, however many maps it draws on
+  them, instead of once per map (and twice for a region map). The sales
+  example's page drops from 351 KB to about 226 KB.
 
 ## 0.19.0 - 2026-10-19
 

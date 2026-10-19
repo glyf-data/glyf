@@ -2,7 +2,7 @@ SELECT city, latitude, longitude, revenue, format
 FROM {{ source('raw', 'stores') }}
 ORDER BY revenue DESC
 
-VISUALISE latitude AS latitude, longitude AS longitude, revenue AS size, format AS color
+VISUALISE city AS label, latitude AS latitude, longitude AS longitude, revenue AS size, format AS color
 DRAW map
 LABEL title => 'Stores by Revenue'
-INTERACT tooltip
+INTERACT tooltip, zoom

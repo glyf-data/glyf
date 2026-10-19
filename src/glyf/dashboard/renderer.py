@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -12,6 +12,7 @@ from glyf.dashboard.filters import plan_filters
 from glyf.dashboard.lineage import build_lineage
 from glyf.dashboard.loader import Dashboard
 from glyf.dashboard.theme import DEFAULT_THEME, Theme
+from glyf.ggsql.geo import SHAPES_DATASET_PREFIX
 
 
 @dataclass(frozen=True)
@@ -82,6 +83,7 @@ class DashboardRenderer:
             name: apply_chart_theme(chart_artifact, resolved_chart_theme)
             for name, chart_artifact in chart_artifacts.items()
         }
+        themed_chart_artifacts, shared_datasets = share_datasets(themed_chart_artifacts)
         themed_charts = tuple(
             themed_chart_artifacts[chart.metadata.name] for chart in charts
         )
@@ -98,6 +100,7 @@ class DashboardRenderer:
             # of it.
             needs_vega=interactive or bool(filters.vega_charts),
             filters=filters,
+            shared_datasets=shared_datasets,
             has_tables=any(chart.metadata.is_table for chart in themed_charts),
             lineage=build_lineage(charts) if config.dashboard.show_lineage else None,
             dashboard_config=config.dashboard,
@@ -128,6 +131,41 @@ class DashboardRenderer:
 
 
 TAG_TONES = 6
+
+
+def share_datasets(
+    charts: dict[str, ChartArtifact],
+) -> tuple[dict[str, ChartArtifact], dict[str, object]]:
+    """Charts whose specs leave their map shapes to the page, and the shapes.
+
+    Every map carries its shapes, which for the world's countries are most of
+    its spec. A page draws them from one copy: each spec names the datasets it
+    left out (`usermeta.glyf.shared`), and the page's script puts them back
+    before it draws. The artifacts on disk keep their shapes, so a spec read
+    on its own still draws.
+    """
+    shared: dict[str, object] = {}
+    result = dict(charts)
+    for name, chart in charts.items():
+        spec = chart.vega_spec
+        if not isinstance(spec, dict) or not isinstance(spec.get("datasets"), dict):
+            continue
+        names = [key for key in spec["datasets"] if str(key).startswith(SHAPES_DATASET_PREFIX)]
+        if not names:
+            continue
+        trimmed = dict(spec)
+        trimmed["datasets"] = {
+            key: value for key, value in spec["datasets"].items() if key not in names
+        }
+        usermeta = dict(trimmed.get("usermeta") or {})
+        glyf_meta = dict(usermeta.get("glyf") or {})
+        glyf_meta["shared"] = names
+        usermeta["glyf"] = glyf_meta
+        trimmed["usermeta"] = usermeta
+        for key in names:
+            shared.setdefault(key, spec["datasets"][key])
+        result[name] = replace(chart, vega_spec=trimmed)
+    return result, shared
 
 
 def tag_tone(tag: str) -> int:

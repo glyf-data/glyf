@@ -297,7 +297,7 @@ ORDER BY country
 VISUALISE country AS region, revenue AS color
 DRAW map
 LABEL title => 'Revenue by Country'
-INTERACT tooltip
+INTERACT tooltip, zoom
 ```
 
 </ChartTypeCard>
@@ -374,7 +374,7 @@ INTERACT tooltip
 | `kpi` | One number as a tile, with the change against a comparison value. Not drawn. | `value`, optional `compare` | glyf |
 | `sankey` | Flows between stages, one band per `source` and `target` pair, as wide as its `value`. | `source`, `target`, `value` | glyf |
 | `treemap` | One rectangle per row, its area its `value`, clustered by `group`. | `label`, `value`, optional `group` | glyf |
-| `map` | One filled region per row, or one point per row at a latitude and longitude. | `region` or `latitude` and `longitude`, optional `size` and `color` | glyf |
+| `map` | One filled region per row, or one point per row at a latitude and longitude. | `region` or `latitude` and `longitude`, optional `size`, `color` and `label` | glyf |
 
 Any other `DRAW` value fails validation with `unsupported chart type`. The
 directives every chart shares, `LABEL`, `CONFIG` and `INTERACT`, are in

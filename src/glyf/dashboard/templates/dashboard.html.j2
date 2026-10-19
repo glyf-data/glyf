@@ -23,6 +23,71 @@
   <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+  {% if shared_datasets %}
+  <script type="application/json" id="glyf-shared-datasets">{{ shared_datasets | tojson }}</script>
+  {% endif %}
+  <script>
+    (function () {
+      {% if shared_datasets %}
+      // A chart's spec, with the datasets the page carries once for every
+      // chart that draws them (a map's shapes) put back.
+      let shared = null;
+      window.glyfSpec = (text) => {
+        const spec = JSON.parse(text);
+        const names = (spec.usermeta && spec.usermeta.glyf && spec.usermeta.glyf.shared) || [];
+        if (names.length) {
+          if (shared === null) {
+            const el = document.getElementById("glyf-shared-datasets");
+            shared = el ? JSON.parse(el.textContent) : {};
+          }
+          spec.datasets = Object.assign({}, spec.datasets || {});
+          names.forEach((name) => { spec.datasets[name] = shared[name]; });
+        }
+        return spec;
+      };
+      {% else %}
+      window.glyfSpec = (text) => JSON.parse(text);
+      {% endif %}
+      // Vega-Lite has no zoom for a map's projection. A map that asks for one
+      // gets it in the compiled spec: its projection's scale and translate
+      // follow a zoom level and an offset that the wheel and a drag change,
+      // starting from the fit Vega-Lite would have made to the land.
+      const zoomMap = (vg) => {
+        const meta = vg.usermeta && vg.usermeta.glyf;
+        const projection = (vg.projections || [])[0];
+        const land = (vg.data || []).find((data) => data.format && data.format.type === "topojson");
+        if (!meta || meta.zoom !== "map" || !projection || !land) return vg;
+        const unit = { name: "glyf_unit", type: projection.type, scale: 1, translate: [0, 0] };
+        ["rotate", "center"].forEach((key) => { if (projection[key] !== undefined) unit[key] = projection[key]; });
+        vg.projections.push(unit);
+        const zoom = "clamp(glyf_view.k * pow(1.0015, -event.deltaY * pow(16, event.deltaMode)), 1, 12)";
+        vg.signals = (vg.signals || []).concat([
+          { name: "glyf_bounds", update: `geoBounds('glyf_unit', {type: 'FeatureCollection', features: data(${JSON.stringify(land.name)})})` },
+          { name: "glyf_fit", update: "min(width / max(glyf_bounds[1][0] - glyf_bounds[0][0], 1e-9), height / max(glyf_bounds[1][1] - glyf_bounds[0][1], 1e-9))" },
+          { name: "glyf_down", value: null, on: [{ events: "pointerdown", update: "[x(), y(), glyf_view.x, glyf_view.y]" }] },
+          {
+            name: "glyf_view",
+            value: { k: 1, x: 0, y: 0 },
+            on: [
+              // Zoom about the pointer: the place under it stays under it.
+              { events: "wheel!", force: true, update: `${zoom} == 1 ? {k: 1, x: 0, y: 0} : {k: ${zoom}, x: x() - (x() - glyf_view.x) * ${zoom} / glyf_view.k, y: y() - (y() - glyf_view.y) * ${zoom} / glyf_view.k}` },
+              { events: "[pointerdown, window:pointerup] > window:pointermove", update: "glyf_view.k == 1 || !glyf_down ? glyf_view : {k: glyf_view.k, x: glyf_down[2] + x() - glyf_down[0], y: glyf_down[3] + y() - glyf_down[1]}" },
+              { events: "dblclick", update: "{k: 1, x: 0, y: 0}" },
+            ],
+          },
+        ]);
+        delete projection.fit;
+        delete projection.size;
+        projection.scale = { signal: "glyf_fit * glyf_view.k" };
+        projection.translate = { signal: "[glyf_view.k * (width - glyf_fit * (glyf_bounds[1][0] + glyf_bounds[0][0])) / 2 + glyf_view.x, glyf_view.k * (height - glyf_fit * (glyf_bounds[1][1] + glyf_bounds[0][1])) / 2 + glyf_view.y]" };
+        // Zoomed in, the land runs past the view: keep it inside.
+        projection.clipExtent = { signal: "[[0, 0], [width, height]]" };
+        (vg.marks || []).forEach((mark) => { mark.clip = true; });
+        return vg;
+      };
+      window.glyfEmbed = (target, spec) => vegaEmbed(target, spec, { actions: false, renderer: "svg", patch: zoomMap });
+    })();
+  </script>
   {% endif %}
 </head>
 <body>
@@ -301,8 +366,8 @@
       if (!specElement) {
         return;
       }
-      const spec = JSON.parse(specElement.textContent);
-      vegaEmbed(container, spec, { actions: false, renderer: "svg" });
+      const spec = window.glyfSpec(specElement.textContent);
+      window.glyfEmbed(container, spec);
     });
   </script>
   {% endif %}
@@ -519,7 +584,7 @@
           document.querySelectorAll("[data-vega-chart]").forEach((container) => {
             const specElement = document.getElementById(container.dataset.vegaChart);
             if (!specElement) return;
-            vegaEmbed(container, window.glyfVegaTheme(JSON.parse(specElement.textContent), dark), { actions: false, renderer: "svg" });
+            window.glyfEmbed(container, window.glyfVegaTheme(window.glyfSpec(specElement.textContent), dark));
           });
         }
         {% endif %}
@@ -569,10 +634,10 @@
           const target = card.querySelector("[data-vega-chart]");
           const specElement = target && document.getElementById(target.dataset.vegaChart);
           if (!specElement || typeof vegaEmbed !== "function") return;
-          const spec = JSON.parse(specElement.textContent);
+          const spec = window.glyfSpec(specElement.textContent);
           const root = document.documentElement;
           const themed = root.dataset.glyfChartFollows !== "false" && window.glyfVegaTheme ? window.glyfVegaTheme(spec, root.getAttribute("data-theme") === "dark") : spec;
-          vegaEmbed(target, themed, { actions: false, renderer: "svg" });
+          window.glyfEmbed(target, themed);
         });
       });
       {% endif %}
@@ -654,7 +719,7 @@
       const modesOf = (card) => Object.fromEntries((card.dataset.glyfFilters || "").split(" ").filter(Boolean).map((pair) => pair.split(":")));
       const vegaSpecOf = (card) => {
         const el = card.querySelector('script[type="application/json"]');
-        return el ? JSON.parse(el.textContent) : null;
+        return el ? window.glyfSpec(el.textContent) : null;
       };
       const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
       const filterExpr = (pairs) => pairs.map((p) => "(" + p.values.map((v) => `toString(datum[${JSON.stringify(p.field)}]) == ${JSON.stringify(v)}`).join(" || ") + ")").join(" && ");
@@ -667,7 +732,7 @@
         const still = card.querySelector("[data-glyf-still]");
         if (still) { still.hidden = pairs.length > 0; }
         if (target.hasAttribute("data-glyf-filter-chart")) { target.hidden = pairs.length === 0; }
-        if (pairs.length || target.hasAttribute("data-vega-chart")) vegaEmbed(target, spec, { actions: false, renderer: "svg" });
+        if (pairs.length || target.hasAttribute("data-vega-chart")) window.glyfEmbed(target, spec);
         markEmpty(card, pairs.length > 0 && !hasRows(spec, pairs));
       };
       const markEmpty = (card, empty) => {

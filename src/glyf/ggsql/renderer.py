@@ -1,3 +1,4 @@
+import hashlib
 import html
 import json
 import re
@@ -12,7 +13,13 @@ import pyarrow.compute as pc
 
 from glyf.config import RenderConfig
 from glyf.execution.result import ArrowStreamExportable, QueryResult
-from glyf.ggsql.geo import MapShapesError, Shapes, load_shapes, match_regions
+from glyf.ggsql.geo import (
+    SHAPES_DATASET_PREFIX,
+    MapShapesError,
+    Shapes,
+    load_shapes,
+    match_regions,
+)
 from glyf.ggsql.models import GgsqlChart
 from glyf.ggsql.sankey import LABEL_GAP, Layout, SankeyError, layout_sankey
 from glyf.ggsql.treemap import Tile, TreemapError, layout_treemap
@@ -41,8 +48,10 @@ MAP_LAND = "#94a3b8"
 MAP_LAND_OPACITY = 0.28
 MAP_BORDER = "#ffffff"
 MAP_DEFAULT_PROJECTION = "equalEarth"
-# The roles a map binds, in encoding order.
-MAP_ROLES = ("region", "latitude", "longitude", "size", "color")
+# The roles a map binds, in encoding order: a place's name first, so its
+# tooltip opens with it.
+MAP_ROLES = ("label", "region", "latitude", "longitude", "size", "color")
+
 SANKEY_ROLES = ("source", "target", "value")
 COMBO_ROLES = ("x", "y", "y2")
 TREEMAP_ROLES = ("label", "value", "group")
@@ -774,7 +783,7 @@ def _build_map(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.
     except MapShapesError as exc:
         raise ChartRenderError(str(exc)) from exc
 
-    land_data = _shape_data(shapes)
+    dataset, land_data = _shape_data(shapes)
     land = alt.Chart(land_data).mark_geoshape(
         fill=MAP_LAND,
         fillOpacity=MAP_LAND_OPACITY,
@@ -829,8 +838,13 @@ def _build_map(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.
     layered = alt.layer(land, marks.encode(**encoding), data=frame).project(
         type=chart.options.get("projection", MAP_DEFAULT_PROJECTION)
     )
+    properties: dict[str, object] = {"datasets": {dataset: shapes.topology}}
+    if "zoom" in chart.interactions:
+        # Vega-Lite has no zoom for a projection; the dashboard adds one to
+        # the compiled spec of a map that asks (`glyfZoomMap`).
+        properties["usermeta"] = {"glyf": {"zoom": "map"}}
     # A map is not a plot area: the frame around the view would box the sea.
-    return _styled(layered, chart, config).configure_view(stroke=None)
+    return _styled(layered.properties(**properties), chart, config).configure_view(stroke=None)
 
 
 def _build_sankey(chart: GgsqlChart, frame: pa.Table, config: RenderConfig) -> alt.LayerChart:
@@ -970,10 +984,19 @@ def unmatched_regions(chart: GgsqlChart, data: QueryResult) -> tuple[str, ...]:
         return ()
 
 
-def _shape_data(shapes: Shapes) -> alt.InlineData:
-    return alt.InlineData(
-        values=shapes.topology,
-        format=alt.DataFormat(type="topojson", feature=shapes.feature),
+def _shape_data(shapes: Shapes) -> tuple[str, alt.NamedData]:
+    """The shapes' dataset name, and the data that reads it as features.
+
+    The shapes are one named dataset in the spec, which the land and the
+    region lookup share. The name is their content hash, so a dashboard can
+    carry one copy for every map drawn on the same shapes.
+    """
+    digest = hashlib.sha256(
+        json.dumps(shapes.topology, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()[:16]
+    name = f"{SHAPES_DATASET_PREFIX}{digest}"
+    return name, alt.NamedData(
+        name=name, format=alt.DataFormat(type="topojson", feature=shapes.feature)
     )
 
 

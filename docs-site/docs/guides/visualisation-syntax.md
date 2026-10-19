@@ -43,8 +43,8 @@ Roles:
 - `y2`: a `combo`'s line, drawn on the right axis; required there and taken
   nowhere else. See [Combo](../charts/combo.md).
 - `value` and `compare`: a `kpi`'s roles, and nobody else's. See [KPI](../charts/kpi.md).
-- `region`, or `latitude` and `longitude`, with an optional `size`: a `map`'s
-  roles. See [Map](../charts/map.md).
+- `region`, or `latitude` and `longitude`, with an optional `size` and
+  `label`: a `map`'s roles. See [Map](../charts/map.md).
 - `source`, `target` and `value`: a `sankey`'s roles, all three required. See
   [Sankey](../charts/sankey.md).
 - `label` and `value`, with an optional `group`: a `treemap`'s roles. See
@@ -72,7 +72,7 @@ Sixteen chart types, each with its own page under [Charts](../charts/overview.md
 | `heatmap` | `x`, `y`, `color` | [Heatmap](../charts/heatmap.md) |
 | `table` | a column list, or `*` | [Table](../charts/table.md) |
 | `kpi` | `value`, optional `compare` | [KPI](../charts/kpi.md) |
-| `map` | `region` or `latitude` and `longitude`, optional `size` and `color` | [Map](../charts/map.md) |
+| `map` | `region` or `latitude` and `longitude`, optional `size`, `color` and `label` | [Map](../charts/map.md) |
 | `sankey` | `source`, `target`, `value` | [Sankey](../charts/sankey.md) |
 | `treemap` | `label`, `value`, optional `group` | [Treemap](../charts/treemap.md) |
 
@@ -251,8 +251,9 @@ Supported interactions:
   there.
 
 A `table` takes no `INTERACT` clause; sorting by column is built into the
-dashboard. A `kpi` takes none either. A `map`, a `sankey`, a
-`combo`, a `funnel`, a `treemap` and a `waterfall` take `tooltip` only.
+dashboard. A `kpi` takes none either. A `map` takes
+`tooltip` and `zoom`. A `sankey`, a `combo`, a `funnel`, a `treemap` and a
+`waterfall` take `tooltip` only.
 
 Interactive charts still write PNG and SVG artifacts. They also write a Vega-Lite JSON artifact, which dashboard pages embed with the Vega runtime scripts. The exported dashboard is still static HTML, but interactive rendering needs a browser with JavaScript enabled and access to those scripts.
 
